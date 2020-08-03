@@ -4229,7 +4229,7 @@ External Setpoint Generation:
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.start_switch</Name>
-							<Comment><![CDATA[DIN25 3.0]]></Comment>
+							<Comment><![CDATA[DIN25 3.0 (enable)]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -4797,6 +4797,7 @@ DOUT1 0.0]]></Comment>
 					</Box>
 					<Box Id="3" BoxType="9099">
 						<Name>Klemme 3 (EL1008)</Name>
+						<Comment><![CDATA[Main panel]]></Comment>
 						<ImageId>7</ImageId>
 						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x03f03052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1008 8K. Dig. Eingang 24V, 3ms" Desc="EL1008" PortABoxInfo="#x01000002">
 							<SyncMan>001001000000010004000000000000000100001000010000</SyncMan>
@@ -4845,6 +4846,7 @@ DOUT1 0.0]]></Comment>
 					</Box>
 					<Box Id="4" BoxType="9099">
 						<Name>Klemme 4 (EL1008)</Name>
+						<Comment><![CDATA[Ölstatus?]]></Comment>
 						<ImageId>7</ImageId>
 						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x03f03052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1008 8K. Dig. Eingang 24V, 3ms" Desc="EL1008" PortABoxInfo="#x01000003">
 							<SyncMan>001001000000010004000000000000000100001000010000</SyncMan>
@@ -8679,6 +8681,15 @@ DOUT1 0.0]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_Main.reset_switch" VarB="Channel 8^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Main.start_switch" VarB="Channel 4^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Main.stop_switch" VarB="Channel 5^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 4 (EL1008)">
+				<Link VarA="PlcTask Inputs^GVL_Main.brake_clearing" VarB="Channel 7^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_oil.oil_high" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_oil.oil_low" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_oil.oil_overtemperature" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_oil.oil_pressure_OK" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_oil.oil_undertemperature" VarB="Channel 5^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_oil.oilfilter_dirty" VarB="Channel 6^Input"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 5 (EL2008)">
 				<Link VarA="PlcTask Outputs^GVL_Main.lamp_error" VarB="Channel 3^Output"/>
