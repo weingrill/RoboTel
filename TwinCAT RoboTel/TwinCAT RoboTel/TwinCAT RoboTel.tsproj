@@ -1337,6 +1337,506 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 		<DataType>
+			<Name GUID="{4C3FC5AC-D5AA-44C6-AC5A-159774BA0F6D}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_STATE</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>Operational</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Homed</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>NotMoving</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>InPositionArea</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>InTargetPosition</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Protected</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ErrorPropagationDelayed</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>6</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>HasBeenStopped</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>7</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>HasJob</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PositiveDirection</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>9</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>NegativeDirection</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>10</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>HomingBusy</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>11</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ConstantVelocity</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>12</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Compensating</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>13</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetPointGenEnabled</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>14</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PhasingActive</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>15</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExternalLatchValid</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>NewTargetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>17</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ContinuousMotion</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>19</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ControlLoopClosed</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>20</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamTableQueued</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>21</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamDataQueued</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>22</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamScalingPending</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>23</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CmdBuffered</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>24</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PTPmode</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>25</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SoftLimitMinExceeded</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>26</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SoftLimitMaxExceeded</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>27</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>DriveDeviceError</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>28</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MotionCommandsLocked</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>29</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>IoDataInvalid</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>30</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>31</BitOffs>
+			</SubItem>
+			<Format Name="Short">
+				<Printf>%08x</Printf>
+			</Format>
+			<Format Name="Cpp">
+				<Printf>0x%08x</Printf>
+			</Format>
+			<Format Name="IEC">
+				<Printf>16#%08X</Printf>
+			</Format>
+		</DataType>
+		<DataType>
+			<Name GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC" TcBaseType="true">NCTOPLC_AXIS_REF</Name>
+			<BitSize>2048</BitSize>
+			<SubItem>
+				<Name>StateDWord</Name>
+				<Type GUID="{4C3FC5AC-D5AA-44C6-AC5A-159774BA0F6D}" Namespace="MC">NCTOPLC_AXIS_REF_STATE</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ErrorCode</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
+0  = INACTIVE:		axis has no job
+1  = RUNNING:		axis is executing a motion job
+2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
+3  = PHASE_VELOCONST:	axis is moving at constant velocity
+4  = PHASE_ACCPOS:	axis is accelerating
+5  = PHASE_ACCNEG:	axis is decelerating
+Slaves only:
+11 = PREPHASE:		slave axis is in a motion pre-phase
+12 = SYNCHRONIZING:	slave axis is synchronizing
+13 = SYNCHRONOUS:	slave axis is moving synchronously
+External Setpoint Generation:
+41 = EXTSETGEN_MODE1:	external setpoint generation active
+42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
+]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisModeConfirmation</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>HomingState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<Comment><![CDATA[Axis Homing Status:
+0: idle
+1: start homing
+2: searching home switch
+3: stopping on home switch
+4: moving off home switch
+5: searching sync pulse
+6: stopping after homing
+]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CoupleState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<Comment><![CDATA[Axis Coupling Status:
+0: axis is a single axis (not coupled)
+1: axis is a master axis
+2: axis is master and slave
+3: axis is a slave axis
+]]></Comment>
+				<BitSize>32</BitSize>
+				<BitOffs>160</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SvbEntries</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SafEntries</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>224</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisId</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>256</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>OpModeDWord</Name>
+				<Type GUID="{6EF49753-C72C-4F50-AA44-3C7498E76CFE}" Namespace="MC">NCTOPLC_AXIS_REF_OPMODE</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>288</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>320</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ModuloActPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>384</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActiveControlLoopIndex</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>448</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ControlLoopIndex</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>464</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ModuloActTurns</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>480</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActVelo</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>512</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PosDiff</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>576</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>640</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetVelo</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>704</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetAcc</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>768</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TargetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>832</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ModuloSetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>896</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ModuloSetTurns</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>960</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CmdNo</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>992</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CmdState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>1008</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetJerk</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1024</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetTorque</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1088</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActTorque</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1152</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>StateDWord2</Name>
+				<Type GUID="{669F3788-48FD-42CF-8A59-2DA946853FB6}" Namespace="MC">NCTOPLC_AXIS_REF_STATE2</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1216</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>StateDWord3</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1248</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TouchProbeState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1280</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TouchProbeCounter</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000007}">DWORD</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1312</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamCouplingState</Name>
+				<Type GUID="{BA9D9D0F-1A4A-4A27-A19F-3032626A8491}" Namespace="MC">NCTOPLC_AXIS_REF_CAMCOUPLINGSTATE</Type>
+				<ArrayInfo>
+					<LBound>0</LBound>
+					<Elements>8</Elements>
+				</ArrayInfo>
+				<BitSize>64</BitSize>
+				<BitOffs>1344</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>CamCouplingTableID</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000039}">UINTARR8</Type>
+				<BitSize>128</BitSize>
+				<BitOffs>1408</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActTorqueDerivative</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1536</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>SetTorqueDerivative</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1600</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActPosWithoutPosCorrection</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1792</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ActAcc</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1856</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>DcTimeStamp</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>1920</BitOffs>
+			</SubItem>
+			<Properties>
+				<Property>
+					<Name>NcStructType</Name>
+					<Value>2</Value>
+				</Property>
+			</Properties>
+			<Relations>
+				<Relation Priority="100">
+					<Type GUID="{429B767E-373B-40AE-BFA5-E1C08B444DF3}">NCAXLESTRUCT_TOPLC</Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{E8DA524A-605F-4879-82E6-B86EF6986572}">NCAXLESTRUCT_TOPLC2</Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{B507963E-69F3-4B64-BB8C-2BD7A560976D}">NCAXLESTRUCT_TOPLC3</Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{F794B740-82D7-4637-848E-4F74A711D038}">NCAXLESTRUCT_TOPLC4</Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{40BD39B0-C3EA-4F74-9F4F-5F1982786F7C}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{40BD39B2-C3EA-4F74-9F4F-5F1982786F7C}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{8CDE0C45-AB9D-42DB-BC94-1CF7521AB268}"></Type>
+				</Relation>
+			</Relations>
+		</DataType>
+		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-002000000010}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..1] OF BYTE</Name>
 			<BitSize>16</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
@@ -2820,7 +3320,7 @@ External Setpoint Generation:
 						</Vars>
 					</Encoder>
 					<Drive Name="Drive" DrvType="9">
-						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00000100">
+						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00030100">
 							<Analog VeloScale="1.02400649589962" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
@@ -3019,7 +3519,7 @@ External Setpoint Generation:
 						</Vars>
 					</Encoder>
 					<Drive Name="Drive" DrvType="9">
-						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00000100">
+						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00030100">
 							<Analog VeloScale="1.02400649589962" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
@@ -3218,7 +3718,7 @@ External Setpoint Generation:
 						</Vars>
 					</Encoder>
 					<Drive Name="Drive" DrvType="9">
-						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00000100">
+						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00030100">
 							<Analog VeloScale="1.02400649589962" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
@@ -3417,7 +3917,7 @@ External Setpoint Generation:
 						</Vars>
 					</Encoder>
 					<Drive Name="Drive" DrvType="9">
-						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00000100">
+						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00030100">
 							<Analog VeloScale="1.02400649589962" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
@@ -3552,6 +4052,674 @@ External Setpoint Generation:
 				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2">
 					<Name>RoboTelRuntime Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
+					<Vars VarGrpType="1">
+						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>GVL_Dome.Azimut_raw</Name>
+							<Comment><![CDATA[ EL5151]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawWindSpeed</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawWindDirection</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawTemperature</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
+							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<SubVar>
+								<Name>AxisState</Name>
+								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
+0  = INACTIVE:		axis has no job
+1  = RUNNING:		axis is executing a motion job
+2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
+3  = PHASE_VELOCONST:	axis is moving at constant velocity
+4  = PHASE_ACCPOS:	axis is accelerating
+5  = PHASE_ACCNEG:	axis is decelerating
+Slaves only:
+11 = PREPHASE:		slave axis is in a motion pre-phase
+12 = SYNCHRONIZING:	slave axis is synchronizing
+13 = SYNCHRONOUS:	slave axis is moving synchronously
+External Setpoint Generation:
+41 = EXTSETGEN_MODE1:	external setpoint generation active
+42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>HomingState</Name>
+								<Comment><![CDATA[Axis Homing Status:
+0: idle
+1: start homing
+2: searching home switch
+3: stopping on home switch
+4: moving off home switch
+5: searching sync pulse
+6: stopping after homing
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>CoupleState</Name>
+								<Comment><![CDATA[Axis Coupling Status:
+0: axis is a single axis (not coupled)
+1: axis is a master axis
+2: axis is master and slave
+3: axis is a slave axis
+]]></Comment>
+							</SubVar>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawHumidity</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawPressure</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawBrightness</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawPrecipation</Name>
+							<Comment><![CDATA[	rawLightDirection			AT%I*:	INT;]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawTemperatureDome</Name>
+							<Comment><![CDATA[	rawDust11					AT%I*:	BOOL;
+	rawDust12					AT%I*:	BOOL;
+ indoors]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawHumidityDome</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_low</Name>
+							<Comment><![CDATA[DIN9 1.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_high</Name>
+							<Comment><![CDATA[DIN10 1.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_pressure_OK</Name>
+							<Comment><![CDATA[DIN11 1.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_overtemperature</Name>
+							<Comment><![CDATA[DIN12 1.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_undertemperature</Name>
+							<Comment><![CDATA[DIN13 1.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oilfilter_dirty</Name>
+							<Comment><![CDATA[DIN14 1.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_temperature</Name>
+							<Comment><![CDATA[BT2]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oilpan_maximum</Name>
+							<Comment><![CDATA[DIN39 4.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_reserve</Name>
+							<Comment><![CDATA[DIN40 4.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD1</Name>
+							<Comment><![CDATA[DIN17 2.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD2</Name>
+							<Comment><![CDATA[DIN18 2.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD4</Name>
+							<Comment><![CDATA[DIN19 2.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD8</Name>
+							<Comment><![CDATA[DIN20 2.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.reset_switch</Name>
+							<Comment><![CDATA[DIN21 2.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_up</Name>
+							<Comment><![CDATA[DIN22 2.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_down</Name>
+							<Comment><![CDATA[DIN23 2.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.key_switch</Name>
+							<Comment><![CDATA[DIN24 2.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.start_switch</Name>
+							<Comment><![CDATA[DIN25 3.0 (enable)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_left</Name>
+							<Comment><![CDATA[DIN26 3.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_right</Name>
+							<Comment><![CDATA[DIN27 3.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.phase_available</Name>
+							<Comment><![CDATA[DIN1 0.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.key_switch</Name>
+							<Comment><![CDATA[DIN2 0.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.key_switch_remote</Name>
+							<Comment><![CDATA[DIN3 0.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.start_switch</Name>
+							<Comment><![CDATA[DIN4 0.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.HourAxisRef.NcToPlc</Name>
+							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<SubVar>
+								<Name>AxisState</Name>
+								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
+0  = INACTIVE:		axis has no job
+1  = RUNNING:		axis is executing a motion job
+2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
+3  = PHASE_VELOCONST:	axis is moving at constant velocity
+4  = PHASE_ACCPOS:	axis is accelerating
+5  = PHASE_ACCNEG:	axis is decelerating
+Slaves only:
+11 = PREPHASE:		slave axis is in a motion pre-phase
+12 = SYNCHRONIZING:	slave axis is synchronizing
+13 = SYNCHRONOUS:	slave axis is moving synchronously
+External Setpoint Generation:
+41 = EXTSETGEN_MODE1:	external setpoint generation active
+42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>HomingState</Name>
+								<Comment><![CDATA[Axis Homing Status:
+0: idle
+1: start homing
+2: searching home switch
+3: stopping on home switch
+4: moving off home switch
+5: searching sync pulse
+6: stopping after homing
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>CoupleState</Name>
+								<Comment><![CDATA[Axis Coupling Status:
+0: axis is a single axis (not coupled)
+1: axis is a master axis
+2: axis is master and slave
+3: axis is a slave axis
+]]></Comment>
+							</SubVar>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.DecAxisRef.NcToPlc</Name>
+							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<SubVar>
+								<Name>AxisState</Name>
+								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
+0  = INACTIVE:		axis has no job
+1  = RUNNING:		axis is executing a motion job
+2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
+3  = PHASE_VELOCONST:	axis is moving at constant velocity
+4  = PHASE_ACCPOS:	axis is accelerating
+5  = PHASE_ACCNEG:	axis is decelerating
+Slaves only:
+11 = PREPHASE:		slave axis is in a motion pre-phase
+12 = SYNCHRONIZING:	slave axis is synchronizing
+13 = SYNCHRONOUS:	slave axis is moving synchronously
+External Setpoint Generation:
+41 = EXTSETGEN_MODE1:	external setpoint generation active
+42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>HomingState</Name>
+								<Comment><![CDATA[Axis Homing Status:
+0: idle
+1: start homing
+2: searching home switch
+3: stopping on home switch
+4: moving off home switch
+5: searching sync pulse
+6: stopping after homing
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>CoupleState</Name>
+								<Comment><![CDATA[Axis Coupling Status:
+0: axis is a single axis (not coupled)
+1: axis is a master axis
+2: axis is master and slave
+3: axis is a slave axis
+]]></Comment>
+							</SubVar>
+						</Var>
+						<Var>
+							<Name>GVL_Main.stop_switch</Name>
+							<Comment><![CDATA[DIN5 0.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.emergency_stop1</Name>
+							<Comment><![CDATA[DIN6 0.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.emergency_stop2</Name>
+							<Comment><![CDATA[DIN7 0.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.reset_switch</Name>
+							<Comment><![CDATA[DIN8 0.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.main_cabinet_temperature</Name>
+							<Comment><![CDATA[BT1]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.brake_clearing</Name>
+							<Comment><![CDATA[DIN15 1.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.azimut_limit_switch</Name>
+							<Comment><![CDATA[DIN28 3.3 (connected to AX5000?!)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.temperature_mirror2</Name>
+							<Comment><![CDATA[ BT9 mirror]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.temperature_mirror1</Name>
+							<Comment><![CDATA[ BT10]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.temperature_mirror3</Name>
+							<Comment><![CDATA[ BT11]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.temperature_tube</Name>
+							<Comment><![CDATA[ BT12]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.temperature_bearing1</Name>
+							<Comment><![CDATA[ BT13]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.temperature_bearing2</Name>
+							<Comment><![CDATA[ BT14]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.focus_limit_near</Name>
+							<Comment><![CDATA[ DIN29 3.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.focus_limit_far</Name>
+							<Comment><![CDATA[ DIN30 3.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.nasmyth_limit_left</Name>
+							<Comment><![CDATA[ DIN31 3.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.nasmyth_limit_right</Name>
+							<Comment><![CDATA[ DIN32 3.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.cover1_open</Name>
+							<Comment><![CDATA[ DIN33 4.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.cover1_closed</Name>
+							<Comment><![CDATA[ DIN34 4.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.cover2_open</Name>
+							<Comment><![CDATA[ DIN35 4.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.cover2_closed</Name>
+							<Comment><![CDATA[ DIN36 4.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.cover3_open</Name>
+							<Comment><![CDATA[ DIN37 4.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.cover4_closed</Name>
+							<Comment><![CDATA[ DIN38 4.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.AzimuthAxisRef.NcToPlc</Name>
+							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<SubVar>
+								<Name>AxisState</Name>
+								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
+0  = INACTIVE:		axis has no job
+1  = RUNNING:		axis is executing a motion job
+2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
+3  = PHASE_VELOCONST:	axis is moving at constant velocity
+4  = PHASE_ACCPOS:	axis is accelerating
+5  = PHASE_ACCNEG:	axis is decelerating
+Slaves only:
+11 = PREPHASE:		slave axis is in a motion pre-phase
+12 = SYNCHRONIZING:	slave axis is synchronizing
+13 = SYNCHRONOUS:	slave axis is moving synchronously
+External Setpoint Generation:
+41 = EXTSETGEN_MODE1:	external setpoint generation active
+42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>HomingState</Name>
+								<Comment><![CDATA[Axis Homing Status:
+0: idle
+1: start homing
+2: searching home switch
+3: stopping on home switch
+4: moving off home switch
+5: searching sync pulse
+6: stopping after homing
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>CoupleState</Name>
+								<Comment><![CDATA[Axis Coupling Status:
+0: axis is a single axis (not coupled)
+1: axis is a master axis
+2: axis is master and slave
+3: axis is a slave axis
+]]></Comment>
+							</SubVar>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.ElevationAxisRef.NcToPlc</Name>
+							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<SubVar>
+								<Name>AxisState</Name>
+								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
+0  = INACTIVE:		axis has no job
+1  = RUNNING:		axis is executing a motion job
+2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
+3  = PHASE_VELOCONST:	axis is moving at constant velocity
+4  = PHASE_ACCPOS:	axis is accelerating
+5  = PHASE_ACCNEG:	axis is decelerating
+Slaves only:
+11 = PREPHASE:		slave axis is in a motion pre-phase
+12 = SYNCHRONIZING:	slave axis is synchronizing
+13 = SYNCHRONOUS:	slave axis is moving synchronously
+External Setpoint Generation:
+41 = EXTSETGEN_MODE1:	external setpoint generation active
+42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>HomingState</Name>
+								<Comment><![CDATA[Axis Homing Status:
+0: idle
+1: start homing
+2: searching home switch
+3: stopping on home switch
+4: moving off home switch
+5: searching sync pulse
+6: stopping after homing
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>CoupleState</Name>
+								<Comment><![CDATA[Axis Coupling Status:
+0: axis is a single axis (not coupled)
+1: axis is a master axis
+2: axis is master and slave
+3: axis is a slave axis
+]]></Comment>
+							</SubVar>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.DerotatorAxisRef.NcToPlc</Name>
+							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<SubVar>
+								<Name>AxisState</Name>
+								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
+0  = INACTIVE:		axis has no job
+1  = RUNNING:		axis is executing a motion job
+2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
+3  = PHASE_VELOCONST:	axis is moving at constant velocity
+4  = PHASE_ACCPOS:	axis is accelerating
+5  = PHASE_ACCNEG:	axis is decelerating
+Slaves only:
+11 = PREPHASE:		slave axis is in a motion pre-phase
+12 = SYNCHRONIZING:	slave axis is synchronizing
+13 = SYNCHRONOUS:	slave axis is moving synchronously
+External Setpoint Generation:
+41 = EXTSETGEN_MODE1:	external setpoint generation active
+42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>HomingState</Name>
+								<Comment><![CDATA[Axis Homing Status:
+0: idle
+1: start homing
+2: searching home switch
+3: stopping on home switch
+4: moving off home switch
+5: searching sync pulse
+6: stopping after homing
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>CoupleState</Name>
+								<Comment><![CDATA[Axis Coupling Status:
+0: axis is a single axis (not coupled)
+1: axis is a master axis
+2: axis is master and slave
+3: axis is a slave axis
+]]></Comment>
+							</SubVar>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>GVL_Dome.Clockwise</Name>
+							<Comment><![CDATA[Dauer					AT%Q*:	BOOL;]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.CounterClockwise</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.DomeAxisRef.PlcToNc</Name>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_pump_enable</Name>
+							<Comment><![CDATA[ Outputs
+DOUT4 0.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_suction_enable</Name>
+							<Comment><![CDATA[DOUT5 0.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.brake_azimuth_eve</Name>
+							<Comment><![CDATA[DOUT6 0.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.lamp_up</Name>
+							<Comment><![CDATA[ Outputs
+DOUT9 1.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.lamp_down</Name>
+							<Comment><![CDATA[DOUT10 1.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.lamp_right</Name>
+							<Comment><![CDATA[DOUT11 1.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.lamp_left</Name>
+							<Comment><![CDATA[DOUT12 1.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.lamp_error</Name>
+							<Comment><![CDATA[DOUT13 1.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.oil_pump_enable</Name>
+							<Comment><![CDATA[DOUT4 0.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.oil_suction_enable</Name>
+							<Comment><![CDATA[DOUT5 0.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.brake_azimuth_eve</Name>
+							<Comment><![CDATA[DOUT6 0.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.HourAxisRef.PlcToNc</Name>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.DecAxisRef.PlcToNc</Name>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.lamp_power</Name>
+							<Comment><![CDATA[ Outputs
+DOUT1 0.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.lamp_ready</Name>
+							<Comment><![CDATA[DOUT2 0.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.lamp_error</Name>
+							<Comment><![CDATA[DOUT3 0.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.brake_azimuth_eve</Name>
+							<Comment><![CDATA[DOUT6 0.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.focus_lock</Name>
+							<Comment><![CDATA[DOUT14 1.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.nasmyth_lock</Name>
+							<Comment><![CDATA[DOUT15 4.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.AzimuthAxisRef.PlcToNc</Name>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.ElevationAxisRef.PlcToNc</Name>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.DerotatorAxisRef.PlcToNc</Name>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+					</Vars>
+					<TaskPouOids>
+						<TaskPouOid Prio="20" OTCID="#x08502001"/>
+					</TaskPouOids>
 				</Instance>
 			</Project>
 		</Plc>
@@ -3585,6 +4753,9 @@ External Setpoint Generation:
 				</AddressInfo>
 				<Image Id="1" AddrType="9" ImageType="3">
 					<Name>Prozessabbild</Name>
+				</Image>
+				<Image Id="3" AddrType="10" ImageType="3">
+					<Name>Prozessabbild-2</Name>
 				</Image>
 				<Box Id="1" BoxType="9099">
 					<Name>Klemme 1 (EK1200)</Name>
@@ -3847,6 +5018,7 @@ External Setpoint Generation:
 						<EtherCAT SlaveType="1" PdiType="#x0d00" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x05f12c52" RevisionNo="#x00150000" CheckRevisionNoType="3" PortPhys="4867" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1521 1-Port EtherCAT-Abzweig (FX-MultiMode)" Desc="EK1521" PortABoxInfo="#x01000006"/>
 						<Box Id="8" BoxType="9099">
 							<Name>Klemme 8 (EK1501)</Name>
+							<Comment><![CDATA[Unterverteiler Teleskop]]></Comment>
 							<ImageId>1005</ImageId>
 							<EtherCAT SlaveType="1" PdiType="#x0d04" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x05dd2c52" RevisionNo="#x00130000" PortPhys="305" IdentificationAdo="4096" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1501 EtherCAT-Koppler (2A E-Bus, FX-MultiMode, ID-Switch)" Desc="EK1501" PortABoxInfo="#x03000007">
 								<SyncMan>001002000000010004000000000000000000001000000000</SyncMan>
@@ -4052,6 +5224,18 @@ External Setpoint Generation:
 							<Box Id="13" BoxType="9099" BoxFlags="#x00000020">
 								<Name>Klemme 13 (EL3202-0010)</Name>
 								<ImageId>1003</ImageId>
+								<Xml>
+									<BeckhoffEcatSlavePlugIn>
+										<Channel>
+											<ChannelNo>0</ChannelNo>
+											<Data>01000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000010000000000000001000000000000000000000000000000000000000000000000000000000000000000000000000000030000000000000000000000000000000000000000000000000000000000000000000000000000000300000000000000010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</Data>
+										</Channel>
+										<Channel>
+											<ChannelNo>1</ChannelNo>
+											<Data>01000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</Data>
+										</Channel>
+									</BeckhoffEcatSlavePlugIn>
+								</Xml>
 								<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x0c823052" RevisionNo="#x0016000a" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL3202-0010 2K. Ana. Eingang PT100 (RTD), hochgenau" Desc="EL3202-0010" PortABoxInfo="#x0100000c">
 									<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
 									<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
@@ -4060,61 +5244,63 @@ External Setpoint Generation:
 									<Fmmu>0000000000000000801100010100000002000000000000000000000000000000</Fmmu>
 									<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
 									<BootStrapData>0010f400f410f400</BootStrapData>
+									<MBoxUserCmdData>0200030022000000000000000000000000000000000000000000000000000000300080011a000000240400000000010000000000000000000000ffff00000200000000</MBoxUserCmdData>
+									<MBoxUserCmdData>0200030022000000000000000000000000000000000000000000000000000000301080011a000000040400000000010000000000000000000000ffff00000200000000</MBoxUserCmdData>
 									<Pdo Name="RTD Inputs Channel 1" Index="#x1a00" Flags="#x0011" SyncMan="3">
-										<Entry Name="Status__Underrange" Index="#x6000" Sub="#x01">
+										<Entry Name="Status__Underrange" BitLen="1" Index="#x6000" Sub="#x01">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__Overrange" Index="#x6000" Sub="#x02">
+										<Entry Name="Status__Overrange" BitLen="1" Index="#x6000" Sub="#x02">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__Limit 1" Index="#x6000" Sub="#x03">
+										<Entry Name="Status__Limit 1" BitLen="2" Index="#x6000" Sub="#x03">
 											<Type>BIT2</Type>
 										</Entry>
-										<Entry Name="Status__Limit 2" Index="#x6000" Sub="#x05">
+										<Entry Name="Status__Limit 2" BitLen="2" Index="#x6000" Sub="#x05">
 											<Type>BIT2</Type>
 										</Entry>
-										<Entry Name="Status__Error" Index="#x6000" Sub="#x07">
+										<Entry Name="Status__Error" BitLen="1" Index="#x6000" Sub="#x07">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry>
+										<Entry BitLen="7">
 											<Type GUID="{18071995-0000-0000-0000-002000000007}">ARRAY [0..6] OF BIT</Type>
 										</Entry>
-										<Entry Name="Status__TxPDO State" Index="#x1800" Sub="#x07">
+										<Entry Name="Status__TxPDO State" BitLen="1" Index="#x1800" Sub="#x07">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__TxPDO Toggle" Index="#x1800" Sub="#x09">
+										<Entry Name="Status__TxPDO Toggle" BitLen="1" Index="#x1800" Sub="#x09">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Value" Index="#x6000" Sub="#x11">
+										<Entry Name="Value" BitLen="16" Index="#x6000" Sub="#x11">
 											<Type>INT</Type>
 										</Entry>
 									</Pdo>
 									<Pdo Name="RTD Inputs Channel 2" Index="#x1a01" Flags="#x0011" SyncMan="3">
-										<Entry Name="Status__Underrange" Index="#x6010" Sub="#x01">
+										<Entry Name="Status__Underrange" BitLen="1" Index="#x6010" Sub="#x01">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__Overrange" Index="#x6010" Sub="#x02">
+										<Entry Name="Status__Overrange" BitLen="1" Index="#x6010" Sub="#x02">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__Limit 1" Index="#x6010" Sub="#x03">
+										<Entry Name="Status__Limit 1" BitLen="2" Index="#x6010" Sub="#x03">
 											<Type>BIT2</Type>
 										</Entry>
-										<Entry Name="Status__Limit 2" Index="#x6010" Sub="#x05">
+										<Entry Name="Status__Limit 2" BitLen="2" Index="#x6010" Sub="#x05">
 											<Type>BIT2</Type>
 										</Entry>
-										<Entry Name="Status__Error" Index="#x6010" Sub="#x07">
+										<Entry Name="Status__Error" BitLen="1" Index="#x6010" Sub="#x07">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry>
+										<Entry BitLen="7">
 											<Type GUID="{18071995-0000-0000-0000-002000000007}">ARRAY [0..6] OF BIT</Type>
 										</Entry>
-										<Entry Name="Status__TxPDO State" Index="#x1801" Sub="#x07">
+										<Entry Name="Status__TxPDO State" BitLen="1" Index="#x1801" Sub="#x07">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__TxPDO Toggle" Index="#x1801" Sub="#x09">
+										<Entry Name="Status__TxPDO Toggle" BitLen="1" Index="#x1801" Sub="#x09">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Value" Index="#x6010" Sub="#x11">
+										<Entry Name="Value" BitLen="16" Index="#x6010" Sub="#x11">
 											<Type>INT</Type>
 										</Entry>
 									</Pdo>
@@ -6776,10 +7962,10 @@ External Setpoint Generation:
 										</Entry>
 									</Pdo>
 									<Pdo Name="DCM Control Channel 2" Index="#x1607" InOut="1" Flags="#x0010" SyncMan="2">
-										<Entry Name="Control__Enable" Index="#x7030" Sub="#x01">
+										<Entry Name="Control__Enable" Index="#x7030" Sub="#x01" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Control__Reset" Index="#x7030" Sub="#x02">
+										<Entry Name="Control__Reset" Index="#x7030" Sub="#x02" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
 										<Entry Name="Control__Reduce torque" Index="#x7030" Sub="#x03">
@@ -7177,7 +8363,8 @@ External Setpoint Generation:
 	</Project>
 	<Mappings>
 		<MappingInfo Identifier="{00000000-0010-0304-6000-040310000403}" Id="#x02030010"/>
-		<MappingInfo Identifier="{00000000-0020-0304-6000-040321000403}" Id="#x02030020"/>
+		<MappingInfo Identifier="{00000000-0020-0304-6000-040322000403}" Id="#x02030030"/>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500831000403}" Id="#x02030020"/>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^Achse 1">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 18 (EL7342)">
 				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Error" Size="1" OffsA="3"/>
@@ -7480,6 +8667,45 @@ External Setpoint Generation:
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
+			</OwnerB>
+		</OwnerA>
+		<OwnerA Name="TIPC^RoboTelRuntime^RoboTelRuntime Instance">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL1008)">
+				<Link VarA="PlcTask Inputs^GVL_Main.emergency_stop1" VarB="Channel 6^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.emergency_stop2" VarB="Channel 7^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.key_switch" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.key_switch_remote" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.phase_available" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.reset_switch" VarB="Channel 8^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.start_switch" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.stop_switch" VarB="Channel 5^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 5 (EL2008)">
+				<Link VarA="PlcTask Outputs^GVL_Main.lamp_error" VarB="Channel 3^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_Main.lamp_power" VarB="Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_Main.lamp_ready" VarB="Channel 2^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 10 (EL1008)">
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.direction_left" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.direction_right" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.start_switch" VarB="Channel 1^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 12 (EL2008)">
+				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_down" VarB="Channel 2^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_error" VarB="Channel 5^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_left" VarB="Channel 4^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_right" VarB="Channel 3^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_up" VarB="Channel 1^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 9 (EL1008)">
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD1" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD2" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD4" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD8" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.direction_down" VarB="Channel 7^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.direction_up" VarB="Channel 6^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.key_switch" VarB="Channel 8^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.reset_switch" VarB="Channel 5^Input"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

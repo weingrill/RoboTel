@@ -20,7 +20,7 @@ VAR_GLOBAL
 	direction_down	AT%I*: BOOL;
 	//DIN24 2.7
 	key_switch		AT%I*: BOOL;
-	//DIN25 3.0
+	//DIN25 3.0 (enable)
 	start_switch	AT%I*: BOOL;
 	//DIN26 3.1
 	direction_left	AT%I*: BOOL;
