@@ -1,0 +1,859 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="TelescopeControl" Id="{6a4f2e3a-c9ee-4352-b4f6-4f9d94b2c472}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM TelescopeControl
+VAR
+	// manual or automatic operation of the telescope
+	telescope_mode : E_TelescopeMode;	
+	// actual command from the TCS
+	TCS_command: 	E_TCSCommand;
+	// current Julian Date calculated from system time
+	jd,
+	// altitude of the telescope pointing 
+	altitude,
+	// azimut of the telescope pointing 
+	azimut,
+	// local siderial time calculated from Julian date
+	lst,
+	// values calulated when ra and dec are set by TCS
+	altitude_calc, azimuth_calc: LREAL;
+	
+	(* Declination section *)
+	fbDeclinationAxis:		FB_Axis;
+	fbDeclinationAxisJog:	FB_AxisJog;
+	// absolute encoder value of the declination axis
+	Declination_absolute: LREAL;
+	// encoder value of the declination axis derived from absolute encoder in [-90 ... 0 ... +90]
+	Declination_real: LREAL;
+	// encoder value from the motor
+	Declination_current: LREAL;
+	// difference between motor encoder and absolute encoder
+	Declination_lag: LREAL;
+	// true, if declination lag exceeds error boundaries
+	Declination_lagerror: BOOL;
+	// current set coordinates
+	Declination_set: LREAL := -720.0;
+	// current velocity
+	Declination_velocity: LREAL := 0.0;
+	// True if Move has been executed
+	DeclinationDone: BOOL;
+	//Declination_execute: RS;
+	// True if motor controller reports an arror
+	DeclinationAxisError, 
+	// true if axis has been calibrated
+	DeclinationCalibrated: BOOL;
+	// true if axis is moving
+	DeclinationBusy: BOOL;
+	// True if calibration has been aborted
+	DeclinationAborted: BOOL;
+	// true if general error in the axis control occured
+	DeclinationError: BOOL;
+	// error id from axis controller
+	DeclinationErrorID: UDINT;
+	
+	(* Richt Ascension section *)
+	Rightascension_set,
+	Rightascension_current: LREAL;
+	
+	(* Hour Angle part *)
+	fbHourAxis : FB_Axis;
+	fbHourAxisJog 	: FB_AxisJog;
+	Hourangle_absolute,
+	Hourangle_real,
+	Hourangle_current,
+	Hourangle_calc,
+	Hourangle_lag: LREAL;
+	Hourangle_lagerror: BOOL;
+	Hourangle_set: LREAL := -720.0;
+	Hourangle_velocity : LREAL := 0.0;
+	Hourangle_execute: RS;
+	HourangleAxisError, 
+	HourangleCalibrated: BOOL;
+	HourangleDone: BOOL;
+	HourangleBusy: BOOL;
+	HourangleActive: BOOL;
+	HourangleAborted: BOOL;
+	HourangleError: BOOL;
+	HourangleErrorID: UDINT;
+	
+	fbTime: FB_LocalSystemTime := ( bEnable := TRUE, dwCycle := 1);
+	SUNPOS:	FB_SUNPOS;
+	eq2hor:	FB_EQ2HOR;
+	eq2hor2:	FB_EQ2HOR2;
+	hadec2altaz:	FB_HADEC2ALTAZ;
+	
+	AxDecMcHome:	MC_Home; // FIXME MC_Home does not serve the Done and Busy signals!
+	AxHourMcHome:	MC_Home;
+	
+	HomeTrigger: 	R_TRIG;
+	
+	poweron_delay: 	TON;
+	homing_pulse:	TP;
+	//tracking_delay: TON;
+	
+(*	calibration_offset,
+	calibration_factor : LREAL;
+*)	
+	east_of_pier,
+	west_of_pier:	BOOL;
+	reset,
+	softreset:	BOOL;
+	calibrate,
+	softcalibrate:	BOOL;
+(*
+TCS interface section
+see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
+*)
+	
+	// boolean, true: Power on, false: power off
+	power: BOOL;
+	// boolean, true: go to home position, unset track/goto if active
+	gohome: BOOL;
+	// boolean, true: go into park position, ready to stow telescope, unset track/goto
+	park: BOOL;
+	// apparent right ascension, degrees, double
+	ra:	LREAL := -1.0;	
+	// apparent declination, degrees, double
+	de: LREAL := 0.0;
+	// boolean, TRUE: MOVE telescope TO last ra/de AND start tracking. Set 'goto' TO FALSE, IF TRUE. FALSE: Stop tracking as soon as possible
+	track: BOOL;
+	// apparent hour anlge, degrees, double, south=zero, west>0)
+	tau: LREAL := 0.0;
+	// boolean, TRUE: MOVE telescope TO tau/de AND stop there. Set track TO FALSE, IF TRUE. FALSE: no effect.)
+	goto: BOOL;	
+	// boolean, TRUE: Stop motion OF telescope immediately, set goto AND track TO FALSE. FALSE: Allow motion OF telescope again via track/goto).
+	stop: BOOL;	
+	//boolean, TRUE: Swap telescope TO observe eastern hemisphere. Set TO FALSE once there. IF already there, set TO FALSE immediately.FALSE: no effect)
+	east: BOOL;
+	//(boolean, TRUE: Swap telescope TO observe western hemisphere. Set TO FALSE once there. IF already there, set TO FALSE immediately.FALSE: no effect)
+	west: BOOL;	
+	// internal command: telescope is moved to pumping position
+	pumping: BOOL;
+	//	offset TO current tracking point on axis tau, degrees, double
+	tauoffset: LREAL;
+	// 	offset TO current tracking point on axis dec, degrees, double 
+	deoffset: LREAL;
+
+	
+	
+	//TelescopeControlEvent,
+	CalibrationEvent,
+	DeclinationCalEvent,
+	DeclinationErrorEvent,
+	DeclinationLagEvent,
+	DeclinationAxisEvent,
+	HourangleCalEvent,
+	HourangleErrorEvent,
+	HourangleLagEvent,
+	HourangleAxisEvent,
+	TCSgohomeEvent,
+	TCSparkEvent,
+	TCSgotoEvent,
+	TCStrackEvent,
+	TCSstopEvent,
+	AltitudeEvent: FB_Eventlog;
+END_VAR
+VAR_OUTPUT
+	//		TRUE, IF telescope can be operated
+	ready:	BOOL; 
+	//integer, highest error severity currently in effect (0=no error, 1=info,2=warning,4=error,8=panic)
+	error:	UDINT;	
+	//number OF errors encountered
+	errnr:	UINT;	
+	//INT[] error numbers as an ARRAY, valid are errnr entries.
+	errlist:	ARRAY [0..10] OF UINT;
+	//TRUE, IF telescope is in fast-MOVE phase (includes pole-swap)
+	sliding: BOOL;	
+	//TRUE, IF telescope is on tracking position AND currently tracking.
+	tracking: BOOL;	
+	//TRUE, IF telescope is AT rest.
+	stopped: BOOL;	
+	// Current tau/dec. in degrees.
+	decurrent, taucurrent: LREAL; 
+	// (all degrees, azimuth 0=S, W>0)
+	racurrent,azcurrent,altcurrent: LREAL; 
+	//	(time in sec. to reach the goto/track position)
+	slewtime: LREAL; 
+	// 	(TIME in sec. available UNTIL pole-swap necessary).
+	tracktime: LREAL;	
+	// True: telescope is calibrated
+	homed: BOOL;
+END_VAR
+VAR CONSTANT
+(* Potsdam:
+	longitude: LREAL := 13.104589;
+	latitude: LREAL := 52.404977;
+*)
+(* Chile site : *)
+	// telescope site longitude, source: Google 
+	longitude: LREAL := -70.201280;
+	// telescope site latitude, source: Google
+	latitude: LREAL := -24.598464;
+	// telescope site height above sea level: source Wikipedia Cerro Armazones Observatory
+	height: LREAL := 2810.0;
+	siderial_velocity: LREAL := 360.0 / 86164.099;
+	position_velocity: LREAL := 1.0;
+	declination_park: LREAL := 294.0;
+	hourangle_park: LREAL := 359.5;
+
+	declination_home: LREAL := 270.0;
+	hourangle_home: LREAL := 270.0;
+	
+	lag_error : LREAL := 0.5;
+	position_error : LREAL := 10.0/3600.0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// get the system time
+fbTime();
+IF fbTime.bValid THEN
+	jd := DateTime2JD(fbTime.systemTime);
+END_IF
+lst := CT2LST(longitude, jd);
+// set reset state either by hardware (key pressed) or by software (set by e.g. tcs)
+reset := softreset OR GVL_Telescope.Key2;
+IF softreset THEN
+	// unset the softreset, after reset has been set
+	softreset := FALSE;
+END_IF
+
+// set calibration state either by hardware (key pressed) or by software (set by e.g. tcs)
+calibrate := softcalibrate OR GVL_Telescope.Key1;
+IF DeclinationCalibrated AND HourangleCalibrated THEN
+	// unset the softcalibrate, after calibration has been performed
+	softcalibrate := FALSE;
+END_IF
+
+// determine the operation of the telescope based on the switch set
+IF GVL_Telescope.Option1 THEN
+	telescope_mode := E_TelescopeMode.manual;
+ELSIF GVL_Telescope.Option2 THEN
+	telescope_mode := E_TelescopeMode.automatic;
+ELSE
+	telescope_mode := E_TelescopeMode.off;
+END_IF
+
+//F_Y(GVL_Telescope.declination_encoder, 98887, 229833, 90, -90);
+// Declination +90° ... 98887
+Declination_absolute := 360.0 - F_AbsoluteDecoder(GVL_Telescope.declination_encoder, 45.41473388671875, 262144);
+hourangle_absolute := F_AbsoluteDecoder(GVL_Telescope.hourangle_encoder, 95.12787, 262144);
+// GVL_Telescope.declination_encoder<98887 OR GVL_Telescope.declination_encoder > 229833; --> west of pier
+west_of_pier := (hourangle_absolute > 270.0);
+east_of_pier := NOT west_of_pier;
+IF west_of_pier THEN
+	Declination_real := 180.0 - Declination_absolute; // OK
+ELSE // west_of_pier
+	IF Declination_absolute>180.0 THEN
+		Declination_real := Declination_absolute - 360.0;
+	ELSE
+		Declination_real := Declination_absolute;
+	END_IF
+END_IF
+IF Declination_absolute > 270.0 THEN
+	hourangle_real := hourangle_absolute - 180.0;
+ELSE
+	hourangle_real := hourangle_absolute; // OK
+END_IF
+rightascension_current := MODABS(lst*15.0 - hourangle_real, 360.0);
+
+hadec2altaz(	ha	:= hourangle_real,
+				dec	:= declination_real,
+				lat	:= latitude,
+				alt	=> altitude,
+				az	=> azimut);
+
+eq2hor2(alpha := ra,
+	delta := de,
+	lon := longitude,
+	lat := latitude,
+	JD := jd,
+	alt => altitude_calc,
+	az => azimuth_calc,
+	ha => hourangle_calc);
+	
+poweron_delay(IN := TRUE, PT := T#1S, Q =>);
+homing_pulse(IN := poweron_delay.Q, PT := T#1S, Q =>);
+HomeTrigger(CLK := (calibrate OR homing_pulse.Q OR power OR gohome OR park) AND (GVL_Telescope.Option1 OR GVL_Telescope.Option2), Q =>);
+(*
+// this is the calibration section
+IF HomeTrigger.Q THEN
+//	calibration_offset := hourangle_real;
+	calibration_offset := declination_real;
+END_IF
+
+IF ABS(hourangle_current - calibration_offset) > 1.0 THEN
+	calibration_factor := (hourangle_real - calibration_offset) / (hourangle_current - calibration_offset);
+END_IF
+
+IF ABS(declination_current - calibration_offset) > 1.0 THEN
+	calibration_factor := (declination_real - calibration_offset) / (declination_current - calibration_offset);
+END_IF
+*)
+// old nc scaling 0.302675079777926
+// new feed constant = old feed constant * calibration factor 0.305559987589397406645987351813
+Declination_lag :=  declination_current - declination_absolute;
+Hourangle_lag := hourangle_current - hourangle_absolute;
+Declination_lagerror := ABS(Declination_lag) > lag_error;
+Hourangle_lagerror := ABS(Hourangle_lag) > lag_error;
+
+AxDecMcHome(Execute := HomeTrigger.Q,
+	Position	:= declination_absolute,
+	HomingMode	:= MC_Direct,
+	Done		=> DeclinationCalibrated,
+	Busy 		=> DeclinationBusy,
+	CommandAborted => DeclinationAborted,
+	Error 		=> DeclinationError,
+	ErrorID 	=> DeclinationErrorID,
+	Axis 		:= GVL_Telescope.DecAxisRef);
+
+AxHourMcHome(Execute := HomeTrigger.Q,
+	Position 	:= hourangle_absolute,
+	HomingMode	:= MC_Direct,
+	Done 		=> HourangleCalibrated,
+	Busy 		=> HourangleBusy,
+	CommandAborted => HourangleAborted,
+	Error 		=> HourangleError,
+	ErrorID 	=> HourangleErrorID,
+	Axis 		:= GVL_Telescope.HourAxisRef);
+
+						
+(* manual section *********************************)
+IF  telescope_mode = E_TelescopeMode.manual THEN 
+	fbDeclinationAxisJog(
+		bPowerEnable	:= GVL_Telescope.Option1,
+		bEnable_Positive := declination_absolute <= F_DeclinationLimit(latitude, west_of_pier, TRUE),
+		bEnable_Negative := declination_absolute >= F_DeclinationLimit(latitude, west_of_pier, FALSE), 
+		fPowerOverride	:= 100, 
+		bReset			:= reset, 
+		bStop			:= Declination_lagerror,
+		bForward 		:= SEL(west_of_pier, GVL_Telescope.declination_plus, GVL_Telescope.declination_minus),
+		bBackward 		:= SEL(west_of_pier, GVL_Telescope.declination_minus, GVL_Telescope.declination_plus),
+		bBusy 			=> DeclinationBusy,
+		bErr 			=> DeclinationError,
+		bAxError 		=> DeclinationAxisError, 
+		nAxErrId 		=> DeclinationErrorID, 
+		fActVelo 		=> , 
+		fActPos			=> Declination_current, 
+		stAxis			:= GVL_Telescope.DecAxisRef );
+		
+	fbHourAxisJog(
+		bPowerEnable	:= GVL_Telescope.Option1,
+		bEnable_Positive := hourangle_absolute<=360.0, 
+		bEnable_Negative := hourangle_absolute>=180.0 OR (hourangle_absolute<5.0), // allow for overshoot
+		fPowerOverride	:= 100, 
+		bReset			:= reset, 
+		bStop			:= Hourangle_lagerror,
+		bForward 		:= GVL_Telescope.hour_plus,
+		bBackward 		:= GVL_Telescope.hour_minus,
+		bBusy 			=> HourangleBusy,
+		bErr 			=> HourangleError,
+		bAxError		=> HourangleAxisError, 
+		nAxErrId 		=> HourangleErrorID, 
+		fActVelo 		=> , 
+		fActPos 		=> Hourangle_current, 
+		stAxis			:= GVL_Telescope.HourAxisRef );
+END_IF
+
+// set TCS_command according to state variables ordered by precedence
+IF track THEN
+	TCS_command := E_TCSCommand.track;
+ELSIF goto THEN
+	TCS_command := E_TCSCommand.goto;
+ELSIF gohome THEN
+	TCS_command := E_TCSCommand.gohome;
+ELSIF park THEN
+	TCS_command := E_TCSCommand.park;
+ELSIF east THEN
+	TCS_command := E_TCSCommand.east;
+ELSIF west THEN
+	TCS_command := E_TCSCommand.west;
+ELSIF pumping THEN
+	TCS_command := E_TCSCommand.pumping;
+ELSIF stop THEN
+	TCS_command := E_TCSCommand.stop;
+ELSE
+	TCS_command := E_TCSCommand.no_command;
+END_IF
+
+(* automatic section *********************************)
+IF telescope_mode = E_TelescopeMode.automatic THEN
+	IF declination_lagerror OR Hourangle_lagerror THEN
+		power := FALSE;
+		TCS_command := E_TCSCommand.no_command;
+	END_IF
+	IF TCS_command = E_TCSCommand.gohome THEN // goto home position
+		track := FALSE;
+		goto := FALSE;
+		Declination_set := declination_home;
+		Hourangle_set := hourangle_home;
+		Hourangle_velocity := position_velocity;
+		Declination_velocity := position_velocity;
+	END_IF
+	IF TCS_command = E_TCSCommand.park THEN // goto park position
+		track := FALSE;
+		goto := FALSE;
+		
+		Declination_set := declination_park;
+		Declination_velocity := position_velocity;
+		Hourangle_set := hourangle_park;
+		Hourangle_velocity := position_velocity;
+	END_IF
+	IF TCS_command = E_TCSCommand.track THEN // move telescope to last ra/de and start tracking.
+		goto := FALSE;
+		(*
+		IF ABS(Declination_current - de) > position_error THEN
+			Declination_velocity := position_velocity;
+			Declination_set := de;
+		ELSE
+			Declination_velocity := 0.0;
+		END_IF
+		IF ABS(rightascension_current - ra) > position_error THEN
+			Hourangle_velocity := position_velocity;
+			Hourangle_set := MODABS(lst*15.0 - hourangle_real, 360.0);
+		ELSE
+			Hourangle_velocity := siderial_velocity;
+			Hourangle_set := 270.0;
+		END_IF
+		*)
+		Declination_velocity := 0.0;
+		Hourangle_velocity := siderial_velocity;
+		Hourangle_set := SEL(west_of_pier, 270.0, 360.0);
+	END_IF
+	IF TCS_command = E_TCSCommand.goto THEN // move telescope to tau/de and stop there. Set track to false, if true. False: no effect.
+		track := FALSE;
+		// TODO: check altitude
+		IF de >= -90 AND de <= 90 THEN
+			Declination_set := SEL(west_of_pier, 180 - de, 360 + de);
+		END_IF
+		IF tau >= 180.0 AND tau < 360.0 THEN
+			Hourangle_set := tau;
+		ELSIF tau >= 0.0 AND tau <180 THEN
+			//TODO
+			goto := FALSE;
+		ELSIF ra >= 0.0 AND ra < 360.0 THEN
+			Hourangle_set := Hourangle_calc;
+		END_IF
+		Declination_velocity := position_velocity;
+		Hourangle_velocity := position_velocity;
+	END_IF
+	IF TCS_command = E_TCSCommand.stop THEN
+		goto := FALSE;
+		track := FALSE;
+		// (boolean, true: Stop motion of telescope immediately, set goto and track to false. false: Allow motion of telescope again via track/goto).
+	END_IF
+	// Setting allowed only if telescope is not moving.
+	IF TCS_command = E_TCSCommand.east THEN
+		IF west_of_pier THEN
+			// move telescope to west of pier
+			Declination_velocity := position_velocity;
+			Hourangle_velocity := position_velocity;
+			Declination_set := 270;
+			Hourangle_set := 180.0;
+		ELSE
+			east := FALSE;
+			
+		END_IF
+	END_IF
+	// Setting allowed only if telescope is not moving.
+	IF TCS_command = E_TCSCommand.west THEN
+		IF east_of_pier THEN
+			// move telescope to east of pier
+			Declination_velocity := position_velocity;
+			Hourangle_velocity := position_velocity;
+			Declination_set := 270;
+			Hourangle_set := 360.0;
+		ELSE
+			west := FALSE;
+		END_IF
+	END_IF
+	// internal command, might not be issued by the TCS
+	IF TCS_command = E_TCSCommand.pumping THEN
+		Declination_velocity := position_velocity;
+		Hourangle_velocity := position_velocity;
+		Declination_set := 205.0;
+		Hourangle_set := 355.0;
+	END_IF
+	
+	fbDeclinationAxis(bPowerEnable := power,
+		bEnable_Positive	:= TRUE, //declination_real <= F_DeclinationLimit(latitude, west_of_pier, TRUE),
+		bEnable_Negative	:= TRUE, //declination_real >= F_DeclinationLimit(latitude, west_of_pier, FALSE), 
+		bReset 			:= reset,
+		bMoveAbsExec	:= gohome OR park OR goto OR east OR west OR pumping, // TODO gohome or park or goto
+		fMoveAbsPos 	:= Declination_set,
+		fMoveAbsVelo	:= Declination_velocity,
+		bStop			:= Declination_lagerror,
+		bHalt			:= stop,
+		bMoveAbsDone 	=> DeclinationDone,
+		bMoveAbsBusy 	=> DeclinationBusy,
+		bMoveAbsErr 	=> DeclinationError,
+		bAxError 		=> DeclinationAxisError,
+		nAxErrId 		=> DeclinationErrorID,
+		fActVelo =>,
+		fActPos 		=> Declination_current,
+		stAxis			:= GVL_Telescope.DecAxisRef);
+	// TODO: enable_positive and negative
+	fbHourAxis(bPowerEnable	:= power, 
+		bReset			:= reset, 
+		bMoveAbsExec	:= gohome OR park OR track OR goto OR east OR west OR pumping,
+		fMoveAbsPos		:= Hourangle_set,
+		fMoveAbsVelo	:= Hourangle_velocity,
+		bStop			:= Hourangle_lagerror,
+		bHalt			:= stop,
+		bMoveAbsDone	=> HourangleDone,
+		bMoveAbsBusy	=> HourangleBusy,
+		bMoveAbsErr		=> HourangleError,
+		bAxError		=> HourangleAxisError, 
+		nAxErrId 		=> HourangleErrorID, 
+		fActVelo 		=> , 
+		fActPos 		=> hourangle_current, 
+		stAxis			:= GVL_Telescope.HourAxisRef );
+	GVL_Telescope.DecAxisRef.ReadStatus();
+	GVL_Telescope.HourAxisRef.ReadStatus();
+	ready := DeclinationDone AND HourangleDone;
+	error := MAX(DeclinationErrorID, HourangleErrorID);
+	sliding := (DeclinationBusy OR HourangleBusy) AND (gohome OR park OR goto OR east OR west);
+	stopped := GVL_Telescope.DecAxisRef.Status.NotMoving AND GVL_Telescope.HourAxisRef.Status.NotMoving;
+	decurrent := Declination_current;
+	taucurrent := Hourangle_current;
+	// Calculation of ra: racurrent = lst[deg] - hourangle_real;
+	racurrent := rightascension_current;
+	azcurrent := azimut;
+	altcurrent := altitude;
+	slewtime := MAX(ABS(Hourangle_current-Hourangle_set)/position_velocity, ABS(Declination_current-Declination_set)/position_velocity);
+	homed := GVL_Telescope.DecAxisRef.Status.Homed AND GVL_Telescope.HourAxisRef.Status.Homed;
+	IF gohome AND ready THEN
+		gohome := FALSE;
+	END_IF
+	IF park AND ready THEN
+		park := FALSE;
+	END_IF
+END_IF
+DeclinationLagEvent(	Trigger := poweron_delay.Q AND Declination_lagerror, 
+						Level := ADSLOG_MSGTYPE_ERROR,
+						FormatString := 'Declination lag exceeded maximum: %s',
+						OnMessage := LREAL_TO_STRING(Declination_lag),
+						OffMessage := 'in range', 
+						OffLevel := ADSLOG_MSGTYPE_HINT);
+HourangleLagEvent(	Trigger := poweron_delay.Q AND Hourangle_lagerror, 
+					Level := ADSLOG_MSGTYPE_ERROR,
+					FormatString := 'Hour angle lag exceeded maximum: %s',
+					OnMessage := LREAL_TO_STRING(Hourangle_lag),
+					OffMessage := 'in range',
+					OffLevel := ADSLOG_MSGTYPE_HINT);
+DeclinationCalEvent(	Trigger :=  poweron_delay.Q AND DeclinationCalibrated, 
+						Level := ADSLOG_MSGTYPE_HINT,
+						FormatString := 'Declination Axis %s',
+						OnMessage := 'calibrated',
+						OffMessage := 'uncalibrated',
+						OffLevel := ADSLOG_MSGTYPE_WARN);
+
+HourangleCalEvent(	Trigger :=  poweron_delay.Q AND HourangleCalibrated, 
+					Level := ADSLOG_MSGTYPE_HINT,
+					FormatString := 'Hourangle Axis %s',
+					OnMessage := 'calibrated',
+					OffMessage := 'uncalibrated',
+					OffLevel := ADSLOG_MSGTYPE_WARN);
+
+CalibrationEvent(	Trigger := HomeTrigger.Q, 
+					Level := ADSLOG_MSGTYPE_HINT,
+					OnMessage := 'Calibrating telescope axis');
+DeclinationErrorEvent(	Trigger := DeclinationError, 
+						Level := ADSLOG_MSGTYPE_ERROR,
+						FormatString := 'Declination %s',
+						OnMessage := 'Error',
+						OffMessage := 'Error cleared',
+						OffLevel := ADSLOG_MSGTYPE_HINT);
+DeclinationAxisEvent(	Trigger := DeclinationAxisError, 
+						Level := ADSLOG_MSGTYPE_ERROR,
+						FormatString := 'Declination Axis %s',
+						OnMessage := 'Error',
+						OffMessage := 'Error cleared',
+						OffLevel := ADSLOG_MSGTYPE_HINT);
+HourangleErrorEvent(	Trigger := HourangleError, 
+						Level := ADSLOG_MSGTYPE_ERROR,
+						FormatString := 'Hourangle %s',
+						OnMessage := 'Error',
+						OffMessage := 'Error cleared',
+						OffLevel := ADSLOG_MSGTYPE_HINT);
+HourangleAxisEvent(	Trigger := HourangleAxisError, 
+					Level := ADSLOG_MSGTYPE_ERROR,
+					FormatString := 'Hourangle Axis %s',
+					OnMessage := 'Error',
+					OffMessage := 'Error cleared',
+					OffLevel := ADSLOG_MSGTYPE_HINT);
+TCSgohomeEvent(	Trigger := gohome, 
+				Level := ADSLOG_MSGTYPE_HINT,
+				FormatString := 'GOHOME %s',
+				OnMessage := 'commencing',
+				OffMEssage := 'completed');
+TCSparkEvent(	Trigger := park, 
+				Level := ADSLOG_MSGTYPE_HINT,
+				FormatString := 'PARK %s',
+				OnMessage := 'commencing',
+				OffMEssage := 'completed');
+TCSgotoEvent(	Trigger := goto, 
+				Level := ADSLOG_MSGTYPE_HINT,
+				FormatString := 'GOTO %s',
+				OnMessage := 'commencing',
+				OffMEssage := 'completed');
+TCStrackEvent(	Trigger := track, 
+				Level := ADSLOG_MSGTYPE_HINT,
+				FormatString := 'TRACK %s',
+				OnMessage := 'commencing',
+				OffMEssage := 'completed');
+TCSstopEvent(	Trigger := stop, 
+				Level := ADSLOG_MSGTYPE_WARN,
+				FormatString := 'STOP %s',
+				OnMessage := 'commencing',
+				OffMEssage := 'completed',
+				OffLevel := ADSLOG_MSGTYPE_HINT);
+TCSstopEvent(	Trigger := stop, 
+				Level := ADSLOG_MSGTYPE_WARN,
+				FormatString := 'STOP %s',
+				OnMessage := 'commencing',
+				OffMEssage := 'completed',
+				OffLevel := ADSLOG_MSGTYPE_HINT);
+AltitudeEvent(	Trigger := altitude_calc<0.0, 
+				Level := ADSLOG_MSGTYPE_WARN,
+				FormatString := '%s',
+				OnMessage := 'Target below horizon',
+				OffMEssage := '');
+GVL_MainControl.ControlLamp :=	DeclinationError OR HourangleError OR 
+								Declination_lagerror OR Hourangle_lagerror OR 
+								DeclinationAxisError OR HourangleAxisError;]]></ST>
+    </Implementation>
+    <LineIds Name="TelescopeControl">
+      <LineId Id="58" Count="1" />
+      <LineId Id="353" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="354" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="628" Count="1" />
+      <LineId Id="643" Count="0" />
+      <LineId Id="646" Count="0" />
+      <LineId Id="644" Count="1" />
+      <LineId Id="1116" Count="1" />
+      <LineId Id="1115" Count="0" />
+      <LineId Id="648" Count="0" />
+      <LineId Id="1118" Count="0" />
+      <LineId Id="1120" Count="0" />
+      <LineId Id="1119" Count="0" />
+      <LineId Id="1121" Count="0" />
+      <LineId Id="647" Count="0" />
+      <LineId Id="635" Count="1" />
+      <LineId Id="638" Count="3" />
+      <LineId Id="637" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="322" Count="0" />
+      <LineId Id="1278" Count="0" />
+      <LineId Id="1571" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="1578" Count="0" />
+      <LineId Id="1576" Count="1" />
+      <LineId Id="2012" Count="0" />
+      <LineId Id="1579" Count="0" />
+      <LineId Id="1581" Count="1" />
+      <LineId Id="2017" Count="0" />
+      <LineId Id="2014" Count="0" />
+      <LineId Id="2016" Count="0" />
+      <LineId Id="2015" Count="0" />
+      <LineId Id="1583" Count="0" />
+      <LineId Id="2226" Count="1" />
+      <LineId Id="2229" Count="1" />
+      <LineId Id="2228" Count="0" />
+      <LineId Id="1587" Count="0" />
+      <LineId Id="1586" Count="0" />
+      <LineId Id="70" Count="4" />
+      <LineId Id="1794" Count="0" />
+      <LineId Id="1282" Count="0" />
+      <LineId Id="1795" Count="3" />
+      <LineId Id="2008" Count="3" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="1112" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="303" Count="0" />
+      <LineId Id="649" Count="0" />
+      <LineId Id="304" Count="0" />
+      <LineId Id="316" Count="1" />
+      <LineId Id="306" Count="0" />
+      <LineId Id="350" Count="0" />
+      <LineId Id="308" Count="0" />
+      <LineId Id="311" Count="0" />
+      <LineId Id="310" Count="0" />
+      <LineId Id="630" Count="0" />
+      <LineId Id="318" Count="2" />
+      <LineId Id="510" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="312" Count="0" />
+      <LineId Id="356" Count="0" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="1142" Count="0" />
+      <LineId Id="1144" Count="0" />
+      <LineId Id="961" Count="0" />
+      <LineId Id="82" Count="5" />
+      <LineId Id="89" Count="2" />
+      <LineId Id="1133" Count="0" />
+      <LineId Id="93" Count="5" />
+      <LineId Id="100" Count="2" />
+      <LineId Id="1134" Count="0" />
+      <LineId Id="334" Count="0" />
+      <LineId Id="332" Count="0" />
+      <LineId Id="328" Count="0" />
+      <LineId Id="104" Count="1" />
+      <LineId Id="275" Count="1" />
+      <LineId Id="106" Count="1" />
+      <LineId Id="2018" Count="0" />
+      <LineId Id="108" Count="11" />
+      <LineId Id="273" Count="1" />
+      <LineId Id="120" Count="1" />
+      <LineId Id="2019" Count="0" />
+      <LineId Id="122" Count="9" />
+      <LineId Id="1498" Count="1" />
+      <LineId Id="1501" Count="0" />
+      <LineId Id="1527" Count="2" />
+      <LineId Id="1513" Count="0" />
+      <LineId Id="1526" Count="0" />
+      <LineId Id="1547" Count="1" />
+      <LineId Id="1520" Count="3" />
+      <LineId Id="2867" Count="1" />
+      <LineId Id="1524" Count="1" />
+      <LineId Id="1511" Count="0" />
+      <LineId Id="1519" Count="0" />
+      <LineId Id="1509" Count="0" />
+      <LineId Id="333" Count="0" />
+      <LineId Id="335" Count="0" />
+      <LineId Id="540" Count="0" />
+      <LineId Id="963" Count="1" />
+      <LineId Id="1530" Count="0" />
+      <LineId Id="962" Count="0" />
+      <LineId Id="541" Count="0" />
+      <LineId Id="545" Count="1" />
+      <LineId Id="737" Count="1" />
+      <LineId Id="746" Count="1" />
+      <LineId Id="544" Count="0" />
+      <LineId Id="547" Count="1" />
+      <LineId Id="550" Count="1" />
+      <LineId Id="734" Count="0" />
+      <LineId Id="1531" Count="0" />
+      <LineId Id="735" Count="1" />
+      <LineId Id="549" Count="0" />
+      <LineId Id="552" Count="0" />
+      <LineId Id="556" Count="0" />
+      <LineId Id="2231" Count="0" />
+      <LineId Id="553" Count="0" />
+      <LineId Id="1532" Count="0" />
+      <LineId Id="1536" Count="8" />
+      <LineId Id="1546" Count="0" />
+      <LineId Id="1545" Count="0" />
+      <LineId Id="2232" Count="0" />
+      <LineId Id="2235" Count="0" />
+      <LineId Id="2233" Count="1" />
+      <LineId Id="554" Count="0" />
+      <LineId Id="557" Count="0" />
+      <LineId Id="560" Count="0" />
+      <LineId Id="558" Count="0" />
+      <LineId Id="2660" Count="2" />
+      <LineId Id="1296" Count="1" />
+      <LineId Id="2663" Count="2" />
+      <LineId Id="1299" Count="1" />
+      <LineId Id="1298" Count="0" />
+      <LineId Id="750" Count="0" />
+      <LineId Id="744" Count="0" />
+      <LineId Id="559" Count="0" />
+      <LineId Id="561" Count="1" />
+      <LineId Id="564" Count="0" />
+      <LineId Id="566" Count="0" />
+      <LineId Id="563" Count="0" />
+      <LineId Id="591" Count="0" />
+      <LineId Id="578" Count="0" />
+      <LineId Id="581" Count="1" />
+      <LineId Id="2656" Count="1" />
+      <LineId Id="2236" Count="1" />
+      <LineId Id="2652" Count="2" />
+      <LineId Id="583" Count="0" />
+      <LineId Id="579" Count="0" />
+      <LineId Id="593" Count="0" />
+      <LineId Id="585" Count="2" />
+      <LineId Id="2658" Count="1" />
+      <LineId Id="2238" Count="1" />
+      <LineId Id="589" Count="0" />
+      <LineId Id="2655" Count="0" />
+      <LineId Id="588" Count="0" />
+      <LineId Id="580" Count="0" />
+      <LineId Id="2882" Count="0" />
+      <LineId Id="2871" Count="0" />
+      <LineId Id="2874" Count="3" />
+      <LineId Id="2881" Count="0" />
+      <LineId Id="2870" Count="0" />
+      <LineId Id="653" Count="3" />
+      <LineId Id="658" Count="1" />
+      <LineId Id="662" Count="0" />
+      <LineId Id="2445" Count="0" />
+      <LineId Id="663" Count="0" />
+      <LineId Id="667" Count="2" />
+      <LineId Id="673" Count="3" />
+      <LineId Id="664" Count="0" />
+      <LineId Id="752" Count="0" />
+      <LineId Id="568" Count="4" />
+      <LineId Id="2446" Count="0" />
+      <LineId Id="703" Count="0" />
+      <LineId Id="721" Count="1" />
+      <LineId Id="724" Count="0" />
+      <LineId Id="573" Count="4" />
+      <LineId Id="1226" Count="0" />
+      <LineId Id="1228" Count="0" />
+      <LineId Id="1227" Count="0" />
+      <LineId Id="725" Count="0" />
+      <LineId Id="1230" Count="0" />
+      <LineId Id="717" Count="0" />
+      <LineId Id="1229" Count="0" />
+      <LineId Id="711" Count="0" />
+      <LineId Id="713" Count="0" />
+      <LineId Id="712" Count="0" />
+      <LineId Id="714" Count="1" />
+      <LineId Id="2666" Count="0" />
+      <LineId Id="1276" Count="0" />
+      <LineId Id="716" Count="0" />
+      <LineId Id="754" Count="4" />
+      <LineId Id="542" Count="0" />
+      <LineId Id="1244" Count="11" />
+      <LineId Id="1231" Count="12" />
+      <LineId Id="1214" Count="0" />
+      <LineId Id="957" Count="2" />
+      <LineId Id="905" Count="1" />
+      <LineId Id="1196" Count="2" />
+      <LineId Id="1204" Count="0" />
+      <LineId Id="951" Count="1" />
+      <LineId Id="1193" Count="2" />
+      <LineId Id="1206" Count="0" />
+      <LineId Id="907" Count="1" />
+      <LineId Id="1190" Count="2" />
+      <LineId Id="1207" Count="0" />
+      <LineId Id="954" Count="2" />
+      <LineId Id="1189" Count="0" />
+      <LineId Id="1188" Count="0" />
+      <LineId Id="1208" Count="0" />
+      <LineId Id="931" Count="1" />
+      <LineId Id="1179" Count="0" />
+      <LineId Id="933" Count="3" />
+      <LineId Id="1180" Count="0" />
+      <LineId Id="937" Count="0" />
+      <LineId Id="1183" Count="0" />
+      <LineId Id="939" Count="1" />
+      <LineId Id="1181" Count="0" />
+      <LineId Id="941" Count="0" />
+      <LineId Id="1184" Count="0" />
+      <LineId Id="943" Count="1" />
+      <LineId Id="1182" Count="0" />
+      <LineId Id="945" Count="0" />
+      <LineId Id="1185" Count="0" />
+      <LineId Id="947" Count="2" />
+      <LineId Id="1187" Count="0" />
+      <LineId Id="1186" Count="0" />
+      <LineId Id="1209" Count="0" />
+      <LineId Id="1485" Count="10" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="1279" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

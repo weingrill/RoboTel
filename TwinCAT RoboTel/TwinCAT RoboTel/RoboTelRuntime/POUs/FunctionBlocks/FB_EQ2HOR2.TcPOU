@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="FB_EQ2HOR2" Id="{7b34f02a-1435-4300-8153-5c49f62d1b5b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EQ2HOR2
+VAR_INPUT
+	// right ascension in degrees
+	alpha: LREAL;
+	// declination in degrees
+	delta: LREAL;
+	// longitude in degrees
+	lon: LREAL;
+	// latitude in degrees
+	lat: LREAL;
+	// Julian Days
+	JD: LREAL;
+END_VAR
+VAR_OUTPUT
+	// altitude in degrees
+	alt: LREAL;
+	// azimuth in degrees
+	az: LREAL;
+	// hour angle in degreesss
+	ha: LREAL;
+END_VAR
+VAR
+	lst: LREAL;
+	sinalt, sinaz, cosaz, az2: LREAL;
+END_VAR
+VAR CONSTANT
+	d2r:	LREAL := PI/180.0;
+	r2d:	LREAL := 180.0/PI;
+	h2r:	LREAL := PI/12.0;
+	h2d:	LREAL := 15.0;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[lst := ct2lst(lon, jd);
+ha := MODABS(lst*15.0 - alpha, 360.0);
+sinalt := (SIN(delta*d2r)*SIN(lat*d2r)) + (COS(delta*d2r)*COS(lat*d2r)*COS(ha*d2r));
+alt := ASIN(sinalt) * r2d;
+
+sinaz := -SIN(ha*d2r)*COS(delta*d2r)/COS(alt*d2r);
+az := ASIN(sinaz) * r2d;
+cosaz := (SIN(delta*d2r) - SIN(lat*d2r)*sinalt)/(COS(lat*d2r)*COS(alt*d2r));
+az2 := ACOS(cosaz) * r2d;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_EQ2HOR2">
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="50" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <GVL Name="GVL_Main" Id="{4c62cafc-6725-448b-aa29-7cf19ff00316}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+//TODO update to current RoboTel IOs
+VAR_GLOBAL
+	//DIN1 0.0
+	phase_available		AT%I*: BOOL;
+	//DIN2 0.1
+	key_switch			AT%I*: BOOL;
+	//DIN3 0.2
+	key_switch_remote	AT%I*: BOOL;
+	//DIN4 0.3
+	start_switch		AT%I*: BOOL;
+	//DIN5 0.4
+	stop_switch			AT%I*: BOOL;
+	//DIN6 0.5
+	emergency_stop1		AT%I*: BOOL;
+	//DIN7 0.6
+	emergency_stop2		AT%I*: BOOL;
+	//DIN8 0.7
+	reset_switch		AT%I*: BOOL;
+	
+	//BT1
+	main_cabinet_temperature	AT%I*: INT;
+	//DIN15 1.6
+	brake_clearing		AT%I*: BOOL;
+	//DIN28 3.3 (connected to AX5000?!)
+	azimut_limit_switch	AT%I*: BOOL;
+	
+	
+	
+	// Outputs
+	
+	//DOUT1 0.0
+	lamp_power			AT%Q*: BOOL;
+	//DOUT2 0.1
+	lamp_ready			AT%Q*: BOOL;
+	//DOUT3 0.2
+	lamp_error			AT%Q*: BOOL;
+	
+	//DOUT6 0.5
+	brake_azimuth_eve		AT%Q*: BOOL;
+
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

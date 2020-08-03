@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <GVL Name="GVL_pendant_control" Id="{a267d832-eb20-4a8a-93de-0055909d4111}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+//TODO update to current RoboTel IOs
+VAR_GLOBAL
+	//DIN17 2.0
+	BCD1		AT%I*: BOOL;
+	//DIN18 2.1
+	BCD2		AT%I*: BOOL;
+	//DIN19 2.2
+	BCD4		AT%I*: BOOL;
+	//DIN20 2.3
+	BCD8		AT%I*: BOOL;
+	//DIN21 2.4
+	reset_switch	AT%I*: BOOL;
+	//DIN22 2.5
+	direction_up	AT%I*: BOOL;
+	//DIN23 2.6
+	direction_down	AT%I*: BOOL;
+	//DIN24 2.7
+	key_switch		AT%I*: BOOL;
+	//DIN25 3.0
+	start_switch	AT%I*: BOOL;
+	//DIN26 3.1
+	direction_left	AT%I*: BOOL;
+	//DIN27 3.2
+	direction_right	AT%I*: BOOL;
+	
+	// Outputs
+	
+	//DOUT9 1.0
+	lamp_up			AT%Q*: BOOL;
+	//DOUT10 1.1
+	lamp_down			AT%Q*: BOOL;
+	//DOUT11 1.2
+	lamp_right			AT%Q*: BOOL;
+	//DOUT12 1.3
+	lamp_left			AT%Q*: BOOL;
+	//DOUT13 1.4
+	lamp_error			AT%Q*: BOOL;
+	
+	//DOUT4 0.3
+	oil_pump_enable		AT%Q*: BOOL;
+	//DOUT5 0.4
+	oil_suction_enable		AT%Q*: BOOL;
+	//DOUT6 0.5
+	brake_azimuth_eve		AT%Q*: BOOL;
+
+	
+	// Zyklisches Interface zwischen NC und Achse
+	HourAxisRef: AXIS_REF;
+	DecAxisRef: AXIS_REF;
+	
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

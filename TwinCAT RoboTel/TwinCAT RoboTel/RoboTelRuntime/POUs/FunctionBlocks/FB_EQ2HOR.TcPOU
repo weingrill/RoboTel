@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="FB_EQ2HOR" Id="{2aaa455b-6325-4dbe-b61c-a8cfdf369fe1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EQ2HOR
+VAR_INPUT
+	RA: 		LREAL;	// Right Ascension of object  (J2000) in degrees (FK5)
+	Dec: 		LREAL;	// Declination of object (J2000) in degrees (FK5)
+	JD: 		LREAL;	// Julian Date
+	LAT: 		LREAL;	// north geodetic latitude of location in degrees
+	LON: 		LREAL; 	// EAST longitude of location in degrees (Specify west longitude with a negative sign.)
+	ALTITUDE:	LREAL := 0.0;  // The altitude of the observing location, in meters. [default=0].  
+	WS:			BOOL := FALSE; //  Set this to TRUE get the azimuth measured westward FROM south (NOT East of North).
+	PRECESS:	BOOL := TRUE; // Set this to 1 to force precession [default], 0 for no precession correction
+	NUTATE:		BOOL := TRUE; // Set this to 1 to force nutation [default], 0 for no nutation.
+	ABERRATION:	BOOL := TRUE; // Set this to 1 to force aberration correction [default], 0 for no correction.
+	REFRACT:	BOOL := TRUE; // Set to 1 to force refraction correction [default], 0 for no correction.
+END_VAR
+VAR_OUTPUT
+	alt: 	LREAL; // altitude (in degrees)
+	az:		LREAL; // azimuth angle (in degrees, measured EAST FROM NORTH, but see keyword WS above.)
+	ha:		LREAL; // hour angle (in degrees) (optional)	
+END_VAR
+VAR
+	ra_, dec_, tstart, J_now: LREAL;
+	s_now: STRING;
+	fbprecess: FB_PRECESS;
+	lmst: LREAL;
+	last: LREAL;
+	d_psi: LREAL;
+	eps: LREAL;
+	hadec2altaz:	FB_HADEC2ALTAZ;
+	co_nutate: 		FB_CO_NUTATE;
+	co_aberration:	CO_ABERRATION;
+	co_refract:		CO_REFRACT;
+	dra1, dra2: LREAL;
+	ddec1, ddec2 : LREAL;
+END_VAR
+VAR CONSTANT
+	d2r:	LREAL := PI/180.0;
+	h2r:	LREAL := PI/12.0;
+	h2d:	LREAL := 15.0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* source https://idlastro.gsfc.nasa.gov/ftp/pro/astro/eq2hor.pro 
+
+PURPOSE:
+	Convert celestial  (ra-dec) coords to local horizon coords (alt-az).
+
+DESCRIPTION:
+This  code calculates horizon (alt,az) coordinates from equatorial
+(ra,dec) coords.   It is typically accurate to about 1 arcsecond or better (I
+have checked the output against the publicly available XEPHEM software). It
+performs precession, nutation, aberration, and refraction corrections.  The
+perhaps best thing about it is that it can take arrays as inputs, in all
+variables and keywords EXCEPT Lat, lon, and Altitude (the code assumes these
+aren't changing), and uses vector arithmetic in every calculation except
+when calculating the precession matrices.
+*)
+
+ra_ := ra;
+dec_ := dec;
+
+tstart := 2000.0;
+
+(* ******************************************************************************
+ PRECESS coordinates to current date
+ (uses astro lib procedure PRECESS.pro)
+*)
+J_now := (JD - 2451545.0)/365.25 + 2000.0; // compute current equinox
+IF precess THEN
+	fbprecess( ra := ra_, dec := dec_, 
+	EQUINOX1 := tstart, EQUINOX2 := J_now, 
+	ra_precessed =>ra_, dec_precessed => dec_);
+END_IF
+
+(******************************************************************************
+ calculate NUTATION and ABERRATION Corrections to Ra-Dec 
+*)
+
+IF NUTATE THEN
+	co_nutate(	jd := jd, 
+				ra := ra_, 
+				dec := dec_, 
+				d_ra => dra1, 
+				d_dec => ddec1, 
+				eps=>eps, 
+				d_psi=>d_psi);
+	ra_ := ra_ + dra1/3600.0;
+	dec_ := dec_ + ddec1/3600.0;
+END_IF
+
+IF ABERRATION THEN	
+	co_aberration(	jd := jd, 
+					ra := ra_, 
+					dec := dec_, 
+					d_ra => dra2, 
+					d_dec => ddec2, 
+					eps := eps);
+	ra_ := ra_ + dra2/3600.0;
+	dec_ := dec_ + ddec2/3600.0;
+END_IF
+
+(***************************************************************************************
+Calculate LOCAL MEAN SIDEREAL TIME *)
+lmst := ct2lst(lon, jd);  // get LST (in hours) - note:this is independent of time zone  since giving jd
+lmst := lmst*h2d ; //convert LMST to degrees (btw, this is the RA of the zenith)
+// calculate local APPARENT sidereal time
+last := lmst + d_psi *COS(eps*d2r)/3600.0 ; //add correction in degrees
+
+(******************************************************************************
+ Find hour angle (in DEGREES) *)
+ha := last - ra_;
+ha := MODABS(ha, 360.0);
+
+(*******************************************************************************
+ Now do the spherical trig to get APPARENT alt,az. *)
+hadec2altaz(	ha := ha, 
+				dec := dec_, 
+				lat := lat, 
+				alt => alt, 
+				az => az, 
+				WS := WS);
+
+(********************************************************************************************
+ Make Correction for ATMOSPHERIC REFRACTION
+ (use this for visible and radio wavelengths; author is unsure about other wavelengths.
+  See the comments in CO_REFRACT for more details.) *)
+IF refract THEN 
+	co_refract(	old_alt := alt, 
+				altitude := altitude, 
+				to_observed := TRUE, 
+				new_alt => alt);
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_EQ2HOR">
+      <LineId Id="3" Count="89" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

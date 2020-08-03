@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="F_AbsoluteDecoder" Id="{06331f59-fb8f-4087-b1da-febbf7154476}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_AbsoluteDecoder : LREAL
+VAR_INPUT
+		// encoder steps
+	input :	ULINT;
+	// phase in degrees
+	phase : LREAL := 0.0;
+	// encoder full turn
+	modulus : LREAL := 262144.0;
+END_VAR
+VAR
+	norm : LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[norm := (ULINT_TO_LREAL(input) + modulus - phase*modulus/360.0) / modulus;
+F_AbsoluteDecoder := MODABS(norm*360.0, 360.0);]]></ST>
+    </Implementation>
+    <LineIds Name="F_AbsoluteDecoder">
+      <LineId Id="28" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

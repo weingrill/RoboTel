@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="F_HourangleLimit" Id="{554b9597-c408-4ecf-87ac-bb54cc0c61e6}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_HourangleLimit : LREAL
+VAR_INPUT
+		// limits for west of pier if true otherwise east of pier
+	west: BOOL;
+	// positive is true for the positive (upper) limit, false for the ngeative (lower) limit
+	positive: BOOL := TRUE;
+
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF west THEN
+	IF positive THEN
+		F_HourangleLimit := 360.0;
+	ELSE
+		F_HourangleLimit := 270.0;
+	END_IF
+ELSE // east
+	IF positive THEN
+		F_HourangleLimit := 270.0;
+	ELSE
+		F_HourangleLimit := 180.0;
+	END_IF
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="F_HourangleLimit">
+      <LineId Id="7" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="19" Count="5" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

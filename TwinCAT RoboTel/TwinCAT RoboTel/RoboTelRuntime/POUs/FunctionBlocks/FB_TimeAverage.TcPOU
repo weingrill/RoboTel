@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="FB_TimeAverage" Id="{3d3f768c-9845-48d2-a29c-b1ee2e4a39dc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TimeAverage
+VAR_INPUT
+	IN:		REAL;
+	PT:		TIME := T#4400MS;
+END_VAR
+VAR_OUTPUT
+	AVG:	REAL;
+	MINAVG:	REAL;
+	MAXAVG:	REAL;
+	Overflow: BOOL;
+END_VAR
+VAR
+	fbCycle	:TON;
+	buffer:	ARRAY[0..30000] OF REAL;
+	index:	INT := 0;
+	number:	INT := 0;
+	i:		INT;
+	sum:	REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbCycle(IN:= NOT fbCycle.Q,
+		PT:= PT);
+
+// write the current value into the buffer		
+buffer[index] := IN;
+
+// increase the index
+IF index < 30000 THEN
+	index := index + 1;
+END_IF
+
+Overflow := (index = 30000);
+
+// during the first cycle number will be smaller than index
+IF number < index THEN
+	number := index;
+END_IF
+
+// sum up the buffer to the current number
+sum := 0.0;
+MINAVG := IN;
+MAXAVG := IN;
+FOR i :=0 TO number-1 DO
+	sum := sum + buffer[i];
+	MINAVG := MIN(buffer[i], MINAVG);
+	MAXAVG := MAX(buffer[i], MAXAVG);
+END_FOR
+
+// return the average
+AVG := sum / number;
+
+// if we hit the cycle time, reset the index and overwrite old values
+IF fbCycle.Q THEN
+	number := index;
+	index := 0;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_TimeAverage">
+      <LineId Id="12" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="23" Count="2" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="38" Count="1" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="53" Count="1" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="36" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

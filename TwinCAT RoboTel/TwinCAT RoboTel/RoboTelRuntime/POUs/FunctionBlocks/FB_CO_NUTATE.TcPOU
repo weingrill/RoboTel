@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <POU Name="FB_CO_NUTATE" Id="{1eae2c23-d186-449f-a296-fa0bbdbdf4fc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_CO_NUTATE
+VAR_INPUT
+	jd,
+	ra,
+	dec:	LREAL;
+END_VAR
+VAR_OUTPUT
+	d_ra,
+	d_dec,
+	eps,
+	d_psi,
+	d_eps:	LREAL;
+END_VAR
+VAR
+	T, 
+	eps0,
+ce, se,x,y,z,x2,y2,z2,rad,xyproj,ra2,dec2: LREAL;
+	nutate:	FB_NUTATE;
+END_VAR
+VAR CONSTANT
+	d2r:	LREAL := PI/180.0;
+	d2as:	LREAL := PI/(180.0*3600.0);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Julian centuries FROM J2000 OF jd.
+T := (jd -2451545.0)/36525.0; 
+
+// must calculate obliquity OF ecliptic
+nutate(jd := jd,
+		nut_long => d_psi, 
+		nut_obliq => d_eps); 
+
+eps0 := 23.4392911*3600.0 - 46.8150*T - 0.00059*EXPT(T, 2) + 0.001813*EXPT(T, 3);
+eps := (eps0 + d_eps)/3600.0*d2r; // TRUE obliquity OF the ecliptic in radians
+ 
+//useful numbers
+ce := COS(eps);
+se := SIN(eps);
+
+// convert ra-dec to equatorial rectangular coordinates
+x := COS(ra*d2r) * COS(dec*d2r);
+y := SIN(ra*d2r) * COS(dec*d2r);
+z := SIN(dec*d2r);
+
+// apply corrections to each rectangular coordinate
+x2 := x - (y*ce + z*se)*d_psi * d2as;
+y2 := y + (x*ce*d_psi - z*d_eps) * d2as;
+z2 := z + (x*se*d_psi + y*d_eps) * d2as;
+
+// convert back to equatorial spherical coordinates
+rad := SQRT(x2*x2 + y2*y2 + z2*z2);
+xyproj := SQRT(x2*x2 + y2*y2);
+
+ra2  := x2 * 0.0;
+dec2 := x2 * 0.0;
+
+// Calculate Ra and Dec in RADIANS (later convert to DEGREES)
+IF (xyproj = 0) AND (z <> 0) THEN
+	// places where xyproj=0 (point at NCP or SCP)
+	dec2 := ASIN(z2/rad);
+	ra2 := 0.0;
+END_IF
+ 
+IF (xyproj <> 0) THEN
+	// places other than NCP or SCP
+	ra2 := ATAN2(y2, x2);
+	dec2 := ASIN(z2/rad);
+END_IF
+
+// convert to DEGREES
+
+ra2 := ra2 /d2r;
+dec2 := dec2 /d2r;
+
+ra2 := MODABS(ra2, 360.0);
+
+
+// Return changes in ra and dec in arcseconds
+d_ra := (ra2 - ra) * 3600.0;
+d_dec := (dec2 - dec) * 3600.0;
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_CO_NUTATE">
+      <LineId Id="3" Count="55" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

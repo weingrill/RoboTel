@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="LREAL_TO_FMTESTR" Id="{87e8e94a-e4ab-4792-8032-2087ad1cc7b1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION LREAL_TO_FMTESTR : STRING
+VAR_INPUT
+	in         : LREAL; // 1.19412572985311e-6
+    iPrecision : INT := 2;
+    bRound     : BOOL := TRUE;
+END_VAR
+VAR
+	lstring: STRING;
+	ppos: INT;
+	epos: INT;
+	mantisse: LREAL;
+	exponent: STRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[lstring := LREAL_TO_STRING(in);
+ppos := FIND(lstring, '.');
+epos := FIND(lstring, 'e');
+IF epos = 0 OR ppos = 0 THEN
+	LREAL_TO_FMTESTR := LREAL_TO_FMTSTR(in, iPrecision, bRound);
+	RETURN;
+END_IF
+mantisse := STRING_TO_LREAL(LEFT(lstring, epos-1)); // 1.19412572985311
+exponent := RIGHT(lstring, LEN(lstring)-epos+1); // e-6
+LREAL_TO_FMTESTR := CONCAT(LREAL_TO_FMTSTR(mantisse,iPrecision, bRound), exponent);]]></ST>
+    </Implementation>
+    <LineIds Name="LREAL_TO_FMTESTR">
+      <LineId Id="7" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="13" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

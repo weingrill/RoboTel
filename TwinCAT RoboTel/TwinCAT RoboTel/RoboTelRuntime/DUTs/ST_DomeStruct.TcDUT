@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <DUT Name="ST_DomeStruct" Id="{f092fa95-d8c9-4e9d-a273-5f49d3cc3e09}">
+    <Declaration><![CDATA[TYPE ST_DomeStruct :
+STRUCT
+	OpenShutter: 	BOOL;
+	CloseShutter: 	BOOL;
+	OpenFlap: 		BOOL;
+	CloseFlap: 		BOOL;
+	WatchDogReset:	BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

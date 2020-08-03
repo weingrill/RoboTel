@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <GVL Name="GVL_Telescope" Id="{a7572ab9-17bf-4e0d-b71f-e76e531b6203}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	// BT9 mirror
+	temperature_mirror2		AT%I*: INT;
+	// BT10
+	temperature_mirror1		AT%I*: INT;
+	// BT11
+	temperature_mirror3		AT%I*: INT;
+	// BT12
+	temperature_tube		AT%I*: INT;
+	// BT13
+	temperature_bearing1	AT%I*: INT;
+	// BT14
+	temperature_bearing2	AT%I*: INT;
+	
+	
+	// DIN29 3.4
+	focus_limit_near	AT%I*: BOOL;
+	// DIN30 3.5
+	focus_limit_far		AT%I*: BOOL;
+	// DIN31 3.6
+	nasmyth_limit_left	AT%I*: BOOL;
+	// DIN32 3.7
+	nasmyth_limit_right	AT%I*: BOOL;
+	
+	
+	// DIN33 4.0
+	cover1_open		AT%I*: BOOL;
+	// DIN34 4.1
+	cover1_closed	AT%I*: BOOL;
+	// DIN35 4.2
+	cover2_open		AT%I*: BOOL;
+	// DIN36 4.3
+	cover2_closed	AT%I*: BOOL;
+	// DIN37 4.4
+	cover3_open		AT%I*: BOOL;
+	// DIN38 4.5
+	cover4_closed	AT%I*: BOOL;
+	
+	//DOUT14 1.5
+	focus_lock		AT%Q*: BOOL;
+	//DOUT15 4.6
+	nasmyth_lock		AT%Q*: BOOL;
+
+	
+	// Zyklisches Interface zwischen NC und Achse
+	AzimuthAxisRef: AXIS_REF;
+	ElevationAxisRef: AXIS_REF;
+	DerotatorAxisRef: AXIS_REF;
+		
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

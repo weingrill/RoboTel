@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="DateTime2JD" Id="{99729b85-ef51-43f9-be01-c7ed25524dd9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION DateTime2JD : LREAL
+VAR_INPUT
+	epoch: TIMESTRUCT;
+END_VAR
+VAR
+	a,y,m,d,jdn: LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*    import datetime
+    from math import floor
+    if not type(epoch) is datetime.datetime:
+        raise TypeError('datetime must be of type datetime')
+    
+    a = floor((14 - epoch.month)/12)
+    y = epoch.year + 4800 - a
+    m = epoch.month + 12*a - 3
+    
+    d = epoch.day
+    d += epoch.hour/24. + epoch.minute/1440. + epoch.second/86400. # microsecond might be added here?
+    
+    if [epoch.year,epoch.month,d] >= [1582,10,15]:
+        jdn = epoch.day + floor((153*m + 2)/5) + 365*y + floor(y/4) - floor(y/100) + floor(y/400) - 32045
+    elif [epoch.year,epoch.month,d] <= [1582,10,4]:
+        jdn = epoch.day + floor((153*m + 2)/5) + 365*y + floor(y/4) - 32083
+    return jdn + (epoch.hour-12)/24. + epoch.minute/1440. + epoch.second/86400.
+*)
+a := FLOOR((14.0 - epoch.wMonth)/12.0);
+y := epoch.wYear + 4800.0 - a;
+m := epoch.wMonth + 12.0*a - 3.0;
+
+d := epoch.wDay + (epoch.wHour/24.0) + (epoch.wMinute/1440.0) + (epoch.wSecond/86400.0);
+
+//IF (epoch.wYear > 1582) (* AND (epoch.wMonth > 10.0) AND (d > 15.0)*) THEN
+	jdn := epoch.wDay + FLOOR((153*m + 2)/5) + 365.0*y + FLOOR(y/4) - FLOOR(y/100) + FLOOR(y/400) - 32045.0;
+//ELSIF (epoch.wYear < 1582) AND (epoch.wMonth < 10) AND (d > 4.0) THEN
+//	jdn := epoch.wDay + FLOOR((153*m + 2)/5) + 365.0*y + FLOOR(y/4) - 32083.0;
+//END_IF
+
+DateTime2JD := jdn
+			+ (epoch.wHour-12.0)/24.0
+			+ (epoch.wMinute/1440.0) 
+			+ (epoch.wSecond/86400.0)
+			+ (DWORD_TO_REAL(epoch.wMilliseconds)/86400000.0);
+
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="DateTime2JD">
+      <LineId Id="3" Count="30" />
+      <LineId Id="44" Count="3" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="CO_REFRACT" Id="{3da273e0-5aa9-4438-ae19-b4f0ec632a24}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK CO_REFRACT
+VAR_INPUT
+	old_alt: LREAL;
+	altitude: LREAL := 0.0;
+	pressure: LREAL := 0.0;
+	temperature: LREAL := 0.0;
+	epsilon: LREAL := 0.25; //accuracy of iteration for observed=TRUE case, in arcseconds
+	TO_OBSERVED: BOOL;
+END_VAR
+VAR_OUTPUT
+	new_alt: LREAL;
+END_VAR
+VAR
+	aout, P, T, dr, cur, last : LREAL;
+END_VAR
+VAR CONSTANT
+	alpha : LREAL := 0.0065; //temp lapse rate [deg C per meter]
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF temperature = 0.0 THEN
+	IF altitude > 11000.0 THEN 
+		temperature := 211.5; 
+	ELSE 
+		temperature := 283.0 - alpha*altitude;
+	END_IF
+END_IF
+
+// estimate Pressure based on altitude, using U.S. Standard Atmosphere formula.
+IF pressure = 0 THEN 
+	pressure := 1010.0*EXPT(1-6.5/288000*altitude, 5.255);
+END_IF
+
+IF NOT TO_OBSERVED THEN 
+	aout := old_alt - co_refract_forward(old_alt, P:=pressure,T:=temperature);
+ELSE
+	aout := 0.0;
+	P := pressure; T := temperature;
+	//calculate initial refraction guess
+	dr := co_refract_forward(old_alt, P:=P, T:=T);
+	cur := old_alt + dr; // guess of observed location
+
+	REPEAT 
+	 	last := cur;
+		dr := co_refract_forward(cur, P:= P, T:=T);
+	  	cur := old_alt + dr;
+	UNTIL ABS(last-cur)*3600.0 < epsilon
+	END_REPEAT
+	aout := cur;
+END_IF
+
+new_alt := aout;
+]]></ST>
+    </Implementation>
+    <LineIds Name="CO_REFRACT">
+      <LineId Id="3" Count="31" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="CO_REFRACT_FORWARD" Id="{9e2a6c66-b60a-451a-a6f4-0d24b94a8b52}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION CO_REFRACT_FORWARD : LREAL
+VAR_INPUT
+	a: LREAL;
+	P: LREAL := 1010.0;
+	T: LREAL := 283.0;
+END_VAR
+VAR
+	Ref, tpcor: LREAL;
+END_VAR
+VAR CONSTANT
+	d2r : LREAL := PI/180.0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* INPUTS
+    a = The observed (apparent) altitude, in DEGREES.
+        May be scalar or vector.
+
+ INPUT KEYWORDS
+    P:  Pressure [in millibars]. Default is 1010 millibars. [scalar or vector]
+    T:  Ground Temp [in Celsius].  Default is 0 Celsius. [scalar or vector]
+*)
+
+(* you have observed the altitude a, and would like to know what the "apparent" 
+ altitude is (the one behind the atmosphere). *)
+//w = where(a LT 15.)
+Ref := 0.0166667 / TAN((a + 7.31/(a+4.4))*d2r);
+
+//R = 1.02/tan((a + 10.3/(a+5.11))*d2r)/60. 
+// this formula goes the other direction!
+
+IF a < 15.0 THEN 
+	Ref := 3.569*(0.1594 + 0.0196*a + 0.00002*EXPT(a, 2))/(1.0+0.505*a + 0.0845*EXPT(a, 2));
+END_IF
+tpcor := P/1010.0 * 283/T;
+CO_REFRACT_FORWARD := tpcor * Ref;
+]]></ST>
+    </Implementation>
+    <LineIds Name="CO_REFRACT_FORWARD">
+      <LineId Id="3" Count="21" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

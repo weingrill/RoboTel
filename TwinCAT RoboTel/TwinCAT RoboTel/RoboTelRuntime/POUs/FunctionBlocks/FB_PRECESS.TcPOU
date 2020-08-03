@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <POU Name="FB_PRECESS" Id="{879c3673-6766-4546-9283-3aa893f2e05f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PRECESS
+VAR_INPUT
+	ra, 
+	dec,
+	equinox1,
+	equinox2: LREAL;
+	RADIAN:	BOOL := FALSE;
+END_VAR
+VAR_OUTPUT
+	ra_precessed,
+	dec_precessed:	LREAL;
+END_VAR
+VAR
+	ra_rad, dec_rad: LREAL;
+	a,b,c,t: LREAL;
+	x, x2: ARRAY[0..2] OF LREAL;
+	st1: LREAL;
+	rot: ARRAY[0..2,0..2] OF LREAL;
+	sina, sinb, sinc, cosa,cosb,cosc: LREAL;
+END_VAR
+VAR CONSTANT
+	deg_to_rad : LREAL := PI/180.0;
+	sec_to_rad : LREAL := deg_to_rad/3600.0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT RADIAN THEN
+	ra_rad := ra*deg_to_rad;
+	dec_rad := dec*deg_to_rad;
+ELSE
+    //Convert TO double precision IF NOT already
+	ra_rad := ra;
+	dec_rad := dec;
+END_IF
+
+a := COS( dec_rad );
+x[0] := a*COS(ra_rad); x[1] := a*SIN(ra_rad); x[2] := SIN(dec_rad);
+
+//*** PREMAT code starts here
+ST1 := 0.001*( equinox1 - 2000.0);
+t := 0.001*( equinox2 - equinox1);
+//  Compute 3 rotation angles
+A := sec_to_rad * T * (23062.181 + ST1*(139.656 +0.0139*ST1) + T*(30.188 - 0.344*ST1+17.998*T));
+B := sec_to_rad * T * T * (79.280 + 0.410*ST1 + 0.205*T) + A;
+C := sec_to_rad * T * (20043.109 - ST1*(85.33 + 0.217*ST1) + T*(-42.665 - 0.217*ST1 -41.833*T));
+  sina := SIN(a); sinb := SIN(b);  sinc := SIN(c);
+  cosa := COS(a); cosb := COS(b);  cosc := COS(c);
+
+rot[0,0] :=  cosa*cosb*cosc-sina*sinb; 	rot[0,1] := sina*cosb+cosa*sinb*cosc; 	rot[0,2] := cosa*sinc;
+rot[1,0] := -cosa*sinb-sina*cosb*cosc; 	rot[1,1] := cosa*cosb-sina*sinb*cosc; 	rot[1,2] := -sina*sinc;
+rot[2,0] := -cosb*sinc;					rot[2,1] := -sinb*sinc; 				rot[2,2] := cosc;
+
+//*** PREMAT code ends here
+
+//x2 := rot* x; //rotate to get output direction cosines
+x2[0] := rot[0,0]*x[0] + rot[1,0]*x[1] + rot[2,0]*x[2];
+x2[1] := rot[0,1]*x[0] + rot[1,1]*x[1] + rot[2,1]*x[2];
+x2[2] := rot[0,2]*x[0] + rot[1,2]*x[1] + rot[2,2]*x[2];
+
+ra_rad := atan2(x2[1],x2[0]);
+dec_rad := ASIN(x2[2]);
+
+IF NOT RADIAN THEN
+	ra_precessed := ra_rad/deg_to_rad;
+	ra_precessed := MODABS(ra_precessed, 360.0);            //RA between 0 AND 360 degrees
+	dec_precessed := dec_rad/deg_to_rad;
+ELSE
+	ra_precessed := ra_rad; 
+	dec_precessed := dec_rad;
+	ra_precessed := MODABS(ra_rad, 2.0*PI);
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="FB_PRECESS">
+      <LineId Id="3" Count="43" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

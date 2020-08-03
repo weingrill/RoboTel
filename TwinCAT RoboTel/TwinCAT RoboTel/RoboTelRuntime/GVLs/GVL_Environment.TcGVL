@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <GVL Name="GVL_Environment" Id="{5aba1c40-190c-423b-85e3-0e4c78c9f67d}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+
+(* 
+TODO: verify Precipation BOOL or INT
+*)
+
+VAR_GLOBAL
+	rawWindSpeed				AT%I*:	INT;
+	rawWindDirection			AT%I*:	INT;
+	rawTemperature				AT%I*:	INT;
+	rawHumidity					AT%I*:	INT;
+	rawPressure 				AT%I*:	INT;
+	rawBrightness				AT%I*:	INT;
+//	rawLightDirection			AT%I*:	INT;
+	rawPrecipation				AT%I*:	INT;
+//	rawDust11					AT%I*:	BOOL;
+//	rawDust12					AT%I*:	BOOL;
+	
+	// indoors
+	rawTemperatureDome			AT%I*:	INT;
+	rawHumidityDome				AT%I*:	INT;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

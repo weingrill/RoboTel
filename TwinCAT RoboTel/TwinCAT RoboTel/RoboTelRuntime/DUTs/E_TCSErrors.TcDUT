@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="E_TCSErrors" Id="{2dd2d6b4-03c3-4430-b6a7-932cfa6a657a}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_TCSErrors :
+(
+	no_error := 0,
+	info :=1,
+	warning := 2,
+    error := 4,
+	panic := 8
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

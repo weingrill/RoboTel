@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="ATAN2" Id="{dba69bd6-0eda-4092-a354-7cdf0084c954}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION ATAN2 : LREAL
+VAR_INPUT
+	y, x: LREAL;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* source: https://de.wikipedia.org/wiki/Arctan2 *)
+
+IF x > 0 THEN
+	ATAN2 := ATAN(y/x);
+ELSIF x < 0 AND y > 0 THEN
+	ATAN2 := ATAN(y/x) + PI;
+ELSIF x < 0 AND y = 0 THEN
+	ATAN2 := PI;
+ELSIF x < 0 AND y < 0 THEN
+	ATAN2 := ATAN(y/x) - PI;
+ELSIF x = 0 AND y > 0 THEN
+	ATAN2 := PI/2.0;
+ELSIF x = 0 AND y < 0 THEN
+	ATAN2 := -PI/2.0;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="ATAN2">
+      <LineId Id="3" Count="13" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

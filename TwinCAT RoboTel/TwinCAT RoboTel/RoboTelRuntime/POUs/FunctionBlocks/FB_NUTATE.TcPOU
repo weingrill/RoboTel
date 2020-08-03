@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <POU Name="FB_NUTATE" Id="{95dd8a00-9a0a-45f1-bc01-551d4089e605}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_NUTATE
+VAR_INPUT
+	jd:	LREAL;
+END_VAR
+VAR_OUTPUT
+	nut_long, nut_obliq: LREAL := 0.0;
+END_VAR
+VAR
+	t: LREAL;
+	d, M, Mprime, F, omega: LREAL;
+	arg, sarg, carg:  ARRAY[0..62] OF LREAL;
+	I: INT;
+END_VAR
+VAR CONSTANT
+	dtor:	LREAL := PI/180.0;
+	coeff1:	ARRAY[0..3] OF LREAL := [297.85036, 445267.111480, -0.0019142,  1.0/189474];
+	coeff2:	ARRAY[0..3] OF LREAL := [357.52772,  35999.050340, -0.0001603, -1.0/3E5]; 
+	coeff3:	ARRAY[0..3] OF LREAL := [134.96298, 477198.867398,  0.0086972,  1.0/5.625E4]; 
+	coeff4:	ARRAY[0..3] OF LREAL :=  [93.27191, 483202.017538, -0.0036825, -1.0/3.27270E5]; 
+  	coeff5: ARRAY[0..3] OF LREAL := [125.04452,  -1934.136261,  0.0020708,  1.0/4.5E5];
+	d_lng: ARRAY[0..62] OF LREAL := [0,-2,0,0,0,0,-2,0,0,-2,-2,-2,0,2,0,2,0,0,-2,0,2,0,0,-2,0,-2,0,0,2,-2,0,-2,0,0,2,2,0,-2,0,2,2,-2,-2,2,2,0,-2,-2,0,-2,-2,0,-1,-2,1,0,0,-1,0,0,2,0,2]; 
+	m_lng: ARRAY[0..62] OF LREAL := [0,0,0,0,1,0,1,0,0,-1,17(0),2,0,2,1,0,-1,0,0,0,1,1,-1,0,0,0,0,0,0,-1,-1,0,0,0,1,0,0,1,0,0,0,-1,1,-1,-1,0,-1];
+	mp_lng: ARRAY[0..62] OF LREAL := [0,0,0,0,0,1,0,0,1,0,1,0,-1,0,1,-1,-1,1,2,-2,0,2,2,1,0,0,-1,0,-1,0,0,1,0,2,-1,1,0,1,0,0,1,2,1,-2,0,1,0,0,2,2,0,1,1,0,0,1,-2,1,1,1,-1,3,0];
+	f_lng: ARRAY[0..62] OF LREAL := [0,2,2,0,0,0,2,2,2,2,0,2,2,0,0,2,0,2,0,2,2,2,0,2,2,2,2,0,0,2,0,0,0,-2,2,2,2,0,2,2,0,2,2,0,0,0,2,0,2,0,2,-2,0,0,0,2,2,0,0,2,2,2,2];
+	om_lng: ARRAY[0..62] OF LREAL := [1,2,2,2,0,0,2,1,2,2,0,1,2,0,1,2,1,1,0,1,2,2,0,2,0,0,1,0,1,2,1,1,1,0,1,2,2,0,2,1,0,2,1,1,1,0,1,1,1,1,1,0,0,0,0,0,2,0,0,2,2,2,2];
+	sin_lng: ARRAY[0..62] OF LREAL := [-171996, -13187, -2274, 2062, 1426, 712, -517, -386, -301, 217, -158, 129, 123, 63, 63, -59, -58, -51, 48, 46, -38, -31, 29, 29, 26, -22, 21, 17, 16, -16, -15, -13, -12, 11, -10, -8, 7, -7, -7, -7, 6,6,6,-6,-6,5,-5,-5,-5,4,4,4,-4,-4,-4,3,-3,-3,-3,-3,-3,-3,-3 ];
+	sdelt: ARRAY[0..62] OF LREAL := [-174.2, -1.6, -0.2, 0.2, -3.4, 0.1, 1.2, -0.4, 0, -0.5, 0, 0.1, 0,0,0.1, 0,-0.1,10(0), -0.1, 0, 0.1, 33(0)];
+	cos_lng: ARRAY[0..62] OF LREAL := [ 92025, 5736, 977, -895, 54, -7, 224, 200, 129, -95,0,-70,-53,0, -33, 26, 32, 27, 0, -24, 16,13,0,-12,0,0,-10,0,-8,7,9,7,6,0,5,3,-3,0,3,3, 0,-3,-3,3,3,0,3,3,3, 14(0)] ;
+	cdelt: ARRAY[0..62] OF LREAL := [8.9, -3.1, -0.5, 0.5, -0.1, 0.0, -0.6, 0.0, -0.1, 0.3, 53(0)];
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//  form time in Julian centuries from 1900.0
+
+t := (jd - 2451545.0)/36525.0;
+
+// Mean elongation of the Moon
+
+d := poly(T, coeff1)*dtor;
+d := MODABS(d, 2.0*PI);
+
+// Sun's mean anomaly
+
+M := poly(T,coeff2)*dtor;
+M := MODABS(M, 2.0*PI);
+
+// Moon's mean anomaly
+
+Mprime := poly(T,coeff3)*dtor;
+Mprime := MODABS(Mprime, 2.0*PI);
+
+// Moon's argument of latitude
+
+F := poly(T, coeff4 )*dtor;
+F := MODABS(F, 2.0*PI);
+
+// Longitude OF the ascending node OF the Moon's mean orbit on the ecliptic,
+//  measured from the mean equinox of the date
+
+omega := poly(T, coeff5)*dtor;
+omega := MODABS(omega, 2.0*PI);
+
+
+// Sum the periodic terms 
+FOR i:=0 TO 62 DO
+	arg[i] := d_lng[i]*d + m_lng[i]*m +mp_lng[i]*mprime + f_lng[i]*f +om_lng[i]*omega;
+	sarg[i] := SIN(arg[i]);
+	carg[i] := COS(arg[i]);
+END_FOR
+
+nut_long  := 0.0;
+nut_obliq := 0.0;
+
+FOR i:=0 TO 62 DO
+	nut_long  := nut_long  + 0.0001*( (sdelt[i]*t + sin_lng[i])*sarg[i]);
+	nut_obliq := nut_obliq + 0.0001*( (cdelt[i]*t + cos_lng[i])*carg[i]);
+END_FOR
+ ]]></ST>
+    </Implementation>
+    <LineIds Name="FB_NUTATE">
+      <LineId Id="3" Count="44" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

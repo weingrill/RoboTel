@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <POU Name="FB_Mittelwert" Id="{d122bc0c-db6f-4ffc-ba2e-e54d6898d8d1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Mittelwert
+VAR_INPUT
+	fInValue			:REAL;
+	tZycleTime			:TIME:= T#4400MS;
+END_VAR
+VAR_OUTPUT
+	fMittelwert			:REAL;
+END_VAR
+VAR
+	aValue				:ARRAY[0..10000] OF REAL;
+	
+	nIndex1				:INT;
+	nIndex2				:INT;
+	fSum				:REAL;
+	nWerteCount			:INT;
+	fbMittelwertZyklus	:ton;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Mittelwertbildung über 20 Werte
+
+	// Takt Bilden
+	fbMittelwertZyklus(
+		IN:= NOT fbMittelwertZyklus.Q,
+		PT:= tZycleTime,
+		Q=>,
+		ET=> );
+	
+	// Abhänkig vom Zyklus Werte Schreiben
+	IF fbMittelwertZyklus.Q = TRUE THEN
+	
+		// Umkopieren der gespeicherten Werte (FiFo)
+			(* For -Schleife *)
+		FOR nIndex1:=18 TO 0 BY -1 DO
+			aValue[nIndex1+1] := aValue[nIndex1];
+		END_FOR
+		// Eintragen des Aktuellen Wertes
+			(* Zuweisung auf Speicherstelle 0 *)
+			aValue[0] := fInValue;
+		// nWerteCount bis 20 erhöhen	
+			(* hilfsvariable befüllen *)
+		IF nWerteCount < 20 THEN
+			nWerteCount := nWerteCount + 1;
+		END_IF
+	END_IF		
+	
+	// Summenbildung
+		(* Initallisierung der Var fSum *)
+		fSum := 0.0;
+		
+		(* Summenbildung über FOR-Schleife *)
+		FOR nIndex2:=0 TO nWerteCount-1 DO
+			fSum := fSum + aValue[nIndex2];
+		END_FOR
+		
+	// Mittelwert bilden
+		IF 	nWerteCount > 0 THEN
+			fMittelwert:= fSum / nWerteCount;
+		END_IF
+
+	
+		
+		
+		]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Mittelwert">
+      <LineId Id="3" Count="43" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

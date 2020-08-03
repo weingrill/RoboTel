@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="CT2LST" Id="{69d1807b-966a-4b2d-9801-b72992fcc729}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION CT2LST : LREAL
+VAR_INPUT
+	lng: LREAL; // The longitude in degrees (east of Greenwich) of the place for which the local sidereal time is desired, scalar.   The Greenwich mean sidereal time (GMST) can be found by setting Lng = 0.
+	jd:	LREAL; // this is the Julian date of time in question
+END_VAR
+VAR
+	t0,t,theta: LREAL;
+END_VAR
+VAR CONSTANT
+	jd2000: LREAL := 2451545.0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* source https://idlastro.gsfc.nasa.gov/ftp/pro/astro/ct2lst.pro 
+
+;+
+; NAME:
+;     CT2LST
+; PURPOSE:
+;     To convert from Local Civil Time to Local Mean Sidereal Time.
+;
+; CALLING SEQUENCE:
+;     CT2LST, Lst, Lng, Tz, Time, [Day, Mon, Year] 
+;                       or
+;     CT2LST, Lst, Lng, dummy, JD
+;
+; INPUTS:
+;     Lng  - The longitude in degrees (east of Greenwich) of the place for 
+;            which the local sidereal time is desired, scalar.   The Greenwich 
+;            mean sidereal time (GMST) can be found by setting Lng = 0.
+;     Tz  - The time zone of the site in hours, positive East  of the Greenwich
+;           meridian (ahead of GMT).  Use this parameter to easily account 
+;           for Daylight Savings time (e.g. -4=EDT, -5 = EST/CDT), scalar
+;           This parameter is not needed (and ignored) if Julian date is 
+;           supplied.    ***Note that the sign of TZ was changed in July 2008
+;           to match the standard definition.*** 
+;     Time or JD  - If more than four parameters are specified, then this is 
+;               the time of day of the specified date in decimal hours.  If 
+;               exactly four parameters are specified, then this is the 
+;               Julian date of time in question, scalar or vector
+;
+; OPTIONAL INPUTS:
+;      Day -  The day of the month (1-31),integer scalar or vector
+;      Mon -  The month, in numerical format (1-12), integer scalar or vector
+;      Year - The 4 digit year (e.g. 2008), integer scalar or vector
+;
+; OUTPUTS:
+;       Lst   The Local Sidereal Time for the date/time specified in hours.
+;
+; RESTRICTIONS:
+;       If specified, the date should be in numerical form.  The year should
+;       appear as yyyy.
+;
+; PROCEDURE:
+;       The Julian date of the day and time is question is used to determine
+;       the number of days to have passed since 0 Jan 2000.  This is used
+;       in conjunction with the GST of that date to extrapolate to the current
+;       GST; this is then used to get the LST.    See Astronomical Algorithms
+;       by Jean Meeus, p. 84 (Eq. 11-4) for the constants used.
+;
+; EXAMPLE:
+;       Find the Greenwich mean sidereal time (GMST) on 2008 Jul 30 at 15:53 pm
+;       in Baltimore, Maryland (longitude=-76.72 degrees).   The timezone is 
+;       EDT or tz=-4
+;
+;       IDL> CT2LST, lst, -76.72, -4,ten(15,53), 30, 07, 2008
+;
+;               ==> lst =  11.356505  hours  (= 11h 21m 23.418s)
+;
+;       The Web site  http://tycho.usno.navy.mil/sidereal.html contains more
+;       info on sidereal time, as well as an interactive calculator.
+; PROCEDURES USED:
+;       jdcnv - Convert from year, month, day, hour to julian date
+;
+; MODIFICATION HISTORY:
+;     Adapted from the FORTRAN program GETSD by Michael R. Greason, STX, 
+;               27 October 1988.
+;     Use IAU 1984 constants Wayne Landsman, HSTX, April 1995, results 
+;               differ by about 0.1 seconds  
+;     Longitudes measured *east* of Greenwich   W. Landsman    December 1998
+;     Time zone now measure positive East of Greenwich W. Landsman July 2008
+;     Remove debugging print statement  W. Landsman April 2009
+;-
+
+*)
+
+t0 := jd - jd2000;
+t := t0/36525.0;
+// Compute GST in seconds.
+theta := 280.46061837 + (360.98564736629 * t0) + EXPT(t, 2)*(0.000387933 - (t/ 3871.0E4));
+//theta := 100.46061837 + 36000.770053608*t0 + 0.000387933*EXPT(t0,2) - EXPT(t0,3)/3871000.0;
+// Compute LST in hours.
+CT2LST := ( theta + lng)/15.0;
+CT2LST := MODABS(CT2LST, 24.0);
+]]></ST>
+    </Implementation>
+    <LineIds Name="CT2LST">
+      <LineId Id="3" Count="80" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

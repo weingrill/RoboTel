@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="F_MeanDirection" Id="{94e882ea-c222-451c-8427-c100167c90fa}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_MeanDirection : LREAL
+VAR_INPUT
+	direction1,
+	direction2: LREAL;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[F_MeanDirection := MODABS(direction1 + 360.0 + direction2 + 360, 360.0);]]></ST>
+    </Implementation>
+    <LineIds Name="F_MeanDirection">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

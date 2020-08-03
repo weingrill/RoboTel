@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="F_YREAL" Id="{de87cd9e-9e50-4d38-82bb-04f167b6bbb8}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_YREAL : REAL
+VAR_INPUT
+	fX:		LREAL;
+	fXmin:	REAL := 0.0;
+	fXmax:	REAL := 32767.0;
+	fYmin, fYmax:	REAL;
+END_VAR
+VAR
+	fgain,
+	foffset:	LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+y = mx+b
+
+		    delta X	  fYmax - fYmin
+m = fgain = ------- = -------------
+			delta Y	  fXmax - fXmin
+			
+b = foffset = y - m*x = y - fgain*x
+					  = fYmin - fgain * fXmin
+*)
+
+// y = fgain * x + foffset
+
+IF (fXmax - fXmin) <> 0 THEN
+
+	// Berechnung der Steigung
+	fgain := (fYmax - fYmin) / (fXmax - fXmin);
+	
+	// Berechnung des Offsets
+	foffset := fYmin - (fgain * fXmin);
+	
+	// Berechnung von F_Y
+
+	IF fgain * fX + foffset < fYmin THEN 
+		F_YREAL := fYmin;
+		
+	END_IF
+	IF fgain * fX + foffset > fYmax THEN 
+		F_YREAL := fYmax;
+	END_IF	
+	F_YREAL := LREAL_TO_REAL(fgain * fX + foffset);
+		
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_YREAL">
+      <LineId Id="3" Count="32" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

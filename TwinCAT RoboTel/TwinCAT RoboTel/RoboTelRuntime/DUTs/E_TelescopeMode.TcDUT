@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+  <DUT Name="E_TelescopeMode" Id="{5edbc58b-acc7-44ce-96ce-477a027914e6}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_TelescopeMode :
+(
+	off := 0,
+	manual := 1,
+	automatic := 2
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

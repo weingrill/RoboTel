@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+  <POU Name="FB_LightTimer" Id="{b043bba5-8cc0-481c-b3d2-6f5e446f9c29}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_LightTimer
+VAR_INPUT
+	IN: BOOL;
+	PT: TIME := T#60S;
+END_VAR
+VAR_OUTPUT
+	Q: BOOL;
+END_VAR
+VAR
+	SR1 : SR;
+	rtrig: R_TRIG;
+	ton1 : TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+This is a simple light control based on a impulse switch.
+The output Q goes high on the rising edge of the input IN.
+The output Q stays high until the time PT runs out or another rising edge on IN is detected.
+*)
+
+// detect the rsing edge of the input
+rtrig(CLK := IN);
+// reset the input after PT time
+ton1(IN := Q,
+		PT := PT);
+// sets the flip-flop on the first rising edge, reset it on the second rising edge or when time is up.
+SR1(SET1 := rtrig.Q AND NOT Q,
+	RESET := ton1.Q OR (Q AND rtrig.Q),
+	Q1 => Q);]]></ST>
+    </Implementation>
+    <LineIds Name="FB_LightTimer">
+      <LineId Id="35" Count="0" />
+      <LineId Id="38" Count="2" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="14" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

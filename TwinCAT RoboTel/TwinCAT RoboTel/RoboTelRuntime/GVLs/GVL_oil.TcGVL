@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <GVL Name="GVL_oil" Id="{6c305df7-17d1-4acb-a553-c870f87116d0}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	//DIN9 1.0
+	oil_low				AT%I*: BOOL;
+	//DIN10 1.1
+	oil_high			AT%I*: BOOL;
+	//DIN11 1.2
+	oil_pressure_OK		AT%I*: BOOL;
+	//DIN12 1.3
+	oil_overtemperature		AT%I*: BOOL;
+	//DIN13 1.4
+	oil_undertemperature	AT%I*: BOOL;
+	//DIN14 1.5
+	oilfilter_dirty		AT%I*: BOOL;
+	//BT2
+	oil_temperature			AT%I*: INT;
+	
+	//DIN39 4.6
+	oilpan_maximum		AT%I*: BOOL;
+	//DIN40 4.7
+	oil_reserve			AT%I*: BOOL;
+	
+	
+	// Outputs
+		
+	//DOUT4 0.3
+	oil_pump_enable		AT%Q*: BOOL;
+	//DOUT5 0.4
+	oil_suction_enable		AT%Q*: BOOL;
+	//DOUT6 0.5
+	brake_azimuth_eve		AT%Q*: BOOL;
+
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

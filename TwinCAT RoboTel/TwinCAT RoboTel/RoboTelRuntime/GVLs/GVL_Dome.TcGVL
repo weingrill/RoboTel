@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <GVL Name="GVL_Dome" Id="{8410bcc3-97cb-4334-927b-71c02664ab1a}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	//Dauer					AT%Q*:	BOOL;
+	Clockwise				AT%Q*:	BOOL;
+	CounterClockwise		AT%Q*:	BOOL;
+	// EL5151
+	Azimut_raw				AT%I*:	INT;
+	
+	WatchDogReset:	BOOL;
+	OpenShutter: 	BOOL;
+	CloseShutter: 	BOOL;
+	OpenFlap: 		BOOL;
+	CloseFlap: 		BOOL;
+	
+	ShutterOpened:	BOOL;
+	ShutterClosed:	BOOL;
+	FlapOpened:		BOOL;
+	FlapClosed:		BOOL;
+	Stop:			BOOL;
+	DomeAxisRef: AXIS_REF;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

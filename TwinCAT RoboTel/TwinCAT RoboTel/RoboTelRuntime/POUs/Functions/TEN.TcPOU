@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="TEN" Id="{48a4167d-326b-4179-a49a-d85a103bff69}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION TEN : LREAL
+VAR_INPUT
+	dd,mm,ss: LREAL;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[TEN := dd + (mm/60.0) + (ss/3600.0);
+]]></ST>
+    </Implementation>
+    <LineIds Name="TEN">
+      <LineId Id="3" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
