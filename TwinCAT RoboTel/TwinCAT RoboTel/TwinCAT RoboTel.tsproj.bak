@@ -3588,6 +3588,7 @@ External Setpoint Generation:
 				</Image>
 				<Box Id="1" BoxType="9099">
 					<Name>Klemme 1 (EK1200)</Name>
+					<Comment><![CDATA[Hauptschrank]]></Comment>
 					<ImageId>1000</ImageId>
 					<EtherCAT PdiType="#x0100" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x04b02c52" RevisionNo="#x00001388" InfoDataState="false" PortPhys="49" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1200-5000 EtherCAT Netzteil (2A E-Bus)" Desc="EK1200" PortABoxInfo="#x00ffffff"/>
 					<Box Id="2" BoxType="9099" BoxFlags="#x00000020">
@@ -7010,6 +7011,7 @@ External Setpoint Generation:
 				</Box>
 				<Box Id="24" BoxType="9099" BoxFlags="#x00000020">
 					<Name>Antrieb 24 (AX5206-0000-0210)</Name>
+					<Comment><![CDATA[Derotator]]></Comment>
 					<ImageId>1011</ImageId>
 					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" DownloadPdoCfg="true" CycleMBoxPollingTime="0" FoeType="1" SoeChannels="2" VendorId="#x00000002" ProductCode="#x14566012" RevisionNo="#x00d20000" InfoDataAddr="true" InfoDataSoeDS401="true" InfoDataDcTimes="true" TimeoutStateChange2="15000" TimeoutStateChange3="10000" TimeoutStateChange4="500" AutoRestoreAfterWcOk="true" CheckRevisionNoType="4" PortPhys="12305" IdentificationAdo="308" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AX5206-0000-0210 EtherCAT Drive (SoE, 2 Ch.)" Desc="AX5206-0000-0210" PortABoxInfo="#x01000017">
 						<SyncMan>001880002600010001000000800080008000001826010000</SyncMan>
@@ -7077,6 +7079,7 @@ External Setpoint Generation:
 				</Box>
 				<Box Id="25" BoxType="9099" BoxFlags="#x00000020">
 					<Name>Antrieb 25 (AX5125-0000-0213)</Name>
+					<Comment><![CDATA[Azmiut?]]></Comment>
 					<ImageId>1012</ImageId>
 					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" DownloadPdoCfg="true" CycleMBoxPollingTime="0" FoeType="1" SoeChannels="1" VendorId="#x00000002" ProductCode="#x14056012" RevisionNo="#x00d50000" InfoDataAddr="true" InfoDataSoeDS401="true" InfoDataDcTimes="true" TimeoutStateChange2="15000" TimeoutStateChange3="10000" TimeoutStateChange4="500" AutoRestoreAfterWcOk="true" CheckRevisionNoType="4" PortPhys="12305" IdentificationAdo="308" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AX5125-0000-0213 EtherCAT Drive (SoE, 1 Ch.)" Desc="AX5125-0000-0213" PortABoxInfo="#x01000018">
 						<SyncMan>001880002600010001000000800080008000001826010000</SyncMan>
@@ -7123,6 +7126,7 @@ External Setpoint Generation:
 				</Box>
 				<Box Id="26" BoxType="9099" BoxFlags="#x00000020">
 					<Name>Antrieb 26 (AX5125-0000-0213)</Name>
+					<Comment><![CDATA[Elevation?]]></Comment>
 					<ImageId>1012</ImageId>
 					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" DownloadPdoCfg="true" CycleMBoxPollingTime="0" FoeType="1" SoeChannels="1" VendorId="#x00000002" ProductCode="#x14056012" RevisionNo="#x00d50000" InfoDataAddr="true" InfoDataSoeDS401="true" InfoDataDcTimes="true" TimeoutStateChange2="15000" TimeoutStateChange3="10000" TimeoutStateChange4="500" AutoRestoreAfterWcOk="true" CheckRevisionNoType="4" PortPhys="12305" IdentificationAdo="308" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AX5125-0000-0213 EtherCAT Drive (SoE, 1 Ch.)" Desc="AX5125-0000-0213" PortABoxInfo="#x01000019">
 						<SyncMan>001880002600010001000000800080008000001826010000</SyncMan>

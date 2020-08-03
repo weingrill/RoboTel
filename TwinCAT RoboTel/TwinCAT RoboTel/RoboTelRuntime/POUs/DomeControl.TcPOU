@@ -63,9 +63,6 @@ END_IF
 IF DomeClosed THEN
 	CloseDome := FALSE;
 END_IF
-FlatScreenTimer(IN := FlatScreen, PT := T#1H, Q => GVL_Dome.FlatScreen);
-// give feedback that Flatscreen is on
-FlatScreen := FlatScreenTimer.Q;
 
 IF TelescopeControl.telescope_mode = E_TelescopeMode.automatic THEN
 	IF OpenDome AND Environment.avg_wind < 10.0 THEN
@@ -77,11 +74,9 @@ IF TelescopeControl.telescope_mode = E_TelescopeMode.automatic THEN
 		GVL_Dome.CloseFlap := TRUE;
 	END_IF
 	
-	IF Environment.DustAverage.AVG > 0.5 OR 
-		Environment.avg_wind > 15.0 OR
+	IF Environment.avg_wind > 15.0 OR
 		Environment.PrecipitationAverage.AVG > 1.0 OR
-		Environment.Brightness > 2000.0 OR
-		MainControls.VoltageGuardWarning THEN
+		Environment.Brightness > 2000.0 THEN
 		GVL_Dome.CloseShutter := TRUE;
 		GVL_Dome.CloseFlap := TRUE;
 		//CloseDome := TRUE;
@@ -133,7 +128,6 @@ ELSE // WriteCycle
 		DomeControl.2 := GVL_Dome.CloseShutter;
 		DomeControl.3 := GVL_Dome.OpenFlap;
 		DomeControl.4 := GVL_Dome.CloseFlap;
-		DomeControl.5 := GVL_Dome.FlatScreen;
 		bError := FALSE;
 		fbWriteReq( IDXGRP := 16#4020, 
 					IDXOFFS := 0, 
@@ -178,14 +172,11 @@ DomeLog(Trigger := DomeCommError,
       <LineId Id="597" Count="1" />
       <LineId Id="584" Count="0" />
       <LineId Id="578" Count="5" />
-      <LineId Id="453" Count="0" />
-      <LineId Id="468" Count="0" />
-      <LineId Id="467" Count="0" />
       <LineId Id="498" Count="0" />
       <LineId Id="469" Count="0" />
-      <LineId Id="483" Count="11" />
+      <LineId Id="483" Count="9" />
+      <LineId Id="494" Count="0" />
       <LineId Id="527" Count="0" />
-      <LineId Id="629" Count="0" />
       <LineId Id="495" Count="1" />
       <LineId Id="500" Count="1" />
       <LineId Id="497" Count="0" />
@@ -212,7 +203,7 @@ DomeLog(Trigger := DomeCommError,
       <LineId Id="239" Count="2" />
       <LineId Id="211" Count="0" />
       <LineId Id="213" Count="2" />
-      <LineId Id="247" Count="5" />
+      <LineId Id="247" Count="4" />
       <LineId Id="216" Count="6" />
       <LineId Id="224" Count="0" />
       <LineId Id="266" Count="0" />
