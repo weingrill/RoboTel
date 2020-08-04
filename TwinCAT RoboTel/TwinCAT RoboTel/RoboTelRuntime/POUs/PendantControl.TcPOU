@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="PendantControl" Id="{4c9494b1-b987-44f6-88ae-faae341979f2}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PendantControl
+VAR
+	Selection: UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Selection := 1*BOOL_TO_UINT(GVL_pendant_control.BCD1) + 
+			 2*BOOL_TO_UINT(GVL_pendant_control.BCD2) + 
+			 4*BOOL_TO_UINT(GVL_pendant_control.BCD4) +
+			 8*BOOL_TO_UINT(GVL_pendant_control.BCD8);
+
+GVL_pendant_control.lamp_left := FALSE;
+GVL_pendant_control.lamp_right := FALSE;
+GVL_pendant_control.lamp_up := FALSE;
+GVL_pendant_control.lamp_down := FALSE;
+		 
+CASE Selection OF
+	1:	GVL_pendant_control.lamp_left := TRUE;
+		GVL_pendant_control.lamp_right := TRUE;
+	5:	GVL_pendant_control.lamp_left := TRUE;
+		GVL_pendant_control.lamp_right := TRUE;
+		GVL_pendant_control.lamp_up := TRUE;
+		GVL_pendant_control.lamp_down := TRUE;
+		
+END_CASE]]></ST>
+    </Implementation>
+    <LineIds Name="PendantControl">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="2" />
+      <LineId Id="17" Count="2" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="10" Count="2" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="20" Count="2" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="13" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

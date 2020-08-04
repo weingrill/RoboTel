@@ -161,6 +161,9 @@
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\PendantControl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\TelescopeControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>

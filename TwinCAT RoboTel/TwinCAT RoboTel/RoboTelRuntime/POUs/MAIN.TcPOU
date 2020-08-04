@@ -8,12 +8,21 @@ END_VAR
     <Implementation>
       <ST><![CDATA[TelescopeControl();
 DomeControl();
+PendantControl();
 GVL_Main.lamp_power := GVL_Main.phase_available;
+GVL_Telescope.brake_azimuth_eve := GVL_Main.brake_clearing;
+GVL_Main.softstart_trafo := GVL_Main.key_switch AND 
+							GVL_Main.emergency_stop1 AND
+							GVL_Main.emergency_stop2;
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="2" Count="0" />
-      <LineId Id="6" Count="2" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="10" Count="3" />
+      <LineId Id="8" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

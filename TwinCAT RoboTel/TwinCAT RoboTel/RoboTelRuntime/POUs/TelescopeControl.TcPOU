@@ -184,13 +184,13 @@ VAR CONSTANT
 	longitude: LREAL := 13.104589;
 	latitude: LREAL := 52.404977;
 *)
-(* Chile site : *)
+(* RoboTel site : *)
 	// telescope site longitude, source: Google 
-	longitude: LREAL := -70.201280;
+	longitude: LREAL := 13.101867;
 	// telescope site latitude, source: Google
-	latitude: LREAL := -24.598464;
-	// telescope site height above sea level: source Wikipedia Cerro Armazones Observatory
-	height: LREAL := 2810.0;
+	latitude: LREAL := 52.404940;
+	// telescope site height above sea level: estimated
+	height: LREAL := 33.0;
 	siderial_velocity: LREAL := 360.0 / 86164.099;
 	position_velocity: LREAL := 1.0;
 	declination_park: LREAL := 294.0;
