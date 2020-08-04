@@ -40,19 +40,6 @@ VAR_GLOBAL
 	//DOUT13 1.4
 	lamp_error			AT%Q*: BOOL;
 	
-	//DOUT4 0.3
-	oil_pump_enable		AT%Q*: BOOL;
-	//DOUT5 0.4
-	oil_suction_enable		AT%Q*: BOOL;
-	//DOUT6 0.5
-	brake_azimuth_eve		AT%Q*: BOOL;
-
-	
-	// Zyklisches Interface zwischen NC und Achse
-	HourAxisRef: AXIS_REF;
-	DecAxisRef: AXIS_REF;
-	
-	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

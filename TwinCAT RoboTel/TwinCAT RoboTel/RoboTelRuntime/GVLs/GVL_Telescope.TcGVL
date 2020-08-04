@@ -15,8 +15,14 @@ VAR_GLOBAL
 	temperature_bearing1	AT%I*: INT;
 	// BT14
 	temperature_bearing2	AT%I*: INT;
+	// BT15
+	temperature_cabinet		AT%I*: INT;
+
+	//DOUT6 0.5
+	brake_azimuth_eve	AT%Q*: BOOL;
 	
-	
+	// DIN28 3.3 (connected to AX5000?!)
+	azimut_limit_switch	AT%I*: BOOL;
 	// DIN29 3.4
 	focus_limit_near	AT%I*: BOOL;
 	// DIN30 3.5
@@ -25,7 +31,6 @@ VAR_GLOBAL
 	nasmyth_limit_left	AT%I*: BOOL;
 	// DIN32 3.7
 	nasmyth_limit_right	AT%I*: BOOL;
-	
 	
 	// DIN33 4.0
 	cover1_open		AT%I*: BOOL;
@@ -39,17 +44,24 @@ VAR_GLOBAL
 	cover3_open		AT%I*: BOOL;
 	// DIN38 4.5
 	cover4_closed	AT%I*: BOOL;
-	
+
 	//DOUT14 1.5
 	focus_lock		AT%Q*: BOOL;
 	//DOUT15 4.6
-	nasmyth_lock		AT%Q*: BOOL;
+	nasmyth_lock	AT%Q*: BOOL;
+	//Horn 4.7
+	horn			AT%Q*: BOOL;
 
 	
 	// Zyklisches Interface zwischen NC und Achse
-	AzimuthAxisRef: AXIS_REF;
-	ElevationAxisRef: AXIS_REF;
-	DerotatorAxisRef: AXIS_REF;
+	AzimuthAxisRef: 	AXIS_REF;
+	ElevationAxisRef: 	AXIS_REF;
+	DerotatorAxisRef: 	AXIS_REF;
+	FocusAxisRef:		AXIS_REF;
+	NasmythAxisRef:		AXIS_REF;
+	Cover1AxisRef:		AXIS_REF;
+	Cover2AxisRef:		AXIS_REF;
+	Cover3AxisRef:		AXIS_REF;
 		
 END_VAR]]></Declaration>
   </GVL>

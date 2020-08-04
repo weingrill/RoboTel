@@ -25,12 +25,6 @@ VAR_GLOBAL
 	main_cabinet_temperature	AT%I*: INT;
 	//DIN15 1.6
 	brake_clearing		AT%I*: BOOL;
-	//DIN28 3.3 (connected to AX5000?!)
-	azimut_limit_switch	AT%I*: BOOL;
-	
-	
-	
-	// Outputs
 	
 	//DOUT1 0.0
 	lamp_power			AT%Q*: BOOL;
@@ -39,8 +33,8 @@ VAR_GLOBAL
 	//DOUT3 0.2
 	lamp_error			AT%Q*: BOOL;
 	
-	//DOUT6 0.5
-	brake_azimuth_eve		AT%Q*: BOOL;
+	//DOUT7 0.6
+	softstart_trafo		AT%Q*:BOOL;
 
 END_VAR]]></Declaration>
   </GVL>

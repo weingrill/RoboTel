@@ -23,17 +23,11 @@ VAR_GLOBAL
 	//DIN40 4.7
 	oil_reserve			AT%I*: BOOL;
 	
-	
-	// Outputs
 		
 	//DOUT4 0.3
 	oil_pump_enable		AT%Q*: BOOL;
 	//DOUT5 0.4
-	oil_suction_enable		AT%Q*: BOOL;
-	//DOUT6 0.5
-	brake_azimuth_eve		AT%Q*: BOOL;
-
-	
+	oil_suction_enable		AT%Q*: BOOL;	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
