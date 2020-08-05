@@ -3992,6 +3992,11 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Telescope.cover3_closed</Name>
+							<Comment><![CDATA[ DIN38 4.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_pendant_control.BCD1</Name>
 							<Comment><![CDATA[DIN17 2.0]]></Comment>
 							<Type>BOOL</Type>
@@ -4169,11 +4174,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Telescope.cover3_open</Name>
 							<Comment><![CDATA[ DIN37 4.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.cover4_closed</Name>
-							<Comment><![CDATA[ DIN38 4.5]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -8728,14 +8728,13 @@ DOUT9 1.0]]></Comment>
 		</OwnerA>
 		<OwnerA Name="TIPC^RoboTelRuntime^RoboTelRuntime Instance">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL1008)">
-				<Link VarA="PlcTask Inputs^GVL_Main.emergency_stop1" VarB="Channel 6^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.emergency_stop2" VarB="Channel 7^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.emergency_stop1" VarB="Channel 5^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.emergency_stop2" VarB="Channel 6^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Main.key_switch" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.key_switch_remote" VarB="Channel 3^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Main.phase_available" VarB="Channel 1^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.reset_switch" VarB="Channel 8^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.start_switch" VarB="Channel 4^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.stop_switch" VarB="Channel 5^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.reset_switch" VarB="Channel 7^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.start_switch" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.stop_switch" VarB="Channel 4^Input"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 4 (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_Main.brake_clearing" VarB="Channel 7^Input"/>
@@ -8775,7 +8774,6 @@ DOUT9 1.0]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.cover2_closed" VarB="Channel 4^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.cover2_open" VarB="Channel 3^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.cover3_open" VarB="Channel 5^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.cover4_closed" VarB="Channel 6^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_oil.oil_reserve" VarB="Channel 8^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_oil.oilpan_maximum" VarB="Channel 7^Input"/>
 			</OwnerB>

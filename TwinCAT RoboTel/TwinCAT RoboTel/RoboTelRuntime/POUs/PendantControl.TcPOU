@@ -16,7 +16,9 @@ GVL_pendant_control.lamp_left := FALSE;
 GVL_pendant_control.lamp_right := FALSE;
 GVL_pendant_control.lamp_up := FALSE;
 GVL_pendant_control.lamp_down := FALSE;
-		 
+
+GVL_Telescope.horn := GVL_pendant_control.reset_switch;
+ 
 CASE Selection OF
 	1:	GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
@@ -31,7 +33,7 @@ END_CASE]]></ST>
       <LineId Id="5" Count="0" />
       <LineId Id="7" Count="2" />
       <LineId Id="17" Count="2" />
-      <LineId Id="25" Count="1" />
+      <LineId Id="25" Count="3" />
       <LineId Id="10" Count="2" />
       <LineId Id="16" Count="0" />
       <LineId Id="20" Count="2" />

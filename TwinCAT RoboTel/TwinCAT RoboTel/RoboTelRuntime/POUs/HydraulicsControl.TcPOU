@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="HydraulicsControl" Id="{6bf4055d-2300-4039-bb16-5b9f94622e06}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM HydraulicsControl
+VAR
+	pump_pod,
+	suction_pump_POD,
+	pressure_watchdog: TON;
+	suction_pump_timer: TP;
+	
+	pressure_failure,
+	oil_low,
+	oil_high,
+	oil_pressure_OK :	BOOL := FALSE;
+	
+	HydraulicsLog,
+	reservewarn,
+	oil_low_log: FB_EventLog;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* 
+Main control Logic for the Hydraulics system
+* power on delay for main pump and suction pump
+* start main pump if main control is ready (button pressed or remote)
+* start suction pump if maximum in pan is reached
+* suction pump runs for 60 seconds
+* stop main pump if oil is low
+* stop main pump if pressure fails for 10 seconds
+*)
+oil_low := NOT GVL_oil.oil_low;
+oil_high := NOT GVL_oil.oil_high;
+
+pump_pod(IN := 	MAIN.ready AND 
+				NOT oil_low AND
+				NOT pressure_failure,
+		 PT := T#3S);
+GVL_Oil.oil_pump_enable := pump_pod.Q;
+
+suction_pump_POD(IN :=	MAIN.power_OK AND 
+						GVL_oil.oilpan_maximum,
+				 PT := T#4S);
+suction_pump_timer(IN := suction_pump_POD.Q,
+					PT := T#60S,
+					Q => GVL_Oil.oil_suction_enable);
+
+pressure_watchdog(IN := GVL_Oil.oil_pump_enable AND 
+						NOT GVL_oil.oil_pressure_OK,
+					PT := T#10S,
+				  Q => pressure_failure);
+
+HydraulicsLog(Trigger := pressure_failure,
+				Level := ADSLOG_MSGTYPE_ERROR,
+				FormatString := 'oil pressure: %s',
+				OnMessage := 'LOW',
+				OffMessage := 'OK',
+				OffLevel := ADSLOG_MSGTYPE_HINT);
+reservewarn(Trigger := GVL_oil.oil_reserve,
+			Level := ADSLOG_MSGTYPE_WARN,
+			FormatString := 'oil reserve: %s',
+			OnMessage := 'LOW',
+			OffMessage := 'OK',
+			OffLevel := ADSLOG_MSGTYPE_HINT);
+oil_low_log(Trigger := oil_low,
+				Level := ADSLOG_MSGTYPE_ERROR,
+				FormatString := 'oil level: %s',
+				OnMessage := 'LOW',
+				OffMessage := 'OK',
+				OffLevel := ADSLOG_MSGTYPE_HINT);
+]]></ST>
+    </Implementation>
+    <LineIds Name="HydraulicsControl">
+      <LineId Id="15" Count="1" />
+      <LineId Id="18" Count="2" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="54" Count="3" />
+      <LineId Id="59" Count="5" />
+      <LineId Id="66" Count="5" />
+      <LineId Id="51" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -3,26 +3,68 @@
   <POU Name="MAIN" Id="{c39aef1e-7c14-41dc-ad83-03bececdc52a}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
+	power_OK,
+	ready,
+	power_failure,
+	error : BOOL := FALSE;
+	power_watchdog : TON;
+	ready_state: RS;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[TelescopeControl();
+      <ST><![CDATA[(* 
+Main control loop
+* Execute sub modules
+* power management
+* control panel switches and status lamps
+*)
+power_OK := NOT GVL_Main.phase_available;
+ready_state(SET := GVL_Main.start_switch AND 
+				   power_OK,
+			RESET1 := GVL_main.stop_switch OR error,
+			Q1 => ready);
+		
+TelescopeControl();
 DomeControl();
 PendantControl();
-GVL_Main.lamp_power := GVL_Main.phase_available;
+HydraulicsControl();
 GVL_Telescope.brake_azimuth_eve := GVL_Main.brake_clearing;
 GVL_Main.softstart_trafo := GVL_Main.key_switch AND 
 							GVL_Main.emergency_stop1 AND
-							GVL_Main.emergency_stop2;
+							GVL_Main.emergency_stop2 (* AND NOT power_failure*); // remove after testing
+power_watchdog(IN := GVL_Main.softstart_trafo AND NOT power_OK,
+				PT := T#2S,
+				Q => power_failure);
+error := power_failure OR HydraulicsControl.pressure_failure;
+							
+GVL_Main.lamp_ready := ready;
+GVL_Main.lamp_error := error;
+GVL_Main.lamp_power := power_ok;
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
+      <LineId Id="28" Count="0" />
+      <LineId Id="30" Count="3" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="22" Count="0" />
       <LineId Id="2" Count="0" />
       <LineId Id="6" Count="0" />
       <LineId Id="9" Count="0" />
-      <LineId Id="7" Count="0" />
+      <LineId Id="15" Count="0" />
       <LineId Id="10" Count="3" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="26" Count="0" />
       <LineId Id="8" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="43" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

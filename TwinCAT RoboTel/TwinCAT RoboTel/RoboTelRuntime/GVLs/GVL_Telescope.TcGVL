@@ -43,7 +43,7 @@ VAR_GLOBAL
 	// DIN37 4.4
 	cover3_open		AT%I*: BOOL;
 	// DIN38 4.5
-	cover4_closed	AT%I*: BOOL;
+	cover3_closed	AT%I*: BOOL;
 
 	//DOUT14 1.5
 	focus_lock		AT%Q*: BOOL;
