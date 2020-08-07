@@ -3,18 +3,17 @@
   <POU Name="HydraulicsControl" Id="{6bf4055d-2300-4039-bb16-5b9f94622e06}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM HydraulicsControl
 VAR
-	pump_pod,
-	suction_pump_POD,
 	pressure_watchdog: TON;
 	suction_pump_timer: TP;
 	
 	pressure_failure,
 	oil_low,
 	oil_high,
-	oil_pressure_OK :	BOOL := FALSE;
+	oil_pressure_OK,
+	oil_warning :	BOOL := FALSE;
 	
 	HydraulicsLog,
-	reservewarn,
+	ReserveLog,
 	oil_low_log: FB_EventLog;
 END_VAR
 ]]></Declaration>
@@ -30,17 +29,14 @@ Main control Logic for the Hydraulics system
 *)
 oil_low := NOT GVL_oil.oil_low;
 oil_high := NOT GVL_oil.oil_high;
+oil_warning := GVL_oil.oil_reserve;
 
-pump_pod(IN := 	MAIN.ready AND 
+GVL_Oil.oil_pump_enable := MAIN.ready AND MAIN.phase_available AND
 				NOT oil_low AND
-				NOT pressure_failure,
-		 PT := T#3S);
-GVL_Oil.oil_pump_enable := pump_pod.Q;
+				NOT pressure_failure;
 
-suction_pump_POD(IN :=	MAIN.power_OK AND 
+suction_pump_timer(IN := MAIN.phase_available AND 
 						GVL_oil.oilpan_maximum,
-				 PT := T#4S);
-suction_pump_timer(IN := suction_pump_POD.Q,
 					PT := T#60S,
 					Q => GVL_Oil.oil_suction_enable);
 
@@ -52,10 +48,10 @@ pressure_watchdog(IN := GVL_Oil.oil_pump_enable AND
 HydraulicsLog(Trigger := pressure_failure,
 				Level := ADSLOG_MSGTYPE_ERROR,
 				FormatString := 'oil pressure: %s',
-				OnMessage := 'LOW',
+				OnMessage := 'FAILURE',
 				OffMessage := 'OK',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
-reservewarn(Trigger := GVL_oil.oil_reserve,
+ReserveLog(Trigger := oil_warning,
 			Level := ADSLOG_MSGTYPE_WARN,
 			FormatString := 'oil reserve: %s',
 			OnMessage := 'LOW',
@@ -79,16 +75,12 @@ oil_low_log(Trigger := oil_low,
       <LineId Id="41" Count="0" />
       <LineId Id="43" Count="0" />
       <LineId Id="42" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="9" Count="0" />
+      <LineId Id="89" Count="2" />
       <LineId Id="5" Count="0" />
       <LineId Id="11" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="35" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="36" Count="0" />
       <LineId Id="44" Count="0" />
       <LineId Id="25" Count="0" />
       <LineId Id="24" Count="0" />

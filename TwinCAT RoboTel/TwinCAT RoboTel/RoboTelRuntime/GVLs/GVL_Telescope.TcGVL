@@ -21,7 +21,7 @@ VAR_GLOBAL
 	//DOUT6 0.5
 	brake_azimuth_eve	AT%Q*: BOOL;
 	
-	// DIN28 3.3 (connected to AX5000?!)
+	// DIN28 3.3 (absolute)
 	azimut_limit_switch	AT%I*: BOOL;
 	// DIN29 3.4
 	focus_limit_near	AT%I*: BOOL;

@@ -4,11 +4,20 @@
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
 	power_OK,
+	phase_available,
 	ready,
 	power_failure,
-	error : BOOL := FALSE;
+	error, 
+	warning : BOOL := FALSE;
+	warn_blink : FB_BLINK;
+	// TCS remote start;
+	remote_start:	BOOL := FALSE;
+	// TCS remote stop;
+	remote_stop:	BOOL := FALSE;
 	power_watchdog : TON;
 	ready_state: RS;
+	
+	VentilatorAxisRef :	AXIS_REF;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -17,39 +26,53 @@ Main control loop
 * Execute sub modules
 * power management
 * control panel switches and status lamps
+
+* start switch activates Hydraulics and Trafo
+* TODO: Trafo waits for pressure_ok
+* 
 *)
-power_OK := NOT GVL_Main.phase_available;
-ready_state(SET := GVL_Main.start_switch AND 
-				   power_OK,
-			RESET1 := GVL_main.stop_switch OR error,
+// TODO: Input from softstart_trafo
+power_OK := TRUE;
+phase_available := GVL_Main.phase_available;
+ready_state(SET := power_OK AND(GVL_Main.start_switch OR remote_start),
+			RESET1 := GVL_main.stop_switch OR remote_stop OR error,
 			Q1 => ready);
 		
 TelescopeControl();
 DomeControl();
 PendantControl();
 HydraulicsControl();
-GVL_Telescope.brake_azimuth_eve := GVL_Main.brake_clearing;
+GVL_Telescope.brake_azimuth_eve := GVL_Main.brake_clearing AND NOT GVL_Telescope.azimut_limit_switch;
 GVL_Main.softstart_trafo := GVL_Main.key_switch AND 
 							GVL_Main.emergency_stop1 AND
-							GVL_Main.emergency_stop2 (* AND NOT power_failure*); // remove after testing
+							GVL_Main.emergency_stop2 AND
+							phase_available (*AND NOT power_failure*); // remove after testing
 power_watchdog(IN := GVL_Main.softstart_trafo AND NOT power_OK,
 				PT := T#2S,
 				Q => power_failure);
-error := power_failure OR HydraulicsControl.pressure_failure;
+warn_blink(ENABLE := HydraulicsControl.oil_warning, Q => warning);
+error := power_failure OR 
+			HydraulicsControl.pressure_failure OR 
+			(NOT phase_available)
+			OR GVL_Telescope.azimut_limit_switch;
 							
 GVL_Main.lamp_ready := ready;
-GVL_Main.lamp_error := error;
+GVL_Main.lamp_error := error OR warning;
 GVL_Main.lamp_power := power_ok;
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="28" Count="0" />
       <LineId Id="30" Count="3" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="65" Count="0" />
       <LineId Id="29" Count="0" />
+      <LineId Id="62" Count="0" />
       <LineId Id="16" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="20" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="19" Count="1" />
       <LineId Id="23" Count="0" />
       <LineId Id="22" Count="0" />
       <LineId Id="2" Count="0" />
@@ -57,9 +80,12 @@ GVL_Main.lamp_power := power_ok;
       <LineId Id="9" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="10" Count="3" />
+      <LineId Id="69" Count="0" />
       <LineId Id="35" Count="0" />
       <LineId Id="37" Count="1" />
+      <LineId Id="70" Count="0" />
       <LineId Id="41" Count="0" />
+      <LineId Id="71" Count="2" />
       <LineId Id="26" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="40" Count="0" />
