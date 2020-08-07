@@ -58,10 +58,6 @@ VAR_GLOBAL
 	ElevationAxisRef: 	AXIS_REF;
 	DerotatorAxisRef: 	AXIS_REF;
 	FocusAxisRef:		AXIS_REF;
-	NasmythAxisRef:		AXIS_REF;
-	Cover1AxisRef:		AXIS_REF;
-	Cover2AxisRef:		AXIS_REF;
-	Cover3AxisRef:		AXIS_REF;
 		
 END_VAR]]></Declaration>
   </GVL>

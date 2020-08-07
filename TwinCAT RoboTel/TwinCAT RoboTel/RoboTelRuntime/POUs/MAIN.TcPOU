@@ -17,7 +17,6 @@ VAR
 	power_watchdog : TON;
 	ready_state: RS;
 	
-	VentilatorAxisRef :	AXIS_REF;
 END_VAR
 ]]></Declaration>
     <Implementation>
