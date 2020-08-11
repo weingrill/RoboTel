@@ -4,6 +4,14 @@
     <Declaration><![CDATA[PROGRAM PendantControl
 VAR
 	Selection: UINT;
+	Cover3_state: RS;
+	Cover3_axis: 		MDP5001_511_733_5131DD77;
+	Cover3_control:		FB_DCAxis;
+	Cover2_axis: 		MDP5001_511_733_5131DD77;
+	Cover2_control:		FB_DCAxis;
+	Nasmyth_axis:		MDP5001_511_733_5131DD77;
+	Nasmyth_control:	FB_DCAxis;
+	error:				BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -16,33 +24,88 @@ GVL_pendant_control.lamp_left := FALSE;
 GVL_pendant_control.lamp_right := FALSE;
 GVL_pendant_control.lamp_up := FALSE;
 GVL_pendant_control.lamp_down := FALSE;
-GVL_pendant_control.lamp_error := MAIN.error;
+//GVL_pendant_control.lamp_error := MAIN.error;
+FanControl(enable := NOT GVL_pendant_control.key_switch);
+//GVL_Telescope.horn := GVL_pendant_control.reset_switch;
 
-GVL_Telescope.horn := GVL_pendant_control.reset_switch;
- 
 CASE Selection OF
 	1:	GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
+	2: Cover2_control(open := GVL_pendant_control.direction_up,
+						close := GVL_pendant_control.direction_down,
+						enable := GVL_pendant_control.key_switch AND GVL_Telescope.cover3_closed,
+						reset := MAIN.reset,
+						limit_open := GVL_Telescope.cover2_open,
+						limit_close := GVL_Telescope.cover2_closed,
+						error => error,
+						axis_ref := Cover2_axis);
+		GVL_pendant_control.lamp_up := GVL_Telescope.cover2_open;
+		GVL_pendant_control.lamp_down := GVL_Telescope.cover2_closed;
+ 
+	
+	3:  
+		 Cover3_control(open := GVL_pendant_control.direction_up,
+						close := GVL_pendant_control.direction_down,
+						enable := GVL_pendant_control.key_switch,
+						reset := MAIN.reset,
+						limit_open := GVL_Telescope.cover3_open,
+						limit_close := GVL_Telescope.cover3_closed,
+						error => error,
+						axis_ref := Cover3_axis);
+		GVL_pendant_control.lamp_up := GVL_Telescope.cover3_open;
+		GVL_pendant_control.lamp_down := GVL_Telescope.cover3_closed;
+	4:
+		GVL_Telescope.nasmyth_lock :=  GVL_pendant_control.key_switch AND 
+										( GVL_pendant_control.direction_left OR 
+ 										GVL_pendant_control.direction_right OR
+										GVL_pendant_control.start_switch);
+		 Nasmyth_control(open := GVL_pendant_control.direction_left,
+						close := GVL_pendant_control.direction_right,
+						enable := GVL_pendant_control.key_switch,
+						reset := MAIN.reset,
+						limit_open := GVL_Telescope.nasmyth_limit_left,
+						limit_close := GVL_Telescope.nasmyth_limit_right,
+						error => error,
+						axis_ref := Nasmyth_axis);
+		GVL_pendant_control.lamp_left := GVL_Telescope.nasmyth_limit_left;
+		GVL_pendant_control.lamp_right := GVL_Telescope.nasmyth_limit_left;
+		
 	5:	GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
 		GVL_pendant_control.lamp_up := TRUE;
 		GVL_pendant_control.lamp_down := TRUE;
 		
-END_CASE]]></ST>
+END_CASE
+
+GVL_pendant_control.lamp_error := Main.error;]]></ST>
     </Implementation>
     <LineIds Name="PendantControl">
       <LineId Id="5" Count="0" />
       <LineId Id="7" Count="2" />
       <LineId Id="17" Count="2" />
       <LineId Id="25" Count="2" />
-      <LineId Id="33" Count="0" />
+      <LineId Id="118" Count="0" />
       <LineId Id="28" Count="0" />
       <LineId Id="10" Count="2" />
       <LineId Id="16" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="95" Count="5" />
+      <LineId Id="105" Count="2" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="109" Count="8" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="139" Count="3" />
+      <LineId Id="129" Count="9" />
+      <LineId Id="126" Count="0" />
       <LineId Id="20" Count="2" />
       <LineId Id="24" Count="0" />
       <LineId Id="23" Count="0" />
       <LineId Id="13" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="121" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

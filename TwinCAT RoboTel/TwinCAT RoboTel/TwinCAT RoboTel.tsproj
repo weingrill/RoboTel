@@ -1925,6 +1925,372 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 		<DataType>
+			<Name GUID="{0D5D3957-2569-4F30-6431-CF7632826B0E}">Status_3AC9AF68</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>Latch_extern_valid</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Set_counter_done</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Counter_underflow</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Counter_overflow</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Extrapolation_stall</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>7</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Status_of_input_A</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Status_of_input_B</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>9</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Status_of_extern_latch</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>12</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Sync_error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>13</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TxPDO_Toggle</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>15</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{114953BF-D65E-EC5D-3305-9ACC3A569601}">Status_3018D6E8</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>Ready_to_enable</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Ready</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Warning</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Moving_positive</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Moving_negative</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Torque_reduced</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>6</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Digital_input_1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>11</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Digital_input_2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>12</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Sync_error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>13</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TxPDO_Toggle</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>15</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Name>
+			<BitSize>64</BitSize>
+			<SubItem>
+				<Name>MDP5001_511_Status</Name>
+				<Type GUID="{0D5D3957-2569-4F30-6431-CF7632826B0E}">Status_3AC9AF68</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_511_Counter_value</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_511_Latch_value</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_733_Status_1</Name>
+				<Type GUID="{114953BF-D65E-EC5D-3305-9ACC3A569601}">Status_3018D6E8</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>48</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{508807F8-2EA3-67C0-5146-C64AF9E39DC0}">Status_BD138CF3</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>Ready_to_enable</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Ready</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Warning</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Moving_positive</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Moving_negative</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Torque_reduced</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>6</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Digital_input_1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>11</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Digital_input_2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>12</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Sync_error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>13</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TxPDO_Toggle</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>15</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{090C41C9-297B-FA74-D8AD-D3A91C189A0B}">MDP5001_511_733_I_5131DD77</Name>
+			<BitSize>64</BitSize>
+			<SubItem>
+				<Name>MDP5001_511_Status</Name>
+				<Type GUID="{0D5D3957-2569-4F30-6431-CF7632826B0E}">Status_3AC9AF68</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_511_Counter_value</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_511_Latch_value</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_733_Status_1</Name>
+				<Type GUID="{508807F8-2EA3-67C0-5146-C64AF9E39DC0}">Status_BD138CF3</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>48</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{6EA42558-F619-E31D-78F6-9601E46735C3}">Control_4F1A42DD</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>Enable_latch_extern_on_positive_edge</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Set_counter</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Enable_latch_extern_on_negative_edge</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{3EA2E42C-938D-954B-8DBE-9C7A71451C3D}">Control_EC698C5D</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>Enable</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Reset</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Reduce_torque</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Threshold_active</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{0D3B3A77-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_O_32199BA1</Name>
+			<BitSize>64</BitSize>
+			<SubItem>
+				<Name>MDP5001_511_Control</Name>
+				<Type GUID="{6EA42558-F619-E31D-78F6-9601E46735C3}">Control_4F1A42DD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_511_Set_counter_value</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_733_Control_1</Name>
+				<Type GUID="{3EA2E42C-938D-954B-8DBE-9C7A71451C3D}">Control_EC698C5D</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_733_Velocity</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000006}">INT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>48</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{090C41CA-297B-FA74-D8AD-D3A91C189A0B}">MDP5001_511_733_O_5131DD77</Name>
+			<BitSize>64</BitSize>
+			<SubItem>
+				<Name>MDP5001_511_Control</Name>
+				<Type GUID="{6EA42558-F619-E31D-78F6-9601E46735C3}">Control_4F1A42DD</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_511_Set_counter_value</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_733_Control_1</Name>
+				<Type GUID="{3EA2E42C-938D-954B-8DBE-9C7A71451C3D}">Control_EC698C5D</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_733_Velocity</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000006}">INT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>48</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-002000000010}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..1] OF BYTE</Name>
 			<BitSize>16</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
@@ -3044,6 +3410,14 @@ Drive Status 4 (manually linked):
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
+							<Name>FanControl.Fan_axis.MDP5001_511_733_Input</Name>
+							<Type GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Type>
+						</Var>
+						<Var>
+							<Name>PendantControl.Nasmyth_axis.MDP5001_511_733_Input</Name>
+							<Type GUID="{090C41C9-297B-FA74-D8AD-D3A91C189A0B}">MDP5001_511_733_I_5131DD77</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Dome.Azimut_raw</Name>
 							<Comment><![CDATA[ EL5151]]></Comment>
 							<Type>INT</Type>
@@ -3543,9 +3917,25 @@ External Setpoint Generation:
 ]]></Comment>
 							</SubVar>
 						</Var>
+						<Var>
+							<Name>PendantControl.Cover3_axis.MDP5001_511_733_Input</Name>
+							<Type GUID="{090C41C9-297B-FA74-D8AD-D3A91C189A0B}">MDP5001_511_733_I_5131DD77</Type>
+						</Var>
+						<Var>
+							<Name>PendantControl.Cover2_axis.MDP5001_511_733_Input</Name>
+							<Type GUID="{090C41C9-297B-FA74-D8AD-D3A91C189A0B}">MDP5001_511_733_I_5131DD77</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
 						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>FanControl.Fan_axis.MDP5001_511_733_Output</Name>
+							<Type GUID="{0D3B3A77-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_O_32199BA1</Type>
+						</Var>
+						<Var>
+							<Name>PendantControl.Nasmyth_axis.MDP5001_511_733_Output</Name>
+							<Type GUID="{090C41CA-297B-FA74-D8AD-D3A91C189A0B}">MDP5001_511_733_O_5131DD77</Type>
+						</Var>
 						<Var>
 							<Name>GVL_Dome.Clockwise</Name>
 							<Comment><![CDATA[Dauer					AT%Q*:	BOOL;]]></Comment>
@@ -3650,6 +4040,14 @@ DOUT9 1.0]]></Comment>
 						<Var>
 							<Name>GVL_Telescope.FocusAxisRef.PlcToNc</Name>
 							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>PendantControl.Cover3_axis.MDP5001_511_733_Output</Name>
+							<Type GUID="{090C41CA-297B-FA74-D8AD-D3A91C189A0B}">MDP5001_511_733_O_5131DD77</Type>
+						</Var>
+						<Var>
+							<Name>PendantControl.Cover2_axis.MDP5001_511_733_Output</Name>
+							<Type GUID="{090C41CA-297B-FA74-D8AD-D3A91C189A0B}">MDP5001_511_733_O_5131DD77</Type>
 						</Var>
 					</Vars>
 					<TaskPouOids>
@@ -4486,7 +4884,7 @@ DOUT9 1.0]]></Comment>
 								<Name>Klemme 18 (EL7342)</Name>
 								<Comment><![CDATA[Fokus / M3]]></Comment>
 								<ImageId>1007</ImageId>
-								<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="39" FoeType="1" VendorId="#x00000002" ProductCode="#x1cae3052" RevisionNo="#x00170000" InfoDataAddr="true" InfoDataSoeDS401="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" SdoUploadWithMaxLength="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL7342 2K. DC-Motor-Endstufe (50V, 3.5A)" Desc="EL7342" PortABoxInfo="#x01000011">
+								<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="39" FoeType="1" VendorId="#x00000002" ProductCode="#x1cae3052" RevisionNo="#x00170000" InfoDataAddr="true" InfoDataSoeDS401="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" SdoUploadWithMaxLength="true" CreateDeviceDataType="true" DeviceDataTypePerChannel="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL7342 2K. DC-Motor-Endstufe (50V, 3.5A)" Desc="EL7342" PortABoxInfo="#x01000011">
 									<SyncMan>001080002600010001000000400080008000001026010000</SyncMan>
 									<SyncMan>801080002200010002000000400080008000801022010000</SyncMan>
 									<SyncMan>001110002400010003000000000000001000001124010000</SyncMan>
@@ -5548,7 +5946,7 @@ DOUT9 1.0]]></Comment>
 								<Name>Klemme 20 (EL7342)</Name>
 								<Comment><![CDATA[Klappe1, Klappe2]]></Comment>
 								<ImageId>1007</ImageId>
-								<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="39" FoeType="1" VendorId="#x00000002" ProductCode="#x1cae3052" RevisionNo="#x00170000" InfoDataAddr="true" InfoDataSoeDS401="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" SdoUploadWithMaxLength="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL7342 2K. DC-Motor-Endstufe (50V, 3.5A)" Desc="EL7342" PortABoxInfo="#x01000013">
+								<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="39" FoeType="1" VendorId="#x00000002" ProductCode="#x1cae3052" RevisionNo="#x00170000" InfoDataAddr="true" InfoDataSoeDS401="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" SdoUploadWithMaxLength="true" CreateDeviceDataType="true" DeviceDataTypePerChannel="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL7342 2K. DC-Motor-Endstufe (50V, 3.5A)" Desc="EL7342" PortABoxInfo="#x01000013">
 									<SyncMan>001080002600010001000000400080008000001026010000</SyncMan>
 									<SyncMan>801080002200010002000000400080008000801022010000</SyncMan>
 									<SyncMan>001110002400010003000000000000001000001124010000</SyncMan>
@@ -6301,7 +6699,7 @@ DOUT9 1.0]]></Comment>
 								<Name>Klemme 21 (EL7342)</Name>
 								<Comment><![CDATA[Klappe3, Schaltschranklüfter]]></Comment>
 								<ImageId>1007</ImageId>
-								<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="39" FoeType="1" VendorId="#x00000002" ProductCode="#x1cae3052" RevisionNo="#x00170000" InfoDataAddr="true" InfoDataSoeDS401="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" SdoUploadWithMaxLength="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL7342 2K. DC-Motor-Endstufe (50V, 3.5A)" Desc="EL7342" PortABoxInfo="#x01000014">
+								<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="39" FoeType="1" VendorId="#x00000002" ProductCode="#x1cae3052" RevisionNo="#x00170000" InfoDataAddr="true" InfoDataSoeDS401="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" SdoUploadWithMaxLength="true" CreateDeviceDataType="true" DeviceDataTypePerChannel="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL7342 2K. DC-Motor-Endstufe (50V, 3.5A)" Desc="EL7342" PortABoxInfo="#x01000014">
 									<SyncMan>001080002600010001000000400080008000001026010000</SyncMan>
 									<SyncMan>801080002200010002000000400080008000801022010000</SyncMan>
 									<SyncMan>001110002400010003000000000000001000001124010000</SyncMan>
@@ -6529,7 +6927,7 @@ DOUT9 1.0]]></Comment>
 										</Entry>
 									</Pdo>
 									<Pdo Name="DCM Status Channel 1" Index="#x1a06" Flags="#x0010" SyncMan="3">
-										<Entry Name="Status__Ready to enable" Index="#x6020" Sub="#x01" Flags="#x00008020">
+										<Entry Name="Status__Ready_to_enable" Index="#x6020" Sub="#x01" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
 										<Entry Name="Status__Ready" Index="#x6020" Sub="#x02" Flags="#x00008020">
@@ -6541,7 +6939,7 @@ DOUT9 1.0]]></Comment>
 										<Entry Name="Status__Error" Index="#x6020" Sub="#x04" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__Moving positive" Index="#x6020" Sub="#x05" Flags="#x00008020">
+										<Entry Name="Status__Moving_positive" Index="#x6020" Sub="#x05" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
 										<Entry Name="Status__Moving negative" Index="#x6020" Sub="#x06" Flags="#x00008020">
@@ -6581,22 +6979,22 @@ DOUT9 1.0]]></Comment>
 										</Entry>
 									</Pdo>
 									<Pdo Name="DCM Status Channel 2" Index="#x1a08" Flags="#x0010" SyncMan="3">
-										<Entry Name="Status__Ready to enable" Index="#x6030" Sub="#x01" Flags="#x00008020">
+										<Entry Name="Status__Ready_to_enable" Index="#x6030" Sub="#x01" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__Ready" Index="#x6030" Sub="#x02">
+										<Entry Name="Status__Ready" Index="#x6030" Sub="#x02" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__Warning" Index="#x6030" Sub="#x03">
+										<Entry Name="Status__Warning" Index="#x6030" Sub="#x03" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__Error" Index="#x6030" Sub="#x04">
+										<Entry Name="Status__Error" Index="#x6030" Sub="#x04" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__Moving positive" Index="#x6030" Sub="#x05">
+										<Entry Name="Status__Moving_positive" Index="#x6030" Sub="#x05" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__Moving negative" Index="#x6030" Sub="#x06">
+										<Entry Name="Status__Moving_negative" Index="#x6030" Sub="#x06" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
 										<Entry Name="Status__Torque reduced" Index="#x6030" Sub="#x07">
@@ -6608,10 +7006,10 @@ DOUT9 1.0]]></Comment>
 										<Entry Name="Status__">
 											<Type GUID="{18071995-0000-0000-0000-002000000003}">ARRAY [0..2] OF BIT</Type>
 										</Entry>
-										<Entry Name="Status__Digital input 1" Index="#x6030" Sub="#x0c">
+										<Entry Name="Status__Digital_input_1" Index="#x6030" Sub="#x0c" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__Digital input 2" Index="#x6030" Sub="#x0d">
+										<Entry Name="Status__Digital_input_2" Index="#x6030" Sub="#x0d" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
 										<Entry Name="Status__Sync error" Index="#x6030" Sub="#x0e">
@@ -6867,10 +7265,10 @@ DOUT9 1.0]]></Comment>
 										</Entry>
 									</Pdo>
 									<Pdo Name="DCM Control Channel 1" Index="#x1604" InOut="1" Flags="#x0010" SyncMan="2">
-										<Entry Name="Control__Enable" Index="#x7020" Sub="#x01">
+										<Entry Name="Control__Enable" Index="#x7020" Sub="#x01" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Control__Reset" Index="#x7020" Sub="#x02">
+										<Entry Name="Control__Reset" Index="#x7020" Sub="#x02" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
 										<Entry Name="Control__Reduce torque" Index="#x7020" Sub="#x03">
@@ -6909,10 +7307,10 @@ DOUT9 1.0]]></Comment>
 										<Entry Name="Control__Reset" Index="#x7030" Sub="#x02" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Control__Reduce torque" Index="#x7030" Sub="#x03">
+										<Entry Name="Control__Reduce_torque" Index="#x7030" Sub="#x03" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Control__Threshold active" Index="#x7030" Sub="#x04">
+										<Entry Name="Control__Threshold_active" Index="#x7030" Sub="#x04" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
 										<Entry Name="Control__">
@@ -7489,23 +7887,8 @@ DOUT9 1.0]]></Comment>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^Focus">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 18 (EL7342)">
-				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Error" Size="1" OffsA="3"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Moving negative" Size="1" OffsA="5"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Moving positive" Size="1" OffsA="4"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Ready" Size="1" OffsA="1"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Ready to enable"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Torque reduced" Size="1" OffsA="6"/>
-				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Warning" Size="1" OffsA="2"/>
-				<Link VarA="Drive^Inputs^In^nState2" VarB="DCM Status Channel 1^Status^Digital input 1" Size="1" OffsA="3"/>
-				<Link VarA="Drive^Inputs^In^nState2" VarB="DCM Status Channel 1^Status^Digital input 2" Size="1" OffsA="4"/>
-				<Link VarA="Drive^Inputs^In^nState2" VarB="DCM Status Channel 1^Status^Sync error" Size="1" OffsA="5"/>
-				<Link VarA="Drive^Inputs^In^nState2" VarB="DCM Status Channel 1^Status^TxPDO Toggle" Size="1" OffsA="7"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="DCM Control Channel 1^Control^Enable"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="DCM Control Channel 1^Control^Reduce torque" Size="1" OffsA="2"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="DCM Control Channel 1^Control^Reset" Size="1" OffsA="1"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="DCM Control Channel 1^Control^Threshold active" Size="1" OffsA="3"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut2[0]" VarB="DCM Velocity Channel 1^Velocity"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 19 (EL5101)">
@@ -7598,9 +7981,6 @@ DOUT9 1.0]]></Comment>
 				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_right" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_up" VarB="Channel 1^Output"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 13 (EL3202-0010)">
-				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_cabinet" VarB="RTD Inputs Channel 1^Value"/>
-			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 14 (EL3202-0010)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_mirror1" VarB="RTD Inputs Channel 2^Value"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_mirror2" VarB="RTD Inputs Channel 1^Value"/>
@@ -7611,7 +7991,45 @@ DOUT9 1.0]]></Comment>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 16 (EL3202-0010)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_bearing1" VarB="RTD Inputs Channel 1^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_bearing2" VarB="RTD Inputs Channel 2^Value"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_cabinet" VarB="RTD Inputs Channel 2^Value"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 18 (EL7342)">
+				<Link VarA="PlcTask Inputs^PendantControl.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 2^Counter value"/>
+				<Link VarA="PlcTask Inputs^PendantControl.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 2^Latch value"/>
+				<Link VarA="PlcTask Inputs^PendantControl.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 2^Status"/>
+				<Link VarA="PlcTask Inputs^PendantControl.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" VarB="DCM Status Channel 2^Status"/>
+				<Link VarA="PlcTask Outputs^PendantControl.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_511_Control" VarB="ENC Control compact Channel 2^Control"/>
+				<Link VarA="PlcTask Outputs^PendantControl.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" VarB="ENC Control compact Channel 2^Set counter value"/>
+				<Link VarA="PlcTask Outputs^PendantControl.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 2^Control"/>
+				<Link VarA="PlcTask Outputs^PendantControl.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 2^Velocity"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 20 (EL7342)">
+				<Link VarA="PlcTask Inputs^PendantControl.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 2^Counter value"/>
+				<Link VarA="PlcTask Inputs^PendantControl.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 2^Latch value"/>
+				<Link VarA="PlcTask Inputs^PendantControl.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 2^Status"/>
+				<Link VarA="PlcTask Inputs^PendantControl.Cover2_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" VarB="DCM Status Channel 2^Status"/>
+				<Link VarA="PlcTask Outputs^PendantControl.Cover2_axis.MDP5001_511_733_Output^MDP5001_511_Control" VarB="ENC Control compact Channel 2^Control"/>
+				<Link VarA="PlcTask Outputs^PendantControl.Cover2_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" VarB="ENC Control compact Channel 2^Set counter value"/>
+				<Link VarA="PlcTask Outputs^PendantControl.Cover2_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 2^Control"/>
+				<Link VarA="PlcTask Outputs^PendantControl.Cover2_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 2^Velocity"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 21 (EL7342)">
+				<Link VarA="PlcTask Inputs^FanControl.Fan_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 2^Counter value"/>
+				<Link VarA="PlcTask Inputs^FanControl.Fan_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 2^Latch value"/>
+				<Link VarA="PlcTask Inputs^FanControl.Fan_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 2^Status"/>
+				<Link VarA="PlcTask Inputs^FanControl.Fan_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" VarB="DCM Status Channel 2^Status"/>
+				<Link VarA="PlcTask Inputs^PendantControl.Cover3_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 1^Counter value"/>
+				<Link VarA="PlcTask Inputs^PendantControl.Cover3_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 1^Latch value"/>
+				<Link VarA="PlcTask Inputs^PendantControl.Cover3_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 1^Status"/>
+				<Link VarA="PlcTask Inputs^PendantControl.Cover3_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" VarB="DCM Status Channel 1^Status"/>
+				<Link VarA="PlcTask Outputs^FanControl.Fan_axis.MDP5001_511_733_Output^MDP5001_511_Control" VarB="ENC Control compact Channel 2^Control"/>
+				<Link VarA="PlcTask Outputs^FanControl.Fan_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" VarB="ENC Control compact Channel 2^Set counter value"/>
+				<Link VarA="PlcTask Outputs^FanControl.Fan_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 2^Control"/>
+				<Link VarA="PlcTask Outputs^FanControl.Fan_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 2^Velocity"/>
+				<Link VarA="PlcTask Outputs^PendantControl.Cover3_axis.MDP5001_511_733_Output^MDP5001_511_Control" VarB="ENC Control compact Channel 1^Control"/>
+				<Link VarA="PlcTask Outputs^PendantControl.Cover3_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" VarB="ENC Control compact Channel 1^Set counter value"/>
+				<Link VarA="PlcTask Outputs^PendantControl.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 1^Control"/>
+				<Link VarA="PlcTask Outputs^PendantControl.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 1^Velocity"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 9 (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD1" VarB="Channel 1^Input"/>

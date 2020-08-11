@@ -7,7 +7,8 @@ VAR
 	phase_available,
 	ready,
 	power_failure,
-	error, 
+	error,
+	reset, 
 	warning : BOOL := FALSE;
 	warn_blink : FB_BLINK;
 	// TCS remote start;
@@ -17,6 +18,7 @@ VAR
 	power_watchdog : TON;
 	ready_state: RS;
 	
+
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -53,11 +55,14 @@ warn_blink(ENABLE := HydraulicsControl.oil_warning, Q => warning);
 error := power_failure OR 
 			HydraulicsControl.pressure_failure OR 
 			(NOT phase_available)
-			OR GVL_Telescope.azimut_limit_switch;
-							
+			OR GVL_Telescope.azimut_limit_switch
+			OR PendantControl.error
+			OR FanControl.error;
+reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch;							
 GVL_Main.lamp_ready := ready;
 GVL_Main.lamp_error := error OR warning;
 GVL_Main.lamp_power := power_ok;
+
 ]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
@@ -85,11 +90,13 @@ GVL_Main.lamp_power := power_ok;
       <LineId Id="70" Count="0" />
       <LineId Id="41" Count="0" />
       <LineId Id="71" Count="2" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="82" Count="0" />
       <LineId Id="26" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="40" Count="0" />
       <LineId Id="44" Count="0" />
-      <LineId Id="43" Count="0" />
+      <LineId Id="77" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

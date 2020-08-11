@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="FanControl" Id="{aa14e62d-ea4c-4f88-afe0-bf32efd9c378}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM FanControl
+VAR_INPUT
+	enable: BOOL := TRUE;	
+END_VAR
+VAR
+	Fan_axis:	MDP5001_511_733_32199BA1;
+	temperature : REAL;
+	velocity: INT;
+	error: BOOL;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := enable;
+Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Reset := MAIN.reset;
+temperature := GVL_Telescope.temperature_cabinet / 100.0;
+velocity := LREAL_TO_INT(F_YREAL(temperature, 25.0, 40.0, 0.0, 32767));
+Fan_axis.MDP5001_511_733_Output.MDP5001_733_Velocity := velocity;
+error := Fan_axis.MDP5001_511_733_Input.MDP5001_733_Status_1.Error;
+]]></ST>
+    </Implementation>
+    <LineIds Name="FanControl">
+      <LineId Id="10" Count="1" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
