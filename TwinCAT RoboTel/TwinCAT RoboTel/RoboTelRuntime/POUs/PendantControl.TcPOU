@@ -12,6 +12,9 @@ VAR
 	Nasmyth_axis:		MDP5001_511_733_5131DD77;
 	Nasmyth_control:	FB_DCAxis;
 	error:				BOOL;
+	Nasmyth_delay:		TON;
+	Nasmyth_unlock,
+	Nasmyth_unlocked:	BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -27,6 +30,11 @@ GVL_pendant_control.lamp_down := FALSE;
 //GVL_pendant_control.lamp_error := MAIN.error;
 FanControl(enable := NOT GVL_pendant_control.key_switch);
 //GVL_Telescope.horn := GVL_pendant_control.reset_switch;
+
+Nasmyth_delay(IN := GVL_Telescope.nasmyth_lock,
+				PT := T#500MS,
+				Q => Nasmyth_unlocked);
+
 
 CASE Selection OF
 	1:	GVL_pendant_control.lamp_left := TRUE;
@@ -59,16 +67,18 @@ CASE Selection OF
 										( GVL_pendant_control.direction_left OR 
  										GVL_pendant_control.direction_right OR
 										GVL_pendant_control.start_switch);
-		 Nasmyth_control(open := GVL_pendant_control.direction_left,
-						close := GVL_pendant_control.direction_right,
+										
+		 Nasmyth_control(open := GVL_pendant_control.direction_left AND Nasmyth_unlocked,
+						close := GVL_pendant_control.direction_right AND Nasmyth_unlocked,
 						enable := GVL_pendant_control.key_switch,
 						reset := MAIN.reset,
-						limit_open := GVL_Telescope.nasmyth_limit_left,
-						limit_close := GVL_Telescope.nasmyth_limit_right,
+						limit_open := NOT GVL_Telescope.nasmyth_limit_right,
+						limit_close := NOT GVL_Telescope.nasmyth_limit_left,
 						error => error,
+						velocity := 18000,
 						axis_ref := Nasmyth_axis);
 		GVL_pendant_control.lamp_left := GVL_Telescope.nasmyth_limit_left;
-		GVL_pendant_control.lamp_right := GVL_Telescope.nasmyth_limit_left;
+		GVL_pendant_control.lamp_right := GVL_Telescope.nasmyth_limit_right;
 		
 	5:	GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
@@ -86,7 +96,10 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="25" Count="2" />
       <LineId Id="118" Count="0" />
       <LineId Id="28" Count="0" />
-      <LineId Id="10" Count="2" />
+      <LineId Id="158" Count="3" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="11" Count="1" />
       <LineId Id="16" Count="0" />
       <LineId Id="34" Count="0" />
       <LineId Id="95" Count="5" />
@@ -98,7 +111,10 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="81" Count="0" />
       <LineId Id="80" Count="0" />
       <LineId Id="139" Count="3" />
-      <LineId Id="129" Count="9" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="129" Count="6" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="136" Count="2" />
       <LineId Id="126" Count="0" />
       <LineId Id="20" Count="2" />
       <LineId Id="24" Count="0" />

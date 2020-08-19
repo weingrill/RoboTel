@@ -50,6 +50,9 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\CoverControl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\DomeControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
