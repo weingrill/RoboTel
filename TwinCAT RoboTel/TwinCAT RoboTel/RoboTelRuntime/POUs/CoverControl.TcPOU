@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="CoverControl" Id="{c323d474-9f57-40fd-ba67-b4ebd08c9f7c}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM CoverControl
+VAR
+	open_delay	: TON;
+	close_delay : TON;
+	open:		BOOL;
+	close:		BOOL;
+	error: 		BOOL;
+	enable:		BOOL;
+	Cover3_control:		FB_DCAxis;
+	Cover2_control:		FB_DCAxis;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// close has precedence over open
+IF close THEN
+	open := FALSE;
+END_IF
+
+open_delay(IN := open AND NOT GVL_Telescope.cover3_closed,
+			PT := T#3S);
+close_delay(IN := close AND NOT GVL_Telescope.cover2_open,
+			PT := T#3S);
+			
+enable := GVL_pendant_control.key_switch;
+// open cover 3 first then cover 2 after 3 seconds
+Cover3_control(open := open,
+						close := close_delay.Q,
+						enable := enable,
+						reset := MAIN.reset,
+						limit_open := GVL_Telescope.cover3_open,
+						limit_close := GVL_Telescope.cover3_closed,
+						error => error,
+						axis_ref := PendantControl.Cover3_axis);
+// close cover 2 first then cover 3 after 3 seconds
+Cover2_control(open := open_delay.Q,
+						close := close,
+						enable := enable,
+						reset := MAIN.reset,
+						limit_open := GVL_Telescope.cover2_open,
+						limit_close := GVL_Telescope.cover2_closed,
+						error => error,
+						axis_ref := PendantControl.Cover2_axis);
+		GVL_pendant_control.lamp_up := GVL_Telescope.cover2_open;
+		GVL_pendant_control.lamp_down := GVL_Telescope.cover2_closed;]]></ST>
+    </Implementation>
+    <LineIds Name="CoverControl">
+      <LineId Id="18" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="23" Count="6" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="38" Count="8" />
+      <LineId Id="37" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
