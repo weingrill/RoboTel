@@ -34,7 +34,7 @@ Main control loop
 *)
 // TODO: Input from softstart_trafo
 power_OK := TRUE;
-phase_available := GVL_Main.phase_available;
+phase_available := TRUE; // GVL_Main.phase_available;
 ready_state(SET := power_OK AND(GVL_Main.start_switch OR remote_start),
 			RESET1 := GVL_main.stop_switch OR remote_stop OR error,
 			Q1 => ready);
