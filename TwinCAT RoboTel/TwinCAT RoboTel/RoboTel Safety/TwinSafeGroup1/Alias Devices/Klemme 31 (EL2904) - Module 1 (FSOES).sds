@@ -1,0 +1,166 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SafetyDeviceDesc Crc="2540815174" FileFormatVersion="1.6">
+  <AliasDeviceType>
+    <Type>4</Type>
+    <SubType>290</SubType>
+    <VendorId>2</VendorId>
+  </AliasDeviceType>
+  <SDSID>3</SDSID>
+  <SafetyAliasDevice>
+    <ObjectId>50921474</ObjectId>
+    <LinkingMode>Automatic</LinkingMode>
+    <ConnectionId>3</ConnectionId>
+    <ConnectionMode>master</ConnectionMode>
+    <ConnectionType>FSoE</ConnectionType>
+    <MapDiag>false</MapDiag>
+    <MapInputs>false</MapInputs>
+    <MapOutputs>false</MapOutputs>
+    <MapState>false</MapState>
+    <ModuleFaultIsComErr>false</ModuleFaultIsComErr>
+    <SafeAddress>3</SafeAddress>
+    <Watchdog>100</Watchdog>
+    <ComErrAck Type="Unset" />
+    <Params>
+      <Param Index="4320" SubIndex="1">0000</Param>
+      <Param Index="4320" SubIndex="2">0000</Param>
+      <Param Index="32768" SubIndex="1">00</Param>
+      <Param Index="32768" SubIndex="2">01</Param>
+      <Param Index="32768" SubIndex="3">01</Param>
+      <Param Index="32768" SubIndex="4">00</Param>
+      <Messages>
+        <IO>
+          <Name>FSoE Master CMD</Name>
+          <Index>28672</Index>
+          <SubIndex>1</SubIndex>
+          <DataType>USINT</DataType>
+          <Direction>Out</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>8</BitSize>
+          <BitOffsMessage>0</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+        <IO>
+          <Name>OutputChannel1</Name>
+          <Index>28673</Index>
+          <SubIndex>1</SubIndex>
+          <DataType>BIT</DataType>
+          <Direction>Out</Direction>
+          <SafetyType>SafetySil3</SafetyType>
+          <BitSize>1</BitSize>
+          <BitOffsMessage>8</BitOffsMessage>
+          <BitOffsData>0</BitOffsData>
+        </IO>
+        <IO>
+          <Name>OutputChannel2</Name>
+          <Index>28673</Index>
+          <SubIndex>2</SubIndex>
+          <DataType>BIT</DataType>
+          <Direction>Out</Direction>
+          <SafetyType>SafetySil3</SafetyType>
+          <BitSize>1</BitSize>
+          <BitOffsMessage>9</BitOffsMessage>
+          <BitOffsData>1</BitOffsData>
+        </IO>
+        <IO>
+          <Name>OutputChannel3</Name>
+          <Index>28673</Index>
+          <SubIndex>3</SubIndex>
+          <DataType>BIT</DataType>
+          <Direction>Out</Direction>
+          <SafetyType>SafetySil3</SafetyType>
+          <BitSize>1</BitSize>
+          <BitOffsMessage>10</BitOffsMessage>
+          <BitOffsData>2</BitOffsData>
+        </IO>
+        <IO>
+          <Name>OutputChannel4</Name>
+          <Index>28673</Index>
+          <SubIndex>4</SubIndex>
+          <DataType>BIT</DataType>
+          <Direction>Out</Direction>
+          <SafetyType>SafetySil3</SafetyType>
+          <BitSize>1</BitSize>
+          <BitOffsMessage>11</BitOffsMessage>
+          <BitOffsData>3</BitOffsData>
+        </IO>
+        <IO>
+          <Name />
+          <Index>0</Index>
+          <SubIndex>0</SubIndex>
+          <DataType />
+          <Direction>Out</Direction>
+          <SafetyType>SafetySil3</SafetyType>
+          <BitSize>4</BitSize>
+          <BitOffsMessage>12</BitOffsMessage>
+          <BitOffsData>4</BitOffsData>
+        </IO>
+        <IO>
+          <Name>FSoE Master CRC_0</Name>
+          <Index>28672</Index>
+          <SubIndex>3</SubIndex>
+          <DataType>UINT</DataType>
+          <Direction>Out</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>16</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+        <IO>
+          <Name>FSoE Master ConnID</Name>
+          <Index>28672</Index>
+          <SubIndex>2</SubIndex>
+          <DataType>UINT</DataType>
+          <Direction>Out</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>32</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+        <IO>
+          <Name>FSoE Slave CMD</Name>
+          <Index>24576</Index>
+          <SubIndex>1</SubIndex>
+          <DataType>USINT</DataType>
+          <Direction>In</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>8</BitSize>
+          <BitOffsMessage>0</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+        <IO>
+          <Name />
+          <Index>0</Index>
+          <SubIndex>0</SubIndex>
+          <DataType />
+          <Direction>In</Direction>
+          <SafetyType>SafetySil3</SafetyType>
+          <BitSize>8</BitSize>
+          <BitOffsMessage>8</BitOffsMessage>
+          <BitOffsData>0</BitOffsData>
+        </IO>
+        <IO>
+          <Name>FSoE Slave CRC_0</Name>
+          <Index>24576</Index>
+          <SubIndex>3</SubIndex>
+          <DataType>UINT</DataType>
+          <Direction>In</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>16</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+        <IO>
+          <Name>FSoE Slave ConnID</Name>
+          <Index>24576</Index>
+          <SubIndex>2</SubIndex>
+          <DataType>UINT</DataType>
+          <Direction>In</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>32</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+      </Messages>
+    </Params>
+  </SafetyAliasDevice>
+</SafetyDeviceDesc>

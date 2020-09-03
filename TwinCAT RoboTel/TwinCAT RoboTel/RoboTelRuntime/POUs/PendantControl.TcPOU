@@ -15,6 +15,7 @@ VAR
 	Nasmyth_delay:		TON;
 	Nasmyth_unlock,
 	Nasmyth_unlocked:	BOOL;
+	Focusstate:	RS;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -79,8 +80,10 @@ CASE Selection OF
 						axis_ref := Nasmyth_axis);
 		GVL_pendant_control.lamp_left := GVL_Telescope.nasmyth_limit_left;
 		GVL_pendant_control.lamp_right := GVL_Telescope.nasmyth_limit_right;
-		
-	5:	GVL_pendant_control.lamp_left := TRUE;
+	5:	Focusstate(SET := GVL_pendant_control.start_switch,
+					RESET1 := GVL_pendant_control.reset_switch,
+					Q1 => GVL_Telescope.focus_lock);
+	15:	GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
 		GVL_pendant_control.lamp_up := TRUE;
 		GVL_pendant_control.lamp_down := TRUE;
@@ -116,6 +119,7 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="155" Count="0" />
       <LineId Id="136" Count="2" />
       <LineId Id="126" Count="0" />
+      <LineId Id="197" Count="1" />
       <LineId Id="20" Count="2" />
       <LineId Id="24" Count="0" />
       <LineId Id="23" Count="0" />

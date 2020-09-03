@@ -32,9 +32,9 @@ Main control loop
 * TODO: Trafo waits for pressure_ok
 * 
 *)
-// TODO: Input from softstart_trafo
-power_OK := TRUE;
-phase_available := TRUE; // GVL_Main.phase_available;
+
+power_OK := GVL_main.power_available;
+phase_available := GVL_Main.phase_available;
 ready_state(SET := power_OK AND(GVL_Main.start_switch OR remote_start),
 			RESET1 := GVL_main.stop_switch OR remote_stop OR error,
 			Q1 => ready);
@@ -44,10 +44,7 @@ DomeControl();
 PendantControl();
 HydraulicsControl();
 GVL_Telescope.brake_azimuth_eve := GVL_Main.brake_clearing AND NOT GVL_Telescope.azimut_limit_switch;
-GVL_Main.softstart_trafo := GVL_Main.key_switch AND 
-							GVL_Main.emergency_stop1 AND
-							GVL_Main.emergency_stop2 AND
-							phase_available (*AND NOT power_failure*); // remove after testing
+GVL_Main.softstart_trafo := GVL_Main.key_switch_remote (*AND NOT power_failure*); // remove after testing
 power_watchdog(IN := GVL_Main.softstart_trafo AND NOT power_OK,
 				PT := T#2S,
 				Q => power_failure);
@@ -58,7 +55,8 @@ error := power_failure OR
 			OR GVL_Telescope.azimut_limit_switch
 			OR PendantControl.error
 			OR FanControl.error;
-reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch;							
+reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch;		
+GVL_Main.reset_safety := reset;					
 GVL_Main.lamp_ready := ready;
 GVL_Main.lamp_error := error OR warning;
 GVL_Main.lamp_power := power_ok;
@@ -83,7 +81,7 @@ GVL_Main.lamp_power := power_ok;
       <LineId Id="6" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="15" Count="0" />
-      <LineId Id="10" Count="3" />
+      <LineId Id="10" Count="0" />
       <LineId Id="69" Count="0" />
       <LineId Id="35" Count="0" />
       <LineId Id="37" Count="1" />
@@ -93,6 +91,7 @@ GVL_Main.lamp_power := power_ok;
       <LineId Id="80" Count="0" />
       <LineId Id="82" Count="0" />
       <LineId Id="26" Count="0" />
+      <LineId Id="102" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="40" Count="0" />
       <LineId Id="44" Count="0" />

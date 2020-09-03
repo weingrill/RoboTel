@@ -5,7 +5,7 @@
 VAR
 	pressure_watchdog: TON;
 	suction_pump_timer: TP;
-	
+	oil_pump_state: RS;
 	pressure_failure,
 	oil_low,
 	oil_high,
@@ -31,18 +31,24 @@ oil_low := NOT GVL_oil.oil_low;
 oil_high := NOT GVL_oil.oil_high;
 oil_warning := GVL_oil.oil_reserve;
 
+oil_pump_state(SET := GVL_Main.start_switch,
+				RESET1 := GVL_Main.reset_switch OR 
+						pressure_failure OR 
+						oil_low OR
+						NOT MAIN.phase_available);
+				
 GVL_Oil.oil_pump_enable := MAIN.ready AND MAIN.phase_available AND
 				NOT oil_low AND
 				NOT pressure_failure;
 
 suction_pump_timer(IN := MAIN.phase_available AND 
 						GVL_oil.oilpan_maximum,
-					PT := T#60S,
+					PT := T#28S,
 					Q => GVL_Oil.oil_suction_enable);
 
 pressure_watchdog(IN := GVL_Oil.oil_pump_enable AND 
 						NOT GVL_oil.oil_pressure_OK,
-					PT := T#10S,
+					PT := T#60S,
 				  Q => pressure_failure);
 
 HydraulicsLog(Trigger := pressure_failure,
@@ -75,7 +81,14 @@ oil_low_log(Trigger := oil_low,
       <LineId Id="41" Count="0" />
       <LineId Id="43" Count="0" />
       <LineId Id="42" Count="0" />
-      <LineId Id="89" Count="2" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="90" Count="1" />
       <LineId Id="5" Count="0" />
       <LineId Id="11" Count="0" />
       <LineId Id="35" Count="0" />
