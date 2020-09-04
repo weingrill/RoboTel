@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project Crc="4063311817" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+<Project Crc="2910375533" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
@@ -16,7 +16,7 @@
     <IntProjName>RoboTel Safety</IntProjName>
     <IsNewCreated>false</IsNewCreated>
     <SPlcProjVersion>1.3.0.0</SPlcProjVersion>
-    <NextSdsId>14</NextSdsId>
+    <NextSdsId>15</NextSdsId>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
     <DebugSymbols>false</DebugSymbols>
@@ -26,8 +26,9 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="GVLs\GVL1.sgvl" />
-    <None Include="TwinSafeGroup1\Alias Devices\1 Digital Input %28Standard%29_1.sds" />
-    <None Include="TwinSafeGroup1\Alias Devices\1 Digital Input %28Standard%29_2.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\SafetyError.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\RunSafety.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\RestartSafety.sds" />
     <None Include="TwinSafeGroup1\Alias Devices\Klemme 30 %28EL1904%29 - Module 1 %28FSOES%29.sds" />
     <None Include="TwinSafeGroup1\Alias Devices\Klemme 31 %28EL2904%29 - Module 1 %28FSOES%29.sds" />
     <None Include="TwinSafeGroup1\TwinSafeGroup1.sal" />

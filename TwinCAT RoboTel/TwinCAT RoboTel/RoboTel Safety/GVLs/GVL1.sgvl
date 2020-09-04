@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<GlobalVariables Crc="890484635" Id="14a7511a-cafd-46f9-bec6-d9122e753db2" FileFormatVersion="1.0">
+<GlobalVariables Crc="3614773811" Id="14a7511a-cafd-46f9-bec6-d9122e753db2" FileFormatVersion="1.0">
   <Variable Id="c78fca0f-2e4f-46c1-a3d3-8b866481e03b">
     <Name>EStop1</Name>
     <SourceUsages>
@@ -103,6 +103,21 @@
       <GroupPortUsage Id="fcdc79dd-9879-476e-8788-49b97c872b37">
         <ModelElementId>588bf1d3-1deb-4e8b-a34a-eedb4107e67e</ModelElementId>
       </GroupPortUsage>
+    </TargetUsages>
+  </Variable>
+  <Variable Id="8dcc96a4-ac97-4166-bd08-ff64eb96bcd7">
+    <Name>Error</Name>
+    <SourceUsages>
+      <FbPortUsage Id="53feb69f-c143-4a46-9d25-069dc2e4fd41">
+        <ModelElementId>e314b391-d2e1-4704-81ce-3401f74d1252</ModelElementId>
+      </FbPortUsage>
+    </SourceUsages>
+    <TargetUsages>
+      <AliasDeviceIoUsage Id="4e632eef-6e18-45e6-9c4c-0c60c61143f6">
+        <SdsId>14</SdsId>
+        <ChannelId>1</ChannelId>
+        <FunctionId>1131179972</FunctionId>
+      </AliasDeviceIoUsage>
     </TargetUsages>
   </Variable>
 </GlobalVariables>
