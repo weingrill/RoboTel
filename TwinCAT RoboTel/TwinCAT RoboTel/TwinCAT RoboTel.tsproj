@@ -2673,12 +2673,12 @@ External Setpoint Generation:
 					<Name>Derotator</Name>
 					<AxisPara>
 						<General UnitName="°"/>
-						<Dynamic Acceleration="3" Deceleration="3" Jerk="1.8"/>
-						<Velo Maximum="10"/>
+						<Dynamic Acceleration="21.375" Deceleration="21.375" Jerk="64.125"/>
+						<Velo RefSearch="0.1425" RefSync="0.1425" SlowManual="0.7125" FastManual="4.275" Fast="14.25" Maximum="14.25"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="8">
-						<EncPara MaxCount="#xffffffff"/>
+						<EncPara ScaleFactorNumerator="0.1" ScaleFactorDenominator="1048576" MaxCount="#xffffffff"/>
 						<Vars VarGrpType="1">
 							<Name>Eingänge</Name>
 							<Var>
@@ -2744,7 +2744,7 @@ External Setpoint Generation:
 					</Encoder>
 					<Drive Name="Drive" DrvType="9">
 						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00030100">
-							<Analog VeloScale="1.02400649589962" ScaleFactorActTorque="0.1"/>
+							<Analog VeloReferenz="15.675" VeloScale="1.02400649589962" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
@@ -3476,191 +3476,51 @@ Drive Status 4 (manually linked):
 							<Type GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.Azimut_raw</Name>
-							<Comment><![CDATA[ EL5151]]></Comment>
+							<Name>GVL_Main.phase_available</Name>
+							<Comment><![CDATA[DIN1 0.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.power_available</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.key_switch</Name>
+							<Comment><![CDATA[DIN2 0.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.key_switch_remote</Name>
+							<Comment><![CDATA[DIN3 0.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.start_switch</Name>
+							<Comment><![CDATA[DIN4 0.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.stop_switch</Name>
+							<Comment><![CDATA[DIN5 0.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.reset_switch</Name>
+							<Comment><![CDATA[DIN8 0.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.main_cabinet_temperature</Name>
+							<Comment><![CDATA[BT1]]></Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_pendant_control.BCD1</Name>
-							<Comment><![CDATA[DIN17 2.0]]></Comment>
+							<Name>GVL_Main.brake_clearing</Name>
+							<Comment><![CDATA[DIN15 1.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Environment.rawWindSpeed</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
-							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-							<SubVar>
-								<Name>AxisState</Name>
-								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
-0  = INACTIVE:		axis has no job
-1  = RUNNING:		axis is executing a motion job
-2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
-3  = PHASE_VELOCONST:	axis is moving at constant velocity
-4  = PHASE_ACCPOS:	axis is accelerating
-5  = PHASE_ACCNEG:	axis is decelerating
-Slaves only:
-11 = PREPHASE:		slave axis is in a motion pre-phase
-12 = SYNCHRONIZING:	slave axis is synchronizing
-13 = SYNCHRONOUS:	slave axis is moving synchronously
-External Setpoint Generation:
-41 = EXTSETGEN_MODE1:	external setpoint generation active
-42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>HomingState</Name>
-								<Comment><![CDATA[Axis Homing Status:
-0: idle
-1: start homing
-2: searching home switch
-3: stopping on home switch
-4: moving off home switch
-5: searching sync pulse
-6: stopping after homing
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>CoupleState</Name>
-								<Comment><![CDATA[Axis Coupling Status:
-0: axis is a single axis (not coupled)
-1: axis is a master axis
-2: axis is master and slave
-3: axis is a slave axis
-]]></Comment>
-							</SubVar>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawWindDirection</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawTemperature</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawHumidity</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawPressure</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawBrightness</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawPrecipation</Name>
-							<Comment><![CDATA[	rawLightDirection			AT%I*:	INT;]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawTemperatureDome</Name>
-							<Comment><![CDATA[	rawDust11					AT%I*:	BOOL;
-	rawDust12					AT%I*:	BOOL;
- indoors]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawHumidityDome</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.BCD2</Name>
-							<Comment><![CDATA[DIN18 2.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.BCD4</Name>
-							<Comment><![CDATA[DIN19 2.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.BCD8</Name>
-							<Comment><![CDATA[DIN20 2.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.reset_switch</Name>
-							<Comment><![CDATA[DIN21 2.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.direction_up</Name>
-							<Comment><![CDATA[DIN22 2.5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.direction_down</Name>
-							<Comment><![CDATA[DIN23 2.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.key_switch</Name>
-							<Comment><![CDATA[DIN24 2.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.start_switch</Name>
-							<Comment><![CDATA[DIN25 3.0 (enable)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.direction_left</Name>
-							<Comment><![CDATA[DIN26 3.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.direction_right</Name>
-							<Comment><![CDATA[DIN27 3.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_low</Name>
-							<Comment><![CDATA[DIN9 1.0]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_high</Name>
-							<Comment><![CDATA[DIN10 1.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_pressure_OK</Name>
-							<Comment><![CDATA[DIN11 1.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_overtemperature</Name>
-							<Comment><![CDATA[DIN12 1.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_undertemperature</Name>
-							<Comment><![CDATA[DIN13 1.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oilfilter_dirty</Name>
-							<Comment><![CDATA[DIN14 1.5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oilpan_maximum</Name>
-							<Comment><![CDATA[DIN39 4.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_temperature</Name>
-							<Comment><![CDATA[BT2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_reserve</Name>
-							<Comment><![CDATA[DIN40 4.7]]></Comment>
+							<Name>GVL_Main.Safety_error</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -3751,6 +3611,16 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Telescope.cover3_closed</Name>
 							<Comment><![CDATA[ DIN38 4.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_low</Name>
+							<Comment><![CDATA[DIN9 1.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_high</Name>
+							<Comment><![CDATA[DIN10 1.1]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -3926,60 +3796,186 @@ External Setpoint Generation:
 							</SubVar>
 						</Var>
 						<Var>
-							<Name>GVL_Main.phase_available</Name>
-							<Comment><![CDATA[DIN1 0.0]]></Comment>
+							<Name>GVL_oil.oil_pressure_OK</Name>
+							<Comment><![CDATA[DIN11 1.2]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.power_available</Name>
+							<Name>GVL_oil.oil_overtemperature</Name>
+							<Comment><![CDATA[DIN12 1.3]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.key_switch</Name>
-							<Comment><![CDATA[DIN2 0.1]]></Comment>
+							<Name>GVL_oil.oil_undertemperature</Name>
+							<Comment><![CDATA[DIN13 1.4]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.key_switch_remote</Name>
-							<Comment><![CDATA[DIN3 0.2]]></Comment>
+							<Name>GVL_oil.oilfilter_dirty</Name>
+							<Comment><![CDATA[DIN14 1.5]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.start_switch</Name>
-							<Comment><![CDATA[DIN4 0.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.stop_switch</Name>
-							<Comment><![CDATA[DIN5 0.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.reset_switch</Name>
-							<Comment><![CDATA[DIN8 0.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.brake_clearing</Name>
-							<Comment><![CDATA[DIN15 1.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.main_cabinet_temperature</Name>
-							<Comment><![CDATA[BT1]]></Comment>
+							<Name>GVL_oil.oil_temperature</Name>
+							<Comment><![CDATA[BT2]]></Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.Safety_error</Name>
+							<Name>GVL_oil.oilpan_maximum</Name>
+							<Comment><![CDATA[DIN39 4.6]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_reserve</Name>
+							<Comment><![CDATA[DIN40 4.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawWindSpeed</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawWindDirection</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawTemperature</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawHumidity</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawPressure</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawBrightness</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawPrecipation</Name>
+							<Comment><![CDATA[	rawLightDirection			AT%I*:	INT;]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawTemperatureDome</Name>
+							<Comment><![CDATA[	rawDust11					AT%I*:	BOOL;
+	rawDust12					AT%I*:	BOOL;
+ indoors]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawHumidityDome</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD1</Name>
+							<Comment><![CDATA[DIN17 2.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD2</Name>
+							<Comment><![CDATA[DIN18 2.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD4</Name>
+							<Comment><![CDATA[DIN19 2.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD8</Name>
+							<Comment><![CDATA[DIN20 2.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.reset_switch</Name>
+							<Comment><![CDATA[DIN21 2.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_up</Name>
+							<Comment><![CDATA[DIN22 2.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_down</Name>
+							<Comment><![CDATA[DIN23 2.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.key_switch</Name>
+							<Comment><![CDATA[DIN24 2.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.start_switch</Name>
+							<Comment><![CDATA[DIN25 3.0 (enable)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_left</Name>
+							<Comment><![CDATA[DIN26 3.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_right</Name>
+							<Comment><![CDATA[DIN27 3.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Azimut_raw</Name>
+							<Comment><![CDATA[ EL5151]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
+							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<SubVar>
+								<Name>AxisState</Name>
+								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
+0  = INACTIVE:		axis has no job
+1  = RUNNING:		axis is executing a motion job
+2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
+3  = PHASE_VELOCONST:	axis is moving at constant velocity
+4  = PHASE_ACCPOS:	axis is accelerating
+5  = PHASE_ACCNEG:	axis is decelerating
+Slaves only:
+11 = PREPHASE:		slave axis is in a motion pre-phase
+12 = SYNCHRONIZING:	slave axis is synchronizing
+13 = SYNCHRONOUS:	slave axis is moving synchronously
+External Setpoint Generation:
+41 = EXTSETGEN_MODE1:	external setpoint generation active
+42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>HomingState</Name>
+								<Comment><![CDATA[Axis Homing Status:
+0: idle
+1: start homing
+2: searching home switch
+3: stopping on home switch
+4: moving off home switch
+5: searching sync pulse
+6: stopping after homing
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>CoupleState</Name>
+								<Comment><![CDATA[Axis Coupling Status:
+0: axis is a single axis (not coupled)
+1: axis is a master axis
+2: axis is master and slave
+3: axis is a slave axis
+]]></Comment>
+							</SubVar>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
 						<Name>PlcTask Outputs</Name>
-						<Var>
-							<Name>GVL_Main.restart_safety</Name>
-							<Type>BOOL</Type>
-						</Var>
 						<Var>
 							<Name>PendantControl.Cover3_axis.MDP5001_511_733_Output</Name>
 							<Type GUID="{090C41CA-297B-FA74-D8AD-D3A91C189A0B}">MDP5001_511_733_O_5131DD77</Type>
@@ -3997,52 +3993,35 @@ External Setpoint Generation:
 							<Type GUID="{0D3B3A77-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_O_32199BA1</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.Clockwise</Name>
-							<Comment><![CDATA[Dauer					AT%Q*:	BOOL;]]></Comment>
+							<Name>GVL_Main.lamp_power</Name>
+							<Comment><![CDATA[DOUT1 0.0]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.CounterClockwise</Name>
+							<Name>GVL_Main.lamp_ready</Name>
+							<Comment><![CDATA[DOUT2 0.1]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.DomeAxisRef.PlcToNc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.lamp_up</Name>
-							<Comment><![CDATA[ Outputs
-DOUT9 1.0]]></Comment>
+							<Name>GVL_Main.lamp_error</Name>
+							<Comment><![CDATA[DOUT3 0.2]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_pendant_control.lamp_down</Name>
-							<Comment><![CDATA[DOUT10 1.1]]></Comment>
+							<Name>GVL_Main.softstart_trafo</Name>
+							<Comment><![CDATA[DOUT7 0.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_pendant_control.lamp_right</Name>
-							<Comment><![CDATA[DOUT11 1.2]]></Comment>
+							<Name>GVL_Main.Run_safety</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_pendant_control.lamp_left</Name>
-							<Comment><![CDATA[DOUT12 1.3]]></Comment>
+							<Name>GVL_Main.restart_safety</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_pendant_control.lamp_error</Name>
-							<Comment><![CDATA[DOUT13 1.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_pump_enable</Name>
-							<Comment><![CDATA[DOUT4 0.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_suction_enable</Name>
-							<Comment><![CDATA[DOUT5 0.4]]></Comment>
+							<Name>GVL_Main.ErrAck_Safety</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -4082,32 +4061,53 @@ DOUT9 1.0]]></Comment>
 							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.lamp_power</Name>
-							<Comment><![CDATA[DOUT1 0.0]]></Comment>
+							<Name>GVL_oil.oil_pump_enable</Name>
+							<Comment><![CDATA[DOUT4 0.3]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.lamp_ready</Name>
-							<Comment><![CDATA[DOUT2 0.1]]></Comment>
+							<Name>GVL_oil.oil_suction_enable</Name>
+							<Comment><![CDATA[DOUT5 0.4]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.lamp_error</Name>
-							<Comment><![CDATA[DOUT3 0.2]]></Comment>
+							<Name>GVL_pendant_control.lamp_up</Name>
+							<Comment><![CDATA[ Outputs
+DOUT9 1.0]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.softstart_trafo</Name>
-							<Comment><![CDATA[DOUT7 0.6]]></Comment>
+							<Name>GVL_pendant_control.lamp_down</Name>
+							<Comment><![CDATA[DOUT10 1.1]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.Run_safety</Name>
+							<Name>GVL_pendant_control.lamp_right</Name>
+							<Comment><![CDATA[DOUT11 1.2]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.ErrAck_Safety</Name>
+							<Name>GVL_pendant_control.lamp_left</Name>
+							<Comment><![CDATA[DOUT12 1.3]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.lamp_error</Name>
+							<Comment><![CDATA[DOUT13 1.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Clockwise</Name>
+							<Comment><![CDATA[Dauer					AT%Q*:	BOOL;]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.CounterClockwise</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.DomeAxisRef.PlcToNc</Name>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 					</Vars>
 					<TaskPouOids>
@@ -8894,7 +8894,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<AxisSetting Channel="0">
 									<Property>
 										<Name>NcFeedConstant</Name>
-										<Value>104.857600</Value>
+										<Value>0.100000</Value>
 									</Property>
 									<Property>
 										<Name>Feedback2Connector0</Name>
@@ -8910,7 +8910,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 									</Property>
 									<Property>
 										<Name>Feedback1Connector0</Name>
-										<Value>4</Value>
+										<Value>0</Value>
 									</Property>
 									<Property>
 										<Name>Feedback1Connector1</Name>
@@ -8920,13 +8920,155 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 										<Name>Feedback1Connector2</Name>
 										<Value>4</Value>
 									</Property>
+									<Property>
+										<Name>AppendStartuplistDirect</Name>
+										<Value>2</Value>
+									</Property>
+									<Property>
+										<Name>Feedback1Type</Name>
+										<Value>Resolver#p2f8kHzn0.5phi0deg</Value>
+									</Property>
+									<Property>
+										<Name>Feedback1DataVersion</Name>
+										<Value>2.0.78</Value>
+									</Property>
+									<Property>
+										<Name>Feedback1Application</Name>
+										<Value>Default</Value>
+									</Property>
+									<Property>
+										<Name>MotorType</Name>
+										<Value>MR4108-U3-N60</Value>
+									</Property>
+									<Property>
+										<Name>ConfiguedMotorType</Name>
+										<Value>MR4108-U3-N60</Value>
+									</Property>
+									<Property>
+										<Name>MotorDataVersion</Name>
+										<Value>1.0.0</Value>
+									</Property>
+									<Property>
+										<Name>MotorApplication</Name>
+										<Value>Default</Value>
+									</Property>
+									<Property>
+										<Name>MotorDataLocation</Name>
+										<Value>C:\TwinCAT\3.1\Components\Base\Addins\TcDriveManager\MotorPool\ESR Pollmeier MR4108-U3-N60.xeds</Value>
+									</Property>
+									<Property>
+										<Name>MotorDataSchema</Name>
+										<Value>MotorDataSheet</Value>
+									</Property>
+									<Parametersets>
+										<Parameter>
+											<Comment>Motor vendor</Comment>
+											<Name>Vendor</Name>
+											<Data type="visibleString">ESR Pollmeier</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Electric motor type</Comment>
+											<Name>ElecType</Name>
+											<Data type="visibleString">MR4108-U3-N60</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Motor construction</Comment>
+											<Name>ConstrType</Name>
+											<Data type="real64">0.000000</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Pole Pairs</Comment>
+											<Name>PolePairs</Name>
+											<Data type="real64">3</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Standstill Current</Comment>
+											<Name>I0rms</Name>
+											<Data type="real64" unitSiNumerator="ampere">3.50</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Rated Current</Comment>
+											<Name>Inrms</Name>
+											<Data type="real64" unitSiNumerator="ampere">2.30</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Peak Current</Comment>
+											<Name>Iprms</Name>
+											<Data type="real64" unitSiNumerator="ampere">13.40</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Nominal Voltage</Comment>
+											<Name>Unrms</Name>
+											<Data type="real64" unitSiNumerator="volt">230</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Max DC-Link Voltage</Comment>
+											<Name>Umaxrms</Name>
+											<Data type="real64" unitSiNumerator="volt">320</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Max Torque</Comment>
+											<Name>Mpeak</Name>
+											<Data type="real64" unitSiNumerator="newton metre">4.70</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Torque Constant</Comment>
+											<Name>kT</Name>
+											<Data type="real64" unitSiNumerator="newton metre" unitSiDenominator="ampere">0.36</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>EMK</Comment>
+											<Name>kErms</Name>
+											<Data type="real64" unitSiNumerator="volt" unitSiDenominator="revolutions/minute (rpm)">0.0250</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Winding resistance Ph-Ph 20°C</Comment>
+											<Name>R</Name>
+											<Data type="real64" unitSiNumerator="ohm">3.9</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Lq Ph-Ph</Comment>
+											<Name>Lq</Name>
+											<Data type="real64" unitSiNumerator="henry">0.0079</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Max speed</Comment>
+											<Name>Nmax</Name>
+											<Data type="real64" unitSiNumerator="revolutions/minute (rpm)">9000</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>J motor with brake and encoder</Comment>
+											<Name>J</Name>
+											<Data type="real64" unitSiNumerator="moment of inertia">0.000080</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>T motor warn limit</Comment>
+											<Name>TMotorWarn</Name>
+											<Data type="real64" unitSiNumerator="degree Celsius">80.0</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>T motor shut down</Comment>
+											<Name>TMotorLimit</Name>
+											<Data type="real64" unitSiNumerator="degree Celsius">100.0</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Motor thermal constant</Comment>
+											<Name>Mtc</Name>
+											<Data type="real64" unitSiNumerator="minute (time)">17.00</Data>
+										</Parameter>
+										<Parameter>
+											<Comment>Motor feedback connection</Comment>
+											<Name>FbCon</Name>
+											<Data type="real64">1.000000</Data>
+										</Parameter>
+									</Parametersets>
 								</AxisSetting>
 							</AxisSettings>
 							<DialogSettings>
 								<DialogSetting Name="Power management" Channel="0">
 									<Property>
 										<Name>PowerSupplyType</Name>
-										<Value>0</Value>
+										<Value>1</Value>
 									</Property>
 								</DialogSetting>
 							</DialogSettings>
@@ -8934,15 +9076,46 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<InitCmd DriveNo="0" IDN="30" MotorDataLevel="0" DisableMode="0">
 									<RetainData>3e0042004669726d776172653a2076322e313020284275696c64203030313629202f20426f6f746c6f616465723a2076322e303220284275696c6420303030322900</RetainData>
 								</InitCmd>
+								<InitCmd DriveNo="0" IDN="91" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="100" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="101" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="106" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="107" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="109" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="111" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="113" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="196" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="201" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="204" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="432" MotorDataLevel="0" DisableMode="0">
 									<RetainData>1200160053657269616c233a20303030323238303936</RetainData>
 								</InitCmd>
+								<InitCmd DriveNo="0" IDN="32770" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32818" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32819" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32821" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32822" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32823" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32825" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32829" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32830" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32834" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32835" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32838" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32839" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32841" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32845" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32860" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32861" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="32918" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="33088" MotorDataLevel="0" DisableMode="0">
 									<RetainData>24002400d2001000ca0002002b9d5b002b9d5b000000000000000000000000002260000000000000</RetainData>
 								</InitCmd>
 								<InitCmd DriveNo="0" IDN="33093" MotorDataLevel="0" DisableMode="0">
 									<RetainData>16001a005365702020352032303137202c2030393a35333a3230</RetainData>
 								</InitCmd>
+								<InitCmd DriveNo="0" IDN="33219" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="33279" MotorDataLevel="1" DisableMode="0"/>
 							</InitCmds>
 							<StatusBar>
 								<Element option="0" SortOder="0" SubIdx="0">
@@ -9084,13 +9257,45 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000a0000000e000000000000000000000000000000000000000000000023402000000000000b004f7065726174696f6e206d6f646500</MBoxUserCmdData>
 						<MBoxUserCmdData>004005000a0000001e0000000000000000000000000000000000000000000000034030810000000001005265706f727420646961676e6f737469637320696e666f726d6174696f6e00</MBoxUserCmdData>
 						<MBoxUserCmdData>004005000a0000001e0000000000000000000000000000000000000000000000234030810000000001005265706f727420646961676e6f737469637320696e666f726d6174696f6e00</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000001300000000000000000000000000000000000000000000000340d88000000000c4224d6178204443206c696e6b20766f6c7461676500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000001500000000000000000000000000000000000000000000000340c98000000000a00f4e6f6d696e616c206d61696e7320766f6c7461676500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000002600000000000000000000000000000000000000000000000340ca800000000064004d61696e7320766f6c7461676520706f73697469766520746f6c6572616e63652072616e676500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000002600000000000000000000000000000000000000000000000340cb800000000064004d61696e7320766f6c74616765206e6567617469766520746f6c6572616e63652072616e676500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000001d00000000000000000000000000000000000000000000000340cc80000000000900506f776572206d616e6167656d656e7420636f6e74726f6c20776f726400</MBoxUserCmdData>
-						<MBoxUserCmdData>02000500ec0000000f00000000000000000000000000000000000000000000000340968000000000e000e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000400000000000000000004000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000466565646261636b2031207479706500</MBoxUserCmdData>
-						<MBoxUserCmdData>02000500140000001b000000000000000000000000000000000000000000000003409a8000000000080008000200000000000000466565646261636b2031207265666572656e6365207369676e616c00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001300000000000000000000000000000000000000000000000340d88000000000800c4d6178204443206c696e6b20766f6c7461676500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001500000000000000000000000000000000000000000000000340c98000000000fc084e6f6d696e616c206d61696e7320766f6c7461676500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000002600000000000000000000000000000000000000000000000340ca8000000000c8004d61696e7320766f6c7461676520706f73697469766520746f6c6572616e63652072616e676500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000002600000000000000000000000000000000000000000000000340cb8000000000c8004d61696e7320766f6c74616765206e6567617469766520746f6c6572616e63652072616e676500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001d00000000000000000000000000000000000000000000000340cc80000000001100506f776572206d616e6167656d656e7420636f6e74726f6c20776f726400</MBoxUserCmdData>
+						<MBoxUserCmdData>02000500ec0000000f00000000000000000000000000000000000000000000000340968000000000e000e000000000005265736f6c76657223703266386b487a6e302e35706869306465670000000000000000000000000000000000040000000000000003000400000000000300020832000000102700007e04ee02f401e80300000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a6004a019b0000000000000000000000000000000000000000000000466565646261636b2031207479706500</MBoxUserCmdData>
+						<MBoxUserCmdData>02000500140000001b000000000000000000000000000000000000000000000003409a8000000000080008000100000000000000466565646261636b2031207265666572656e6365207369676e616c00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001800000000000000000000000000000000000000000000000340d087000000000100436f6e6669677572656420736166657479206f7074696f6e00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c000000190000000000000000000000000000000000000000000000034098800000000001000000466565646261636b20312067656172206e756d657261746f7200</MBoxUserCmdData>
+						<MBoxUserCmdData>020005001a00000015000000000000000000000000000000000000000000000003403580000000000e0022004d52343130382d55332d4e363000436f6e66696775726564206d6f746f72207479706500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a000000170000000000000000000000000000000000000000000000034032800000000000004d6f746f7220636f6e737472756374696f6e207479706500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005001c00000013000000000000000000000000000000000000000000000003403e800000000010001000fc035000640001001400190000000000546865726d616c206d6f746f72206d6f64656c00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a000000140000000000000000000000000000000000000000000000034033800000000003004e756d626572206f6620706f6c6520706169727300</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001e000000000000000000000000000000000000000000000003406f0000000000ac0d00004d6f746f7220636f6e74696e756f7573207374616c6c2063757272656e7400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001300000000000000000000000000000000000000000000000340c40000000000fc0800004d6f746f722072617465642063757272656e7400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c00000012000000000000000000000000000000000000000000000003406d0000000000583400004d6f746f72207065616b2063757272656e7400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a00000013000000000000000000000000000000000000000000000003404d8000000000fc084d6f746f7220726174656420766f6c7461676500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000002200000000000000000000000000000000000000000000000340438000000000800c4d6f746f722077696e64696e673a204469656c65637472696320737472656e67746800</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001100000000000000000000000000000000000000000000000340498000000000d60100004d6f746f72207065616b20746f7271756500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000000900000000000000000000000000000000000000000000000340378000000000fa004d6f746f7220454d4600</MBoxUserCmdData>
+						<MBoxUserCmdData>02000500140000001400000000000000000000000000000000000000000000000340428000000000080008008601000016030000456c656374726963206d6f746f72206d6f64656c00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001300000000000000000000000000000000000000000000000340710000000000282300004d6178696d756d206d6f746f7220737065656400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001c000000000000000000000000000000000000000000000003405b00000000001dbc1e094269706f6c61722076656c6f63697479206c696d69742076616c756500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005001400000015000000000000000000000000000000000000000000000003404780000000000800080050000000000000004d656368616e6963616c206d6f746f72206461746100</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001900000000000000000000000000000000000000000000000340c9000000000020034d6f746f72207761726e696e672074656d706572617475726500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001b00000000000000000000000000000000000000000000000340cc0000000000e8034d6f746f72207368757420646f776e2074656d706572617475726500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001b00000000000000000000000000000000000000000000000340c38100000000000043757272656e7420636f6e74726f6c6c65722073657474696e677300</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001d000000000000000000000000000000000000000000000003403980000000007869456c656374726963616c20636f6d6d75746174696f6e206f666673657400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001d000000000000000000000000000000000000000000000003403d800000000004004d6f746f722074656d70657261747572652073656e736f72207479706500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a00000017000000000000000000000000000000000000000000000003400280000000003e0043757272656e74206374726c206379636c652074696d6500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005001c0000001500000000000000000000000000000000000000000000000340368000000000100022004158353230362d303030302d23232323436f6e66696775726564206472697665207479706500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001a000000000000000000000000000000000000000000000003405d8000000000ac0d0000436f6e66696775726564206368616e6e656c2063757272656e7400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001f000000000000000000000000000000000000000000000003405c8000000000581b0000436f6e66696775726564206368616e6e656c207065616b2063757272656e7400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001d000000000000000000000000000000000000000000000003404680000000007e0000004d6f746f7220636f6e74696e756f7573207374616c6c20746f7271756500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a00000020000000000000000000000000000000000000000000000003406a0000000000ed0043757272656e74206c6f6f702070726f706f7274696f6e616c206761696e203100</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000002b000000000000000000000000000000000000000000000003406b0000000000080043757272656e7420636f6e74726f6c206c6f6f7020696e74656772616c20616374696f6e2074696d65203100</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000002900000000000000000000000000000000000000000000000340ff8100000000960056656c6f636974792066696c74657220313a204c6f7720706173732074696d6520636f6e7374616e7400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001f000000000000000000000000000000000000000000000003406400000000002500000056656c6f63697479206c6f6f702070726f706f7274696f6e616c206761696e00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000002200000000000000000000000000000000000000000000000340650000000000500056656c6f63697479206c6f6f7020696e74656772616c20616374696f6e2074696d6500</MBoxUserCmdData>
 						<Pdo Name="AT 1" Index="#x0010" Flags="#x0001" SyncMan="3">
 							<Entry Name="Drive status word" Index="#x0087" Flags="#x00000800">
 								<Type>UINT</Type>
@@ -9237,9 +9442,11 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 		<MappingInfo Identifier="{05000010-2001-0850-6000-040300205008}" Id="#x02030040" Watchdog="14000000040000000400000004000000"/>
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500831000403}" Id="#x02030020"/>
 		<OwnerA Name="TIID^Device 1 (EtherCAT)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 2 (EL6910)">
+				<Link VarA="Term 1 (EK1200)^Term 30 (EL1904)^Module 1 (FSOES)^TxPDO^FSOE" VarB="ConnectionOutputs^Message_2 RxPDO"/>
+			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 30 (EL1904)">
 				<Link VarA="Term 1 (EK1200)^Term 2 (EL6910)^ConnectionInputs^Message_2 TxPDO" VarB="Module 1 (FSOES)^RxPDO^FSOE"/>
-				<Link VarA="Term 1 (EK1200)^Term 2 (EL6910)^ConnectionOutputs^Message_2 RxPDO" VarB="Module 1 (FSOES)^TxPDO^FSOE"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 31 (EL2904)">
 				<Link VarA="Term 1 (EK1200)^Term 2 (EL6910)^ConnectionInputs^Message_3 TxPDO" VarB="Module 1 (FSOES)^RxPDO^FSOE"/>
