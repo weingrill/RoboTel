@@ -58,7 +58,7 @@ error := power_failure OR
 			OR FanControl.error
 			OR GVL_Main.Safety_error;
 reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch;		
-GVL_Main.Run_safety := phase_available;
+GVL_Main.Run_safety := phase_available AND NOT (GVL_Main.stop_switch AND GVL_Main.reset_switch);
 restart_safety(IN := phase_available, PT := T#1S);
 GVL_Main.restart_safety := reset OR restart_safety.Q;
 GVL_MAIN.ErrAck_Safety := NOT GVL_Main.key_switch_remote AND GVL_Main.stop_switch;

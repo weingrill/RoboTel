@@ -1,18 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TargetSystemConfig Crc="3673485626" Version="1.4">
+<TargetSystemConfig Crc="2125276724" Version="1.4">
   <TargetSystemType>HSafetyPLC</TargetSystemType>
   <TargetSystemSubType>EL6910</TargetSystemSubType>
   <IsExternalDevice>false</IsExternalDevice>
   <TargetSystemObjectId>50462722</TargetSystemObjectId>
   <TargetSystemObjectName>Klemme 2 (EL6910)</TargetSystemObjectName>
-  <SoftwareVersion>03 (V01.09)     </SoftwareVersion>
-  <SerialNumber>2102577</SerialNumber>
+  <SoftwareVersion />
+  <SerialNumber />
   <ProjectCRC>13351</ProjectCRC>
   <MapProjectCRC>false</MapProjectCRC>
   <MapSerialNumber>false</MapSerialNumber>
   <VersionNumber>2</VersionNumber>
   <FSOEAddress>1</FSOEAddress>
-  <DipSwitch>1</DipSwitch>
+  <DipSwitch />
   <AmsNetID>5.78.96.50.2.1</AmsNetID>
   <AmsPort>1001</AmsPort>
   <ConnectionInfoDataConfigOld>false</ConnectionInfoDataConfigOld>
