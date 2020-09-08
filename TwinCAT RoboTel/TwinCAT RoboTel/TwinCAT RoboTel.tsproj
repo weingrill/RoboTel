@@ -2945,7 +2945,7 @@ External Setpoint Generation:
 						</Vars>
 					</Encoder>
 					<Drive Name="Drive" DrvType="9">
-						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00000100">
+						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00030100">
 							<Analog VeloReferenz="532.941728" VeloScale="1.02400649589962" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
@@ -3147,7 +3147,7 @@ External Setpoint Generation:
 						</Vars>
 					</Encoder>
 					<Drive Name="Drive" DrvType="9">
-						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00000100">
+						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00030100">
 							<Analog VeloReferenz="532.941728" VeloScale="1.02400649589962" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
@@ -3521,10 +3521,6 @@ Drive Status 4 (manually linked):
 						<Var>
 							<Name>GVL_Main.brake_clearing</Name>
 							<Comment><![CDATA[DIN15 1.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.Safety_error</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -3977,6 +3973,11 @@ External Setpoint Generation:
 ]]></Comment>
 							</SubVar>
 						</Var>
+						<Var>
+							<Name>GVL_Safety.Error</Name>
+							<Comment><![CDATA[ Safety Error Condition]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
 						<Name>PlcTask Outputs</Name>
@@ -4014,18 +4015,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Main.softstart_trafo</Name>
 							<Comment><![CDATA[DOUT7 0.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.Run_safety</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.restart_safety</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.ErrAck_Safety</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -4112,6 +4101,21 @@ DOUT9 1.0]]></Comment>
 						<Var>
 							<Name>GVL_Dome.DomeAxisRef.PlcToNc</Name>
 							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.Run</Name>
+							<Comment><![CDATA[ Run/Stop Safety]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.Restart</Name>
+							<Comment><![CDATA[ Restart Safety]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.ErrAck</Name>
+							<Comment><![CDATA[ Error Acknowledgement ]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<TaskPouOids>
@@ -9902,9 +9906,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<InitCmd DriveNo="0" IDN="32845" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32860" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32861" MotorDataLevel="1" DisableMode="0"/>
-								<InitCmd DriveNo="0" IDN="33088" MotorDataLevel="0" DisableMode="0">
-									<RetainData>24002400d5000600ca0002002c9d5b002c9d5b000000000000000000000000002260000000000000</RetainData>
-								</InitCmd>
 								<InitCmd DriveNo="0" IDN="33093" MotorDataLevel="0" DisableMode="0">
 									<RetainData>16001a004a616e2020332032303230202c2030383a32313a3437</RetainData>
 								</InitCmd>
@@ -10214,10 +10215,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 		</OwnerA>
 		<OwnerA Name="TIPC^RoboTelRuntime^RoboTelRuntime Instance">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 2 (EL6910)">
-				<Link VarA="PlcTask Inputs^GVL_Main.Safety_error" VarB="StandardInputs^Standard Out Var 14"/>
-				<Link VarA="PlcTask Outputs^GVL_Main.ErrAck_Safety" VarB="StandardOutputs^Standard In Var 1"/>
-				<Link VarA="PlcTask Outputs^GVL_Main.Run_safety" VarB="StandardOutputs^Standard In Var 11"/>
-				<Link VarA="PlcTask Outputs^GVL_Main.restart_safety" VarB="StandardOutputs^Standard In Var 13"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.ErrAck" VarB="StandardOutputs^Standard In Var 1"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.Restart" VarB="StandardOutputs^Standard In Var 13"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.Run" VarB="StandardOutputs^Standard In Var 11"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_Main.key_switch_remote" VarB="Channel 1^Input"/>

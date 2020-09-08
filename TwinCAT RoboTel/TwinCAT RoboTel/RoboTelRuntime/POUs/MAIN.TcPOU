@@ -16,11 +16,7 @@ VAR
 	// TCS remote stop;
 	remote_stop:	BOOL := FALSE;
 	power_watchdog : TON;
-	restart_safety : TP;
-	safety_state : RS;
 	ready_state: RS;
-	
-
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -56,12 +52,8 @@ error := power_failure OR
 			OR GVL_Telescope.azimut_limit_switch
 			OR PendantControl.error
 			OR FanControl.error
-			OR GVL_Main.Safety_error;
+			OR GVL_Safety.Error;
 reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch;		
-GVL_Main.Run_safety := phase_available AND NOT (GVL_Main.stop_switch AND GVL_Main.reset_switch);
-restart_safety(IN := phase_available, PT := T#1S);
-GVL_Main.restart_safety := reset OR restart_safety.Q;
-GVL_MAIN.ErrAck_Safety := NOT GVL_Main.key_switch_remote AND GVL_Main.stop_switch;
 					
 GVL_Main.lamp_ready := ready;
 GVL_Main.lamp_error := error OR warning;
@@ -97,9 +89,7 @@ GVL_Main.lamp_power := power_ok;
       <LineId Id="82" Count="0" />
       <LineId Id="107" Count="0" />
       <LineId Id="26" Count="0" />
-      <LineId Id="109" Count="1" />
-      <LineId Id="102" Count="0" />
-      <LineId Id="112" Count="1" />
+      <LineId Id="113" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="40" Count="0" />
       <LineId Id="44" Count="0" />

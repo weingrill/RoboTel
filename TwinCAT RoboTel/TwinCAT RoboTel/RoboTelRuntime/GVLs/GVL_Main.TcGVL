@@ -33,10 +33,6 @@ VAR_GLOBAL
 	//DOUT7 0.6
 	softstart_trafo		AT%Q*:BOOL;
 
-	Run_safety			AT%Q*:BOOL;
-	restart_safety		AT%Q*:BOOL; 
-	Safety_error		AT%I*:BOOL;
-	ErrAck_Safety		AT%Q*:BOOL;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

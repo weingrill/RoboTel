@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<safetyApplication Crc="4251065936" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.2.0.0" Id="04206a8c-e882-4430-a4d2-4b2bd47095a8" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
+<safetyApplication Crc="894498184" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.2.0.0" Id="04206a8c-e882-4430-a4d2-4b2bd47095a8" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
   <networks>
     <safetyApplicationHasNetworks Id="91193b0a-0959-45d0-84ef-68ec703593aa">
       <Network Id="68eb6a1b-d5bb-40eb-9c4c-f65d9d2a43e1" name="Network1" networkName="Network1" intId="1" networkOrderId="0">
         <functionBlocks>
           <networkHasFunctionBlocks Id="48c02cee-283e-4096-9c9d-77c7771974c0">
-            <fBEstop Id="03c64c15-8370-462c-a01c-7de4c49f9891" name="FBEstop1" instanceName="FBEstop1" orderOfExecution="1" mapState="false" mapDiag="false" functionName="safeEstop" safeInputsAfterDiscError="false">
+            <fBEstop Id="03c64c15-8370-462c-a01c-7de4c49f9891" name="FBEstop1" instanceName="FBEstop1" orderOfExecution="1" mapState="false" mapDiag="false" functionName="safeEstop" safeInputsAfterDiscError="true">
               <inPorts>
                 <functioBlockHasInPorts Id="2d327942-8a72-4e43-a971-62adf019e120">
                   <inPort Id="22758754-8566-40b4-bf8f-f51f9253ea0f" name="Restart" portName="Restart" portNum="2" objectIndex="0" varId="1" filter="3" portDataType="1" maxDeviation="0" resetTime="0">

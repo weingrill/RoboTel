@@ -41,6 +41,10 @@
     <Compile Include="GVLs\GVL_oil.TcGVL">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GVLs\GVL_Safety.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="GVLs\GVL_Telescope.TcGVL">
       <SubType>Code</SubType>
     </Compile>
@@ -177,6 +181,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\PendantControl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\SafetyHandling.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\TelescopeControl.TcPOU">
