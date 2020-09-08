@@ -59,7 +59,7 @@ GVL_Main.lamp_ready := ready;
 GVL_Main.lamp_error := error OR warning;
 GVL_Main.lamp_power := power_ok;
 
-]]></ST>
+SafetyHandling();]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="28" Count="0" />

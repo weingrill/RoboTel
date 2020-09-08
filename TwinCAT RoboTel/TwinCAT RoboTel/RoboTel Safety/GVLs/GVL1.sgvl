@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<GlobalVariables Crc="3614773811" Id="14a7511a-cafd-46f9-bec6-d9122e753db2" FileFormatVersion="1.0">
+<GlobalVariables Crc="4102938875" Id="14a7511a-cafd-46f9-bec6-d9122e753db2" FileFormatVersion="1.0">
   <Variable Id="c78fca0f-2e4f-46c1-a3d3-8b866481e03b">
     <Name>EStop1</Name>
     <SourceUsages>
@@ -118,6 +118,21 @@
         <ChannelId>1</ChannelId>
         <FunctionId>1131179972</FunctionId>
       </AliasDeviceIoUsage>
+    </TargetUsages>
+  </Variable>
+  <Variable Id="baf321e3-aba7-4fd7-9262-7f9ffdc4823f">
+    <Name>Feedback1</Name>
+    <SourceUsages>
+      <AliasDeviceIoUsage Id="17c48fa1-5dca-47af-acab-e98c53511621">
+        <SdsId>2</SdsId>
+        <ChannelId>3</ChannelId>
+        <FunctionId>1610679041</FunctionId>
+      </AliasDeviceIoUsage>
+    </SourceUsages>
+    <TargetUsages>
+      <FbPortUsage Id="4c303286-7ae4-49b4-8452-43328827c3cc">
+        <ModelElementId>444fc72d-6844-405e-b0f0-8a011516420b</ModelElementId>
+      </FbPortUsage>
     </TargetUsages>
   </Variable>
 </GlobalVariables>

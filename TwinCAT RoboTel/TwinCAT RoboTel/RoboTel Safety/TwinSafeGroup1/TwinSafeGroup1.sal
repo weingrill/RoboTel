@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<safetyApplication Crc="894498184" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.2.0.0" Id="04206a8c-e882-4430-a4d2-4b2bd47095a8" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
+<safetyApplication Crc="4249172021" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.2.0.0" Id="04206a8c-e882-4430-a4d2-4b2bd47095a8" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
   <networks>
     <safetyApplicationHasNetworks Id="91193b0a-0959-45d0-84ef-68ec703593aa">
       <Network Id="68eb6a1b-d5bb-40eb-9c4c-f65d9d2a43e1" name="Network1" networkName="Network1" intId="1" networkOrderId="0">
@@ -53,7 +53,13 @@
                   <inPort Id="b12045e4-f78e-4287-9060-9e8b0a447a89" name="EStopIn8" portName="EStopIn8" portNum="11" objectIndex="15" varId="10" filter="2" portDataType="1" channelInterface="Both Deactivated" maxDeviation="0" resetTime="0" />
                 </functioBlockHasInPorts>
                 <functioBlockHasInPorts Id="9b7be88f-e3c0-42de-a14f-6d35991f6fe9">
-                  <inPort Id="444fc72d-6844-405e-b0f0-8a011516420b" name="EDM1" portName="EDM1" portNum="13" objectIndex="1" varId="12" filter="3" portDataType="1" maxDeviation="0" resetTime="0" />
+                  <inPort Id="444fc72d-6844-405e-b0f0-8a011516420b" name="EDM1" portName="EDM1" portNum="13" objectIndex="1" varId="12" filter="3" portDataType="1" maxDeviation="0" resetTime="0">
+                    <fbPortGlobalVariableReferences>
+                      <functionBlockPortHasFbPortGlobalVariableReferences Id="f3bdcca6-839a-47dd-947f-1c9de69dcf3f">
+                        <fbPortGlobalVariableReference Id="635961d1-ab47-4c88-bf4d-aeac66e304c6" variableId="baf321e3-aba7-4fd7-9262-7f9ffdc4823f" lastKnownPath="GVL1.Feedback1" />
+                      </functionBlockPortHasFbPortGlobalVariableReferences>
+                    </fbPortGlobalVariableReferences>
+                  </inPort>
                 </functioBlockHasInPorts>
                 <functioBlockHasInPorts Id="282baffe-8646-44eb-8846-66ce0657d81c">
                   <inPort Id="e73ac346-e429-4b37-9cd2-dbdc15a574e2" name="EDM2" portName="EDM2" portNum="14" objectIndex="2" varId="13" filter="3" portDataType="1" maxDeviation="0" resetTime="0" />
