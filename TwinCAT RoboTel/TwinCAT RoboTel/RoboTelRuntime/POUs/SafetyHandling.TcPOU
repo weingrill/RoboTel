@@ -16,7 +16,8 @@ restart_safety(IN := GVL_Main.phase_available, PT := T#1S);
 // RESTART Safety after pushing reset or power on delay
 GVL_Safety.Restart := Main.reset OR restart_safety.Q;
 // Error Acknowledgment: Turn key_switch OFF and press STOP 
-GVL_Safety.ErrAck := NOT GVL_Main.key_switch_remote AND GVL_Main.stop_switch;
+GVL_Safety.ErrAck := (NOT GVL_Main.key_switch_remote AND GVL_Main.stop_switch)
+					OR (NOT GVL_pendant_control.key_switch AND GVL_pendant_control.reset_switch);
 ]]></ST>
     </Implementation>
     <LineIds Name="SafetyHandling">
@@ -28,6 +29,7 @@ GVL_Safety.ErrAck := NOT GVL_Main.key_switch_remote AND GVL_Main.stop_switch;
       <LineId Id="8" Count="0" />
       <LineId Id="16" Count="0" />
       <LineId Id="9" Count="0" />
+      <LineId Id="23" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

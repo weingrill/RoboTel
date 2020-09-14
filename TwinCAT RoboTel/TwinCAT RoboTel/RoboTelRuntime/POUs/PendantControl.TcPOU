@@ -16,6 +16,10 @@ VAR
 	Nasmyth_unlock,
 	Nasmyth_unlocked:	BOOL;
 	Focusstate:	RS;
+	FocusAxisJog:		FB_AxisJog;
+	DerotatorAxisJog:	FB_AxisJog;
+	
+	manual:		BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -28,8 +32,9 @@ GVL_pendant_control.lamp_left := FALSE;
 GVL_pendant_control.lamp_right := FALSE;
 GVL_pendant_control.lamp_up := FALSE;
 GVL_pendant_control.lamp_down := FALSE;
+manual := GVL_pendant_control.key_switch;
 //GVL_pendant_control.lamp_error := MAIN.error;
-FanControl(enable := NOT GVL_pendant_control.key_switch);
+FanControl(enable := NOT manual);
 //GVL_Telescope.horn := GVL_pendant_control.reset_switch;
 
 Nasmyth_delay(IN := GVL_Telescope.nasmyth_lock,
@@ -42,7 +47,7 @@ CASE Selection OF
 		GVL_pendant_control.lamp_right := TRUE;
 	2: Cover2_control(open := GVL_pendant_control.direction_up,
 						close := GVL_pendant_control.direction_down,
-						enable := GVL_pendant_control.key_switch AND GVL_Telescope.cover3_closed,
+						enable := manual AND GVL_Telescope.cover3_closed,
 						reset := MAIN.reset,
 						limit_open := GVL_Telescope.cover2_open,
 						limit_close := GVL_Telescope.cover2_closed,
@@ -55,7 +60,7 @@ CASE Selection OF
 	3:  
 		 Cover3_control(open := GVL_pendant_control.direction_up,
 						close := GVL_pendant_control.direction_down,
-						enable := GVL_pendant_control.key_switch,
+						enable := manual,
 						reset := MAIN.reset,
 						limit_open := GVL_Telescope.cover3_open,
 						limit_close := GVL_Telescope.cover3_closed,
@@ -64,7 +69,7 @@ CASE Selection OF
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover3_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover3_closed;
 	4:
-		GVL_Telescope.nasmyth_lock :=  GVL_pendant_control.key_switch AND 
+		GVL_Telescope.nasmyth_lock :=  manual AND 
 										( GVL_pendant_control.direction_left OR 
  										GVL_pendant_control.direction_right OR
 										GVL_pendant_control.start_switch);
@@ -80,9 +85,21 @@ CASE Selection OF
 						axis_ref := Nasmyth_axis);
 		GVL_pendant_control.lamp_left := GVL_Telescope.nasmyth_limit_left;
 		GVL_pendant_control.lamp_right := GVL_Telescope.nasmyth_limit_right;
-	5:	Focusstate(SET := GVL_pendant_control.start_switch,
+	5: Focusstate(SET := GVL_pendant_control.start_switch,
 					RESET1 := GVL_pendant_control.reset_switch,
 					Q1 => GVL_Telescope.focus_lock);
+	   FocusAxisJog(bPowerEnable := manual,
+						bEnable_Positive := TRUE,
+						bEnable_Negative := TRUE,
+						bForward := GVL_pendant_control.direction_up,
+						bBackward := GVL_pendant_control.direction_down,
+						stAxis :=	GVL_Telescope.FocusAxisRef);
+	6: DeRotatorAxisJog(bPowerEnable := Main.power_OK,
+						bEnable_Positive := TRUE,
+						bEnable_Negative := TRUE,
+						bForward := GVL_pendant_control.direction_right,
+						bBackward := GVL_pendant_control.direction_left,
+						stAxis :=	GVL_Telescope.DerotatorAxisRef);
 	15:	GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
 		GVL_pendant_control.lamp_up := TRUE;
@@ -96,7 +113,9 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="5" Count="0" />
       <LineId Id="7" Count="2" />
       <LineId Id="17" Count="2" />
-      <LineId Id="25" Count="2" />
+      <LineId Id="25" Count="1" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="27" Count="0" />
       <LineId Id="118" Count="0" />
       <LineId Id="28" Count="0" />
       <LineId Id="158" Count="3" />
@@ -120,6 +139,10 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="136" Count="2" />
       <LineId Id="126" Count="0" />
       <LineId Id="197" Count="1" />
+      <LineId Id="225" Count="4" />
+      <LineId Id="223" Count="0" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="218" Count="4" />
       <LineId Id="20" Count="2" />
       <LineId Id="24" Count="0" />
       <LineId Id="23" Count="0" />
