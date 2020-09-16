@@ -2456,13 +2456,12 @@ External Setpoint Generation:
 				<Axis Id="1" CreateSymbols="true" AxisType="1">
 					<Name>Focus</Name>
 					<AxisPara>
-						<Dynamic Acceleration="1333.33" Deceleration="1333.33" Jerk="888.889"/>
-						<PositionAreaControl Enable="false"/>
-						<TargetPosControl Enable="false"/>
+						<Dynamic AccelerationMaximum="1000" DecelerationMaximum="1000" Acceleration="30" Deceleration="30" Jerk="180"/>
+						<Velo Maximum="5"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="4">
-						<EncPara MaxCount="#x0000ffff">
+						<EncPara ScaleFactorNumerator="0.005" MaxCount="#x0000ffff">
 							<Inc RefSoftSyncMask="#x0000ffff"/>
 						</EncPara>
 						<Vars VarGrpType="1">
@@ -2530,7 +2529,7 @@ External Setpoint Generation:
 					</Encoder>
 					<Drive Name="Drive" DrvType="23">
 						<DrvPara>
-							<Analog ScaleFactorActTorque="0.1"/>
+							<Analog VeloReferenz="10.271318" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
@@ -2614,7 +2613,6 @@ Drive Status 4 (manually linked):
 					</Drive>
 					<Controller Name="Ctrl" CtrType="1">
 						<CtrPara PriorControlFactor="1">
-							<PosDiffControl Enable="false"/>
 							<Observer BandWidth="20"/>
 						</CtrPara>
 					</Controller>
