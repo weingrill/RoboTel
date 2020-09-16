@@ -17,6 +17,7 @@ VAR
 	remote_stop:	BOOL := FALSE;
 	power_watchdog : TON;
 	ready_state: RS;
+	cabinet_temperature:	REAL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -32,15 +33,17 @@ Main control loop
 power_OK := GVL_main.power_available;
 phase_available := GVL_Main.phase_available;
 
-ready_state(SET := power_OK AND(GVL_Main.start_switch OR remote_start),
-			RESET1 := GVL_main.stop_switch OR remote_stop OR error,
+ready_state(SET := power_OK AND HydraulicsControl.oil_pressure_OK AND (GVL_Main.start_switch OR remote_start),
+			RESET1 := GVL_main.stop_switch OR remote_stop OR error OR HydraulicsControl.pressure_failure,
 			Q1 => ready);
 		
 TelescopeControl();
 DomeControl();
 PendantControl();
 HydraulicsControl();
-GVL_Telescope.brake_azimuth_eve := GVL_Main.brake_clearing AND NOT GVL_Telescope.azimut_limit_switch;
+GVL_Telescope.brake_azimuth_eve := (GVL_Main.brake_clearing OR PendantControl.brake_open) AND 
+									HydraulicsControl.oil_pressure_OK AND 
+									NOT GVL_Telescope.azimut_limit_switch;
 GVL_Main.softstart_trafo := GVL_Main.key_switch_remote AND NOT power_failure;
 power_watchdog(IN := GVL_Main.softstart_trafo AND NOT power_OK,
 				PT := T#2S,
@@ -58,7 +61,7 @@ reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch;
 GVL_Main.lamp_ready := ready;
 GVL_Main.lamp_error := error OR warning;
 GVL_Main.lamp_power := power_ok;
-
+cabinet_temperature := INT_TO_REAL(GVL_Main.main_cabinet_temperature) / 100.0;
 SafetyHandling();]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
@@ -79,6 +82,7 @@ SafetyHandling();]]></ST>
       <LineId Id="9" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="10" Count="0" />
+      <LineId Id="132" Count="1" />
       <LineId Id="69" Count="0" />
       <LineId Id="35" Count="0" />
       <LineId Id="37" Count="1" />

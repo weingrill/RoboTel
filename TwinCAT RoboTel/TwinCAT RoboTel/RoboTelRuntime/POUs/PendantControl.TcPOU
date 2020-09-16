@@ -19,7 +19,12 @@ VAR
 	FocusAxisJog:		FB_AxisJog;
 	DerotatorAxisJog:	FB_AxisJog;
 	
-	manual:		BOOL;
+	manual,
+	manual_hydraulics_start,
+	manual_hydraulics_stop:		BOOL;
+	
+	brake_state:	RS;
+	brake_open : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -85,25 +90,43 @@ CASE Selection OF
 						axis_ref := Nasmyth_axis);
 		GVL_pendant_control.lamp_left := GVL_Telescope.nasmyth_limit_left;
 		GVL_pendant_control.lamp_right := GVL_Telescope.nasmyth_limit_right;
-	5: Focusstate(SET := GVL_pendant_control.start_switch,
-					RESET1 := GVL_pendant_control.reset_switch,
+		
+	5:	GVL_pendant_control.lamp_up := NOT GVL_Telescope.focus_limit_far;
+		GVL_pendant_control.lamp_down := NOT GVL_Telescope.focus_limit_near;
+
+		Focusstate(SET := manual AND GVL_pendant_control.start_switch,
+					RESET1 := manual AND GVL_pendant_control.reset_switch,
 					Q1 => GVL_Telescope.focus_lock);
-	   FocusAxisJog(bPowerEnable := manual,
-						bEnable_Positive := TRUE,
-						bEnable_Negative := TRUE,
+		FocusAxisJog(bPowerEnable := manual AND Focusstate.Q1,
+						bEnable_Positive := NOT GVL_Telescope.focus_limit_far,
+						bEnable_Negative := NOT GVL_Telescope.focus_limit_near,
 						bForward := GVL_pendant_control.direction_up,
 						bBackward := GVL_pendant_control.direction_down,
+						bReset := manual AND GVL_pendant_control.reset_switch,
+						bStop := manual AND GVL_pendant_control.start_switch,
+						bErr => error,
 						stAxis :=	GVL_Telescope.FocusAxisRef);
-	6: DeRotatorAxisJog(bPowerEnable := Main.power_OK,
+						
+	6:	GVL_pendant_control.lamp_left := TRUE;
+		GVL_pendant_control.lamp_right := TRUE;
+		DeRotatorAxisJog(bPowerEnable := manual AND GVL_Main.brake_clearing AND Main.power_OK,
 						bEnable_Positive := TRUE,
 						bEnable_Negative := TRUE,
 						bForward := GVL_pendant_control.direction_right,
 						bBackward := GVL_pendant_control.direction_left,
+						bReset := manual AND GVL_pendant_control.reset_switch,
+						bStop := manual AND GVL_pendant_control.start_switch,
+						bErr => error,
 						stAxis :=	GVL_Telescope.DerotatorAxisRef);
 	15:	GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
-		GVL_pendant_control.lamp_up := TRUE;
-		GVL_pendant_control.lamp_down := TRUE;
+		GVL_pendant_control.lamp_up := HydraulicsControl.oil_pressure_OK AND NOT brake_open;
+		GVL_pendant_control.lamp_down := HydraulicsControl.oil_pressure_OK AND brake_open;
+		manual_hydraulics_start := manual AND GVL_pendant_control.start_switch;
+		manual_hydraulics_stop := manual AND GVL_pendant_control.reset_switch;
+		brake_state(SET := GVL_pendant_control.direction_up,
+					Reset1 := GVL_pendant_control.direction_down,
+					Q1 => brake_open);
 		
 END_CASE
 
@@ -137,14 +160,27 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="129" Count="6" />
       <LineId Id="155" Count="0" />
       <LineId Id="136" Count="2" />
+      <LineId Id="241" Count="0" />
+      <LineId Id="236" Count="1" />
       <LineId Id="126" Count="0" />
+      <LineId Id="235" Count="0" />
       <LineId Id="197" Count="1" />
       <LineId Id="225" Count="4" />
+      <LineId Id="251" Count="1" />
+      <LineId Id="246" Count="0" />
       <LineId Id="223" Count="0" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="238" Count="1" />
       <LineId Id="215" Count="0" />
-      <LineId Id="218" Count="4" />
-      <LineId Id="20" Count="2" />
-      <LineId Id="24" Count="0" />
+      <LineId Id="218" Count="3" />
+      <LineId Id="249" Count="1" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="233" Count="1" />
+      <LineId Id="244" Count="1" />
+      <LineId Id="256" Count="1" />
+      <LineId Id="259" Count="0" />
       <LineId Id="23" Count="0" />
       <LineId Id="13" Count="0" />
       <LineId Id="123" Count="0" />
