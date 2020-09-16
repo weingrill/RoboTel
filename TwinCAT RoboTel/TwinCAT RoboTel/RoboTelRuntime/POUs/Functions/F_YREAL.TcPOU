@@ -37,20 +37,14 @@ IF (fXmax - fXmin) <> 0 THEN
 	
 	// Berechnung von F_Y
 
-	IF fgain * fX + foffset < fYmin THEN 
-		F_YREAL := fYmin;
-		
-	END_IF
-	IF fgain * fX + foffset > fYmax THEN 
-		F_YREAL := fYmax;
-	END_IF	
 	F_YREAL := LREAL_TO_REAL(fgain * fX + foffset);
-		
+	F_YREAL := LIMIT(fYmin, F_YREAL, fYMAX);
 END_IF
 ]]></ST>
     </Implementation>
     <LineIds Name="F_YREAL">
-      <LineId Id="3" Count="32" />
+      <LineId Id="3" Count="22" />
+      <LineId Id="33" Count="2" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
