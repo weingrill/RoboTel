@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="FB_Timer" Id="{51d55881-1840-43a3-abc1-8de5ef122133}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM FB_Timer
+VAR_INPUT
+	bStart          : BOOL := FALSE;
+	bStop			: BOOL := FALSE;
+END_VAR
+VAR_OUTPUT
+    tDifference     : TIME;
+END_VAR
+VAR
+    StartTrigger,
+	StopTrigger		: R_TRIG;
+    StartTime    	: TIME;
+    StopTime    	: TIME;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+Timer functionblock
+
+Source:
+https://infosys.beckhoff.de/index.php?content=../content/1031/tc3_plc_intro/2529365899.html&id=
+*)
+StartTrigger(CLK := bStart);
+StopTrigger(CLK := bStop);
+
+IF StartTrigger.Q THEN
+    StartTime  := TIME();
+END_IF
+
+IF StopTrigger.Q THEN
+    StopTime  := TIME();
+    tDifference   := StopTime - StartTime;    // The difference will be T#5s
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Timer">
+      <LineId Id="39" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="16" Count="5" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
