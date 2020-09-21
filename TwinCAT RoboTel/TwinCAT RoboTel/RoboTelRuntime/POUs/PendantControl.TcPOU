@@ -18,6 +18,8 @@ VAR
 	Focusstate:	RS;
 	FocusAxisJog:		FB_AxisJog;
 	DerotatorAxisJog:	FB_AxisJog;
+	ElevationAxisJog:	FB_AxisJog;
+	AzimuthAxisJog:		FB_AxisJog;
 	
 	manual,
 	manual_hydraulics_start,
@@ -118,6 +120,29 @@ CASE Selection OF
 						bStop := manual AND GVL_pendant_control.start_switch,
 						bErr => error,
 						stAxis :=	GVL_Telescope.DerotatorAxisRef);
+	7:	GVL_pendant_control.lamp_up := TRUE;
+		GVL_pendant_control.lamp_down := TRUE;
+		ElevationAxisJog(bPowerEnable := manual AND GVL_Main.brake_clearing AND Main.power_OK,
+						bEnable_Positive := GVL_Main.brake_clearing,
+						bEnable_Negative := GVL_Main.brake_clearing,
+						bForward := GVL_pendant_control.direction_up,
+						bBackward := GVL_pendant_control.direction_down,
+						bReset := manual AND GVL_pendant_control.reset_switch,
+						bStop := manual AND GVL_pendant_control.start_switch,
+						bErr => error,
+						stAxis :=	GVL_Telescope.ElevationAxisRef);
+	8:	GVL_pendant_control.lamp_left := TRUE;
+		GVL_pendant_control.lamp_right := TRUE;
+		AzimuthAxisJog(bPowerEnable := manual AND GVL_Main.brake_clearing AND Main.power_OK,
+						bEnable_Positive := GVL_Main.brake_clearing,
+						bEnable_Negative := GVL_Main.brake_clearing,
+						bForward := GVL_pendant_control.direction_right,
+						bBackward := GVL_pendant_control.direction_left,
+						bReset := manual AND GVL_pendant_control.reset_switch,
+						bStop := manual AND GVL_pendant_control.start_switch,
+						bErr => error,
+						stAxis :=	GVL_Telescope.AzimuthAxisRef);
+	
 	15:	GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
 		GVL_pendant_control.lamp_up := HydraulicsControl.oil_pressure_OK AND NOT brake_open;
@@ -176,6 +201,10 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="249" Count="1" />
       <LineId Id="247" Count="0" />
       <LineId Id="222" Count="0" />
+      <LineId Id="288" Count="9" />
+      <LineId Id="285" Count="0" />
+      <LineId Id="299" Count="10" />
+      <LineId Id="298" Count="0" />
       <LineId Id="20" Count="1" />
       <LineId Id="233" Count="1" />
       <LineId Id="244" Count="1" />

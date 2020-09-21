@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="FB_Timer" Id="{51d55881-1840-43a3-abc1-8de5ef122133}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM FB_Timer
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Timer
 VAR_INPUT
 	bStart          : BOOL := FALSE;
 	bStop			: BOOL := FALSE;
