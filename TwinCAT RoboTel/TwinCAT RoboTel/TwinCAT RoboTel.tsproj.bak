@@ -3625,32 +3625,32 @@ External Setpoint Generation:
 						</Var>
 						<Var>
 							<Name>GVL_oil.oil_low</Name>
-							<Comment><![CDATA[DIN9 1.0]]></Comment>
+							<Comment><![CDATA[ 2.1]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_oil.oil_high</Name>
-							<Comment><![CDATA[DIN10 1.1]]></Comment>
+							<Comment><![CDATA[ ?]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_oil.oil_pressure_OK</Name>
-							<Comment><![CDATA[DIN11 1.2]]></Comment>
+							<Comment><![CDATA[ 2.3]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_oil.oil_overtemperature</Name>
-							<Comment><![CDATA[DIN12 1.3]]></Comment>
+							<Comment><![CDATA[ 2.4]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_oil.oil_undertemperature</Name>
-							<Comment><![CDATA[DIN13 1.4]]></Comment>
+							<Comment><![CDATA[ 2.5]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_oil.oilfilter_dirty</Name>
-							<Comment><![CDATA[DIN14 1.5]]></Comment>
+							<Comment><![CDATA[ 2.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>

@@ -3,9 +3,10 @@
   <POU Name="SafetyHandling" Id="{6d4a788c-2168-4769-93de-c67314036861}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM SafetyHandling
 VAR
-	restart_safety : TP;
-	safety_state : RS;
-
+	restart_safety 	: TP;
+	safety_state 	: RS;
+	start_delay 	: TON;
+	ErrAck_Pulse	: TP;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -15,9 +16,16 @@ GVL_Safety.Run := GVL_Main.phase_available AND NOT (GVL_Main.stop_switch AND GVL
 restart_safety(IN := GVL_Main.phase_available, PT := T#1S);
 // RESTART Safety after pushing reset or power on delay
 GVL_Safety.Restart := Main.reset OR restart_safety.Q;
+
+// wait n seconds after Start ...
+start_delay(IN := GVL_Main.phase_available, PT := T#15S);
+// ... and send ErrAck for n milliseconds
+ErrAck_Pulse(IN := GVL_Main.phase_available AND start_delay.Q, PT := T#200MS);
+
 // Error Acknowledgment: Turn key_switch OFF and press STOP 
 GVL_Safety.ErrAck := (NOT GVL_Main.key_switch_remote AND GVL_Main.stop_switch)
-					OR (NOT GVL_pendant_control.key_switch AND GVL_pendant_control.reset_switch);
+					OR (NOT GVL_pendant_control.key_switch AND GVL_pendant_control.reset_switch)
+					OR ErrAck_Pulse.Q;
 ]]></ST>
     </Implementation>
     <LineIds Name="SafetyHandling">
@@ -27,9 +35,15 @@ GVL_Safety.ErrAck := (NOT GVL_Main.key_switch_remote AND GVL_Main.stop_switch)
       <LineId Id="7" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="8" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="30" Count="0" />
       <LineId Id="16" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="23" Count="0" />
+      <LineId Id="35" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

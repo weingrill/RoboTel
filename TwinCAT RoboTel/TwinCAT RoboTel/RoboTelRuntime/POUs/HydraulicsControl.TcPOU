@@ -10,11 +10,17 @@ VAR
 	oil_low,
 	oil_high,
 	oil_pressure_OK,
-	oil_warning :	BOOL := FALSE;
+	oil_warning,
+	oil_filter_dirty,
+	oil_cold,
+	oil_hot :	BOOL := FALSE;
 	
 	HydraulicsLog,
 	ReserveLog,
-	oil_low_log: FB_EventLog;
+	oil_low_log,
+	FilterLog,
+	OverTemperatureLog,
+	UnderTemperatureLog: FB_EventLog;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -30,6 +36,10 @@ Main control Logic for the Hydraulics system
 oil_low := NOT GVL_oil.oil_low;
 oil_high := NOT GVL_oil.oil_high;
 oil_warning := GVL_oil.oil_reserve;
+oil_pressure_OK := TRUE OR NOT GVL_oil.oil_pressure_OK;
+oil_filter_dirty := NOT GVL_oil.oilfilter_dirty;
+oil_cold := NOT GVL_oil.oil_undertemperature;
+oil_hot := NOT GVL_oil.oil_overtemperature;
 
 oil_pump_state(SET := GVL_Main.start_switch OR PendantControl.manual_hydraulics_start,
 				RESET1 := GVL_Main.stop_switch OR PendantControl.manual_hydraulics_stop OR
@@ -45,8 +55,8 @@ suction_pump_timer(IN := MAIN.phase_available AND
 					Q => GVL_Oil.oil_suction_enable);
 
 pressure_watchdog(IN := GVL_Oil.oil_pump_enable AND 
-						NOT GVL_oil.oil_pressure_OK,
-					PT := T#20S,
+						NOT oil_pressure_OK,
+					PT := T#10S,
 				  Q => pressure_failure);
 				  
 oil_pressure_ok := oil_pump_state.Q1 AND NOT pressure_failure;
@@ -69,6 +79,24 @@ oil_low_log(Trigger := oil_low,
 				OnMessage := 'LOW',
 				OffMessage := 'OK',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
+FilterLog(Trigger := oil_filter_dirty,
+				Level := ADSLOG_MSGTYPE_WARN,
+				FormatString := 'Hydraulics Filter is %s',
+				OnMessage := 'dirty',
+				OffMessage := 'clean',
+				OffLevel := ADSLOG_MSGTYPE_HINT);
+OverTemperatureLog(Trigger := oil_hot,
+				Level := ADSLOG_MSGTYPE_WARN,
+				FormatString := 'Hydraulics Temperature %s',
+				OnMessage := '> 50C',
+				OffMessage := '< 50C',
+				OffLevel := ADSLOG_MSGTYPE_HINT);
+UnderTemperatureLog(Trigger := oil_cold,
+				Level := ADSLOG_MSGTYPE_WARN,
+				FormatString := 'Hydraulics Temperature %s',
+				OnMessage := '< 10C',
+				OffMessage := '> 10C',
+				OffLevel := ADSLOG_MSGTYPE_HINT);
 ]]></ST>
     </Implementation>
     <LineIds Name="HydraulicsControl">
@@ -81,6 +109,9 @@ oil_low_log(Trigger := oil_low,
       <LineId Id="41" Count="0" />
       <LineId Id="43" Count="0" />
       <LineId Id="42" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="152" Count="1" />
       <LineId Id="108" Count="0" />
       <LineId Id="89" Count="0" />
       <LineId Id="109" Count="0" />
@@ -106,6 +137,7 @@ oil_low_log(Trigger := oil_low,
       <LineId Id="54" Count="3" />
       <LineId Id="59" Count="5" />
       <LineId Id="66" Count="5" />
+      <LineId Id="157" Count="17" />
       <LineId Id="51" Count="0" />
     </LineIds>
   </POU>
