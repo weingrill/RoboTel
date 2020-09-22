@@ -111,7 +111,7 @@ CASE Selection OF
 						
 	6:	GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
-		DeRotatorAxisJog(bPowerEnable := manual AND GVL_Main.brake_clearing AND Main.power_OK,
+		DeRotatorAxisJog(bPowerEnable := manual AND Main.power_OK,
 						bEnable_Positive := TRUE,
 						bEnable_Negative := TRUE,
 						bForward := GVL_pendant_control.direction_right,
