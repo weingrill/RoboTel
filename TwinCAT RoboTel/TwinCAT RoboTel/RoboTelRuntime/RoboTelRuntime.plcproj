@@ -60,6 +60,9 @@
     <Compile Include="POUs\DomeControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\ElevationControl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Environment.TcPOU">
       <SubType>Code</SubType>
     </Compile>

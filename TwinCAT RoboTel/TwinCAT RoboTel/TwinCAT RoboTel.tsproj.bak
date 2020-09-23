@@ -3078,10 +3078,9 @@ External Setpoint Generation:
 					<Name>Elevation</Name>
 					<AxisPara>
 						<General UnitName="°"/>
-						<Dynamic AccelerationMaximum="20" DecelerationMaximum="20" Acceleration="10" Deceleration="10" Jerk="10"/>
-						<Velo RefSearch="1" RefSync="1" SlowManual="0.1" FastManual="1" Fast="1663.37292480469" Maximum="10"/>
+						<Dynamic AccelerationMaximum="20" DecelerationMaximum="20" Acceleration="2" Deceleration="2" Jerk="2"/>
+						<Velo RefSearch="1" RefSync="1" SlowManual="0.1" FastManual="1" Fast="1663.37292480469" Maximum="2"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
-						<ParameterChanged>8</ParameterChanged>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="8">
 						<EncPara ScaleFactorNumerator="360" ScaleFactorDenominator="1048576" MaxCount="#xffffffff"/>

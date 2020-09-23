@@ -56,6 +56,7 @@ TelescopeControl();
 //DomeControl();
 PendantControl();
 HydraulicsControl();
+FanControl(enable := NOT PendantControl.manual);
 
 GVL_Main.softstart_trafo := key_switch AND NOT power_failure;
 power_timer(bStart := key_switch, bStop := power_OK);
@@ -69,6 +70,7 @@ error := power_failure OR
 			OR GVL_Telescope.azimut_limit_switch
 			OR PendantControl.error
 			OR FanControl.error
+			OR ElevationControl.error
 			OR GVL_Safety.Error;
 // set control lights					
 GVL_Main.lamp_ready := ready;
@@ -100,6 +102,7 @@ SafetyHandling();]]></ST>
       <LineId Id="165" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="15" Count="0" />
+      <LineId Id="171" Count="0" />
       <LineId Id="167" Count="0" />
       <LineId Id="69" Count="0" />
       <LineId Id="154" Count="0" />
@@ -110,6 +113,7 @@ SafetyHandling();]]></ST>
       <LineId Id="71" Count="2" />
       <LineId Id="80" Count="0" />
       <LineId Id="82" Count="0" />
+      <LineId Id="172" Count="0" />
       <LineId Id="107" Count="0" />
       <LineId Id="113" Count="0" />
       <LineId Id="8" Count="0" />
