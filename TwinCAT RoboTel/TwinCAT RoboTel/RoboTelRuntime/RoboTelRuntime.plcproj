@@ -66,6 +66,9 @@
     <Compile Include="POUs\FanControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FocusControl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FunctionBlocks\CO_ABERRATION.TcPOU">
       <SubType>Code</SubType>
     </Compile>

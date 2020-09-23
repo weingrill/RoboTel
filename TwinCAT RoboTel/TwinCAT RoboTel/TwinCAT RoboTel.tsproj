@@ -3078,7 +3078,7 @@ External Setpoint Generation:
 					<Name>Elevation</Name>
 					<AxisPara>
 						<General UnitName="°"/>
-						<Dynamic AccelerationMaximum="20" DecelerationMaximum="20" Acceleration="2" Deceleration="2" Jerk="2"/>
+						<Dynamic AccelerationMaximum="20" DecelerationMaximum="20" Acceleration="0.4" Deceleration="0.4" Jerk="0.1"/>
 						<Velo RefSearch="1" RefSync="1" SlowManual="0.1" FastManual="1" Fast="1663.37292480469" Maximum="2"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
@@ -8894,7 +8894,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 					</EtherCAT>
 				</Box>
 				<Box Id="79" BoxType="9099" BoxFlags="#x00000020">
-					<Name>Antrieb 79 (AX5206-0000-0210)</Name>
+					<Name>Derotator (AX5206-0000-0210)</Name>
 					<ImageId>1012</ImageId>
 					<Xml>
 						<AX5XXXDriveTool>
@@ -9344,7 +9344,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 					</EtherCAT>
 				</Box>
 				<Box Id="81" BoxType="9099" BoxFlags="#x00000020">
-					<Name>Antrieb 81 (AX5125-0000-0213)</Name>
+					<Name>Azimuth (AX5125-0000-0213)</Name>
 					<Comment><![CDATA[Azimut]]></Comment>
 					<ImageId>1013</ImageId>
 					<Xml>
@@ -9765,7 +9765,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 					</EtherCAT>
 				</Box>
 				<Box Id="82" BoxType="9099" BoxFlags="#x00000020">
-					<Name>Antrieb 82 (AX5125-0000-0213)</Name>
+					<Name>Elevation (AX5125-0000-0213)</Name>
 					<Comment><![CDATA[Elevation]]></Comment>
 					<ImageId>1013</ImageId>
 					<Xml>
@@ -9996,7 +9996,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								</Element>
 								<Element option="0" SortOder="0" SubIdx="0">
 									<Index>95</Index>
-									<Width>100</Width>
+									<Width>241</Width>
 								</Element>
 								<Element option="1" SortOder="0" SubIdx="0">
 									<Index>32821</Index>
@@ -10150,7 +10150,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000a0000001900000000000000000000000000000000000000000000000340c9000000000020034d6f746f72207761726e696e672074656d706572617475726500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001b00000000000000000000000000000000000000000000000340cc0000000000e8034d6f746f72207368757420646f776e2074656d706572617475726500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001d00000000000000000000000000000000000000000000000340c38100000000000043757272656e7420636f6e74726f6c6c65722073657474696e6773203200</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000001d00000000000000000000000000000000000000000000000340398000000000007d456c656374726963616c20636f6d6d75746174696f6e206f666673657400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001d000000000000000000000000000000000000000000000003403980000000001d7d456c656374726963616c20636f6d6d75746174696f6e206f666673657400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001d000000000000000000000000000000000000000000000003403d800000000004004d6f746f722074656d70657261747572652073656e736f72207479706500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a00000017000000000000000000000000000000000000000000000003400280000000003e0043757272656e74206374726c206379636c652074696d6500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005001c0000001500000000000000000000000000000000000000000000000340368000000000100022004158353132352d303030302d23232323436f6e66696775726564206472697665207479706500</MBoxUserCmdData>
@@ -10164,6 +10164,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000a0000002200000000000000000000000000000000000000000000000340650000000000500056656c6f63697479206c6f6f7020696e74656772616c20616374696f6e2074696d6500</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500ec0000000f00000000000000000000000000000000000000000000000340968000000000e000e00000000000556e6b6e23315670702d3138303030532d355666697865640000000000000000000000000000000003002003030000000000000001000300000000005046000000000000e8030000e803000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003c800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000466565646261636b2031207479706500</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500140000001b000000000000000000000000000000000000000000000003409a8000000000080008000000000000000000466565646261636b2031207265666572656e6365207369676e616c00</MBoxUserCmdData>
+						<MBoxUserCmdData>02000500200000002d00000000000000000000000000000000000000000000000340a78000000000140014000000c8005a001e000000000000000000000000004d6f746f7220616e6420666565646261636b20636f6e6e656374696f6e20636865636b20706172616d6574657200</MBoxUserCmdData>
 						<Pdo Name="AT" Index="#x0010" Flags="#x0001" SyncMan="3">
 							<Entry Name="Drive status word" Index="#x0087" Flags="#x00000800">
 								<Type>UINT</Type>
@@ -10209,7 +10210,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^Azimuth">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 81 (AX5125-0000-0213)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Azimuth (AX5125-0000-0213)">
 				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="AT^Following distance"/>
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
 				<Link VarA="Drive^Inputs^In^nState1" VarB="AT^Drive status word" Size="8" OffsB="8"/>
@@ -10225,7 +10226,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^Derotator">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 79 (AX5206-0000-0210)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Derotator (AX5206-0000-0210)">
 				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="AT 1^Following distance"/>
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
 				<Link VarA="Drive^Inputs^In^nState1" VarB="AT 1^Drive status word" Size="8" OffsB="8"/>
@@ -10241,7 +10242,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^Elevation">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Drive 82 (AX5125-0000-0213)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Elevation (AX5125-0000-0213)">
 				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="AT^Following distance"/>
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
 				<Link VarA="Drive^Inputs^In^nState1" VarB="AT^Drive status word" Size="8" OffsB="8"/>
