@@ -15,6 +15,10 @@ VAR_GLOBAL
 	oil_undertemperature	AT%I*: BOOL;
 	// 2.6
 	oilfilter_dirty		AT%I*: BOOL;
+	// 2.7
+	pump_running		AT%I*: BOOL;
+	// 2.8
+	suction_running		AT%I*: BOOL;
 	//BT2
 	oil_temperature			AT%I*: INT;
 	

@@ -14,7 +14,7 @@ END_VAR
 
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := enable;
+      <ST><![CDATA[Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := enable OR temperature >= 40.0;
 Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Reset := MAIN.reset;
 temperature := GVL_Telescope.temperature_cabinet / 100.0;
 velocity := LREAL_TO_INT(F_YREAL(temperature, 25.0, 40.0, 0.0, 32767));

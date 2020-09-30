@@ -57,6 +57,7 @@ TelescopeControl();
 PendantControl();
 HydraulicsControl();
 FanControl(enable := NOT PendantControl.manual);
+ElevationControl();
 
 GVL_Main.softstart_trafo := key_switch AND NOT power_failure;
 power_timer(bStart := key_switch, bStop := power_OK);
@@ -103,6 +104,7 @@ SafetyHandling();]]></ST>
       <LineId Id="9" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="171" Count="0" />
+      <LineId Id="173" Count="0" />
       <LineId Id="167" Count="0" />
       <LineId Id="69" Count="0" />
       <LineId Id="154" Count="0" />

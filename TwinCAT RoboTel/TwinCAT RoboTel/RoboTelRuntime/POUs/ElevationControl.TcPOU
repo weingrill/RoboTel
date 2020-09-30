@@ -2,21 +2,24 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="ElevationControl" Id="{c0371b19-3d1d-4f20-bd19-ce60539d69cd}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM ElevationControl
-VAR
-	ElevationAxisJog:	FB_AxisJog;
-	ElevationAxis:		FB_Axis;
+VAR_INPUT
 	up:	BOOL;
 	down: BOOL;
 	reset: BOOL;
-	error: BOOL;
 	enable :  BOOL;
-	position,
+END_VAR
+
+VAR
+	ElevationAxisJog:	FB_AxisJog;
+	ElevationAxis:		FB_Axis;
+	error: BOOL;
+	position: LREAL;
 	act_position: LREAL;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[IF PendantControl.manual THEN
-	ElevationAxisJog(	bPowerEnable := GVL_Main.brake_clearing AND Main.power_OK,
+	ElevationAxisJog(	bPowerEnable := enable AND Main.power_OK,
 						bEnable_Positive := GVL_Main.brake_clearing,
 						bEnable_Negative := GVL_Main.brake_clearing,
 						bForward := up,
@@ -24,6 +27,7 @@ END_VAR
 						bReset := reset,
 						bStop := up AND down,
 						bErr => error,
+						fActPos => act_position,
 						stAxis :=	GVL_Telescope.ElevationAxisRef);	
 ELSE
 	ElevationAxis(	bPowerEnable := TelescopeControl.power AND Main.power_OK,
@@ -38,6 +42,7 @@ END_IF
     <LineIds Name="ElevationControl">
       <LineId Id="16" Count="0" />
       <LineId Id="19" Count="7" />
+      <LineId Id="62" Count="0" />
       <LineId Id="17" Count="0" />
       <LineId Id="32" Count="1" />
       <LineId Id="39" Count="0" />

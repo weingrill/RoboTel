@@ -5,7 +5,8 @@
 VAR
 	pressure_watchdog: TON;
 	suction_pump_timer: TP;
-	oil_pump_state: RS;
+	oil_pump_state,
+	brake_state: RS;
 	pressure_failure,
 	oil_low,
 	oil_high,
@@ -13,7 +14,9 @@ VAR
 	oil_warning,
 	oil_filter_dirty,
 	oil_cold,
-	oil_hot :	BOOL := FALSE;
+	oil_hot,
+	pump_running,
+	suction_running :	BOOL := FALSE;
 	brake_open_delay :	TON;
 	HydraulicsLog,
 	ReserveLog,
