@@ -3,9 +3,19 @@
   <GVL Name="GVL_Dome" Id="{8410bcc3-97cb-4334-927b-71c02664ab1a}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
-	//Dauer					AT%Q*:	BOOL;
-	Clockwise				AT%Q*:	BOOL;
-	CounterClockwise		AT%Q*:	BOOL;
+	
+	Clockwise				AT%I*:	BOOL;
+	CounterClockwise		AT%I*:	BOOL;
+	bDirectionMinus AT%I*: BOOL;
+	bDirectionPlus AT%I*: BOOL;
+	bVeloLow AT%I*: BOOL;
+	bVeloHigh AT%I*: BOOL;
+	bBreak AT%I*:		BOOL;
+	bBreakInv AT%I*:	BOOL;
+	
+	Inverter_Enable AT%Q*:	BOOL;
+	Inverter_DirectionMinus AT%Q*: BOOL;
+	Inverter_Velocity AT%Q*: UINT;
 	// EL5151
 	Azimut_raw				AT%I*:	INT;
 	

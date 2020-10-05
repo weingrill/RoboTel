@@ -20,7 +20,8 @@ VAR
 	DerotatorAxisJog:	FB_AxisJog;
 	AzimuthAxisJog:		FB_AxisJog;
 	Elevation_enable,
-	Azimuth_enable : BOOL := FALSE;
+	Azimuth_enable,
+	Dome_enable : BOOL := FALSE;
 	manual,
 	enable,
 	reset,
@@ -63,6 +64,7 @@ Nasmyth_delay(IN := GVL_Telescope.nasmyth_lock,
 
 Elevation_enable := FALSE;
 Azimuth_enable := FALSE;
+Dome_enable := FALSE;
 
 CASE Selection OF
 	1:	GVL_pendant_control.lamp_left := TRUE;
@@ -148,6 +150,12 @@ CASE Selection OF
 		AzimuthControl.left := left;
 		AzimuthControl.right := right;
 		AzimuthControl.reset := reset;
+	9: 	Dome_enable := manual;
+		GVL_pendant_control.lamp_left := Dome_enable;
+		GVL_pendant_control.lamp_right := Dome_enable;
+		DomeControl.left := left;
+		DomeControl.right := right;
+		DomeControl.reset := reset;
 	
 	15:	GVL_pendant_control.lamp_up := HydraulicsControl.oil_pressure_OK AND NOT brake_open;
 		GVL_pendant_control.lamp_down := HydraulicsControl.oil_pressure_OK AND brake_open;
@@ -161,6 +169,7 @@ END_CASE
 
 ElevationControl.enable := Elevation_enable;
 AzimuthControl.enable := Azimuth_enable;
+DomeControl.enable := Dome_enable;
 GVL_pendant_control.lamp_error := Main.error;]]></ST>
     </Implementation>
     <LineIds Name="PendantControl">
@@ -177,7 +186,7 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="158" Count="3" />
       <LineId Id="10" Count="0" />
       <LineId Id="178" Count="0" />
-      <LineId Id="374" Count="0" />
+      <LineId Id="374" Count="1" />
       <LineId Id="331" Count="0" />
       <LineId Id="11" Count="1" />
       <LineId Id="16" Count="0" />
@@ -221,6 +230,8 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="300" Count="0" />
       <LineId Id="309" Count="0" />
       <LineId Id="371" Count="1" />
+      <LineId Id="377" Count="2" />
+      <LineId Id="382" Count="2" />
       <LineId Id="298" Count="0" />
       <LineId Id="233" Count="1" />
       <LineId Id="244" Count="1" />
@@ -230,6 +241,7 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="13" Count="0" />
       <LineId Id="334" Count="1" />
       <LineId Id="373" Count="0" />
+      <LineId Id="381" Count="0" />
       <LineId Id="121" Count="0" />
     </LineIds>
   </POU>

@@ -53,7 +53,7 @@ ready_state(SET := power_OK AND HydraulicsControl.oil_pressure_OK AND start,
 		
 TelescopeControl();
 //TODO: implement dome control
-//DomeControl();
+DomeControl();
 PendantControl();
 HydraulicsControl();
 FanControl(enable := NOT PendantControl.manual);

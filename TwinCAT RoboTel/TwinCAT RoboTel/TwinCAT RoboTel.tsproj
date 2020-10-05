@@ -3277,13 +3277,17 @@ External Setpoint Generation:
 						</Var>
 					</Vars>
 				</Axis>
-				<Axis Id="8" CreateSymbols="true" AxisType="2">
+				<Axis Id="2" CreateSymbols="true" AxisType="2">
 					<Name>DomeAzimuth</Name>
 					<AxisPara>
+						<General UnitName="°"/>
 						<Velo SlowManual="50" FastManual="100" Fast="100" Maximum="100"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
-					<Encoder Name="Enc" EncType="1">
+					<Encoder Name="Enc" EncType="4">
+						<EncPara MaxCount="#x0000ffff">
+							<Inc RefMode="2" RefSoftSyncMask="#x0000ffff"/>
+						</EncPara>
 						<Vars VarGrpType="1">
 							<Name>Eingänge</Name>
 							<Var>
@@ -3990,6 +3994,38 @@ External Setpoint Generation:
 							<Comment><![CDATA[DIN15 1.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
+						<Var>
+							<Name>GVL_Dome.Clockwise</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.CounterClockwise</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bDirectionMinus</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bDirectionPlus</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bVeloLow</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bVeloHigh</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bBreak</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bBreakInv</Name>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
 						<Name>PlcTask Outputs</Name>
@@ -4040,11 +4076,6 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.Clockwise</Name>
-							<Comment><![CDATA[Dauer					AT%Q*:	BOOL;]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Telescope.AzimuthAxisRef.PlcToNc</Name>
 							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
@@ -4059,10 +4090,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Telescope.FocusAxisRef.PlcToNc</Name>
 							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.CounterClockwise</Name>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.DomeAxisRef.PlcToNc</Name>
@@ -4128,6 +4155,18 @@ DOUT9 1.0]]></Comment>
 							<Name>GVL_Main.softstart_trafo</Name>
 							<Comment><![CDATA[DOUT7 0.6]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Inverter_Enable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Inverter_DirectionMinus</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Inverter_Velocity</Name>
+							<Type>UINT</Type>
 						</Var>
 					</Vars>
 					<TaskPouOids>
@@ -10478,6 +10517,29 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
 			</OwnerB>
 		</OwnerA>
+		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^DomeAzimuth">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 59 (EK1501)^Term 74 (EL5151)">
+				<Link VarA="Enc^Inputs^In^nDataIn1[0]" VarB="ENC Inputs^Counter value"/>
+				<Link VarA="Enc^Inputs^In^nDataIn2[0]" VarB="ENC Inputs^Latch value"/>
+				<Link VarA="Enc^Inputs^In^nState1" VarB="ENC Inputs^Status^Extrapolation stall" Size="1" OffsA="7"/>
+				<Link VarA="Enc^Inputs^In^nState1" VarB="ENC Inputs^Status^Latch C valid"/>
+				<Link VarA="Enc^Inputs^In^nState1" VarB="ENC Inputs^Status^Latch extern valid" Size="1" OffsA="1"/>
+				<Link VarA="Enc^Inputs^In^nState1" VarB="ENC Inputs^Status^Set counter done" Size="1" OffsA="2"/>
+				<Link VarA="Enc^Inputs^In^nState2" VarB="ENC Inputs^Status^Status of extern latch" Size="1" OffsA="4"/>
+				<Link VarA="Enc^Inputs^In^nState2" VarB="ENC Inputs^Status^Status of input A"/>
+				<Link VarA="Enc^Inputs^In^nState2" VarB="ENC Inputs^Status^Status of input B" Size="1" OffsA="1"/>
+				<Link VarA="Enc^Inputs^In^nState2" VarB="ENC Inputs^Status^Status of input C" Size="1" OffsA="2"/>
+				<Link VarA="Enc^Inputs^In^nState2" VarB="ENC Inputs^Status^Sync error" Size="1" OffsA="5"/>
+				<Link VarA="Enc^Inputs^In^nState2" VarB="ENC Inputs^Status^TxPDO Toggle" Size="1" OffsA="7"/>
+				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
+				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
+				<Link VarA="Enc^Outputs^Out^nCtrl1" VarB="ENC Outputs^Control^Enable latch C"/>
+				<Link VarA="Enc^Outputs^Out^nCtrl1" VarB="ENC Outputs^Control^Enable latch extern on negative edge" Size="1" OffsA="3"/>
+				<Link VarA="Enc^Outputs^Out^nCtrl1" VarB="ENC Outputs^Control^Enable latch extern on positive edge" Size="1" OffsA="1"/>
+				<Link VarA="Enc^Outputs^Out^nCtrl1" VarB="ENC Outputs^Control^Set counter" Size="1" OffsA="2"/>
+				<Link VarA="Enc^Outputs^Out^nDataOut1[0]" VarB="ENC Outputs^Set counter value"/>
+			</OwnerB>
+		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^Elevation">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Elevation (AX5125-0000-0213)">
 				<Link VarA="Drive^Inputs^In^nDataIn1" VarB="AT^Following distance"/>
@@ -10571,6 +10633,17 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 6 (EL3202-0010)">
 				<Link VarA="PlcTask Inputs^GVL_Main.main_cabinet_temperature" VarB="RTD Inputs Channel 1^Value"/>
 				<Link VarA="PlcTask Inputs^GVL_oil.oil_temperature" VarB="RTD Inputs Channel 2^Value"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 59 (EK1501)^Term 60 (EL1008)">
+				<Link VarA="PlcTask Inputs^GVL_Dome.Clockwise" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Dome.CounterClockwise" VarB="Channel 1^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 59 (EK1501)^Term 61 (EL2008)">
+				<Link VarA="PlcTask Outputs^GVL_Dome.Inverter_DirectionMinus" VarB="Channel 2^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_Dome.Inverter_Enable" VarB="Channel 1^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 59 (EK1501)^Term 63 (EL4002)">
+				<Link VarA="PlcTask Outputs^GVL_Dome.Inverter_Velocity" VarB="AO Outputs Channel 1^Analog output"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 10 (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_pendant_control.direction_left" VarB="Channel 2^Input"/>
@@ -10677,6 +10750,12 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^DomeAzimuth">
 				<Link VarA="PlcTask Inputs^GVL_Dome.DomeAxisRef.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Inputs^GVL_Dome.bBreak" VarB="Drive^Outputs^Out^bBreak"/>
+				<Link VarA="PlcTask Inputs^GVL_Dome.bBreakInv" VarB="Drive^Outputs^Out^bBreakInv"/>
+				<Link VarA="PlcTask Inputs^GVL_Dome.bDirectionMinus" VarB="Drive^Outputs^Out^bDirectionMinus"/>
+				<Link VarA="PlcTask Inputs^GVL_Dome.bDirectionPlus" VarB="Drive^Outputs^Out^bDirectionPlus"/>
+				<Link VarA="PlcTask Inputs^GVL_Dome.bVeloHigh" VarB="Drive^Outputs^Out^bVeloHigh"/>
+				<Link VarA="PlcTask Inputs^GVL_Dome.bVeloLow" VarB="Drive^Outputs^Out^bVeloLow"/>
 				<Link VarA="PlcTask Outputs^GVL_Dome.DomeAxisRef.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Elevation">

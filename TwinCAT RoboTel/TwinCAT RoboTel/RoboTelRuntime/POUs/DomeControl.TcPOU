@@ -2,93 +2,51 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
   <POU Name="DomeControl" Id="{0e02434d-920e-4c0f-81fc-5ff7d5573875}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM DomeControl
+VAR_INPUT
+	enable,
+	reset,
+	left,
+	right: BOOL;
+END_VAR
 VAR
 	DomeAxis: FB_ModuloAxis;
-	//TODO: enter correct NetID vor Dome PLC
-	fbWriteReq: ADSWRITE := ( NETID := '5.66.134.133.1.1', PORT := 851, TMOUT := DEFAULT_ADS_TIMEOUT );
-	fbReadReq: ADSREAD := ( NETID := '5.66.134.133.1.1', PORT := 851, TMOUT := DEFAULT_ADS_TIMEOUT );
-	DomeLog: FB_Eventlog;
-	bBusy: 		BOOL;
-  	bError: 	BOOL;
-	nErrID: 	UDINT;
-   	DomeControl:	WORD;
-	DomeState:	WORD := 0;
-	ReadCycle:	BOOL;
+	DomeJogAxis: FB_AxisJog;
 	Azimuth_set,
 	Azimuth_current,
 	Azimuth_old: LREAL;
+	manual_enable : BOOL;
 	move_azimuth, stop_azimuth: BOOL;
-	DomeCommErrorTimer: TON;
-	DomeCommError: BOOL;
-	OpenDome,
-	CloseDome,
-	DomeOpened,
-	DomeClosed: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* source: https://infosys.beckhoff.de/english.php?content=../content/1033/tcplclib_tc2_system/18014399220202635.html&id= *)
-// lowerst bit must be set as verification
-IF DomeState.0 THEN
-	GVL_Dome.ShutterOpened := DomeState.1;
-	GVL_Dome.ShutterClosed := DomeState.2;
-	GVL_Dome.FlapOpened := DomeState.3;
-	GVL_Dome.FlapClosed := DomeState.4;
-END_IF
-(*
-IF ABS(ConvertEnvironment.WindDirection - Azimuth_current) > 150.0 THEN
-	Azimuth_set := ConvertEnvironment.WindDirection;
-END_IF
-*)
+GVL_Dome.Inverter_Enable := FALSE;
+GVL_Dome.Inverter_Velocity := 0;
+manual_enable := GVL_Dome.Clockwise OR GVL_Dome.CounterClockwise;
 
-IF TelescopeControl.telescope_mode <> E_TelescopeMode.off THEN
-	IF CloseDome THEN
-		GVL_Dome.OpenShutter := FALSE;
-		GVL_Dome.OpenFlap := FALSE;
-		GVL_Dome.CloseShutter := TRUE;
-		GVL_Dome.CloseFlap := TRUE;	
-		OpenDome := FALSE;
-	ELSIF OpenDome THEN
-		GVL_Dome.OpenShutter := TRUE;
-		GVL_Dome.OpenFlap := TRUE;
-		GVL_Dome.CloseShutter := FALSE;
-		GVL_Dome.CloseFlap := FALSE;	
-		CloseDome := FALSE;
-	END_IF
+IF GVL_Dome.bVeloHigh THEN
+	GVL_Dome.Inverter_Velocity := 32000;
+	GVL_Dome.Inverter_Enable := TRUE;
 END_IF
 
-IF DomeOpened OR CloseDome THEN
-	OpenDome := FALSE;
-END_IF
-IF DomeClosed THEN
-	CloseDome := FALSE;
+IF GVL_Dome.bVeloLow THEN
+	GVL_Dome.Inverter_Velocity := 16000;
+	GVL_Dome.Inverter_Enable := TRUE;
 END_IF
 
-IF TelescopeControl.telescope_mode = E_TelescopeMode.automatic THEN
-	IF OpenDome AND Environment.avg_wind < 10.0 THEN
-		GVL_Dome.OpenFlap := TRUE;
-	END_IF
-	
-	// Weather conditions
-	IF Environment.avg_wind > 12.0 THEN
-		GVL_Dome.CloseFlap := TRUE;
-	END_IF
-	
-	IF Environment.avg_wind > 15.0 OR
-		Environment.PrecipitationAverage.AVG > 1.0 OR
-		Environment.Brightness > 2000.0 THEN
-		GVL_Dome.CloseShutter := TRUE;
-		GVL_Dome.CloseFlap := TRUE;
-		//CloseDome := TRUE;
-		//OpenDome := FALSE;
-	END_IF
-	
+IF GVL_Dome.bBreak THEN
+	GVL_Dome.Inverter_Velocity := 0;
+	GVL_Dome.Inverter_Enable := FALSE;
 END_IF
 
-DomeOpened := GVL_Dome.ShutterOpened OR GVL_Dome.FlapOpened;
-DomeClosed := GVL_Dome.ShutterClosed AND GVL_Dome.FlapClosed;
+GVL_Dome.Inverter_DirectionMinus := GVL_Dome.bDirectionPlus;
 
-DomeAxis(bPowerEnable := TRUE,
+DomeJogAxis(bPowerEnable := enable OR manual_enable,
+	bForward := right OR GVL_Dome.Clockwise,
+	bBackward := left OR GVL_Dome.CounterClockwise,
+	stAxis := GVL_Dome.DomeAxisRef);
+
+DomeAxis(bPowerEnable := enable,
 		bMoveModExec	:= (Azimuth_set <> Azimuth_old) OR move_azimuth, //Environment.WindSpeed > 15.0,
 		fMoveModPos 	:= Azimuth_set,
 		fMoveModVelo	:= 2.22, // 180° in 81s
@@ -98,91 +56,24 @@ DomeAxis(bPowerEnable := TRUE,
 
 Azimuth_old := Azimuth_set;
 stop_azimuth := FALSE;
-IF ReadCycle THEN
-	IF NOT bBusy THEN
-		
-		//nErrID := 0; //1795 on comm. loss
-		// for correct index and offset see DomeRuntime Instance -> Data Area		
-		DomeState := 0;
-		fbReadReq( IDXGRP := 	16#4020, 
-					IDXOFFS := 	8, 
-					LEN := 		SIZEOF(DomeState), 
-					DESTADDR := ADR(DomeState),
-					READ  := 	TRUE,
-					ERR => 		bError,
-					ERRID => 	nErrID );
-		bBusy := TRUE;
-	END_IF
-	IF bBusy OR bError THEN
-		fbReadReq( READ := FALSE, BUSY=>bBusy, ERR=>bError, ERRID=>nErrID );
-	END_IF
-	IF NOT bBusy AND NOT bError THEN
-		ReadCycle := FALSE;
-	END_IF
-ELSE // WriteCycle
-	IF NOT bBusy THEN
-		
-		//nErrID := 0; //1795 on comm. loss
-		DomeControl.0 := TRUE; // WatchDogReset
-		DomeControl.1 := GVL_Dome.OpenShutter;
-		DomeControl.2 := GVL_Dome.CloseShutter;
-		DomeControl.3 := GVL_Dome.OpenFlap;
-		DomeControl.4 := GVL_Dome.CloseFlap;
-		bError := FALSE;
-		fbWriteReq( IDXGRP := 16#4020, 
-					IDXOFFS := 0, 
-					LEN := SIZEOF(DomeControl), 
-					SRCADDR := ADR(DomeControl),
-					WRITE  := TRUE,
-					ERR => bError,
-					ERRID => nErrID );
-		bBusy := TRUE;
-	END_IF
-	
-	IF bBusy OR bError THEN
-		fbWriteReq( WRITE := FALSE, BUSY=>bBusy, ERR=>bError, ERRID=>nErrID );
-	END_IF
-	IF NOT bBusy AND NOT bError THEN
-		ReadCycle := TRUE;
-	END_IF
-		
-END_IF
-
-DomeCommErrorTimer(IN := NOT DomeState.0, PT := T#30S, Q => DomeCommError);
-
-DomeLog(Trigger := DomeCommError, 
-	Level := ADSLOG_MSGTYPE_ERROR, 
-	OnMessage := 'Dome communication error', 
-	OffMessage := 'Dome communiaction re-established',
-	OffLevel := ADSLOG_MSGTYPE_HINT);]]></ST>
+]]></ST>
     </Implementation>
     <LineIds Name="DomeControl">
       <LineId Id="5" Count="0" />
-      <LineId Id="273" Count="0" />
-      <LineId Id="271" Count="0" />
-      <LineId Id="261" Count="3" />
-      <LineId Id="242" Count="0" />
-      <LineId Id="311" Count="0" />
-      <LineId Id="310" Count="0" />
-      <LineId Id="312" Count="1" />
-      <LineId Id="289" Count="0" />
-      <LineId Id="599" Count="0" />
-      <LineId Id="585" Count="11" />
-      <LineId Id="600" Count="0" />
-      <LineId Id="597" Count="1" />
-      <LineId Id="584" Count="0" />
-      <LineId Id="578" Count="5" />
-      <LineId Id="498" Count="0" />
-      <LineId Id="469" Count="0" />
-      <LineId Id="483" Count="9" />
-      <LineId Id="494" Count="0" />
-      <LineId Id="527" Count="0" />
-      <LineId Id="495" Count="1" />
-      <LineId Id="500" Count="1" />
-      <LineId Id="497" Count="0" />
-      <LineId Id="470" Count="1" />
-      <LineId Id="603" Count="0" />
-      <LineId Id="601" Count="1" />
+      <LineId Id="650" Count="0" />
+      <LineId Id="673" Count="0" />
+      <LineId Id="666" Count="0" />
+      <LineId Id="636" Count="0" />
+      <LineId Id="635" Count="0" />
+      <LineId Id="639" Count="0" />
+      <LineId Id="647" Count="0" />
+      <LineId Id="638" Count="0" />
+      <LineId Id="668" Count="4" />
+      <LineId Id="640" Count="2" />
+      <LineId Id="648" Count="0" />
+      <LineId Id="643" Count="2" />
+      <LineId Id="652" Count="3" />
+      <LineId Id="657" Count="0" />
       <LineId Id="550" Count="0" />
       <LineId Id="291" Count="0" />
       <LineId Id="294" Count="0" />
@@ -191,35 +82,7 @@ DomeLog(Trigger := DomeCommError,
       <LineId Id="305" Count="0" />
       <LineId Id="329" Count="1" />
       <LineId Id="385" Count="0" />
-      <LineId Id="189" Count="0" />
-      <LineId Id="192" Count="4" />
-      <LineId Id="269" Count="0" />
-      <LineId Id="197" Count="4" />
-      <LineId Id="203" Count="0" />
-      <LineId Id="265" Count="0" />
-      <LineId Id="205" Count="1" />
-      <LineId Id="268" Count="0" />
-      <LineId Id="208" Count="0" />
-      <LineId Id="239" Count="2" />
-      <LineId Id="211" Count="0" />
-      <LineId Id="213" Count="2" />
-      <LineId Id="247" Count="4" />
-      <LineId Id="216" Count="6" />
-      <LineId Id="224" Count="0" />
-      <LineId Id="266" Count="0" />
-      <LineId Id="226" Count="1" />
-      <LineId Id="230" Count="0" />
-      <LineId Id="267" Count="0" />
-      <LineId Id="232" Count="0" />
-      <LineId Id="235" Count="0" />
-      <LineId Id="237" Count="1" />
-      <LineId Id="236" Count="0" />
-      <LineId Id="191" Count="0" />
-      <LineId Id="405" Count="0" />
-      <LineId Id="404" Count="0" />
-      <LineId Id="275" Count="0" />
-      <LineId Id="154" Count="0" />
-      <LineId Id="346" Count="3" />
+      <LineId Id="349" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
