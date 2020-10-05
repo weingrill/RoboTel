@@ -2876,8 +2876,8 @@ External Setpoint Generation:
 					<Name>Azimuth</Name>
 					<AxisPara>
 						<General UnitName="°"/>
-						<Dynamic Acceleration="2495.05938720703" Deceleration="2495.05938720703" Jerk="7485.17816162109"/>
-						<Velo RefSearch="16.6337292480469" RefSync="16.6337292480469" SlowManual="83.1686462402344" FastManual="499.011877441406" Fast="1663.37292480469" Maximum="1663.37292480469"/>
+						<Dynamic AccelerationMaximum="10" DecelerationMaximum="10" Acceleration="1" Deceleration="1" Jerk="10"/>
+						<Velo RefSearch="1" RefSync="1" SlowManual="1" FastManual="5" Fast="1663.37310791016" Maximum="10"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="8">
@@ -2947,7 +2947,7 @@ External Setpoint Generation:
 					</Encoder>
 					<Drive Name="Drive" DrvType="9">
 						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00030100">
-							<Analog VeloReferenz="1829.71021728516" VeloScale="1.02400649589962" ScaleFactorActTorque="0.1"/>
+							<Analog VeloReferenz="1829.71041870117" VeloScale="1.02400649589962" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
@@ -8347,10 +8347,196 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 									<CoeProfile ProfileNo="26219401"/>
 								</EtherCAT>
 							</Box>
+							<Box Id="74" BoxType="9099" BoxFlags="#x00000020">
+								<Name>Klemme 74 (EL5151)</Name>
+								<ImageId>1008</ImageId>
+								<EtherCAT SlaveType="2" PdiType="#x0c05" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x141f3052" RevisionNo="#x001a0000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL5151 1K. Inc. Encoder" Desc="EL5151" PortABoxInfo="#x0100003f">
+									<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
+									<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
+									<SyncMan>001104002400010003000000000000000600001124010000</SyncMan>
+									<SyncMan>80110a002000010004000000000000000e00801120010000</SyncMan>
+									<Fmmu>0000000000000000001100020100000001000000000000000000000000000000</Fmmu>
+									<Fmmu>0000000000000000801100010100000002000000000000000000000000000000</Fmmu>
+									<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+									<BootStrapData>0010f400f410f400</BootStrapData>
+									<DcMode>53796e6368726f6e00000000000000004672656552756e2f534d2d53796e6368726f6e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</DcMode>
+									<DcMode>4443000000000000000000000000000044432d53796e6368726f6e000000000000000000000000000000000000000000000000000000000000000000000020030100000000000000000000000000000000000000000000000000000000000000</DcMode>
+									<DcMode>4443494e00000000000000000000000044432d53796e6368726f6e2028696e7075742062617365642900000000000000000000000000000000000000000020030100000000000000000001000000000000000000000000000000000000000000</DcMode>
+									<Pdo Name="ENC Inputs" Index="#x1a00" Flags="#x0010">
+										<ExcludePdo>#x1a01</ExcludePdo>
+										<Entry Name="Status__Latch C valid" Index="#x6000" Sub="#x01">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__Latch extern valid" Index="#x6000" Sub="#x02">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__Set counter done" Index="#x6000" Sub="#x03">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__">
+											<Type GUID="{18071995-0000-0000-0000-002000000004}">ARRAY [0..3] OF BIT</Type>
+										</Entry>
+										<Entry Name="Status__Extrapolation stall" Index="#x6000" Sub="#x08">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__Status of input A" Index="#x6000" Sub="#x09">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__Status of input B" Index="#x6000" Sub="#x0a">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__Status of input C" Index="#x6000" Sub="#x0b">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__">
+											<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+										</Entry>
+										<Entry Name="Status__Status of extern latch" Index="#x6000" Sub="#x0d">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__Sync error" Index="#x6000" Sub="#x0e">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__">
+											<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+										</Entry>
+										<Entry Name="Status__TxPDO Toggle" Index="#x6000" Sub="#x10">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Counter value" Index="#x6000" Sub="#x11">
+											<Type>UDINT</Type>
+										</Entry>
+										<Entry Name="Latch value" Index="#x6000" Sub="#x12">
+											<Type>UDINT</Type>
+										</Entry>
+									</Pdo>
+									<Pdo Name="ENC Inputs" Index="#x1a01" Flags="#x0010" SyncMan="3">
+										<ExcludePdo>#x1a00</ExcludePdo>
+										<Entry Name="Status__Latch C valid" Index="#x6000" Sub="#x01">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__Latch extern valid" Index="#x6000" Sub="#x02">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__Set counter done" Index="#x6000" Sub="#x03">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__">
+											<Type GUID="{18071995-0000-0000-0000-002000000004}">ARRAY [0..3] OF BIT</Type>
+										</Entry>
+										<Entry Name="Status__Extrapolation stall" Index="#x6000" Sub="#x08">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__Status of input A" Index="#x6000" Sub="#x09">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__Status of input B" Index="#x6000" Sub="#x0a">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__Status of input C" Index="#x6000" Sub="#x0b">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__">
+											<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+										</Entry>
+										<Entry Name="Status__Status of extern latch" Index="#x6000" Sub="#x0d">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__Sync error" Index="#x6000" Sub="#x0e">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Status__">
+											<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+										</Entry>
+										<Entry Name="Status__TxPDO Toggle" Index="#x6000" Sub="#x10">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Counter value" Index="#x6000" Sub="#x11">
+											<Type>UINT</Type>
+										</Entry>
+										<Entry Name="Latch value" Index="#x6000" Sub="#x12">
+											<Type>UINT</Type>
+										</Entry>
+									</Pdo>
+									<Pdo Name="ENC Inputs" Index="#x1a02" Flags="#x0010" SyncMan="3">
+										<ExcludePdo>#x1a03</ExcludePdo>
+										<Entry Name="Period value" Index="#x6000" Sub="#x14">
+											<Type>UDINT</Type>
+										</Entry>
+									</Pdo>
+									<Pdo Name="ENC Inputs" Index="#x1a03" Flags="#x0010">
+										<ExcludePdo>#x1a02</ExcludePdo>
+										<Entry Name="Frequency value" Index="#x6000" Sub="#x13">
+											<Type>UDINT</Type>
+										</Entry>
+									</Pdo>
+									<Pdo Name="ENC Inputs" Index="#x1a04" Flags="#x0010">
+										<ExcludePdo>#x1a05</ExcludePdo>
+										<Entry Name="Timestamp" Index="#x6000" Sub="#x16">
+											<Type>ULINT</Type>
+										</Entry>
+									</Pdo>
+									<Pdo Name="ENC Inputs" Index="#x1a05" Flags="#x0010">
+										<ExcludePdo>#x1a04</ExcludePdo>
+										<Entry Name="Timestamp" Index="#x6000" Sub="#x16">
+											<Type>UDINT</Type>
+										</Entry>
+									</Pdo>
+									<Pdo Name="ENC Outputs" Index="#x1600" InOut="1" Flags="#x0010">
+										<ExcludePdo>#x1601</ExcludePdo>
+										<Entry Name="Control__Enable latch C" Index="#x7000" Sub="#x01">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Control__Enable latch extern on positive edge" Index="#x7000" Sub="#x02">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Control__Set counter" Index="#x7000" Sub="#x03">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Control__Enable latch extern on negative edge" Index="#x7000" Sub="#x04">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Control__">
+											<Type GUID="{18071995-0000-0000-0000-002000000004}">ARRAY [0..3] OF BIT</Type>
+										</Entry>
+										<Entry Name="Control__">
+											<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+										</Entry>
+										<Entry Name="Set counter value" Index="#x7000" Sub="#x11">
+											<Type>UDINT</Type>
+										</Entry>
+									</Pdo>
+									<Pdo Name="ENC Outputs" Index="#x1601" InOut="1" Flags="#x0010" SyncMan="2">
+										<ExcludePdo>#x1600</ExcludePdo>
+										<Entry Name="Control__Enable latch C" Index="#x7000" Sub="#x01">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Control__Enable latch extern on positive edge" Index="#x7000" Sub="#x02">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Control__Set counter" Index="#x7000" Sub="#x03">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Control__Enable latch extern on negative edge" Index="#x7000" Sub="#x04">
+											<Type>BIT</Type>
+										</Entry>
+										<Entry Name="Control__">
+											<Type GUID="{18071995-0000-0000-0000-002000000004}">ARRAY [0..3] OF BIT</Type>
+										</Entry>
+										<Entry Name="Control__">
+											<Type GUID="{18071995-0000-0000-0000-002000000008}">ARRAY [0..0] OF BYTE</Type>
+										</Entry>
+										<Entry Name="Set counter value" Index="#x7000" Sub="#x11">
+											<Type>UINT</Type>
+										</Entry>
+									</Pdo>
+									<CoeProfile ProfileNo="33493897"/>
+								</EtherCAT>
+							</Box>
 							<Box Id="70" BoxType="9099">
 								<Name>Klemme 70 (EL9011)</Name>
 								<ImageId>1009</ImageId>
-								<EtherCAT CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x23333050" InfoDataState="false" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9011 Endklemme" Desc="EL9011" PortABoxInfo="#x0100003f"/>
+								<EtherCAT CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x23333050" InfoDataState="false" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9011 Endklemme" Desc="EL9011" PortABoxInfo="#x0100004a"/>
 							</Box>
 						</Box>
 						<Box Id="69" BoxType="9099">
@@ -9383,30 +9569,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 										<Value>3</Value>
 									</Property>
 									<Property>
-										<Name>MotorType</Name>
-										<Value>3VBN</Value>
-									</Property>
-									<Property>
-										<Name>ConfiguedMotorType</Name>
-										<Value>3VBN</Value>
-									</Property>
-									<Property>
-										<Name>MotorDataVersion</Name>
-										<Value>1.0.0</Value>
-									</Property>
-									<Property>
-										<Name>MotorApplication</Name>
-										<Value>Default</Value>
-									</Property>
-									<Property>
-										<Name>MotorDataLocation</Name>
-										<Value>C:\TwinCAT\3.1\Components\Base\Addins\TcDriveManager\MotorPool\Etel 3VBN.xeds</Value>
-									</Property>
-									<Property>
-										<Name>MotorDataSchema</Name>
-										<Value>MotorDataSheet</Value>
-									</Property>
-									<Property>
 										<Name>Feedback1Type</Name>
 										<Value>Unkn#1Vpp-18000S-5Vfixed</Value>
 									</Property>
@@ -9418,16 +9580,40 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 										<Name>Feedback1Application</Name>
 										<Value>Default</Value>
 									</Property>
+									<Property>
+										<Name>MotorType</Name>
+										<Value>3VBN_2</Value>
+									</Property>
+									<Property>
+										<Name>ConfiguedMotorType</Name>
+										<Value>3VBN_2</Value>
+									</Property>
+									<Property>
+										<Name>MotorDataVersion</Name>
+										<Value>1.0.0</Value>
+									</Property>
+									<Property>
+										<Name>MotorApplication</Name>
+										<Value>Default</Value>
+									</Property>
+									<Property>
+										<Name>MotorDataLocation</Name>
+										<Value>C:\TwinCAT\3.1\Components\Base\Addins\TcDriveManager\MotorPool\ETEL 3VBN_2.xeds</Value>
+									</Property>
+									<Property>
+										<Name>MotorDataSchema</Name>
+										<Value>MotorDataSheet</Value>
+									</Property>
 									<Parametersets>
 										<Parameter>
 											<Comment>Motor vendor</Comment>
 											<Name>Vendor</Name>
-											<Data type="visibleString">Etel</Data>
+											<Data type="visibleString">ETEL</Data>
 										</Parameter>
 										<Parameter>
 											<Comment>Electric motor type</Comment>
 											<Name>ElecType</Name>
-											<Data type="visibleString">3VBN</Data>
+											<Data type="visibleString">3VBN_2</Data>
 										</Parameter>
 										<Parameter>
 											<Comment>Motor construction</Comment>
@@ -9452,7 +9638,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 										<Parameter>
 											<Comment>Peak Current</Comment>
 											<Name>Iprms</Name>
-											<Data type="real64" unitSiNumerator="ampere">75.70</Data>
+											<Data type="real64" unitSiNumerator="ampere">75.50</Data>
 										</Parameter>
 										<Parameter>
 											<Comment>Nominal Voltage</Comment>
@@ -9462,7 +9648,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 										<Parameter>
 											<Comment>Max DC-Link Voltage</Comment>
 											<Name>Umaxrms</Name>
-											<Data type="real64" unitSiNumerator="volt">600</Data>
+											<Data type="real64" unitSiNumerator="volt">890</Data>
 										</Parameter>
 										<Parameter>
 											<Comment>Max Torque</Comment>
@@ -9492,7 +9678,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 										<Parameter>
 											<Comment>Max speed</Comment>
 											<Name>Nmax</Name>
-											<Data type="real64" unitSiNumerator="revolutions/minute (rpm)">325</Data>
+											<Data type="real64" unitSiNumerator="revolutions/minute (rpm)">600</Data>
 										</Parameter>
 										<Parameter>
 											<Comment>J motor with brake and encoder</Comment>
@@ -9507,12 +9693,12 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 										<Parameter>
 											<Comment>T motor shut down</Comment>
 											<Name>TMotorLimit</Name>
-											<Data type="real64" unitSiNumerator="degree Celsius">100.0</Data>
+											<Data type="real64" unitSiNumerator="degree Celsius">140.0</Data>
 										</Parameter>
 										<Parameter>
 											<Comment>Motor thermal constant</Comment>
 											<Name>Mtc</Name>
-											<Data type="real64" unitSiNumerator="minute (time)">48.00</Data>
+											<Data type="real64" unitSiNumerator="minute (time)">17.00</Data>
 										</Parameter>
 										<Parameter>
 											<Comment>Motor feedback connection</Comment>
@@ -9586,7 +9772,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								</Element>
 								<Element option="0" SortOder="0" SubIdx="0">
 									<Index>95</Index>
-									<Width>275</Width>
+									<Width>377</Width>
 								</Element>
 								<Element option="1" SortOder="0" SubIdx="0">
 									<Index>32821</Index>
@@ -9695,8 +9881,8 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" DownloadPdoCfg="true" CycleMBoxPollingTime="0" FoeType="1" SoeChannels="1" VendorId="#x00000002" ProductCode="#x14056012" RevisionNo="#x00d50000" InfoDataAddr="true" InfoDataSoeDS401="true" InfoDataDcTimes="true" TimeoutStateChange2="15000" TimeoutStateChange3="10000" TimeoutStateChange4="500" AutoRestoreAfterWcOk="true" CheckRevisionNoType="4" PortPhys="12305" IdentificationAdo="308" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AX5125-0000-0213 EtherCAT Drive (SoE, 1 Ch.)" Desc="AX5125-0000-0213" PortABoxInfo="#x0100004f">
 						<SyncMan>001880002600010001000000800080008000001826010000</SyncMan>
 						<SyncMan>001a80002200010002000000800080008000001a22010000</SyncMan>
-						<SyncMan>001006002400010003000000000000000000001024010000</SyncMan>
-						<SyncMan>00110a002200010004000000000000000000001122010000</SyncMan>
+						<SyncMan>001008002400010003000000000000000000001024010000</SyncMan>
+						<SyncMan>00110e002200010004000000000000000000001122010000</SyncMan>
 						<SyncMan>002000002400010005000000000000000000002024010000</SyncMan>
 						<SyncMan>002400002000010006000000000000000000002420010000</SyncMan>
 						<Fmmu>0000000000000000001000020100000001000000000000000000000000000000</Fmmu>
@@ -9716,28 +9902,32 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000a0000000e000000000000000000000000000000000000000000000003402000000000000b004f7065726174696f6e206d6f646500</MBoxUserCmdData>
 						<MBoxUserCmdData>004005000a0000001e0000000000000000000000000000000000000000000000034030810000000001005265706f727420646961676e6f737469637320696e666f726d6174696f6e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001800000000000000000000000000000000000000000000000340d087000000000300436f6e6669677572656420736166657479206f7074696f6e00</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000001300000000000000000000000000000000000000000000000340d88000000000581b4d6178204443206c696e6b20766f6c7461676500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001300000000000000000000000000000000000000000000000340d88000000000c4224d6178204443206c696e6b20766f6c7461676500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001500000000000000000000000000000000000000000000000340c98000000000a00f4e6f6d696e616c206d61696e7320766f6c7461676500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002600000000000000000000000000000000000000000000000340ca800000000064004d61696e7320766f6c7461676520706f73697469766520746f6c6572616e63652072616e676500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002600000000000000000000000000000000000000000000000340cb800000000064004d61696e7320766f6c74616765206e6567617469766520746f6c6572616e63652072616e676500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001d00000000000000000000000000000000000000000000000340cc80000000000908506f776572206d616e6167656d656e7420636f6e74726f6c20776f726400</MBoxUserCmdData>
-						<MBoxUserCmdData>02000500100000001500000000000000000000000000000000000000000000000340358000000000040022003356424e436f6e66696775726564206d6f746f72207479706500</MBoxUserCmdData>
+						<MBoxUserCmdData>02000500ec0000000f00000000000000000000000000000000000000000000000340968000000000e000e00000000000556e6b6e23315670702d3138303030532d355666697865640000000000000000000000000000000003002003030000000000000001000300000000005046000000000000e8030000e8030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000466565646261636b2031207479706500</MBoxUserCmdData>
+						<MBoxUserCmdData>02000500140000001b000000000000000000000000000000000000000000000003409a8000000000080008000000000000000000466565646261636b2031207265666572656e6365207369676e616c00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000002600000000000000000000000000000000000000000000000340018000000000401f537769746368696e67206672657175656e6379206f66207468652049474254206d6f64756c6500</MBoxUserCmdData>
+						<MBoxUserCmdData>02000500480000002800000000000000000000000000000000000000000000000340a580000000003c003c000100010064000000f401b80b00000000000000009001c8009001200300000500e1009600b80b84030000000000000000000000000000000000000000436f6d6d75746174696f6e206f66667365742063616c6962726174696f6e20706172616d6574657200</MBoxUserCmdData>
+						<MBoxUserCmdData>02000500120000001500000000000000000000000000000000000000000000000340358000000000060022003356424e5f32436f6e66696775726564206d6f746f72207479706500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a000000170000000000000000000000000000000000000000000000034032800000000000004d6f746f7220636f6e737472756374696f6e207479706500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005001c00000013000000000000000000000000000000000000000000000003403e800000000010001000400b5000640001001400190000000000546865726d616c206d6f746f72206d6f64656c00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005001c00000013000000000000000000000000000000000000000000000003403e800000000010001000fc035000640001001400190000000000546865726d616c206d6f746f72206d6f64656c00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a000000140000000000000000000000000000000000000000000000034033800000000021004e756d626572206f6620706f6c6520706169727300</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000001e000000000000000000000000000000000000000000000003406f0000000000fa2300004d6f746f7220636f6e74696e756f7573207374616c6c2063757272656e7400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000001300000000000000000000000000000000000000000000000340c40000000000a82f00004d6f746f722072617465642063757272656e7400</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c00000012000000000000000000000000000000000000000000000003406d0000000000b42701004d6f746f72207065616b2063757272656e7400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c00000012000000000000000000000000000000000000000000000003406d0000000000ec2601004d6f746f72207065616b2063757272656e7400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a00000013000000000000000000000000000000000000000000000003404d8000000000a00f4d6f746f7220726174656420766f6c7461676500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000002200000000000000000000000000000000000000000000000340438000000000581b4d6f746f722077696e64696e673a204469656c65637472696320737472656e67746800</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000002200000000000000000000000000000000000000000000000340438000000000c4224d6f746f722077696e64696e673a204469656c65637472696320737472656e67746800</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000001100000000000000000000000000000000000000000000000340498000000000b88201004d6f746f72207065616b20746f7271756500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a000000090000000000000000000000000000000000000000000000034037800000000016314d6f746f7220454d4600</MBoxUserCmdData>
 						<MBoxUserCmdData>0200050014000000140000000000000000000000000000000000000000000000034042800000000008000800c800000040060000456c656374726963206d6f746f72206d6f64656c00</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c0000001300000000000000000000000000000000000000000000000340710000000000450100004d6178696d756d206d6f746f7220737065656400</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c0000001c000000000000000000000000000000000000000000000003405b0000000000e61a54004269706f6c61722076656c6f63697479206c696d69742076616c756500</MBoxUserCmdData>
-						<MBoxUserCmdData>0200050014000000150000000000000000000000000000000000000000000000034047800000000008000800f0490200000000004d656368616e6963616c206d6f746f72206461746100</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001300000000000000000000000000000000000000000000000340710000000000580200004d6178696d756d206d6f746f7220737065656400</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001c000000000000000000000000000000000000000000000003405b000000000024a69b004269706f6c61722076656c6f63697479206c696d69742076616c756500</MBoxUserCmdData>
+						<MBoxUserCmdData>0200050014000000150000000000000000000000000000000000000000000000034047800000000008000800f0490200002d31014d656368616e6963616c206d6f746f72206461746100</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001900000000000000000000000000000000000000000000000340c9000000000020034d6f746f72207761726e696e672074656d706572617475726500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000001b00000000000000000000000000000000000000000000000340cc0000000000e8034d6f746f72207368757420646f776e2074656d706572617475726500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001b00000000000000000000000000000000000000000000000340cc000000000078054d6f746f72207368757420646f776e2074656d706572617475726500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001d00000000000000000000000000000000000000000000000340c38100000000000043757272656e7420636f6e74726f6c6c65722073657474696e6773203200</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001d000000000000000000000000000000000000000000000003403980000000007869456c656374726963616c20636f6d6d75746174696f6e206f666673657400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001d000000000000000000000000000000000000000000000003403d800000000004004d6f746f722074656d70657261747572652073656e736f72207479706500</MBoxUserCmdData>
@@ -9749,29 +9939,39 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000a00000020000000000000000000000000000000000000000000000003406a0000000000e00143757272656e74206c6f6f702070726f706f7274696f6e616c206761696e203100</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002b000000000000000000000000000000000000000000000003406b0000000000080043757272656e7420636f6e74726f6c206c6f6f7020696e74656772616c20616374696f6e2074696d65203100</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002900000000000000000000000000000000000000000000000340ff8100000000960056656c6f636974792066696c74657220313a204c6f7720706173732074696d6520636f6e7374616e7400</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c0000001f00000000000000000000000000000000000000000000000340640000000000a712010056656c6f63697479206c6f6f702070726f706f7274696f6e616c206761696e00</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000002200000000000000000000000000000000000000000000000340650000000000500056656c6f63697479206c6f6f7020696e74656772616c20616374696f6e2074696d6500</MBoxUserCmdData>
-						<MBoxUserCmdData>02000500ec0000000f00000000000000000000000000000000000000000000000340968000000000e000e00000000000556e6b6e23315670702d3138303030532d355666697865640000000000000000000000000000000003002003030000000000000001000300000000005046000000000000e8030000e8030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000466565646261636b2031207479706500</MBoxUserCmdData>
-						<MBoxUserCmdData>02000500140000001b000000000000000000000000000000000000000000000003409a8000000000080008000000000000000000466565646261636b2031207265666572656e6365207369676e616c00</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000002600000000000000000000000000000000000000000000000340018000000000401f537769746368696e67206672657175656e6379206f66207468652049474254206d6f64756c6500</MBoxUserCmdData>
-						<MBoxUserCmdData>02000500480000002800000000000000000000000000000000000000000000000340a580000000003c003c000000000064000000f401b80b0000000000000000900164009001f40104000500e1009600b80b84030000000000000000000000000000000000000000436f6d6d75746174696f6e206f66667365742063616c6962726174696f6e20706172616d6574657200</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001f0000000000000000000000000000000000000000000000034064000000000080841e0056656c6f63697479206c6f6f702070726f706f7274696f6e616c206761696e00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a00000022000000000000000000000000000000000000000000000003406500000000001e0056656c6f63697479206c6f6f7020696e74656772616c20616374696f6e2074696d6500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005001800000011000000000000000000000000000000000000000000000003400282000000000c000c0001000000c800e803bc02000056656c6f63697479206f6273657276657200</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a00000017000000000000000000000000000000000000000000000003406800000000000200506f736974696f6e206c6f6f70204b762d666163746f7200</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001e000000000000000000000000000000000000000000000003405c01000000000000416363656c65726174696f6e206665656420666f7277617264206761696e00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c000000230000000000000000000000000000000000000000000000034091810000000001010100506f736974696f6e206c696d69742073776974636820636f6e66696775726174696f6e00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000002500000000000000000000000000000000000000000000000340388000000000640000004d6178206d6f746f722073706565642077697468206d617820746f727175652f666f72636500</MBoxUserCmdData>
 						<Pdo Name="AT" Index="#x0010" Flags="#x0001" SyncMan="3">
-							<Entry Name="Drive status word" Index="#x0087" Flags="#x00000800">
+							<Entry Name="Drive status word" BitLen="16" Index="#x0087" Flags="#x00000800">
 								<Type>UINT</Type>
 							</Entry>
-							<Entry Name="Position feedback 1 value" Index="#x0033">
+							<Entry Name="Position feedback 1 value" BitLen="32" Index="#x0033">
 								<Type>DINT</Type>
 							</Entry>
-							<Entry Name="Following distance" Index="#x00bd">
+							<Entry Name="Following distance" BitLen="32" Index="#x00bd">
 								<Type>DINT</Type>
+							</Entry>
+							<Entry Name="Torque/force feedback value" BitLen="16" Index="#x0054">
+								<Type>INT</Type>
+							</Entry>
+							<Entry Name="Velocity controller output" BitLen="16" Index="#x81f9">
+								<Type>INT</Type>
 							</Entry>
 						</Pdo>
 						<Pdo Name="MDT" Index="#x0018" InOut="1" Flags="#x0001" SyncMan="2">
-							<Entry Name="Master control word" Index="#x0086" Flags="#x00000800">
+							<Entry Name="Master control word" BitLen="16" Index="#x0086" Flags="#x00000800">
 								<Type>UINT</Type>
 							</Entry>
-							<Entry Name="Position command value" Index="#x002f">
+							<Entry Name="Position command value" BitLen="32" Index="#x002f">
 								<Type>DINT</Type>
+							</Entry>
+							<Entry Name="Torque/force command value" BitLen="16" Index="#x0050">
+								<Type>INT</Type>
 							</Entry>
 						</Pdo>
 					</EtherCAT>
@@ -10149,7 +10349,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>02000500200000002d00000000000000000000000000000000000000000000000340a78000000000140014000000900168011e000000000000000000000000004d6f746f7220616e6420666565646261636b20636f6e6e656374696f6e20636865636b20706172616d6574657200</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000002100000000000000000000000000000000000000000000000340880000000000b2df5f00506f73697469766520616363656c65726174696f6e206c696d69742076616c756500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000002100000000000000000000000000000000000000000000000340890000000000b1df5f004e6567617469766520616363656c65726174696f6e206c696d69742076616c756500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005001800000011000000000000000000000000000000000000000000000003400282000000000c000c0000000000f401e803bc02000056656c6f63697479206f6273657276657200</MBoxUserCmdData>
+						<MBoxUserCmdData>020005001800000011000000000000000000000000000000000000000000000003400282000000000c000c0001000000c800e803bc02000056656c6f63697479206f6273657276657200</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000002500000000000000000000000000000000000000000000000340388000000000640000004d6178206d6f746f722073706565642077697468206d617820746f727175652f666f72636500</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500140000001b00000000000000000000000000000000000000000000000340fb800000000008000800008001800100000050726f62652031206c6f67696320636f6e66696775726174696f6e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001400000000000000000000000000000000000000000000000340fa8000000000000050726f626520312076616c756520736f7572636500</MBoxUserCmdData>
@@ -10182,9 +10382,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000a00000020000000000000000000000000000000000000000000000003406a0000000000e00143757272656e74206c6f6f702070726f706f7274696f6e616c206761696e203100</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002b000000000000000000000000000000000000000000000003406b0000000000080043757272656e7420636f6e74726f6c206c6f6f7020696e74656772616c20616374696f6e2074696d65203100</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002900000000000000000000000000000000000000000000000340ff8100000000960056656c6f636974792066696c74657220313a204c6f7720706173732074696d6520636f6e7374616e7400</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c0000001f00000000000000000000000000000000000000000000000340640000000000e022020056656c6f63697479206c6f6f702070726f706f7274696f6e616c206761696e00</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000002200000000000000000000000000000000000000000000000340650000000000500056656c6f63697479206c6f6f7020696e74656772616c20616374696f6e2074696d6500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a00000017000000000000000000000000000000000000000000000003406800000000003200506f736974696f6e206c6f6f70204b762d666163746f7200</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001f0000000000000000000000000000000000000000000000034064000000000080841e0056656c6f63697479206c6f6f702070726f706f7274696f6e616c206761696e00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a00000022000000000000000000000000000000000000000000000003406500000000001e0056656c6f63697479206c6f6f7020696e74656772616c20616374696f6e2074696d6500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a00000017000000000000000000000000000000000000000000000003406800000000000200506f736974696f6e206c6f6f70204b762d666163746f7200</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001e000000000000000000000000000000000000000000000003405c0100000000e803416363656c65726174696f6e206665656420666f7277617264206761696e00</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500480000002800000000000000000000000000000000000000000000000340a580000000003c003c000000010064000000f401b80b0000000000000000f401c800f401e80300000500e1009600b80b84030000000000000000000000000000000000000000436f6d6d75746174696f6e206f66667365742063616c6962726174696f6e20706172616d6574657200</MBoxUserCmdData>
 						<Pdo Name="AT" Index="#x0010" Flags="#x0001" SyncMan="3">
