@@ -20,8 +20,8 @@ END_VAR
     <Implementation>
       <ST><![CDATA[IF PendantControl.manual THEN
 	ElevationAxisJog(	bPowerEnable := enable AND Main.power_OK,
-						bEnable_Positive := GVL_Main.brake_clearing,
-						bEnable_Negative := GVL_Main.brake_clearing,
+						bEnable_Positive := GVL_Telescope.brake_azimuth_eve,
+						bEnable_Negative := GVL_Telescope.brake_azimuth_eve,
 						bForward := up,
 						bBackward := down,
 						bReset := reset,
