@@ -3486,6 +3486,86 @@ Drive Status 4 (manually linked):
 							<Type GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Dome.Clockwise</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.CounterClockwise</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bDirectionMinus</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bDirectionPlus</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bVeloLow</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bVeloHigh</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bBreak</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bBreakInv</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Azimut_raw</Name>
+							<Comment><![CDATA[ EL5151]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
+							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<SubVar>
+								<Name>AxisState</Name>
+								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
+0  = INACTIVE:		axis has no job
+1  = RUNNING:		axis is executing a motion job
+2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
+3  = PHASE_VELOCONST:	axis is moving at constant velocity
+4  = PHASE_ACCPOS:	axis is accelerating
+5  = PHASE_ACCNEG:	axis is decelerating
+Slaves only:
+11 = PREPHASE:		slave axis is in a motion pre-phase
+12 = SYNCHRONIZING:	slave axis is synchronizing
+13 = SYNCHRONOUS:	slave axis is moving synchronously
+External Setpoint Generation:
+41 = EXTSETGEN_MODE1:	external setpoint generation active
+42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>HomingState</Name>
+								<Comment><![CDATA[Axis Homing Status:
+0: idle
+1: start homing
+2: searching home switch
+3: stopping on home switch
+4: moving off home switch
+5: searching sync pulse
+6: stopping after homing
+]]></Comment>
+							</SubVar>
+							<SubVar>
+								<Name>CoupleState</Name>
+								<Comment><![CDATA[Axis Coupling Status:
+0: axis is a single axis (not coupled)
+1: axis is a master axis
+2: axis is master and slave
+3: axis is a slave axis
+]]></Comment>
+							</SubVar>
+						</Var>
+						<Var>
 							<Name>GVL_oil.oil_low</Name>
 							<Comment><![CDATA[ 2.1]]></Comment>
 							<Type>BOOL</Type>
@@ -3526,14 +3606,14 @@ Drive Status 4 (manually linked):
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_oil.oilpan_maximum</Name>
-							<Comment><![CDATA[DIN39 4.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_oil.oil_temperature</Name>
 							<Comment><![CDATA[BT2]]></Comment>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oilpan_maximum</Name>
+							<Comment><![CDATA[DIN39 4.6]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_oil.oil_reserve</Name>
@@ -3631,15 +3711,16 @@ Drive Status 4 (manually linked):
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_pendant_control.BCD1</Name>
+							<Comment><![CDATA[DIN17 2.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Environment.rawWindSpeed</Name>
 							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Environment.rawWindDirection</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawTemperature</Name>
 							<Type>INT</Type>
 						</Var>
 						<Var>
@@ -3815,6 +3896,10 @@ External Setpoint Generation:
 							</SubVar>
 						</Var>
 						<Var>
+							<Name>GVL_Environment.rawTemperature</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Environment.rawHumidity</Name>
 							<Type>INT</Type>
 						</Var>
@@ -3841,11 +3926,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Environment.rawHumidityDome</Name>
 							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.BCD1</Name>
-							<Comment><![CDATA[DIN17 2.0]]></Comment>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.BCD2</Name>
@@ -3937,94 +4017,14 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.brake_clearing</Name>
-							<Comment><![CDATA[DIN15 1.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Main.main_cabinet_temperature</Name>
 							<Comment><![CDATA[BT1]]></Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.Clockwise</Name>
+							<Name>GVL_Main.brake_clearing</Name>
+							<Comment><![CDATA[DIN15 1.6]]></Comment>
 							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.CounterClockwise</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.bDirectionMinus</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.bDirectionPlus</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.bVeloLow</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.bVeloHigh</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.bBreak</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.bBreakInv</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.Azimut_raw</Name>
-							<Comment><![CDATA[ EL5151]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
-							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-							<SubVar>
-								<Name>AxisState</Name>
-								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
-0  = INACTIVE:		axis has no job
-1  = RUNNING:		axis is executing a motion job
-2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
-3  = PHASE_VELOCONST:	axis is moving at constant velocity
-4  = PHASE_ACCPOS:	axis is accelerating
-5  = PHASE_ACCNEG:	axis is decelerating
-Slaves only:
-11 = PREPHASE:		slave axis is in a motion pre-phase
-12 = SYNCHRONIZING:	slave axis is synchronizing
-13 = SYNCHRONOUS:	slave axis is moving synchronously
-External Setpoint Generation:
-41 = EXTSETGEN_MODE1:	external setpoint generation active
-42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>HomingState</Name>
-								<Comment><![CDATA[Axis Homing Status:
-0: idle
-1: start homing
-2: searching home switch
-3: stopping on home switch
-4: moving off home switch
-5: searching sync pulse
-6: stopping after homing
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>CoupleState</Name>
-								<Comment><![CDATA[Axis Coupling Status:
-0: axis is a single axis (not coupled)
-1: axis is a master axis
-2: axis is master and slave
-3: axis is a slave axis
-]]></Comment>
-							</SubVar>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
@@ -4044,6 +4044,38 @@ External Setpoint Generation:
 						<Var>
 							<Name>FanControl.Fan_axis.MDP5001_511_733_Output</Name>
 							<Type GUID="{0D3B3A77-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_O_32199BA1</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Inverter_Enable</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Inverter_DirectionMinus</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Inverter_Velocity</Name>
+							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.OpenShutter</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.CloseShutter</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.OpenFlap</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.CloseFlap</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.DomeAxisRef.PlcToNc</Name>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_oil.oil_pump_enable</Name>
@@ -4151,38 +4183,6 @@ DOUT9 1.0]]></Comment>
 							<Name>GVL_Main.softstart_trafo</Name>
 							<Comment><![CDATA[DOUT7 0.6]]></Comment>
 							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.Inverter_Enable</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.Inverter_DirectionMinus</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.Inverter_Velocity</Name>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.OpenShutter</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.CloseShutter</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.OpenFlap</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.CloseFlap</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.DomeAxisRef.PlcToNc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 					</Vars>
 					<TaskPouOids>
@@ -9808,9 +9808,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<InitCmd DriveNo="0" IDN="32861" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32918" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32922" MotorDataLevel="1" DisableMode="0"/>
-								<InitCmd DriveNo="0" IDN="33088" MotorDataLevel="0" DisableMode="0">
-									<RetainData>24002400d5000600ca0002002c9d5b002c9d5b000000000000000000000000002260000000000000</RetainData>
-								</InitCmd>
 								<InitCmd DriveNo="0" IDN="33093" MotorDataLevel="0" DisableMode="0">
 									<RetainData>16001a004a616e2020332032303230202c2030383a32313a3437</RetainData>
 								</InitCmd>
@@ -9963,7 +9960,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000a0000002600000000000000000000000000000000000000000000000340cb800000000064004d61696e7320766f6c74616765206e6567617469766520746f6c6572616e63652072616e676500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001d00000000000000000000000000000000000000000000000340cc80000000000908506f776572206d616e6167656d656e7420636f6e74726f6c20776f726400</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500ec0000000f00000000000000000000000000000000000000000000000340968000000000e000e00000000000556e6b6e23315670702d3138303030532d355666697865640000000000000000000000000000000003002003030000000000000001000300000000005046000000000000e8030000e8030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000466565646261636b2031207479706500</MBoxUserCmdData>
-						<MBoxUserCmdData>02000500140000001b000000000000000000000000000000000000000000000003409a8000000000080008000000000000000000466565646261636b2031207265666572656e6365207369676e616c00</MBoxUserCmdData>
+						<MBoxUserCmdData>02000500140000001b000000000000000000000000000000000000000000000003409a8000000000080008000100000000000000466565646261636b2031207265666572656e6365207369676e616c00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002600000000000000000000000000000000000000000000000340018000000000401f537769746368696e67206672657175656e6379206f66207468652049474254206d6f64756c6500</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500480000002800000000000000000000000000000000000000000000000340a580000000003c003c000100010064000000f401b80b00000000000000009001c8009001200300000500e1009600b80b84030000000000000000000000000000000000000000436f6d6d75746174696f6e206f66667365742063616c6962726174696f6e20706172616d6574657200</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500120000001500000000000000000000000000000000000000000000000340358000000000060022003356424e5f32436f6e66696775726564206d6f746f72207479706500</MBoxUserCmdData>
@@ -10001,6 +9998,8 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000a0000001e000000000000000000000000000000000000000000000003405c01000000000000416363656c65726174696f6e206665656420666f7277617264206761696e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c000000230000000000000000000000000000000000000000000000034091810000000001010100506f736974696f6e206c696d69742073776974636820636f6e66696775726174696f6e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000002500000000000000000000000000000000000000000000000340388000000000640000004d6178206d6f746f722073706565642077697468206d617820746f727175652f666f72636500</MBoxUserCmdData>
+						<MBoxUserCmdData>02000500140000001b00000000000000000000000000000000000000000000000340fb800000000008000800000008800100000050726f62652031206c6f67696320636f6e66696775726174696f6e00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001700000000000000000000000000000000000000000000000340a90000000000020050726f626520636f6e74726f6c20706172616d6574657200</MBoxUserCmdData>
 						<Pdo Name="AT" Index="#x0010" Flags="#x0001" SyncMan="3">
 							<Entry Name="Drive status word" BitLen="16" Index="#x0087" Flags="#x00000800">
 								<Type>UINT</Type>
@@ -10244,6 +10243,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<InitCmd DriveNo="0" IDN="32861" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32918" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32922" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="33088" MotorDataLevel="0" DisableMode="0">
+									<RetainData>24002400d5000600ca0002002c9d5b002c9d5b000000000000000000000000002260000000000000</RetainData>
+								</InitCmd>
 								<InitCmd DriveNo="0" IDN="33093" MotorDataLevel="0" DisableMode="0">
 									<RetainData>16001a004a616e2020332032303230202c2030383a32313a3437</RetainData>
 								</InitCmd>
@@ -10369,8 +10371,8 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" DownloadPdoCfg="true" CycleMBoxPollingTime="0" FoeType="1" SoeChannels="1" VendorId="#x00000002" ProductCode="#x14056012" RevisionNo="#x00d50000" InfoDataAddr="true" InfoDataSoeDS401="true" InfoDataDcTimes="true" TimeoutStateChange2="15000" TimeoutStateChange3="10000" TimeoutStateChange4="500" AutoRestoreAfterWcOk="true" CheckRevisionNoType="4" PortPhys="12305" IdentificationAdo="308" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AX5125-0000-0213 EtherCAT Drive (SoE, 1 Ch.)" Desc="AX5125-0000-0213" PortABoxInfo="#x01000051">
 						<SyncMan>001880002600010001000000800080008000001826010000</SyncMan>
 						<SyncMan>001a80002200010002000000800080008000001a22010000</SyncMan>
-						<SyncMan>001006002400010003000000000000000000001024010000</SyncMan>
-						<SyncMan>001114002200010004000000000000000000001122010000</SyncMan>
+						<SyncMan>001008002400010003000000000000000000001024010000</SyncMan>
+						<SyncMan>00111a002200010004000000000000000000001122010000</SyncMan>
 						<SyncMan>002000002400010005000000000000000000002024010000</SyncMan>
 						<SyncMan>002400002000010006000000000000000000002420010000</SyncMan>
 						<Fmmu>0000000000000000001000020100000001000000000000000000000000000000</Fmmu>
@@ -10397,13 +10399,13 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000a0000001d00000000000000000000000000000000000000000000000340cc80000000000908506f776572206d616e6167656d656e7420636f6e74726f6c20776f726400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c000000230000000000000000000000000000000000000000000000034091810000000001000101506f736974696f6e206c696d69742073776974636820636f6e66696775726174696f6e00</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500ec0000000f00000000000000000000000000000000000000000000000340968000000000e000e00000000000556e6b6e23315670702d3138303030532d355666697865640000000000000000000000000000000003002003030000000000000001000300000000005046000000000000e8030000e803000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003c800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000466565646261636b2031207479706500</MBoxUserCmdData>
-						<MBoxUserCmdData>02000500140000001b000000000000000000000000000000000000000000000003409a8000000000080008000000000000000000466565646261636b2031207265666572656e6365207369676e616c00</MBoxUserCmdData>
+						<MBoxUserCmdData>02000500140000001b000000000000000000000000000000000000000000000003409a8000000000080008000100000000000000466565646261636b2031207265666572656e6365207369676e616c00</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500200000002d00000000000000000000000000000000000000000000000340a78000000000140014000000900168011e000000000000000000000000004d6f746f7220616e6420666565646261636b20636f6e6e656374696f6e20636865636b20706172616d6574657200</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000002100000000000000000000000000000000000000000000000340880000000000b2df5f00506f73697469766520616363656c65726174696f6e206c696d69742076616c756500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000002100000000000000000000000000000000000000000000000340890000000000b1df5f004e6567617469766520616363656c65726174696f6e206c696d69742076616c756500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005001800000011000000000000000000000000000000000000000000000003400282000000000c000c0001000000c800e803bc02000056656c6f63697479206f6273657276657200</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000002500000000000000000000000000000000000000000000000340388000000000640000004d6178206d6f746f722073706565642077697468206d617820746f727175652f666f72636500</MBoxUserCmdData>
-						<MBoxUserCmdData>02000500140000001b00000000000000000000000000000000000000000000000340fb800000000008000800008001800100000050726f62652031206c6f67696320636f6e66696775726174696f6e00</MBoxUserCmdData>
+						<MBoxUserCmdData>02000500140000001b00000000000000000000000000000000000000000000000340fb800000000008000800008008800100000050726f62652031206c6f67696320636f6e66696775726174696f6e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001400000000000000000000000000000000000000000000000340fa8000000000000050726f626520312076616c756520736f7572636500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a00000020000000000000000000000000000000000000000000000003405c0000000000e8034269706f6c617220746f727175652f666f726365206c696d69742076616c756500</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500120000001500000000000000000000000000000000000000000000000340358000000000060022003356424e5f32436f6e66696775726564206d6f746f72207479706500</MBoxUserCmdData>
@@ -10436,9 +10438,10 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000a0000002900000000000000000000000000000000000000000000000340ff8100000000960056656c6f636974792066696c74657220313a204c6f7720706173732074696d6520636f6e7374616e7400</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000001f00000000000000000000000000000000000000000000000340640000000000006a180056656c6f63697479206c6f6f702070726f706f7274696f6e616c206761696e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a00000022000000000000000000000000000000000000000000000003406500000000003c0056656c6f63697479206c6f6f7020696e74656772616c20616374696f6e2074696d6500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a00000017000000000000000000000000000000000000000000000003406800000000003200506f736974696f6e206c6f6f70204b762d666163746f7200</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a00000017000000000000000000000000000000000000000000000003406800000000000200506f736974696f6e206c6f6f70204b762d666163746f7200</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001e000000000000000000000000000000000000000000000003405c01000000000000416363656c65726174696f6e206665656420666f7277617264206761696e00</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500480000002800000000000000000000000000000000000000000000000340a580000000003c003c000000010064000000f401b80b0000000000000000f401c800f401e80300000500e1009600b80b84030000000000000000000000000000000000000000436f6d6d75746174696f6e206f66667365742063616c6962726174696f6e20706172616d6574657200</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001700000000000000000000000000000000000000000000000340a90000000000020050726f626520636f6e74726f6c20706172616d6574657200</MBoxUserCmdData>
 						<Pdo Name="AT" Index="#x0010" Flags="#x0001" SyncMan="3">
 							<Entry Name="Drive status word" BitLen="16" Index="#x0087" Flags="#x00000800">
 								<Type>UINT</Type>
@@ -10464,6 +10467,12 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 							<Entry Name="Actual motor current phase W" BitLen="16" Index="#x81ca">
 								<Type>INT</Type>
 							</Entry>
+							<Entry Name="Probe value 1 negative edge" BitLen="32" Index="#x0083">
+								<Type>DINT</Type>
+							</Entry>
+							<Entry Name="Probe 1 negative latched" BitLen="16" Index="#x019a">
+								<Type>INT</Type>
+							</Entry>
 						</Pdo>
 						<Pdo Name="MDT" Index="#x0018" InOut="1" Flags="#x0001" SyncMan="2">
 							<Entry Name="Master control word" BitLen="16" Index="#x0086" Flags="#x00000800">
@@ -10471,6 +10480,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 							</Entry>
 							<Entry Name="Position command value" BitLen="32" Index="#x002f">
 								<Type>DINT</Type>
+							</Entry>
+							<Entry Name="Probe 1 enable" BitLen="16" Index="#x0195">
+								<Type>INT</Type>
 							</Entry>
 						</Pdo>
 					</EtherCAT>
@@ -10720,9 +10732,12 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT^Master control word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT^Position feedback 1 value"/>
+				<Link VarA="Enc^Inputs^In^nDataIn4" VarB="AT^Probe value 1 negative edge"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
+				<Link VarA="Enc^Inputs^In^nState6" VarB="AT^Probe 1 negative latched"/>
+				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="MDT^Probe 1 enable"/>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^Focus">
