@@ -3285,8 +3285,9 @@ External Setpoint Generation:
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="4">
-						<EncPara MaxCount="#x0000ffff">
+						<EncPara Inverse="true" MaxCount="#x0000ffff">
 							<Inc RefMode="2" RefSoftSyncMask="#x0000ffff"/>
+							<ParameterChanged>8</ParameterChanged>
 						</EncPara>
 						<Vars VarGrpType="1">
 							<Name>Eingänge</Name>
