@@ -20,10 +20,10 @@ VAR_GLOBAL
 	Azimut_raw				AT%I*:	INT;
 	
 	WatchDogReset:	BOOL;
-	OpenShutter: 	BOOL;
-	CloseShutter: 	BOOL;
-	OpenFlap: 		BOOL;
-	CloseFlap: 		BOOL;
+	OpenShutter  	AT%Q*: 	BOOL;
+	CloseShutter  	AT%Q*: 	BOOL;
+	OpenFlap  		AT%Q*: 	BOOL;
+	CloseFlap  		AT%Q*: 	BOOL;
 	
 	ShutterOpened:	BOOL;
 	ShutterClosed:	BOOL;

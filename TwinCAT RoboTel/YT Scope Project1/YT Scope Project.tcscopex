@@ -6,13 +6,13 @@
       <SubMember>
         <AdsAcquisition AssemblyName="TwinCAT.Measurement.Scope.API.Model">
           <IndexGroup>61488</IndexGroup>
-          <IndexOffset>163</IndexOffset>
+          <IndexOffset>177</IndexOffset>
           <SymbolName>Elevation (AX5125-0000-0213).AT.Position feedback 1 value</SymbolName>
           <SymbolBased>true</SymbolBased>
           <TargetPort>27905</TargetPort>
           <ContextMask>0</ContextMask>
           <IsHistorical>false</IsHistorical>
-          <FileHandle>103</FileHandle>
+          <FileHandle>193</FileHandle>
           <ServerHandle>0</ServerHandle>
           <ChannelStyleInformation />
           <Enabled>true</Enabled>
@@ -86,13 +86,13 @@
         </AdsAcquisition>
         <AdsAcquisition AssemblyName="TwinCAT.Measurement.Scope.API.Model">
           <IndexGroup>61488</IndexGroup>
-          <IndexOffset>167</IndexOffset>
+          <IndexOffset>181</IndexOffset>
           <SymbolName>Elevation (AX5125-0000-0213).AT.Following distance</SymbolName>
           <SymbolBased>true</SymbolBased>
           <TargetPort>27905</TargetPort>
           <ContextMask>0</ContextMask>
           <IsHistorical>false</IsHistorical>
-          <FileHandle>104</FileHandle>
+          <FileHandle>194</FileHandle>
           <ServerHandle>0</ServerHandle>
           <ChannelStyleInformation />
           <Enabled>true</Enabled>
@@ -166,13 +166,13 @@
         </AdsAcquisition>
         <AdsAcquisition AssemblyName="TwinCAT.Measurement.Scope.API.Model">
           <IndexGroup>61488</IndexGroup>
-          <IndexOffset>171</IndexOffset>
+          <IndexOffset>185</IndexOffset>
           <SymbolName>Elevation (AX5125-0000-0213).AT.Torque/force feedback value</SymbolName>
           <SymbolBased>true</SymbolBased>
           <TargetPort>27905</TargetPort>
           <ContextMask>0</ContextMask>
           <IsHistorical>false</IsHistorical>
-          <FileHandle>105</FileHandle>
+          <FileHandle>195</FileHandle>
           <ServerHandle>0</ServerHandle>
           <ChannelStyleInformation />
           <Enabled>true</Enabled>
@@ -246,13 +246,13 @@
         </AdsAcquisition>
         <AdsAcquisition AssemblyName="TwinCAT.Measurement.Scope.API.Model">
           <IndexGroup>61488</IndexGroup>
-          <IndexOffset>173</IndexOffset>
+          <IndexOffset>187</IndexOffset>
           <SymbolName>Elevation (AX5125-0000-0213).AT.Velocity controller output</SymbolName>
           <SymbolBased>true</SymbolBased>
           <TargetPort>27905</TargetPort>
           <ContextMask>0</ContextMask>
           <IsHistorical>false</IsHistorical>
-          <FileHandle>106</FileHandle>
+          <FileHandle>196</FileHandle>
           <ServerHandle>0</ServerHandle>
           <ChannelStyleInformation />
           <Enabled>true</Enabled>
@@ -326,13 +326,13 @@
         </AdsAcquisition>
         <AdsAcquisition AssemblyName="TwinCAT.Measurement.Scope.API.Model">
           <IndexGroup>61472</IndexGroup>
-          <IndexOffset>163</IndexOffset>
+          <IndexOffset>177</IndexOffset>
           <SymbolName>Elevation (AX5125-0000-0213).MDT.Position command value</SymbolName>
           <SymbolBased>true</SymbolBased>
           <TargetPort>27905</TargetPort>
           <ContextMask>0</ContextMask>
           <IsHistorical>false</IsHistorical>
-          <FileHandle>107</FileHandle>
+          <FileHandle>197</FileHandle>
           <ServerHandle>0</ServerHandle>
           <ChannelStyleInformation />
           <Enabled>true</Enabled>
@@ -406,13 +406,13 @@
         </AdsAcquisition>
         <AdsAcquisition AssemblyName="TwinCAT.Measurement.Scope.API.Model">
           <IndexGroup>61488</IndexGroup>
-          <IndexOffset>175</IndexOffset>
+          <IndexOffset>189</IndexOffset>
           <SymbolName>Elevation (AX5125-0000-0213).AT.Actual motor current phase U</SymbolName>
           <SymbolBased>true</SymbolBased>
           <TargetPort>27905</TargetPort>
           <ContextMask>0</ContextMask>
           <IsHistorical>false</IsHistorical>
-          <FileHandle>108</FileHandle>
+          <FileHandle>198</FileHandle>
           <ServerHandle>0</ServerHandle>
           <ChannelStyleInformation />
           <Enabled>true</Enabled>
@@ -486,13 +486,13 @@
         </AdsAcquisition>
         <AdsAcquisition AssemblyName="TwinCAT.Measurement.Scope.API.Model">
           <IndexGroup>61488</IndexGroup>
-          <IndexOffset>177</IndexOffset>
+          <IndexOffset>191</IndexOffset>
           <SymbolName>Elevation (AX5125-0000-0213).AT.Actual motor current phase V</SymbolName>
           <SymbolBased>true</SymbolBased>
           <TargetPort>27905</TargetPort>
           <ContextMask>0</ContextMask>
           <IsHistorical>false</IsHistorical>
-          <FileHandle>109</FileHandle>
+          <FileHandle>199</FileHandle>
           <ServerHandle>0</ServerHandle>
           <ChannelStyleInformation />
           <Enabled>true</Enabled>
@@ -566,13 +566,13 @@
         </AdsAcquisition>
         <AdsAcquisition AssemblyName="TwinCAT.Measurement.Scope.API.Model">
           <IndexGroup>61488</IndexGroup>
-          <IndexOffset>179</IndexOffset>
+          <IndexOffset>193</IndexOffset>
           <SymbolName>Elevation (AX5125-0000-0213).AT.Actual motor current phase W</SymbolName>
           <SymbolBased>true</SymbolBased>
           <TargetPort>27905</TargetPort>
           <ContextMask>0</ContextMask>
           <IsHistorical>false</IsHistorical>
-          <FileHandle>110</FileHandle>
+          <FileHandle>200</FileHandle>
           <ServerHandle>0</ServerHandle>
           <ChannelStyleInformation />
           <Enabled>true</Enabled>
@@ -1026,7 +1026,7 @@
           <SubMember>
             <ChartZoomStyle AssemblyName="TwinCAT.Measurement.Scope.API.Model">
               <ScaleOnZoom>true</ScaleOnZoom>
-              <YZoom>false</YZoom>
+              <YZoom>true</YZoom>
               <Guid>d71092e6-28b8-4623-8259-65637f2da990</Guid>
               <Title>ChartZoomStyle_16</Title>
               <Name>Chartzoom Style</Name>
@@ -2114,7 +2114,7 @@
   </SubMember>
   <Layout>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;Layout&gt;
-  &lt;Window Guid="ad45e834-da5b-4b66-a26c-871744acc69d" LastFocused="132463669725634890" DockedSize="200" PopupSize="0" FloatingLocation="-1, -1" FloatingSize="550, 400" LastOpenDockSituation="Document" LastFixedDockSituation="Document" LastFixedDockLocation="Right" LastFloatingWindowGuid="00000000-0000-0000-0000-000000000000" LastDockContainerCount="0" LastDockContainerIndex="0" DockedWorkingSize="250, 400" DockedWindowGroupGuid="00000000-0000-0000-0000-000000000000" DockedIndexInWindowGroup="0" DockedSplitPath="0" DocumentWorkingSize="250, 400" DocumentWindowGroupGuid="129f4e5e-5947-4053-bedc-2c8ea7f31764" DocumentIndexInWindowGroup="0" DocumentSplitPath="0" FloatingWorkingSize="250, 400" FloatingWindowGroupGuid="00000000-0000-0000-0000-000000000000" FloatingIndexInWindowGroup="0" FloatingSplitPath="0" /&gt;
+  &lt;Window Guid="ad45e834-da5b-4b66-a26c-871744acc69d" LastFocused="132464507635573314" DockedSize="200" PopupSize="0" FloatingLocation="-1, -1" FloatingSize="550, 400" LastOpenDockSituation="Document" LastFixedDockSituation="Document" LastFixedDockLocation="Right" LastFloatingWindowGuid="00000000-0000-0000-0000-000000000000" LastDockContainerCount="0" LastDockContainerIndex="0" DockedWorkingSize="250, 400" DockedWindowGroupGuid="00000000-0000-0000-0000-000000000000" DockedIndexInWindowGroup="0" DockedSplitPath="0" DocumentWorkingSize="250, 400" DocumentWindowGroupGuid="129f4e5e-5947-4053-bedc-2c8ea7f31764" DocumentIndexInWindowGroup="0" DocumentSplitPath="0" FloatingWorkingSize="250, 400" FloatingWindowGroupGuid="00000000-0000-0000-0000-000000000000" FloatingIndexInWindowGroup="0" FloatingSplitPath="0" /&gt;
   &lt;DocumentContainer Dock="5"&gt;
     &lt;SplitLayoutSystem WorkingSize="250, 400" SplitMode="0"&gt;
       &lt;ControlLayoutSystem WorkingSize="250, 400" Guid="129f4e5e-5947-4053-bedc-2c8ea7f31764" Collapsed="0" SelectedControl="ad45e834-da5b-4b66-a26c-871744acc69d"&gt;
