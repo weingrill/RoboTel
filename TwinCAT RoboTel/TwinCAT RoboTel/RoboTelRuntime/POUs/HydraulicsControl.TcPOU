@@ -8,6 +8,7 @@ VAR
 	suction_pump_timer: TP;
 	oil_pump_state,
 	brake_state: RS;
+	brake_open:	BOOL := FALSE;
 	pressure_failure,
 	suction_failure,
 	oil_low,
@@ -20,7 +21,7 @@ VAR
 	pump_running,
 	suction_running :	BOOL := FALSE;
 	brake_open_delay, 
-pressure_delay :	TON;
+	pressure_delay :	TON;
 	HydraulicsLog,
 	ReserveLog,
 	oil_low_log,
@@ -54,11 +55,11 @@ pump_running := GVL_oil.pump_running;
 suction_running := GVL_oil.suction_running;
 
 // this is a temporary fix of the oil_pressure_ok signal
-(*
+
 pressure_delay(IN := pump_running,
 				PT := T#10S,
 				Q => oil_pressure_ok);
-*)				
+			
 oil_pump_state(SET := GVL_Main.start_switch OR PendantControl.manual_hydraulics_start,
 				RESET1 := GVL_Main.stop_switch OR PendantControl.manual_hydraulics_stop OR
 						pressure_failure OR 
@@ -66,13 +67,14 @@ oil_pump_state(SET := GVL_Main.start_switch OR PendantControl.manual_hydraulics_
 						NOT MAIN.phase_available);
 
 GVL_Oil.oil_pump_enable := oil_pump_state.Q1;
+brake_open := Main.brake_clearing OR PendantControl.brake_open;
 // wait for pressure to build up (hack for oil_pressure_ok)
 brake_open_delay(IN := pump_running,
 				PT := T#10S);
 //manually or remotly open brake. Close brake on limit switch. Wait n seconds after pump is on
 //hold the brake, if we reach the az-limit				
-brake_state(SET := brake_open_delay.Q AND (Main.brake_clearing OR PendantControl.brake_open),
-			RESET1 := GVL_Telescope.azimut_limit_switch,
+brake_state(SET := brake_open_delay.Q AND brake_open,
+			RESET1 := GVL_Telescope.azimut_limit_switch OR NOT brake_open,
 			Q1 => GVL_Telescope.brake_azimuth_eve);
 
 suction_timer(bStart := NOT suction_pump_timer.Q, bStop := GVL_oil.oilpan_maximum);  
@@ -88,7 +90,7 @@ suction_watchdog(IN := GVL_Oil.oil_suction_enable AND NOT suction_running,
 
 pressure_watchdog(IN := GVL_Oil.oil_pump_enable AND 
 						NOT oil_pressure_OK,
-					PT := T#20S,
+					PT := T#15S,
 				  Q => pressure_failure);
 				  
 oil_pressure_ok := pump_running AND NOT pressure_failure;
@@ -164,6 +166,7 @@ SuctionLog(Trigger := suction_failure,
       <LineId Id="112" Count="0" />
       <LineId Id="110" Count="0" />
       <LineId Id="5" Count="0" />
+      <LineId Id="245" Count="0" />
       <LineId Id="177" Count="0" />
       <LineId Id="176" Count="0" />
       <LineId Id="180" Count="0" />

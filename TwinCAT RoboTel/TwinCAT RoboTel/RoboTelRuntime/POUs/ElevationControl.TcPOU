@@ -3,25 +3,27 @@
   <POU Name="ElevationControl" Id="{c0371b19-3d1d-4f20-bd19-ce60539d69cd}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM ElevationControl
 VAR_INPUT
-	up:	BOOL;
-	down: BOOL;
-	reset: BOOL;
-	enable :  BOOL;
+	up:		BOOL;
+	down:	BOOL;
+	reset:	BOOL;
+	enable: BOOL;
 END_VAR
 
 VAR
 	ElevationAxisJog:	FB_AxisJog;
-	ElevationAxis:		FB_Axis;
-	error: BOOL;
-	position: LREAL;
-	act_position: LREAL;
+	ElevationAxis:		FB_Axis2;
+	error: 				BOOL;
+	MoveAxis:			BOOL;
+	position: 			LREAL;
+	act_position: 		LREAL;
+	ErrorID: UDINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[IF PendantControl.manual THEN
-	ElevationAxisJog(	bPowerEnable := enable AND Main.power_OK,
-						bEnable_Positive := GVL_Telescope.brake_azimuth_eve,
-						bEnable_Negative := GVL_Telescope.brake_azimuth_eve,
+	ElevationAxisJog(	bPowerEnable := enable AND HydraulicsControl.brake_open,
+						bEnable_Positive := TRUE,
+						bEnable_Negative := TRUE,
 						bForward := up,
 						bBackward := down,
 						bReset := reset,
@@ -30,12 +32,22 @@ END_VAR
 						fActPos => act_position,
 						stAxis :=	GVL_Telescope.ElevationAxisRef);	
 ELSE
-	ElevationAxis(	bPowerEnable := TelescopeControl.power AND Main.power_OK,
+(*	ElevationAxis(	bPowerEnable := TelescopeControl.power AND Main.power_OK,
 					bReset := reset,
 					fMoveAbsPos := position, 
 					fActPos => act_position,
 					bAxError => error,
 					stAxis :=	GVL_Telescope.ElevationAxisRef);
+					*)
+	ElevationAxis(Enable := TelescopeControl.power AND HydraulicsControl.brake_open,
+					Reset := reset,
+					MoveAxis := MoveAxis,
+					Position := position,
+					Error => Error,
+					ErrorID => ErrorID,
+					ActualPosition => act_position,
+					AxisRef := GVL_Telescope.ElevationAxisRef);
+					
 END_IF
 ]]></ST>
     </Implementation>
@@ -50,6 +62,13 @@ END_IF
       <LineId Id="38" Count="0" />
       <LineId Id="40" Count="0" />
       <LineId Id="35" Count="0" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="87" Count="1" />
+      <LineId Id="84" Count="1" />
+      <LineId Id="83" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>

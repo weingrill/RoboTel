@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="FB_Axis2" Id="{a3e55664-127b-4a99-a2ba-301ba26f68b3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Axis2
+VAR_INPUT
+	// enable the axis
+	Enable:		BOOL;
+	// reset the axis after error
+	Reset: 		BOOL;
+	// Move the Axis to a given position
+	MoveAxis: 	BOOL;
+	// position to move to
+	Position: 	LREAL;
+END_VAR
+VAR_OUTPUT
+	// Reset has been executed
+	ResetDone:	BOOL; 
+	// the axis is in target position
+	MoveDone:	BOOL;
+	// the axis has stopped
+	StopDone: BOOL;
+	// the axis is ready
+	Ready:			BOOL;
+	// the command has been aborted
+	CommandAborted: BOOL;
+	// axis busy
+	Busy: 			BOOL;
+	// axis is moving
+	Active: 		BOOL;
+	//	error condition
+	Error: 			BOOL;
+	// number of error
+	ErrorID: 		UDINT;
+	// actual position of the axis
+	ActualPosition: LREAL;
+END_VAR
+VAR
+	Axis_Power:	MC_Power;
+	Axis_Reset:	MC_Reset;
+	Axis_Move:	MC_MoveAbsolute;
+	Axis_Position:	MC_ReadActualPosition;
+	Axis_Stop:	MC_Stop;
+	bStop: BOOL;
+
+END_VAR
+VAR_IN_OUT
+	// axis reference
+	AxisRef:	AXIS_REF;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Axis_Power(Axis := AxisRef,
+			Enable := Enable,
+			Enable_Positive := Enable,
+			Enable_Negative := Enable,
+			Override := 100.0,
+			Status => Ready,
+			Busy => Busy,
+			Active => Active,
+			Error => Error,
+			ErrorID => ErrorID);
+
+Axis_Reset(Axis := AxisRef,
+			Execute := Reset,
+			Done => ResetDone,
+			Busy => Busy,
+			Error => Error,
+			ErrorID => ErrorID);
+IF ResetDone THEN
+	Reset := FALSE;
+END_IF
+			
+Axis_Move( Axis := AxisRef,
+	Execute := MoveAxis AND Ready,
+	Position := Position,
+	Done => MoveDone,
+	Busy => Busy,
+	Active => Active,
+	CommandAborted => CommandAborted,
+	Error => Error,
+	ErrorID => ErrorID);
+	
+IF MoveDone THEN
+	MoveAxis := FALSE;
+END_IF
+
+IF MoveAxis THEN
+	bStop := FALSE;
+ELSE
+	bStop := TRUE;
+END_IF
+
+Axis_Stop( Axis := AxisRef,
+	Execute := bStop,
+	Done => StopDone,
+	Error => Error,
+	ErrorID => ErrorID);
+
+Axis_Position(Axis := AxisRef,
+	Enable := TRUE,
+	Busy => Busy,
+	Error => Error,
+	ErrorID => ErrorID,
+	Position => ActualPosition);
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Axis2">
+      <LineId Id="27" Count="52" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

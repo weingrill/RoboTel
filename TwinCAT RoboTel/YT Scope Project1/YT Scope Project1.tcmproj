@@ -7,6 +7,9 @@
     <RootNamespace>YT Scope Project1</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="YT Scope Project.svdx">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="YT Scope Project.tcscopex">
       <SubType>Content</SubType>
     </Content>

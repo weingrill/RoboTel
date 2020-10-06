@@ -87,6 +87,9 @@
     <Compile Include="POUs\FunctionBlocks\FB_Axis.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FunctionBlocks\FB_Axis2.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_AxisJog.TcPOU">
       <SubType>Code</SubType>
     </Compile>
