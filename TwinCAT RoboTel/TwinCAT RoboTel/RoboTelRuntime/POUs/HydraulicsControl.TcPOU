@@ -26,7 +26,8 @@ pressure_delay :	TON;
 	oil_low_log,
 	FilterLog,
 	OverTemperatureLog,
-	UnderTemperatureLog: FB_EventLog;
+	UnderTemperatureLog,
+	SuctionLog: FB_EventLog;
 	
 	suction_timer : FB_Timer;
 END_VAR
@@ -128,7 +129,12 @@ UnderTemperatureLog(Trigger := oil_cold,
 				OnMessage := '< 10C',
 				OffMessage := '> 10C',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
-]]></ST>
+SuctionLog(Trigger := suction_failure,
+				Level := ADSLOG_MSGTYPE_ERROR,
+				FormatString := 'suction pump: %s',
+				OnMessage := 'FAILURE',
+				OffMessage := 'OK',
+				OffLevel := ADSLOG_MSGTYPE_HINT);]]></ST>
     </Implementation>
     <LineIds Name="HydraulicsControl">
       <LineId Id="15" Count="1" />
@@ -186,6 +192,7 @@ UnderTemperatureLog(Trigger := oil_cold,
       <LineId Id="59" Count="5" />
       <LineId Id="66" Count="5" />
       <LineId Id="157" Count="17" />
+      <LineId Id="239" Count="4" />
       <LineId Id="51" Count="0" />
     </LineIds>
   </POU>
