@@ -3,11 +3,13 @@
   <POU Name="HydraulicsControl" Id="{6bf4055d-2300-4039-bb16-5b9f94622e06}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM HydraulicsControl
 VAR
-	pressure_watchdog: TON;
+	pressure_watchdog,
+	suction_watchdog: TON;
 	suction_pump_timer: TP;
 	oil_pump_state,
 	brake_state: RS;
 	pressure_failure,
+	suction_failure,
 	oil_low,
 	oil_high,
 	oil_pressure_OK,
@@ -63,12 +65,14 @@ oil_pump_state(SET := GVL_Main.start_switch OR PendantControl.manual_hydraulics_
 						NOT MAIN.phase_available);
 
 GVL_Oil.oil_pump_enable := oil_pump_state.Q1;
-
-//manually or remotly open brake. Close brake on limit switch. Wait n seconds after pump is on
-brake_open_delay(IN := pump_running AND (Main.brake_clearing OR PendantControl.brake_open),
+// wait for pressure to build up (hack for oil_pressure_ok)
+brake_open_delay(IN := pump_running,
 				PT := T#10S);
-//hold the brake, if we reach the az-limit
-GVL_Telescope.brake_azimuth_eve := brake_open_delay.Q AND NOT GVL_Telescope.azimut_limit_switch;
+//manually or remotly open brake. Close brake on limit switch. Wait n seconds after pump is on
+//hold the brake, if we reach the az-limit				
+brake_state(SET := brake_open_delay.Q AND (Main.brake_clearing OR PendantControl.brake_open),
+			RESET1 := GVL_Telescope.azimut_limit_switch,
+			Q1 => GVL_Telescope.brake_azimuth_eve);
 
 suction_timer(bStart := NOT suction_pump_timer.Q, bStop := GVL_oil.oilpan_maximum);  
 
@@ -76,6 +80,10 @@ suction_pump_timer(IN := MAIN.phase_available AND
 						GVL_oil.oilpan_maximum,
 					PT := T#28S,
 					Q => GVL_Oil.oil_suction_enable);
+suction_watchdog(IN := GVL_Oil.oil_suction_enable AND NOT suction_running,
+					PT := T#10S,
+					Q => suction_failure);
+					
 
 pressure_watchdog(IN := GVL_Oil.oil_pump_enable AND 
 						NOT oil_pressure_OK,
@@ -151,17 +159,20 @@ UnderTemperatureLog(Trigger := oil_cold,
       <LineId Id="110" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="177" Count="0" />
-      <LineId Id="183" Count="0" />
       <LineId Id="176" Count="0" />
       <LineId Id="180" Count="0" />
-      <LineId Id="224" Count="0" />
-      <LineId Id="181" Count="0" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="230" Count="0" />
+      <LineId Id="227" Count="2" />
       <LineId Id="186" Count="1" />
       <LineId Id="11" Count="0" />
       <LineId Id="35" Count="0" />
       <LineId Id="92" Count="0" />
       <LineId Id="36" Count="0" />
       <LineId Id="44" Count="0" />
+      <LineId Id="234" Count="1" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="236" Count="0" />
       <LineId Id="25" Count="0" />
       <LineId Id="24" Count="0" />
       <LineId Id="27" Count="0" />
