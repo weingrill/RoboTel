@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="FB_ButtonEnable" Id="{3211ceeb-9597-41c3-8547-3ce80543891d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ButtonEnable
+VAR_INPUT
+	SET:	BOOL;
+	RESET:	BOOL;
+END_VAR
+VAR_OUTPUT
+	Q: BOOL;
+END_VAR
+VAR
+	trigger:	R_TRIG;
+	state:		RS;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[trigger(CLK := SET);
+state(SET := trigger.Q,
+	RESET1 := RESET OR (trigger.Q AND Q),
+	Q1 => Q);]]></ST>
+    </Implementation>
+    <LineIds Name="FB_ButtonEnable">
+      <LineId Id="9" Count="0" />
+      <LineId Id="15" Count="2" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

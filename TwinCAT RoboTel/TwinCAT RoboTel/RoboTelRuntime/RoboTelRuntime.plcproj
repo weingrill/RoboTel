@@ -96,6 +96,9 @@
     <Compile Include="POUs\FunctionBlocks\FB_BLINK.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FunctionBlocks\FB_ButtonEnable.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_CO_NUTATE.TcPOU">
       <SubType>Code</SubType>
     </Compile>
