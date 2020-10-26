@@ -18,6 +18,7 @@ VAR_GLOBAL
 	Inverter_Velocity AT%Q*: UINT;
 	// EL5151
 	Azimut_raw				AT%I*:	INT;
+	Azimut_home				AT%I*:	BOOL;
 	
 	WatchDogReset:	BOOL;
 	OpenShutter  	AT%Q*: 	BOOL;

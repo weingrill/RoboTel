@@ -41,13 +41,14 @@ start := GVL_Main.start_switch OR remote_start;
 stop := GVL_Main.stop_switch OR remote_stop;
 reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch;		
 key_switch := GVL_Main.key_switch_remote;
-brake_clearing := GVL_MAIN.brake_clearing;
+brake_clearing := GVL_Main.brake_clearing;
 
-IF stop THEN
+IF stop OR remote_stop THEN
 	start := FALSE;
+	remote_start := FALSE;
 END_IF
 // telescope is ready when power available and hydraulics ok
-ready_state(SET := power_OK AND HydraulicsControl.oil_pressure_OK AND start,
+ready_state(SET := power_OK AND HydraulicsControl.oil_pressure_OK,
 			RESET1 := stop OR remote_stop OR error OR HydraulicsControl.pressure_failure,
 			Q1 => ready);
 		
@@ -94,7 +95,9 @@ SafetyHandling();]]></ST>
       <LineId Id="166" Count="0" />
       <LineId Id="163" Count="0" />
       <LineId Id="169" Count="1" />
-      <LineId Id="160" Count="2" />
+      <LineId Id="160" Count="1" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="162" Count="0" />
       <LineId Id="105" Count="0" />
       <LineId Id="19" Count="1" />
       <LineId Id="23" Count="0" />

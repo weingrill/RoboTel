@@ -4025,6 +4025,10 @@ External Setpoint Generation:
 							<Comment><![CDATA[DIN15 1.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
+						<Var>
+							<Name>GVL_Dome.Azimut_home</Name>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
 						<Name>PlcTask Outputs</Name>
@@ -10818,6 +10822,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_oil.oil_temperature" VarB="RTD Inputs Channel 2^Value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 59 (EK1501)^Term 60 (EL1008)">
+				<Link VarA="PlcTask Inputs^GVL_Dome.Azimut_home" VarB="Channel 4^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Dome.Clockwise" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Dome.CounterClockwise" VarB="Channel 1^Input"/>
 			</OwnerB>

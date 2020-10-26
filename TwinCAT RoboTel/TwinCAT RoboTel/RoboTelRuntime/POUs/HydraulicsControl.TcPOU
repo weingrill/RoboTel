@@ -8,9 +8,15 @@ VAR
 	suction_pump_timer: TP;
 	oil_pump_state,
 	brake_state: RS;
-	brake_open:	BOOL := FALSE;
+	// command to open the brake
+	open_brake:	BOOL := FALSE;
+	// is the brake open?
+	brake_open:	BOOL;
+	// pump is running, but the pressure remains low
 	pressure_failure,
+	// suction was started, but it is not running
 	suction_failure,
+	// oil is low
 	oil_low,
 	oil_high,
 	oil_pressure_OK,
@@ -20,8 +26,7 @@ VAR
 	oil_hot,
 	pump_running,
 	suction_running :	BOOL := FALSE;
-	brake_open_delay, 
-	pressure_delay :	TON;
+	brake_open_delay:	TON;
 	HydraulicsLog,
 	ReserveLog,
 	oil_low_log,
@@ -46,19 +51,13 @@ Main control Logic for the Hydraulics system
 oil_low := NOT GVL_oil.oil_low;
 oil_high := NOT GVL_oil.oil_high;
 oil_warning := GVL_oil.oil_reserve;
-// TODO: Fix oil_pressure ok signal or check oil
-//oil_pressure_OK := TRUE OR NOT GVL_oil.oil_pressure_OK;
+// Michi Email 22.10.2020 True = OK
+oil_pressure_OK := GVL_oil.oil_pressure_OK;
 oil_filter_dirty := NOT GVL_oil.oilfilter_dirty;
 oil_cold := NOT GVL_oil.oil_undertemperature;
 oil_hot := NOT GVL_oil.oil_overtemperature;
 pump_running := GVL_oil.pump_running;
 suction_running := GVL_oil.suction_running;
-
-// this is a temporary fix of the oil_pressure_ok signal
-
-pressure_delay(IN := pump_running,
-				PT := T#10S,
-				Q => oil_pressure_ok);
 			
 oil_pump_state(SET := GVL_Main.start_switch OR PendantControl.manual_hydraulics_start,
 				RESET1 := GVL_Main.stop_switch OR PendantControl.manual_hydraulics_stop OR
@@ -67,14 +66,17 @@ oil_pump_state(SET := GVL_Main.start_switch OR PendantControl.manual_hydraulics_
 						NOT MAIN.phase_available);
 
 GVL_Oil.oil_pump_enable := oil_pump_state.Q1;
-brake_open := Main.brake_clearing OR PendantControl.brake_open;
+open_brake := Main.brake_clearing OR PendantControl.brake_open;
 // wait for pressure to build up (hack for oil_pressure_ok)
-brake_open_delay(IN := pump_running,
-				PT := T#10S);
+brake_open_delay(IN := pump_running AND oil_pressure_OK,
+				PT := T#3S);
 //manually or remotly open brake. Close brake on limit switch. Wait n seconds after pump is on
-//hold the brake, if we reach the az-limit				
-brake_state(SET := brake_open_delay.Q AND brake_open,
-			RESET1 := GVL_Telescope.azimut_limit_switch OR NOT brake_open,
+//hold the brake, if we reach the az-limit	
+// close the brake if the pump is not running			
+brake_state(SET := brake_open_delay.Q AND open_brake,
+			RESET1 := GVL_Telescope.azimut_limit_switch 
+					  OR NOT open_brake 
+					  OR NOT oil_pump_state.Q1,
 			Q1 => GVL_Telescope.brake_azimuth_eve);
 
 suction_timer(bStart := NOT suction_pump_timer.Q, bStop := GVL_oil.oilpan_maximum);  
@@ -93,7 +95,7 @@ pressure_watchdog(IN := GVL_Oil.oil_pump_enable AND
 					PT := T#15S,
 				  Q => pressure_failure);
 				  
-oil_pressure_ok := pump_running AND NOT pressure_failure;
+// oil_pressure_ok := pump_running AND NOT pressure_failure;
 				  
 HydraulicsLog(Trigger := pressure_failure,
 				Level := ADSLOG_MSGTYPE_ERROR,
@@ -139,63 +141,14 @@ SuctionLog(Trigger := suction_failure,
 				OffLevel := ADSLOG_MSGTYPE_HINT);]]></ST>
     </Implementation>
     <LineIds Name="HydraulicsControl">
-      <LineId Id="15" Count="1" />
-      <LineId Id="18" Count="2" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="216" Count="0" />
-      <LineId Id="147" Count="0" />
-      <LineId Id="149" Count="0" />
-      <LineId Id="152" Count="1" />
-      <LineId Id="214" Count="1" />
-      <LineId Id="223" Count="0" />
-      <LineId Id="218" Count="0" />
-      <LineId Id="225" Count="0" />
-      <LineId Id="219" Count="1" />
-      <LineId Id="222" Count="0" />
-      <LineId Id="221" Count="0" />
-      <LineId Id="89" Count="0" />
-      <LineId Id="109" Count="0" />
-      <LineId Id="111" Count="0" />
-      <LineId Id="113" Count="0" />
-      <LineId Id="112" Count="0" />
-      <LineId Id="110" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="245" Count="0" />
-      <LineId Id="177" Count="0" />
-      <LineId Id="176" Count="0" />
-      <LineId Id="180" Count="0" />
-      <LineId Id="231" Count="0" />
-      <LineId Id="230" Count="0" />
-      <LineId Id="227" Count="2" />
-      <LineId Id="186" Count="1" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="92" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="234" Count="1" />
-      <LineId Id="237" Count="0" />
-      <LineId Id="236" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="130" Count="1" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="54" Count="3" />
-      <LineId Id="59" Count="5" />
-      <LineId Id="66" Count="5" />
-      <LineId Id="157" Count="17" />
-      <LineId Id="239" Count="4" />
+      <LineId Id="308" Count="11" />
+      <LineId Id="454" Count="0" />
+      <LineId Id="321" Count="5" />
+      <LineId Id="333" Count="13" />
+      <LineId Id="416" Count="0" />
+      <LineId Id="347" Count="1" />
+      <LineId Id="455" Count="1" />
+      <LineId Id="349" Count="60" />
       <LineId Id="51" Count="0" />
     </LineIds>
   </POU>
