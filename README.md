@@ -12,6 +12,11 @@ Für alle nachfolgenden Punkte ist es notwendig, dass die Leistung auf "ein" ste
 7. Elevation
 8. Azimut
 9. Dome
+10. Filterrad (noch nicht implementiert)
+11. reserviert
+12. reserviert
+13. reserviert
+14. reserviert
 15. Hydraulik: Enable = Hydraulik start; Reset = Hydraulik stop; Auf = Bremse auf; Ab = Bremse zu: Links zeigt Betrieb der Vorlaufpumpe an; Rechts = Betrieb Rücklauf
 
 **Vor Programm 7 oder 8 Bremse lösen!**
