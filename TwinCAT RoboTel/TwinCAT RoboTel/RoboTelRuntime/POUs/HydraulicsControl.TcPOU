@@ -74,8 +74,8 @@ oil_hot := GVL_oil.oil_overtemperature;
 pump_running := GVL_oil.pump_running;
 suction_running := GVL_oil.suction_running;
 			
-oil_pump_state(SET := Main.start OR PendantControl.manual_hydraulics_start,
-				RESET1 := Main.stop OR PendantControl.manual_hydraulics_stop OR
+oil_pump_state(SET := Main.start,
+				RESET1 := Main.stop OR
 						pressure_failure OR
 						suction_failure OR 
 						oil_low OR

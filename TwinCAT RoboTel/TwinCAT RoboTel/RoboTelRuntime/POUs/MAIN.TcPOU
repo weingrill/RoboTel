@@ -50,8 +50,8 @@ Main control loop
 *)
 power_OK := GVL_main.power_available;
 phase_available := GVL_Main.phase_available;
-start := GVL_Main.start_switch OR remote_start;
-stop := GVL_Main.stop_switch OR remote_stop;
+start := GVL_Main.start_switch OR PendantControl.manual_hydraulics_start OR remote_start;
+stop := GVL_Main.stop_switch  OR PendantControl.manual_hydraulics_stop OR remote_stop;
 reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch;		
 key_switch := GVL_Main.key_switch_remote;
 brake_clearing := GVL_Main.brake_clearing;
