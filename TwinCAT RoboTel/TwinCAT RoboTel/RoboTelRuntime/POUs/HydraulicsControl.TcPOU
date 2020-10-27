@@ -63,16 +63,16 @@ Main control Logic for the Hydraulics system
 * stop main pump if oil is low
 * stop main pump if pressure fails for 10 seconds
 *)
-oil_low := NOT GVL_oil.oil_low;
-oil_high := NOT GVL_oil.oil_high;
-oil_warning := GVL_oil.oil_reserve;
+oil_low := NOT GVL_Hydraulics.oil_low;
+oil_high := NOT GVL_Hydraulics.oil_high;
+oil_warning := GVL_Hydraulics.oil_reserve;
 // Michi Email 22.10.2020 True = OK
-oil_pressure_OK := GVL_oil.oil_pressure_OK;
-oil_filter_dirty := NOT GVL_oil.oilfilter_dirty;
-oil_cold := NOT GVL_oil.oil_undertemperature;
-oil_hot := GVL_oil.oil_overtemperature;
-pump_running := GVL_oil.pump_running;
-suction_running := GVL_oil.suction_running;
+oil_pressure_OK := GVL_Hydraulics.oil_pressure_OK;
+oil_filter_dirty := NOT GVL_Hydraulics.oilfilter_dirty;
+oil_cold := NOT GVL_Hydraulics.oil_undertemperature;
+oil_hot := GVL_Hydraulics.oil_overtemperature;
+pump_running := GVL_Hydraulics.pump_running;
+suction_running := GVL_Hydraulics.suction_running;
 			
 oil_pump_state(SET := Main.start,
 				RESET1 := Main.stop OR
@@ -81,7 +81,7 @@ oil_pump_state(SET := Main.start,
 						oil_low OR
 						NOT MAIN.phase_available);
 
-GVL_Oil.oil_pump_enable := oil_pump_state.Q1;
+GVL_Hydraulics.oil_pump_enable := oil_pump_state.Q1;
 open_brake := Main.brake_clearing OR PendantControl.brake_open;
 // wait for pressure to build up (hack for oil_pressure_ok)
 brake_open_delay(IN := pump_running AND oil_pressure_OK,
@@ -96,18 +96,18 @@ brake_state(SET := brake_open_delay.Q AND open_brake,
 			Q1 => GVL_Telescope.brake_azimuth_eve);
 // measure suction pump cycle
 suction_timer(	bStart := suction_running AND NOT suction_pump_timer.Q, 
-				bStop := GVL_oil.oilpan_maximum);  
+				bStop := GVL_Hydraulics.oilpan_maximum);  
 
 suction_pump_timer(IN := MAIN.phase_available AND 
-						GVL_oil.oilpan_maximum,
+						GVL_Hydraulics.oilpan_maximum,
 					PT := T#28S,
-					Q => GVL_Oil.oil_suction_enable);
-suction_watchdog(IN := GVL_Oil.oil_suction_enable AND NOT suction_running,
+					Q => GVL_Hydraulics.oil_suction_enable);
+suction_watchdog(IN := GVL_Hydraulics.oil_suction_enable AND NOT suction_running,
 					PT := T#10S,
 					Q => suction_failure);
 					
 
-pressure_watchdog(IN := GVL_Oil.oil_pump_enable AND 
+pressure_watchdog(IN := GVL_Hydraulics.oil_pump_enable AND 
 						NOT oil_pressure_OK,
 					PT := T#15S,
 				  Q => pressure_failure);

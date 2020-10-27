@@ -38,7 +38,7 @@
     <Compile Include="GVLs\GVL_pendant_control.TcGVL">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GVLs\GVL_oil.TcGVL">
+    <Compile Include="GVLs\GVL_Hydraulics.TcGVL">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="GVLs\GVL_Safety.TcGVL">

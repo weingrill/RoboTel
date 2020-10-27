@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
-  <GVL Name="GVL_oil" Id="{6c305df7-17d1-4acb-a553-c870f87116d0}">
+  <GVL Name="GVL_Hydraulics" Id="{6c305df7-17d1-4acb-a553-c870f87116d0}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
 	// 2.1
