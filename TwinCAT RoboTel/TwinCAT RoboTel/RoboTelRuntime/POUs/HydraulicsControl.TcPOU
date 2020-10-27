@@ -3,29 +3,43 @@
   <POU Name="HydraulicsControl" Id="{6bf4055d-2300-4039-bb16-5b9f94622e06}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM HydraulicsControl
 VAR
-	pressure_watchdog,
+	// monitors the pressure of the pump is running
+	pressure_watchdog:	TON;
+	// monitors the activation of the suction pump
 	suction_watchdog: TON;
+	// the suction pump is activated for at least 28s when maximum is reached
 	suction_pump_timer: TP;
-	oil_pump_state,
+	// represents the state of the main pump
+	oil_pump_state:		RS;
+	// represents the state of the brake
 	brake_state: RS;
 	// command to open the brake
 	open_brake:	BOOL := FALSE;
-	// is the brake open?
-	brake_open:	BOOL;
+	// status of the brake: is the brake open?
+	brake_open:			BOOL;
 	// pump is running, but the pressure remains low
-	pressure_failure,
+	pressure_failure:	BOOL;
 	// suction was started, but it is not running
-	suction_failure,
+	suction_failure:	BOOL;
 	// oil is low
-	oil_low,
-	oil_high,
-	oil_pressure_OK,
-	oil_warning,
-	oil_filter_dirty,
-	oil_cold,
-	oil_hot,
-	pump_running,
+	oil_low:			BOOL;
+	// oil is high (unused?)
+	oil_high:			BOOL;
+	// oil pressure is 25 bars
+	oil_pressure_OK:	BOOL;
+	// oil is on reserve
+	oil_warning:		BOOL;
+	// oil filter is dirty
+	oil_filter_dirty:	BOOL;
+	// oil is below 10°C
+	oil_cold:			BOOL;
+	// oil is above 50°C
+	oil_hot:			BOOL;
+	// main pump is running
+	pump_running:		BOOL;
+	// suction pump is running
 	suction_running :	BOOL := FALSE;
+	// wait for the brake to open after pressure has been established
 	brake_open_delay:	TON;
 	HydraulicsLog,
 	ReserveLog,
@@ -35,6 +49,7 @@ VAR
 	UnderTemperatureLog,
 	SuctionLog: FB_EventLog;
 	
+	// measures the operating cycle of the suction pump
 	suction_timer : FB_Timer;
 END_VAR
 ]]></Declaration>
