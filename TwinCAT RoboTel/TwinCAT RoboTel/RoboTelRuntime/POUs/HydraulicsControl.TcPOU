@@ -55,13 +55,14 @@ oil_warning := GVL_oil.oil_reserve;
 oil_pressure_OK := GVL_oil.oil_pressure_OK;
 oil_filter_dirty := NOT GVL_oil.oilfilter_dirty;
 oil_cold := NOT GVL_oil.oil_undertemperature;
-oil_hot := NOT GVL_oil.oil_overtemperature;
+oil_hot := GVL_oil.oil_overtemperature;
 pump_running := GVL_oil.pump_running;
 suction_running := GVL_oil.suction_running;
 			
-oil_pump_state(SET := GVL_Main.start_switch OR PendantControl.manual_hydraulics_start,
-				RESET1 := GVL_Main.stop_switch OR PendantControl.manual_hydraulics_stop OR
-						pressure_failure OR 
+oil_pump_state(SET := Main.start OR PendantControl.manual_hydraulics_start,
+				RESET1 := Main.stop OR PendantControl.manual_hydraulics_stop OR
+						pressure_failure OR
+						suction_failure OR 
 						oil_low OR
 						NOT MAIN.phase_available);
 
@@ -78,8 +79,9 @@ brake_state(SET := brake_open_delay.Q AND open_brake,
 					  OR NOT open_brake 
 					  OR NOT oil_pump_state.Q1,
 			Q1 => GVL_Telescope.brake_azimuth_eve);
-
-suction_timer(bStart := NOT suction_pump_timer.Q, bStop := GVL_oil.oilpan_maximum);  
+// measure suction pump cycle
+suction_timer(	bStart := suction_running AND NOT suction_pump_timer.Q, 
+				bStop := GVL_oil.oilpan_maximum);  
 
 suction_pump_timer(IN := MAIN.phase_available AND 
 						GVL_oil.oilpan_maximum,
@@ -94,9 +96,7 @@ pressure_watchdog(IN := GVL_Oil.oil_pump_enable AND
 						NOT oil_pressure_OK,
 					PT := T#15S,
 				  Q => pressure_failure);
-				  
-// oil_pressure_ok := pump_running AND NOT pressure_failure;
-				  
+				  				  
 HydraulicsLog(Trigger := pressure_failure,
 				Level := ADSLOG_MSGTYPE_ERROR,
 				FormatString := 'oil pressure: %s',
@@ -144,11 +144,16 @@ SuctionLog(Trigger := suction_failure,
       <LineId Id="308" Count="11" />
       <LineId Id="454" Count="0" />
       <LineId Id="321" Count="5" />
-      <LineId Id="333" Count="13" />
+      <LineId Id="333" Count="3" />
+      <LineId Id="493" Count="0" />
+      <LineId Id="337" Count="9" />
       <LineId Id="416" Count="0" />
       <LineId Id="347" Count="1" />
       <LineId Id="455" Count="1" />
-      <LineId Id="349" Count="60" />
+      <LineId Id="349" Count="2" />
+      <LineId Id="494" Count="0" />
+      <LineId Id="352" Count="14" />
+      <LineId Id="369" Count="40" />
       <LineId Id="51" Count="0" />
     </LineIds>
   </POU>

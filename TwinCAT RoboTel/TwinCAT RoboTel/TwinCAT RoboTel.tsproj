@@ -3517,9 +3517,43 @@ Drive Status 4 (manually linked):
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Dome.Azimut_home</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Dome.Azimut_raw</Name>
 							<Comment><![CDATA[ EL5151]]></Comment>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_low</Name>
+							<Comment><![CDATA[ 2.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_high</Name>
+							<Comment><![CDATA[ ?]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_pressure_OK</Name>
+							<Comment><![CDATA[ 2.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_overtemperature</Name>
+							<Comment><![CDATA[ 2.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oil_undertemperature</Name>
+							<Comment><![CDATA[ 2.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_oil.oilfilter_dirty</Name>
+							<Comment><![CDATA[ 2.6]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
@@ -3563,36 +3597,6 @@ External Setpoint Generation:
 3: axis is a slave axis
 ]]></Comment>
 							</SubVar>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_low</Name>
-							<Comment><![CDATA[ 2.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_high</Name>
-							<Comment><![CDATA[ ?]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_pressure_OK</Name>
-							<Comment><![CDATA[ 2.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_overtemperature</Name>
-							<Comment><![CDATA[ 2.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_undertemperature</Name>
-							<Comment><![CDATA[ 2.5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oilfilter_dirty</Name>
-							<Comment><![CDATA[ 2.6]]></Comment>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_oil.pump_running</Name>
@@ -3716,10 +3720,6 @@ External Setpoint Generation:
 						</Var>
 						<Var>
 							<Name>GVL_Environment.rawWindSpeed</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawWindDirection</Name>
 							<Type>INT</Type>
 						</Var>
 						<Var>
@@ -3895,6 +3895,10 @@ External Setpoint Generation:
 							</SubVar>
 						</Var>
 						<Var>
+							<Name>GVL_Environment.rawWindDirection</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Environment.rawTemperature</Name>
 							<Type>INT</Type>
 						</Var>
@@ -4023,10 +4027,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Main.brake_clearing</Name>
 							<Comment><![CDATA[DIN15 1.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.Azimut_home</Name>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>

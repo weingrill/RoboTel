@@ -3,25 +3,38 @@
   <POU Name="MAIN" Id="{c39aef1e-7c14-41dc-ad83-03bececdc52a}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	power_OK,
-	phase_available,
-	ready,
-	power_failure,
-	error,
-	reset, 
-	warning,
-	start, 
-	stop,
-	key_switch,
-	brake_clearing : BOOL := FALSE;
-	warn_blink : FB_BLINK;
+	// indicates the power state for the AX5000
+	power_OK:			BOOL;
+	// indicates the phases for the hydraulics
+	phase_available:	BOOL;
+	// telescope drives are ready to enable
+	ready:				BOOL;
+	// trafo did not soft start
+	power_failure:		BOOL;
+	// error stat on drive, power or hydraulics
+	error:				BOOL;
+	// manual, panel or remote reset
+	reset:				BOOL;
+	// hydraulics warning 
+	warning:			BOOL;
+	// start hydraulics
+	start:				BOOL;
+	// stop hydraulics 
+	stop:				BOOL;
+	// soft start trafo
+	key_switch:			BOOL;
+	//	open brake
+	brake_clearing:		BOOL := FALSE;
+	// blink error lamp on warning
+	warn_blink: 		FB_BLINK;
 	// TCS remote start;
 	remote_start:	BOOL := FALSE;
 	// TCS remote stop;
 	remote_stop:	BOOL := FALSE;
 	power_watchdog : TON;
-	ready_state: RS;
+	// main cabinet temperature in degrees
 	cabinet_temperature:	REAL;
+	// measures time between soft start command and power available
 	power_timer:		FB_Timer;
 END_VAR
 ]]></Declaration>
@@ -42,15 +55,14 @@ stop := GVL_Main.stop_switch OR remote_stop;
 reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch;		
 key_switch := GVL_Main.key_switch_remote;
 brake_clearing := GVL_Main.brake_clearing;
+cabinet_temperature := INT_TO_REAL(GVL_Main.main_cabinet_temperature) / 100.0;
 
 IF stop OR remote_stop THEN
 	start := FALSE;
 	remote_start := FALSE;
 END_IF
 // telescope is ready when power available and hydraulics ok
-ready_state(SET := power_OK AND HydraulicsControl.oil_pressure_OK,
-			RESET1 := stop OR remote_stop OR error OR HydraulicsControl.pressure_failure,
-			Q1 => ready);
+ready := power_OK AND HydraulicsControl.oil_pressure_OK;
 		
 TelescopeControl();
 //TODO: implement dome control
@@ -79,7 +91,6 @@ error := power_failure OR
 GVL_Main.lamp_ready := ready;
 GVL_Main.lamp_error := error OR warning;
 GVL_Main.lamp_power := power_ok;
-cabinet_temperature := INT_TO_REAL(GVL_Main.main_cabinet_temperature) / 100.0;
 SafetyHandling();]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
@@ -94,12 +105,13 @@ SafetyHandling();]]></ST>
       <LineId Id="157" Count="1" />
       <LineId Id="166" Count="0" />
       <LineId Id="163" Count="0" />
-      <LineId Id="169" Count="1" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="236" Count="0" />
+      <LineId Id="170" Count="0" />
       <LineId Id="160" Count="1" />
       <LineId Id="221" Count="0" />
       <LineId Id="162" Count="0" />
       <LineId Id="105" Count="0" />
-      <LineId Id="19" Count="1" />
       <LineId Id="23" Count="0" />
       <LineId Id="22" Count="0" />
       <LineId Id="2" Count="0" />
@@ -126,7 +138,7 @@ SafetyHandling();]]></ST>
       <LineId Id="8" Count="0" />
       <LineId Id="40" Count="0" />
       <LineId Id="44" Count="0" />
-      <LineId Id="77" Count="1" />
+      <LineId Id="78" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
