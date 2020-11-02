@@ -3526,33 +3526,7 @@ Drive Status 4 (manually linked):
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_oil.oil_low</Name>
-							<Comment><![CDATA[ 2.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_high</Name>
-							<Comment><![CDATA[ ?]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_pressure_OK</Name>
-							<Comment><![CDATA[ 2.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_overtemperature</Name>
-							<Comment><![CDATA[ 2.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_undertemperature</Name>
-							<Comment><![CDATA[ 2.5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oilfilter_dirty</Name>
-							<Comment><![CDATA[ 2.6]]></Comment>
+							<Name>GVL_Environment.rawRain</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -3597,31 +3571,6 @@ External Setpoint Generation:
 3: axis is a slave axis
 ]]></Comment>
 							</SubVar>
-						</Var>
-						<Var>
-							<Name>GVL_oil.pump_running</Name>
-							<Comment><![CDATA[ 2.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.suction_running</Name>
-							<Comment><![CDATA[ 2.8]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_temperature</Name>
-							<Comment><![CDATA[BT2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oilpan_maximum</Name>
-							<Comment><![CDATA[DIN39 4.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_reserve</Name>
-							<Comment><![CDATA[DIN40 4.7]]></Comment>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.temperature_mirror2</Name>
@@ -3911,26 +3860,6 @@ External Setpoint Generation:
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Environment.rawBrightness</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawPrecipation</Name>
-							<Comment><![CDATA[	rawLightDirection			AT%I*:	INT;]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawTemperatureDome</Name>
-							<Comment><![CDATA[	rawDust11					AT%I*:	BOOL;
-	rawDust12					AT%I*:	BOOL;
- indoors]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawHumidityDome</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_pendant_control.BCD2</Name>
 							<Comment><![CDATA[DIN18 2.1]]></Comment>
 							<Type>BOOL</Type>
@@ -4029,6 +3958,61 @@ External Setpoint Generation:
 							<Comment><![CDATA[DIN15 1.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_low</Name>
+							<Comment><![CDATA[ 2.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_high</Name>
+							<Comment><![CDATA[ ?]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_pressure_OK</Name>
+							<Comment><![CDATA[ 2.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_overtemperature</Name>
+							<Comment><![CDATA[ 2.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_undertemperature</Name>
+							<Comment><![CDATA[ 2.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oilfilter_dirty</Name>
+							<Comment><![CDATA[ 2.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.pump_running</Name>
+							<Comment><![CDATA[ 2.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.suction_running</Name>
+							<Comment><![CDATA[ 2.8]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_temperature</Name>
+							<Comment><![CDATA[BT2]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oilpan_maximum</Name>
+							<Comment><![CDATA[DIN39 4.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_reserve</Name>
+							<Comment><![CDATA[DIN40 4.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
 						<Name>PlcTask Outputs</Name>
@@ -4079,16 +4063,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Dome.DomeAxisRef.PlcToNc</Name>
 							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_pump_enable</Name>
-							<Comment><![CDATA[DOUT4 0.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_oil.oil_suction_enable</Name>
-							<Comment><![CDATA[DOUT5 0.4]]></Comment>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.brake_azimuth_eve</Name>
@@ -4187,6 +4161,16 @@ DOUT9 1.0]]></Comment>
 							<Comment><![CDATA[DOUT7 0.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_pump_enable</Name>
+							<Comment><![CDATA[DOUT4 0.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_suction_enable</Name>
+							<Comment><![CDATA[DOUT5 0.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<TaskPouOids>
 						<TaskPouOid Prio="10" OTCID="#x08502001"/>
@@ -4251,7 +4235,7 @@ DOUT9 1.0]]></Comment>
 					<ImageId>1000</ImageId>
 					<EtherCAT PdiType="#x0100" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x04b02c52" RevisionNo="#x00001388" InfoDataState="false" PortPhys="49" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1200-5000 EtherCAT Netzteil (2A E-Bus)" Desc="EK1200" PortABoxInfo="#x00ffffff"/>
 					<Box Id="2" BoxType="9099" BoxFlags="#x00000020">
-						<Name>Klemme 2 (EL6910)</Name>
+						<Name>TwinSAFE Logic (EL6910)</Name>
 						<ImageId>1001</ImageId>
 						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x1afe3052" RevisionNo="#x00120000" InfoDataAddr="true" RepeatSupport="true" TimeoutStateChange1="5000" TimeoutMailbox2="10000" TComSupport="true" PortPhys="51" DebugMemory="true" SafetyLogicSupported="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6910, TwinSAFE PLC" Desc="EL6910" PortABoxInfo="#x01000001">
 							<SyncMan>001000012600010001000000000100010001001026010000</SyncMan>
@@ -4322,7 +4306,7 @@ DOUT9 1.0]]></Comment>
 						</EtherCAT>
 					</Box>
 					<Box Id="30" BoxType="9099" BoxFlags="#x00000020">
-						<Name>Klemme 30 (EL1904)</Name>
+						<Name>TwinSAFE IN (EL1904)</Name>
 						<ImageId>118</ImageId>
 						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x07703052" RevisionNo="#x00120000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="1" Type="EL1904, 4 K. Safety Eingang 24V, TwinSAFE" Desc="EL1904" PortABoxInfo="#x01000002">
 							<SyncMan>001000012600010001000000400000010001001026010000</SyncMan>
@@ -4389,7 +4373,7 @@ DOUT9 1.0]]></Comment>
 						</EtherCAT>
 					</Box>
 					<Box Id="31" BoxType="9099" BoxFlags="#x00000020">
-						<Name>Klemme 31 (EL2904)</Name>
+						<Name>TwinSAFE OUT (EL2904)</Name>
 						<ImageId>118</ImageId>
 						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x0b583052" RevisionNo="#x00120000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="2" Type="EL2904, 4 K. Safety Ausgang 24V, 0.5A, TwinSAFE" Desc="EL2904" PortABoxInfo="#x0100001e">
 							<SyncMan>001000012600010001000000400000010001001026010000</SyncMan>
@@ -4484,7 +4468,7 @@ DOUT9 1.0]]></Comment>
 						</EtherCAT>
 					</Box>
 					<Box Id="3" BoxType="9099">
-						<Name>Klemme 3 (EL1008)</Name>
+						<Name>Panel IN (EL1008)</Name>
 						<Comment><![CDATA[Main panel]]></Comment>
 						<ImageId>7</ImageId>
 						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x03f03052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1008 8K. Dig. Eingang 24V, 3ms" Desc="EL1008" PortABoxInfo="#x0100001f">
@@ -4533,7 +4517,7 @@ DOUT9 1.0]]></Comment>
 						</EtherCAT>
 					</Box>
 					<Box Id="4" BoxType="9099">
-						<Name>Klemme 4 (EL1008)</Name>
+						<Name>Hydraulik IN (EL1008)</Name>
 						<Comment><![CDATA[Ölstatus?]]></Comment>
 						<ImageId>7</ImageId>
 						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x03f03052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1008 8K. Dig. Eingang 24V, 3ms" Desc="EL1008" PortABoxInfo="#x01000003">
@@ -4582,7 +4566,7 @@ DOUT9 1.0]]></Comment>
 						</EtherCAT>
 					</Box>
 					<Box Id="34" BoxType="9099">
-						<Name>Klemme 34 (EL1008)</Name>
+						<Name>Aux IN (EL1008)</Name>
 						<ImageId>7</ImageId>
 						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x03f03052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1008 8K. Dig. Eingang 24V, 3ms" Desc="EL1008" PortABoxInfo="#x01000004">
 							<SyncMan>001001000000010004000000000000000100001000010000</SyncMan>
@@ -4630,7 +4614,7 @@ DOUT9 1.0]]></Comment>
 						</EtherCAT>
 					</Box>
 					<Box Id="5" BoxType="9099">
-						<Name>Klemme 5 (EL2008)</Name>
+						<Name>Panel OUT (EL2008)</Name>
 						<ImageId>1002</ImageId>
 						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07d83052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL2008 8K. Dig. Ausgang 24V, 0.5A" Desc="EL2008" PortABoxInfo="#x01000022">
 							<SyncMan>000f01004400010003000000000000000000000f44090000</SyncMan>
@@ -4678,7 +4662,7 @@ DOUT9 1.0]]></Comment>
 						</EtherCAT>
 					</Box>
 					<Box Id="37" BoxType="9099">
-						<Name>Klemme 37 (EL2008)</Name>
+						<Name>Hydraulics OUT (EL2008)</Name>
 						<ImageId>1002</ImageId>
 						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07d83052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL2008 8K. Dig. Ausgang 24V, 0.5A" Desc="EL2008" PortABoxInfo="#x01000005">
 							<SyncMan>000f01004400010003000000000000000000000f44090000</SyncMan>
@@ -4726,7 +4710,7 @@ DOUT9 1.0]]></Comment>
 						</EtherCAT>
 					</Box>
 					<Box Id="6" BoxType="9099" BoxFlags="#x00000020">
-						<Name>Klemme 6 (EL3202-0010)</Name>
+						<Name>Cabinet TEMP (EL3202-0010)</Name>
 						<ImageId>1003</ImageId>
 						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x0c823052" RevisionNo="#x0016000a" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL3202-0010 2K. Ana. Eingang PT100 (RTD), hochgenau" Desc="EL3202-0010" PortABoxInfo="#x01000025">
 							<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
@@ -4816,7 +4800,7 @@ DOUT9 1.0]]></Comment>
 								</Pdo>
 							</EtherCAT>
 							<Box Id="9" BoxType="9099">
-								<Name>Klemme 9 (EL1008)</Name>
+								<Name>Handcontrol IN1 (EL1008)</Name>
 								<ImageId>7</ImageId>
 								<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x03f03052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1008 8K. Dig. Eingang 24V, 3ms" Desc="EL1008" PortABoxInfo="#x01000008">
 									<SyncMan>001001000000010004000000000000000100001000010000</SyncMan>
@@ -4864,7 +4848,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="10" BoxType="9099">
-								<Name>Klemme 10 (EL1008)</Name>
+								<Name>Handcontrol IN2 (EL1008)</Name>
 								<ImageId>7</ImageId>
 								<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x03f03052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1008 8K. Dig. Eingang 24V, 3ms" Desc="EL1008" PortABoxInfo="#x01000009">
 									<SyncMan>001001000000010004000000000000000100001000010000</SyncMan>
@@ -4912,7 +4896,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="11" BoxType="9099">
-								<Name>Klemme 11 (EL1008)</Name>
+								<Name>Limits IN1 (EL1008)</Name>
 								<ImageId>7</ImageId>
 								<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x03f03052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1008 8K. Dig. Eingang 24V, 3ms" Desc="EL1008" PortABoxInfo="#x0100000a">
 									<SyncMan>001001000000010004000000000000000100001000010000</SyncMan>
@@ -4960,7 +4944,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="47" BoxType="9099">
-								<Name>Klemme 47 (EL1008)</Name>
+								<Name>Cover IN (EL1008)</Name>
 								<ImageId>7</ImageId>
 								<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x03f03052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1008 8K. Dig. Eingang 24V, 3ms" Desc="EL1008" PortABoxInfo="#x0100000b">
 									<SyncMan>001001000000010004000000000000000100001000010000</SyncMan>
@@ -5008,7 +4992,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="48" BoxType="9099">
-								<Name>Klemme 48 (EL1008)</Name>
+								<Name>Hydraulics IN (EL1008)</Name>
 								<ImageId>7</ImageId>
 								<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x03f03052" RevisionNo="#x00110000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1008 8K. Dig. Eingang 24V, 3ms" Desc="EL1008" PortABoxInfo="#x0100002f">
 									<SyncMan>001001000000010004000000000000000100001000010000</SyncMan>
@@ -5056,7 +5040,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="12" BoxType="9099">
-								<Name>Klemme 12 (EL2008)</Name>
+								<Name>Handcontrol OUT (EL2008)</Name>
 								<ImageId>1002</ImageId>
 								<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07d83052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL2008 8K. Dig. Ausgang 24V, 0.5A" Desc="EL2008" PortABoxInfo="#x01000030">
 									<SyncMan>000f01004400010003000000000000000000000f44090000</SyncMan>
@@ -5104,7 +5088,8 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="50" BoxType="9099">
-								<Name>Klemme 50 (EL2008)</Name>
+								<Name>Aux OUT (EL2008)</Name>
+								<Comment><![CDATA[brakes and horn]]></Comment>
 								<ImageId>1002</ImageId>
 								<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07d83052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL2008 8K. Dig. Ausgang 24V, 0.5A" Desc="EL2008" PortABoxInfo="#x0100000c">
 									<SyncMan>000f01004400010003000000000000000000000f44090000</SyncMan>
@@ -5152,7 +5137,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="13" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 13 (EL3202-0010)</Name>
+								<Name>Temp1 (EL3202-0010)</Name>
 								<ImageId>1003</ImageId>
 								<Xml>
 									<BeckhoffEcatSlavePlugIn>
@@ -5239,7 +5224,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="14" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 14 (EL3202-0010)</Name>
+								<Name>Temp2 (EL3202-0010)</Name>
 								<ImageId>1003</ImageId>
 								<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x0c823052" RevisionNo="#x0016000a" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL3202-0010 2K. Ana. Eingang PT100 (RTD), hochgenau" Desc="EL3202-0010" PortABoxInfo="#x0100000d">
 									<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
@@ -5312,7 +5297,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="15" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 15 (EL3202-0010)</Name>
+								<Name>Temp3 (EL3202-0010)</Name>
 								<ImageId>1003</ImageId>
 								<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x0c823052" RevisionNo="#x0016000a" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL3202-0010 2K. Ana. Eingang PT100 (RTD), hochgenau" Desc="EL3202-0010" PortABoxInfo="#x0100000e">
 									<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
@@ -5385,7 +5370,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="16" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 16 (EL3202-0010)</Name>
+								<Name>Temp4 (EL3202-0010)</Name>
 								<ImageId>1003</ImageId>
 								<Xml>
 									<BeckhoffEcatSlavePlugIn>
@@ -5470,7 +5455,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="17" BoxType="9099">
-								<Name>Klemme 17 (EL9410)</Name>
+								<Name>Power (EL9410)</Name>
 								<ImageId>1006</ImageId>
 								<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x24c23052" RevisionNo="#x00110000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9410 E-Bus Netzteilklemme (Diagnose)" Desc="EL9410" PortABoxInfo="#x01000010">
 									<SyncMan>001001000000010004000000000000000000001000000000</SyncMan>
@@ -5488,7 +5473,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="18" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 18 (EL7342)</Name>
+								<Name>Motor1 (EL7342)</Name>
 								<Comment><![CDATA[Fokus / M3 faulhaber 3557k024cr]]></Comment>
 								<ImageId>1007</ImageId>
 								<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="39" FoeType="1" VendorId="#x00000002" ProductCode="#x1cae3052" RevisionNo="#x00170000" InfoDataAddr="true" InfoDataSoeDS401="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" SdoUploadWithMaxLength="true" CreateDeviceDataType="true" DeviceDataTypePerChannel="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL7342 2K. DC-Motor-Endstufe (50V, 3.5A)" Desc="EL7342" PortABoxInfo="#x01000011">
@@ -6241,7 +6226,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="19" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 19 (EL5101)</Name>
+								<Name>Encoder (EL5101)</Name>
 								<Comment><![CDATA[Fokus Encoder]]></Comment>
 								<ImageId>1008</ImageId>
 								<EtherCAT SlaveType="2" PdiType="#x0c05" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x13ed3052" RevisionNo="#x04000000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL5101 1K. Inc. Encoder 5V" Desc="EL5101" PortABoxInfo="#x01000012">
@@ -6550,7 +6535,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="20" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 20 (EL7342)</Name>
+								<Name>Motor2 (EL7342)</Name>
 								<Comment><![CDATA[Klappe1, Klappe2]]></Comment>
 								<ImageId>1007</ImageId>
 								<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="39" FoeType="1" VendorId="#x00000002" ProductCode="#x1cae3052" RevisionNo="#x00170000" InfoDataAddr="true" InfoDataSoeDS401="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" SdoUploadWithMaxLength="true" CreateDeviceDataType="true" DeviceDataTypePerChannel="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL7342 2K. DC-Motor-Endstufe (50V, 3.5A)" Desc="EL7342" PortABoxInfo="#x01000013">
@@ -7303,7 +7288,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="21" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 21 (EL7342)</Name>
+								<Name>Motor3 (EL7342)</Name>
 								<Comment><![CDATA[Klappe3, Schaltschranklüfter]]></Comment>
 								<ImageId>1007</ImageId>
 								<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="39" FoeType="1" VendorId="#x00000002" ProductCode="#x1cae3052" RevisionNo="#x00170000" InfoDataAddr="true" InfoDataSoeDS401="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" SdoUploadWithMaxLength="true" CreateDeviceDataType="true" DeviceDataTypePerChannel="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL7342 2K. DC-Motor-Endstufe (50V, 3.5A)" Desc="EL7342" PortABoxInfo="#x01000014">
@@ -8062,7 +8047,7 @@ DOUT9 1.0]]></Comment>
 							</Box>
 						</Box>
 						<Box Id="59" BoxType="9099">
-							<Name>Klemme 59 (EK1501)</Name>
+							<Name>Dome Azimuth (EK1501)</Name>
 							<ImageId>1005</ImageId>
 							<EtherCAT SlaveType="1" PdiType="#x0d04" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x05dd2c52" RevisionNo="#x00130000" PortPhys="305" IdentificationAdo="4096" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1501 EtherCAT-Koppler (2A E-Bus, FX-MultiMode, ID-Switch)" Desc="EK1501" PortABoxInfo="#x02000008">
 								<SyncMan>001002000000010004000000000000000000001000000000</SyncMan>
@@ -8074,7 +8059,7 @@ DOUT9 1.0]]></Comment>
 								</Pdo>
 							</EtherCAT>
 							<Box Id="60" BoxType="9099">
-								<Name>Klemme 60 (EL1008)</Name>
+								<Name>Dome IN (EL1008)</Name>
 								<ImageId>7</ImageId>
 								<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x03f03052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1008 8K. Dig. Eingang 24V, 3ms" Desc="EL1008" PortABoxInfo="#x0100003b">
 									<SyncMan>001001000000010004000000000000000100001000010000</SyncMan>
@@ -8122,7 +8107,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="61" BoxType="9099">
-								<Name>Klemme 61 (EL2008)</Name>
+								<Name>Dome OUT (EL2008)</Name>
 								<ImageId>1002</ImageId>
 								<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x07d83052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL2008 8K. Dig. Ausgang 24V, 0.5A" Desc="EL2008" PortABoxInfo="#x0100003c">
 									<SyncMan>000f01004400010003000000000000000000000f44090000</SyncMan>
@@ -8170,7 +8155,7 @@ DOUT9 1.0]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="62" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 62 (EL3064)</Name>
+								<Name>Velo IN (EL3064)</Name>
 								<ImageId>1003</ImageId>
 								<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x0bf83052" RevisionNo="#x00130000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL3064 4K.Ana. Eingang 0-10V" Desc="EL3064" PortABoxInfo="#x0100003d">
 									<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
@@ -8379,7 +8364,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="63" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 63 (EL4002)</Name>
+								<Name>Velo OUT (EL4002)</Name>
 								<ImageId>1010</ImageId>
 								<EtherCAT SlaveType="2" PdiType="#x0405" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x0fa23052" RevisionNo="#x00140000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL4002 2K. Ana. Ausgang 0-10V, 12bit" Desc="EL4002" PortABoxInfo="#x0100003e">
 									<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
@@ -8406,7 +8391,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="74" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 74 (EL5151)</Name>
+								<Name>Encoder (EL5151)</Name>
 								<ImageId>1008</ImageId>
 								<EtherCAT SlaveType="2" PdiType="#x0c05" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x141f3052" RevisionNo="#x001a0000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL5151 1K. Inc. Encoder" Desc="EL5151" PortABoxInfo="#x0100003f">
 									<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
@@ -8598,7 +8583,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 							</Box>
 						</Box>
 						<Box Id="69" BoxType="9099">
-							<Name>Klemme 69 (EK1501)</Name>
+							<Name>Weather (EK1501)</Name>
 							<ImageId>1005</ImageId>
 							<EtherCAT SlaveType="1" PdiType="#x0d04" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x05dd2c52" RevisionNo="#x00130000" PortPhys="305" IdentificationAdo="4096" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1501 EtherCAT-Koppler (2A E-Bus, FX-MultiMode, ID-Switch)" Desc="EK1501" PortABoxInfo="#x0200003b">
 								<SyncMan>001002000000010004000000000000000000001000000000</SyncMan>
@@ -8610,7 +8595,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								</Pdo>
 							</EtherCAT>
 							<Box Id="71" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 71 (EL3068)</Name>
+								<Name>Analog IN (EL3068)</Name>
 								<ImageId>1003</ImageId>
 								<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x0bfc3052" RevisionNo="#x00130000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL3068 8K. Ana. Eingang 0-10V" Desc="EL3068" PortABoxInfo="#x01000045">
 									<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
@@ -9015,7 +9000,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="72" BoxType="9099">
-								<Name>Klemme 72 (EL1008)</Name>
+								<Name>Rain IN (EL1008)</Name>
 								<ImageId>7</ImageId>
 								<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x03f03052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1008 8K. Dig. Eingang 24V, 3ms" Desc="EL1008" PortABoxInfo="#x01000047">
 									<SyncMan>001001000000010004000000000000000100001000010000</SyncMan>
@@ -10658,15 +10643,15 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 		<MappingInfo Identifier="{05000010-2001-0850-6000-040300205008}" Id="#x02030040" Watchdog="14000000040000000400000004000000"/>
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500831000403}" Id="#x02030020"/>
 		<OwnerA Name="TIID^Device 1 (EtherCAT)">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 2 (EL6910)">
-				<Link VarA="Term 1 (EK1200)^Term 30 (EL1904)^Module 1 (FSOES)^TxPDO^FSOE" VarB="ConnectionOutputs^Message_2 RxPDO"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^TwinSAFE IN (EL1904)">
+				<Link VarA="Term 1 (EK1200)^TwinSAFE Logic (EL6910)^ConnectionInputs^Message_2 TxPDO" VarB="Module 1 (FSOES)^RxPDO^FSOE"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 30 (EL1904)">
-				<Link VarA="Term 1 (EK1200)^Term 2 (EL6910)^ConnectionInputs^Message_2 TxPDO" VarB="Module 1 (FSOES)^RxPDO^FSOE"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^TwinSAFE Logic (EL6910)">
+				<Link VarA="Term 1 (EK1200)^TwinSAFE IN (EL1904)^Module 1 (FSOES)^TxPDO^FSOE" VarB="ConnectionOutputs^Message_2 RxPDO"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 31 (EL2904)">
-				<Link VarA="Term 1 (EK1200)^Term 2 (EL6910)^ConnectionInputs^Message_3 TxPDO" VarB="Module 1 (FSOES)^RxPDO^FSOE"/>
-				<Link VarA="Term 1 (EK1200)^Term 2 (EL6910)^ConnectionOutputs^Message_3 RxPDO" VarB="Module 1 (FSOES)^TxPDO^FSOE"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^TwinSAFE OUT (EL2904)">
+				<Link VarA="Term 1 (EK1200)^TwinSAFE Logic (EL6910)^ConnectionInputs^Message_3 TxPDO" VarB="Module 1 (FSOES)^RxPDO^FSOE"/>
+				<Link VarA="Term 1 (EK1200)^TwinSAFE Logic (EL6910)^ConnectionOutputs^Message_3 RxPDO" VarB="Module 1 (FSOES)^TxPDO^FSOE"/>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^Azimuth">
@@ -10702,7 +10687,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^DomeAzimuth">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 59 (EK1501)^Term 74 (EL5151)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Dome Azimuth (EK1501)^Encoder (EL5151)">
 				<Link VarA="Enc^Inputs^In^nDataIn1[0]" VarB="ENC Inputs^Counter value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn2[0]" VarB="ENC Inputs^Latch value"/>
 				<Link VarA="Enc^Inputs^In^nState1" VarB="ENC Inputs^Status^Extrapolation stall" Size="1" OffsA="7"/>
@@ -10744,14 +10729,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^Focus">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 18 (EL7342)">
-				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status"/>
-				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
-				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="DCM Control Channel 1^Control"/>
-				<Link VarA="Drive^Outputs^Out^nDataOut2[0]" VarB="DCM Velocity Channel 1^Velocity"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 19 (EL5101)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Encoder (EL5101)">
 				<Link VarA="Enc^Inputs^In^nDataIn1[0]" VarB="ENC Status compact^Counter value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn2[0]" VarB="ENC Status compact^Latch value"/>
 				<Link VarA="Enc^Inputs^In^nState1" VarB="ENC Status compact^Status^Counter overflow" Size="1" OffsA="4"/>
@@ -10778,92 +10756,109 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="Enc^Outputs^Out^nCtrl1" VarB="ENC Control compact^Control^Set counter" Size="1" OffsA="2"/>
 				<Link VarA="Enc^Outputs^Out^nDataOut1[0]" VarB="ENC Control compact^Set counter value"/>
 			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Motor1 (EL7342)">
+				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status"/>
+				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
+				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="DCM Control Channel 1^Control"/>
+				<Link VarA="Drive^Outputs^Out^nDataOut2[0]" VarB="DCM Velocity Channel 1^Velocity"/>
+			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TIPC^RoboTelRuntime^RoboTelRuntime Instance">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 2 (EL6910)">
-				<Link VarA="PlcTask Outputs^GVL_Safety.ErrAck" VarB="StandardOutputs^Standard In Var 1"/>
-				<Link VarA="PlcTask Outputs^GVL_Safety.Restart" VarB="StandardOutputs^Standard In Var 13"/>
-				<Link VarA="PlcTask Outputs^GVL_Safety.Run" VarB="StandardOutputs^Standard In Var 11"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Aux IN (EL1008)">
+				<Link VarA="PlcTask Inputs^GVL_Main.brake_clearing" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.phase_available" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.power_available" VarB="Channel 2^Input"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 3 (EL1008)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Cabinet TEMP (EL3202-0010)">
+				<Link VarA="PlcTask Inputs^GVL_Hydraulics.oil_temperature" VarB="RTD Inputs Channel 2^Value"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.main_cabinet_temperature" VarB="RTD Inputs Channel 1^Value"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Hydraulics OUT (EL2008)">
+				<Link VarA="PlcTask Outputs^GVL_Hydraulics.oil_pump_enable" VarB="Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_Hydraulics.oil_suction_enable" VarB="Channel 2^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_Main.softstart_trafo" VarB="Channel 7^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_Telescope.brake_azimuth_eve" VarB="Channel 3^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Hydraulik IN (EL1008)">
+				<Link VarA="PlcTask Inputs^GVL_Hydraulics.oil_high" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Hydraulics.oil_low" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Hydraulics.oil_overtemperature" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Hydraulics.oil_pressure_OK" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Hydraulics.oil_undertemperature" VarB="Channel 5^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Hydraulics.oilfilter_dirty" VarB="Channel 6^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Hydraulics.pump_running" VarB="Channel 7^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Hydraulics.suction_running" VarB="Channel 8^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Panel IN (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_Main.key_switch_remote" VarB="Channel 1^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Main.reset_switch" VarB="Channel 4^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Main.start_switch" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Main.stop_switch" VarB="Channel 3^Input"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 34 (EL1008)">
-				<Link VarA="PlcTask Inputs^GVL_Main.brake_clearing" VarB="Channel 3^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.phase_available" VarB="Channel 1^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.power_available" VarB="Channel 2^Input"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 37 (EL2008)">
-				<Link VarA="PlcTask Outputs^GVL_Main.softstart_trafo" VarB="Channel 7^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.brake_azimuth_eve" VarB="Channel 3^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_oil.oil_pump_enable" VarB="Channel 1^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_oil.oil_suction_enable" VarB="Channel 2^Output"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 4 (EL1008)">
-				<Link VarA="PlcTask Inputs^GVL_oil.oil_high" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_oil.oil_low" VarB="Channel 1^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_oil.oil_overtemperature" VarB="Channel 4^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_oil.oil_pressure_OK" VarB="Channel 3^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_oil.oil_undertemperature" VarB="Channel 5^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_oil.oilfilter_dirty" VarB="Channel 6^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_oil.pump_running" VarB="Channel 7^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_oil.suction_running" VarB="Channel 8^Input"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 5 (EL2008)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Panel OUT (EL2008)">
 				<Link VarA="PlcTask Outputs^GVL_Main.lamp_error" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_Main.lamp_power" VarB="Channel 1^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_Main.lamp_ready" VarB="Channel 2^Output"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 6 (EL3202-0010)">
-				<Link VarA="PlcTask Inputs^GVL_Main.main_cabinet_temperature" VarB="RTD Inputs Channel 1^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_oil.oil_temperature" VarB="RTD Inputs Channel 2^Value"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 59 (EK1501)^Term 60 (EL1008)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Dome Azimuth (EK1501)^Dome IN (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_Dome.Azimut_home" VarB="Channel 4^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Dome.Clockwise" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Dome.CounterClockwise" VarB="Channel 1^Input"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 59 (EK1501)^Term 61 (EL2008)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Dome Azimuth (EK1501)^Dome OUT (EL2008)">
 				<Link VarA="PlcTask Outputs^GVL_Dome.Inverter_DirectionMinus" VarB="Channel 2^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_Dome.Inverter_Enable" VarB="Channel 1^Output"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 59 (EK1501)^Term 63 (EL4002)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Dome Azimuth (EK1501)^Velo OUT (EL4002)">
 				<Link VarA="PlcTask Outputs^GVL_Dome.Inverter_Velocity" VarB="AO Outputs Channel 1^Analog output"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 10 (EL1008)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Aux OUT (EL2008)">
+				<Link VarA="PlcTask Outputs^GVL_Telescope.focus_lock" VarB="Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_Telescope.horn" VarB="Channel 3^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_Telescope.nasmyth_lock" VarB="Channel 2^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Cover IN (EL1008)">
+				<Link VarA="PlcTask Inputs^GVL_Telescope.cover1_closed" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.cover1_open" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.cover2_closed" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.cover2_open" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.cover3_closed" VarB="Channel 6^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.cover3_open" VarB="Channel 5^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Handcontrol IN1 (EL1008)">
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD1" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD2" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD4" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD8" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.direction_down" VarB="Channel 7^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.direction_up" VarB="Channel 6^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.key_switch" VarB="Channel 8^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_pendant_control.reset_switch" VarB="Channel 5^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Handcontrol IN2 (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_pendant_control.direction_left" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_pendant_control.direction_right" VarB="Channel 3^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_pendant_control.start_switch" VarB="Channel 1^Input"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 11 (EL1008)">
-				<Link VarA="PlcTask Inputs^GVL_Telescope.focus_limit_far" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.focus_limit_near" VarB="Channel 1^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.nasmyth_limit_left" VarB="Channel 3^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.nasmyth_limit_right" VarB="Channel 4^Input"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 12 (EL2008)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Handcontrol OUT (EL2008)">
 				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_down" VarB="Channel 2^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_error" VarB="Channel 5^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_left" VarB="Channel 4^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_right" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_up" VarB="Channel 1^Output"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 14 (EL3202-0010)">
-				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_mirror1" VarB="RTD Inputs Channel 2^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_mirror2" VarB="RTD Inputs Channel 1^Value"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Hydraulics IN (EL1008)">
+				<Link VarA="PlcTask Inputs^GVL_Hydraulics.oil_reserve" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Hydraulics.oilpan_maximum" VarB="Channel 1^Input"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 15 (EL3202-0010)">
-				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_mirror3" VarB="RTD Inputs Channel 1^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_tube" VarB="RTD Inputs Channel 2^Value"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Limits IN1 (EL1008)">
+				<Link VarA="PlcTask Inputs^GVL_Telescope.focus_limit_far" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.focus_limit_near" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.nasmyth_limit_left" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.nasmyth_limit_right" VarB="Channel 4^Input"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 16 (EL3202-0010)">
-				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_bearing1" VarB="RTD Inputs Channel 1^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_cabinet" VarB="RTD Inputs Channel 2^Value"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 18 (EL7342)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Motor1 (EL7342)">
 				<Link VarA="PlcTask Inputs^PendantControl.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 2^Counter value"/>
 				<Link VarA="PlcTask Inputs^PendantControl.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 2^Latch value"/>
 				<Link VarA="PlcTask Inputs^PendantControl.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 2^Status"/>
@@ -10873,7 +10868,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^PendantControl.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 2^Control"/>
 				<Link VarA="PlcTask Outputs^PendantControl.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 2^Velocity"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 20 (EL7342)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Motor2 (EL7342)">
 				<Link VarA="PlcTask Inputs^PendantControl.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 2^Counter value"/>
 				<Link VarA="PlcTask Inputs^PendantControl.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 2^Latch value"/>
 				<Link VarA="PlcTask Inputs^PendantControl.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 2^Status"/>
@@ -10883,7 +10878,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^PendantControl.Cover2_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 2^Control"/>
 				<Link VarA="PlcTask Outputs^PendantControl.Cover2_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 2^Velocity"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 21 (EL7342)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Motor3 (EL7342)">
 				<Link VarA="PlcTask Inputs^FanControl.Fan_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 2^Counter value"/>
 				<Link VarA="PlcTask Inputs^FanControl.Fan_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 2^Latch value"/>
 				<Link VarA="PlcTask Inputs^FanControl.Fan_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 2^Status"/>
@@ -10901,32 +10896,32 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^PendantControl.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 1^Control"/>
 				<Link VarA="PlcTask Outputs^PendantControl.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 1^Velocity"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 47 (EL1008)">
-				<Link VarA="PlcTask Inputs^GVL_Telescope.cover1_closed" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.cover1_open" VarB="Channel 1^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.cover2_closed" VarB="Channel 4^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.cover2_open" VarB="Channel 3^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.cover3_closed" VarB="Channel 6^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.cover3_open" VarB="Channel 5^Input"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Temp2 (EL3202-0010)">
+				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_mirror1" VarB="RTD Inputs Channel 2^Value"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_mirror2" VarB="RTD Inputs Channel 1^Value"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 48 (EL1008)">
-				<Link VarA="PlcTask Inputs^GVL_oil.oil_reserve" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_oil.oilpan_maximum" VarB="Channel 1^Input"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Temp3 (EL3202-0010)">
+				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_mirror3" VarB="RTD Inputs Channel 1^Value"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_tube" VarB="RTD Inputs Channel 2^Value"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 50 (EL2008)">
-				<Link VarA="PlcTask Outputs^GVL_Telescope.focus_lock" VarB="Channel 1^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.horn" VarB="Channel 3^Output"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.nasmyth_lock" VarB="Channel 2^Output"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Temp4 (EL3202-0010)">
+				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_bearing1" VarB="RTD Inputs Channel 1^Value"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_cabinet" VarB="RTD Inputs Channel 2^Value"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Term 9 (EL1008)">
-				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD1" VarB="Channel 1^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD2" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD4" VarB="Channel 3^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD8" VarB="Channel 4^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_pendant_control.direction_down" VarB="Channel 7^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_pendant_control.direction_up" VarB="Channel 6^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_pendant_control.key_switch" VarB="Channel 8^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_pendant_control.reset_switch" VarB="Channel 5^Input"/>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Weather (EK1501)^Analog IN (EL3068)">
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawHumidity" VarB="AI Standard Channel 3^Value"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawPressure" VarB="AI Standard Channel 5^Value"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawTemperature" VarB="AI Standard Channel 2^Value"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawWindDirection" VarB="AI Standard Channel 4^Value"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawWindSpeed" VarB="AI Standard Channel 1^Value"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Weather (EK1501)^Rain IN (EL1008)">
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawRain" VarB="Channel 1^Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^TwinSAFE Logic (EL6910)">
+				<Link VarA="PlcTask Outputs^GVL_Safety.ErrAck" VarB="StandardOutputs^Standard In Var 1"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.Restart" VarB="StandardOutputs^Standard In Var 13"/>
+				<Link VarA="PlcTask Outputs^GVL_Safety.Run" VarB="StandardOutputs^Standard In Var 11"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EtherCAT Automation Protocol)^Box 24 (Publisher)">
 				<Link VarA="PlcTask Outputs^GVL_Dome.CloseFlap" VarB="CloseFlap^Outputs^VarData"/>

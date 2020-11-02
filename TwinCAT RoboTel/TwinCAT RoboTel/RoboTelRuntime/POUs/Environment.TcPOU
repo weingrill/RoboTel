@@ -8,17 +8,14 @@ VAR
 	Temperature,
 	Humidity,
 	Pressure,
-	Brightness,
-	LightDirection,
-	Precipitation,
 	TemperatureDome,
 	HumidityDome:	REAL;
 	
+	Rain:	BOOL;
 	WindEvent,
 	HumidityEvent,
 	PrecipitationEvent: FB_Eventlog;
 	WindAverage,
-	PrecipitationAverage,
 	HumidityAverage,
 	TemperatureAverage: FB_TimeAverage;
 	avg_wind, max_wind: REAL;
@@ -26,19 +23,18 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* convert raw Sensor values to real values *)
-WindSpeed := 		F_YREAL(GVL_Environment.rawWindSpeed, 		0, 32767,   0.0, 60.0); // m/s
+WindSpeed := 		F_YREAL(GVL_Environment.rawWindSpeed, 		0, 32767,   0.0, 50.0); // m/s
 WindDirection :=	F_YREAL(GVL_Environment.rawWindDirection, 	0, 32767,   0.0, 360.0); // °
-Temperature :=  	F_YREAL(GVL_Environment.rawTemperature, 	0, 32767, -40.0, 60.0); // °C -40...80?
+Temperature :=  	F_YREAL(GVL_Environment.rawTemperature, 	0, 32767, -30.0, 70.0); // °C -40...80?
 Humidity :=			F_YREAL(GVL_Environment.rawHumidity, 		0, 32767,   0.0, 100.0); // %
-Pressure := 		F_YREAL(GVL_Environment.rawPressure,		0, 32767, 300.0, 800.0); // mBar 300...1100? 800..1060?
-Brightness := 		F_YREAL(GVL_Environment.rawBrightness,		0, 32767, 1.0, 150000.0); // Lux
-Precipitation :=    F_YREAL(GVL_Environment.rawPrecipation, 	0, 32767,   0.001, 100.0); // mm/h
+Pressure := 		F_YREAL(GVL_Environment.rawPressure,		0, 32767, 900.0, 1200.0); // mBar 300...1100? 800..1060?
+Rain :=    NOT GVL_Environment.rawRain;
 
-TemperatureDome :=  F_YREAL(GVL_Environment.rawTemperatureDome, 0, 32767, -30.0, 70.0); // °C
-HumidityDome := 	F_YREAL(GVL_Environment.rawHumidityDome, 	0, 32767,   0.0, 100.0); // %
+// TemperatureDome :=  F_YREAL(GVL_Environment.rawTemperatureDome, 0, 32767, -30.0, 70.0); // °C
+// HumidityDome := 	F_YREAL(GVL_Environment.rawHumidityDome, 	0, 32767,   0.0, 100.0); // %
 
 WindAverage(IN := WindSpeed, PT := T#5M, AVG => avg_wind, MAXAVG => max_wind);
-PrecipitationAverage(IN := Precipitation, PT := T#2M);
+// PrecipitationAverage(IN := Precipitation, PT := T#2M);
 HumidityAverage(IN := Humidity, PT := T#2M);
 TemperatureAverage(IN := Temperature, PT := T#5M);
 
@@ -57,10 +53,10 @@ HumidityEvent(	Trigger :=  HumidityAverage.AVG> 80.0,
 				OffLevel := ADSLOG_MSGTYPE_HINT);
 
 // TODO: adjust Precipitation level
-PrecipitationEvent(	Trigger := PrecipitationAverage.AVG > 0.3, 
+PrecipitationEvent(	Trigger := Rain, 
 					Level := ADSLOG_MSGTYPE_WARN,
-					FormatString := 'Precipitation: %s',
-					OnMessage := LREAL_TO_STRING( PrecipitationAverage.AVG),
+					FormatString := 'Rain: %s',
+					OnMessage := 'BAD',
 					OffMessage := 'OK',
 					OffLevel := ADSLOG_MSGTYPE_HINT);
 ]]></ST>
@@ -71,7 +67,6 @@ PrecipitationEvent(	Trigger := PrecipitationAverage.AVG > 0.3,
       <LineId Id="97" Count="0" />
       <LineId Id="13" Count="1" />
       <LineId Id="100" Count="0" />
-      <LineId Id="102" Count="0" />
       <LineId Id="99" Count="0" />
       <LineId Id="68" Count="0" />
       <LineId Id="71" Count="1" />
