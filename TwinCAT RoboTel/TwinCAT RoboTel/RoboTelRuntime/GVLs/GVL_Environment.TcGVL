@@ -4,11 +4,17 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 
 VAR_GLOBAL
+	// Input 1
 	rawWindSpeed				AT%I*:	INT;
-	rawWindDirection			AT%I*:	INT;
-	rawTemperature				AT%I*:	INT;
+	// Input 2
 	rawHumidity					AT%I*:	INT;
+	// Input 3
+	rawTemperature				AT%I*:	INT;
+	// Input 4
+	rawWindDirection			AT%I*:	INT;
+	// Input 5
 	rawPressure 				AT%I*:	INT;
+	// Digital Input 1
 	rawRain						AT%I*:	BOOL;
 	
 	// indoors

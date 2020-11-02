@@ -31,11 +31,11 @@ VAR
 	arrBool       : ARRAY[0..3] OF BOOL;(* Server data to be written *)
 	i            : INT;
 
-	WriteCycle:	TP;
+	WriteCycle:	FB_BLINK;
 	
 	fbWriteReq: ADSWRITE := ( NETID := '5.73.45.158.1.1', PORT := 851, TMOUT := DEFAULT_ADS_TIMEOUT );
 	fbReadReq: ADSREAD := ( NETID := '5.73.45.158.1.1', PORT := 851, TMOUT := DEFAULT_ADS_TIMEOUT );
-	
+	DomeCalibration: MC_SetPosition;
 	DomeCommEvent:	FB_Eventlog;
 END_VAR
 ]]></Declaration>
@@ -70,11 +70,15 @@ DomeJogAxis(bPowerEnable := enable OR manual_enable,
 DomeAxis(bPowerEnable := enable,
 		bMoveModExec	:= (Azimuth_set <> Azimuth_old) OR move_azimuth, //Environment.WindSpeed > 15.0,
 		fMoveModPos 	:= Azimuth_set,
-		fMoveModVelo	:= 2.22, // 180° in 81s
+		fMoveModVelo	:= 2.22, // 180° in 81s, 360° in 120s
 		bHalt			:= stop_azimuth,
 		fActPos 		=> Azimuth_current,
 		stAxis			:= GVL_Dome.DomeAxisRef);
 
+DomeCalibration(Axis := GVL_Dome.DomeAxisRef,
+	Execute := GVL_Dome.Azimut_home,
+	Position := 200.0); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
+		
 Azimuth_old := Azimuth_set;
 stop_azimuth := FALSE;
 
@@ -89,7 +93,7 @@ DomeControlWord.0 := TRUE;
 DomeControlWord.1 := OpenDome;
 DomeControlWord.2 := CloseDome;
 
-WriteCycle(IN := NOT bBusy, PT := T#10S, Q => bWrite);
+WriteCycle(ENABLE := TRUE, ON_TIME := T#5S, OFF_TIME := T#5S, Q => bWrite);
 
 CASE nState OF
    0:
@@ -111,8 +115,10 @@ CASE nState OF
       fbWriteReq( WRITE := FALSE, BUSY=>bBusy, ERR=>bError, ERRID=>nErrID );
       IF NOT bBusy THEN
          IF NOT bError THEN
+			DomeControlWord.0 := TRUE;
             nState := 0;(* Success *)
          ELSE
+			DomeControlWord.0 := FALSE;
             nState := 100;(* Error *)
          END_IF
       END_IF
@@ -151,7 +157,11 @@ DomeCommEvent(	Trigger := bError,
       <LineId Id="296" Count="2" />
       <LineId Id="307" Count="0" />
       <LineId Id="305" Count="0" />
-      <LineId Id="329" Count="1" />
+      <LineId Id="778" Count="0" />
+      <LineId Id="329" Count="0" />
+      <LineId Id="780" Count="1" />
+      <LineId Id="779" Count="0" />
+      <LineId Id="330" Count="0" />
       <LineId Id="385" Count="0" />
       <LineId Id="749" Count="3" />
       <LineId Id="771" Count="1" />
@@ -160,7 +170,11 @@ DomeCommEvent(	Trigger := bError,
       <LineId Id="754" Count="0" />
       <LineId Id="756" Count="0" />
       <LineId Id="755" Count="0" />
-      <LineId Id="716" Count="29" />
+      <LineId Id="716" Count="20" />
+      <LineId Id="789" Count="0" />
+      <LineId Id="737" Count="1" />
+      <LineId Id="790" Count="0" />
+      <LineId Id="739" Count="6" />
       <LineId Id="349" Count="0" />
       <LineId Id="758" Count="5" />
       <LineId Id="757" Count="0" />
