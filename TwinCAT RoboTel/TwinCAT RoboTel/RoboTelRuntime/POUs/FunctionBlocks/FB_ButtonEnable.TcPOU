@@ -16,7 +16,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[trigger(CLK := SET);
-state(SET := trigger.Q,
+state(SET := trigger.Q AND NOT Q,
 	RESET1 := RESET OR (trigger.Q AND Q),
 	Q1 => Q);]]></ST>
     </Implementation>

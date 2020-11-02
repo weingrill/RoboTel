@@ -3485,6 +3485,85 @@ Drive Status 4 (manually linked):
 							<Type GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Environment.rawWindSpeed</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawWindDirection</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawTemperature</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawHumidity</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawPressure</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawRain</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_low</Name>
+							<Comment><![CDATA[ 2.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_high</Name>
+							<Comment><![CDATA[ ?]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_pressure_OK</Name>
+							<Comment><![CDATA[ 2.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_overtemperature</Name>
+							<Comment><![CDATA[ 2.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_undertemperature</Name>
+							<Comment><![CDATA[ 2.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oilfilter_dirty</Name>
+							<Comment><![CDATA[ 2.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.pump_running</Name>
+							<Comment><![CDATA[ 2.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.suction_running</Name>
+							<Comment><![CDATA[ 2.8]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oilpan_maximum</Name>
+							<Comment><![CDATA[DIN39 4.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_temperature</Name>
+							<Comment><![CDATA[BT2]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_reserve</Name>
+							<Comment><![CDATA[DIN40 4.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Dome.Clockwise</Name>
 							<Type>BOOL</Type>
 						</Var>
@@ -3524,10 +3603,6 @@ Drive Status 4 (manually linked):
 							<Name>GVL_Dome.Azimut_raw</Name>
 							<Comment><![CDATA[ EL5151]]></Comment>
 							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawRain</Name>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
@@ -3668,8 +3743,14 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Environment.rawWindSpeed</Name>
-							<Type>INT</Type>
+							<Name>GVL_pendant_control.BCD2</Name>
+							<Comment><![CDATA[DIN18 2.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD4</Name>
+							<Comment><![CDATA[DIN19 2.2]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.AzimuthAxisRef.NcToPlc</Name>
@@ -3844,32 +3925,6 @@ External Setpoint Generation:
 							</SubVar>
 						</Var>
 						<Var>
-							<Name>GVL_Environment.rawWindDirection</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawTemperature</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawHumidity</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawPressure</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.BCD2</Name>
-							<Comment><![CDATA[DIN18 2.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.BCD4</Name>
-							<Comment><![CDATA[DIN19 2.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_pendant_control.BCD8</Name>
 							<Comment><![CDATA[DIN20 2.3]]></Comment>
 							<Type>BOOL</Type>
@@ -3958,61 +4013,6 @@ External Setpoint Generation:
 							<Comment><![CDATA[DIN15 1.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_low</Name>
-							<Comment><![CDATA[ 2.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_high</Name>
-							<Comment><![CDATA[ ?]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_pressure_OK</Name>
-							<Comment><![CDATA[ 2.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_overtemperature</Name>
-							<Comment><![CDATA[ 2.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_undertemperature</Name>
-							<Comment><![CDATA[ 2.5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oilfilter_dirty</Name>
-							<Comment><![CDATA[ 2.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.pump_running</Name>
-							<Comment><![CDATA[ 2.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.suction_running</Name>
-							<Comment><![CDATA[ 2.8]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_temperature</Name>
-							<Comment><![CDATA[BT2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oilpan_maximum</Name>
-							<Comment><![CDATA[DIN39 4.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_reserve</Name>
-							<Comment><![CDATA[DIN40 4.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
 						<Name>PlcTask Outputs</Name>
@@ -4033,6 +4033,16 @@ External Setpoint Generation:
 							<Type GUID="{0D3B3A77-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_O_32199BA1</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Hydraulics.oil_pump_enable</Name>
+							<Comment><![CDATA[DOUT4 0.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_suction_enable</Name>
+							<Comment><![CDATA[DOUT5 0.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Dome.Inverter_Enable</Name>
 							<Type>BOOL</Type>
 						</Var>
@@ -4043,22 +4053,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Dome.Inverter_Velocity</Name>
 							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.OpenShutter</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.CloseShutter</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.OpenFlap</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.CloseFlap</Name>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.DomeAxisRef.PlcToNc</Name>
@@ -4162,16 +4156,20 @@ DOUT9 1.0]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Hydraulics.oil_pump_enable</Name>
-							<Comment><![CDATA[DOUT4 0.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_suction_enable</Name>
-							<Comment><![CDATA[DOUT5 0.4]]></Comment>
+							<Name>GVL_Dome.Light</Name>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
+					<UnrestoredVarLinks ImportTime="2020-11-02T13:21:21">
+						<OwnerA Name="OutputSrc" Prefix="TIPC^RoboTelRuntime^RoboTelRuntime Instance" Type="2">
+							<OwnerB Name="TIID^Device 2 (EtherCAT Automation Protocol)^Box 24 (Publisher)">
+								<Link VarA="GVL_Dome.CloseFlap" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="CloseFlap^Outputs^VarData" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Dome.CloseShutter" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="CloseSlit^Outputs^VarData" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Dome.OpenFlap" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="OpenFlap^Outputs^VarData" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Dome.OpenShutter" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="OpenSlit^Outputs^VarData" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
 					<TaskPouOids>
 						<TaskPouOid Prio="10" OTCID="#x08502001"/>
 					</TaskPouOids>
@@ -10477,162 +10475,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				</Box>
 				<EtherCAT DcSyncMode="3"/>
 			</Device>
-			<Device Id="2" Disabled="true" DevType="112" AmsPort="28674" AmsNetId="5.78.96.50.3.1" RemoteName="Gerät 2 (EtherCAT Automation Protocol)">
-				<Name>Gerät 2 (EtherCAT Automation Protocol)</Name>
-				<AddressInfo>
-					<TcCom>
-						<ObjectId>#x00000000</ObjectId>
-					</TcCom>
-				</AddressInfo>
-				<Image Id="4" AddrType="1" ImageType="3">
-					<Name>Prozessabbild</Name>
-				</Image>
-				<Box Id="24" BoxType="9051">
-					<Name>Box 24 (Publisher)</Name>
-					<ImageId>99</ImageId>
-					<Vars VarGrpType="1">
-						<Name>Eingänge</Name>
-						<Var BoxStateVariable="true">
-							<Name>FrameState</Name>
-							<Comment><![CDATA[0x0001 = Not sent (frame skipped)
-0x0002 = Error (frame oversized)
-0x0004 = Subscriber missing (Unicast only)
-]]></Comment>
-							<Type>UINT</Type>
-						</Var>
-					</Vars>
-					<Vars VarGrpType="2">
-						<Name>Ausgänge</Name>
-						<Var BoxStateVariable="true">
-							<Name>FrameCtrl</Name>
-							<Comment><![CDATA[0x0001 = Disable sending
-0x0002 = Remove destination MAC from ARP cache
-]]></Comment>
-							<Type>UINT</Type>
-						</Var>
-					</Vars>
-					<Eap InOut="1" Publisher="05492d9e0101" ArpRetryInterval="1000">
-						<EapVar Id="1" VarInOut="1" NvId="1" NvLength="1">
-							<Name>OpenFlap</Name>
-							<ImageId>97</ImageId>
-							<Vars VarGrpType="1">
-								<Name>Eingänge</Name>
-								<Var BoxStateVariable="true">
-									<Name>VarState</Name>
-									<Comment><![CDATA[0x0001 = Not sent (variable skipped)
-]]></Comment>
-									<Type>UINT</Type>
-									<BitOffs>16</BitOffs>
-								</Var>
-							</Vars>
-							<Vars VarGrpType="2">
-								<Name>Ausgänge</Name>
-								<Var BoxStateVariable="true">
-									<Name>VarCtrl</Name>
-									<Comment><![CDATA[0x0001 = Disable publishing
-]]></Comment>
-									<Type>UINT</Type>
-									<BitOffs>16</BitOffs>
-								</Var>
-								<Var>
-									<Name>VarData</Name>
-									<Type>BOOL</Type>
-									<BitOffs>32</BitOffs>
-								</Var>
-							</Vars>
-						</EapVar>
-						<EapVar Id="2" VarInOut="1" NvId="2" NvLength="1">
-							<Name>CloseFlap</Name>
-							<ImageId>97</ImageId>
-							<Vars VarGrpType="1">
-								<Name>Eingänge</Name>
-								<Var BoxStateVariable="true">
-									<Name>VarState</Name>
-									<Comment><![CDATA[0x0001 = Not sent (variable skipped)
-]]></Comment>
-									<Type>UINT</Type>
-									<BitOffs>32</BitOffs>
-								</Var>
-							</Vars>
-							<Vars VarGrpType="2">
-								<Name>Ausgänge</Name>
-								<Var BoxStateVariable="true">
-									<Name>VarCtrl</Name>
-									<Comment><![CDATA[0x0001 = Disable publishing
-]]></Comment>
-									<Type>UINT</Type>
-									<BitOffs>40</BitOffs>
-								</Var>
-								<Var>
-									<Name>VarData</Name>
-									<Type>BOOL</Type>
-									<BitOffs>56</BitOffs>
-								</Var>
-							</Vars>
-						</EapVar>
-						<EapVar Id="3" VarInOut="1" NvId="3" NvLength="1">
-							<Name>OpenSlit</Name>
-							<ImageId>97</ImageId>
-							<Vars VarGrpType="1">
-								<Name>Eingänge</Name>
-								<Var BoxStateVariable="true">
-									<Name>VarState</Name>
-									<Comment><![CDATA[0x0001 = Not sent (variable skipped)
-]]></Comment>
-									<Type>UINT</Type>
-									<BitOffs>48</BitOffs>
-								</Var>
-							</Vars>
-							<Vars VarGrpType="2">
-								<Name>Ausgänge</Name>
-								<Var BoxStateVariable="true">
-									<Name>VarCtrl</Name>
-									<Comment><![CDATA[0x0001 = Disable publishing
-]]></Comment>
-									<Type>UINT</Type>
-									<BitOffs>64</BitOffs>
-								</Var>
-								<Var>
-									<Name>VarData</Name>
-									<Type>BOOL</Type>
-									<BitOffs>80</BitOffs>
-								</Var>
-							</Vars>
-						</EapVar>
-						<EapVar Id="4" VarInOut="1" NvId="4" NvLength="1">
-							<Name>CloseSlit</Name>
-							<ImageId>97</ImageId>
-							<Vars VarGrpType="1">
-								<Name>Eingänge</Name>
-								<Var BoxStateVariable="true">
-									<Name>VarState</Name>
-									<Comment><![CDATA[0x0001 = Not sent (variable skipped)
-]]></Comment>
-									<Type>UINT</Type>
-									<BitOffs>64</BitOffs>
-								</Var>
-							</Vars>
-							<Vars VarGrpType="2">
-								<Name>Ausgänge</Name>
-								<Var BoxStateVariable="true">
-									<Name>VarCtrl</Name>
-									<Comment><![CDATA[0x0001 = Disable publishing
-]]></Comment>
-									<Type>UINT</Type>
-									<BitOffs>88</BitOffs>
-								</Var>
-								<Var>
-									<Name>VarData</Name>
-									<Type>BOOL</Type>
-									<BitOffs>104</BitOffs>
-								</Var>
-							</Vars>
-						</EapVar>
-					</Eap>
-				</Box>
-				<Ethernet/>
-				<Eap EapDeviceGuid="{92CD6427-C418-420F-AAEE-3360CEDDD94F}"/>
-			</Device>
 		</Io>
 	</Project>
 	<Mappings>
@@ -10922,12 +10764,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^GVL_Safety.ErrAck" VarB="StandardOutputs^Standard In Var 1"/>
 				<Link VarA="PlcTask Outputs^GVL_Safety.Restart" VarB="StandardOutputs^Standard In Var 13"/>
 				<Link VarA="PlcTask Outputs^GVL_Safety.Run" VarB="StandardOutputs^Standard In Var 11"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 2 (EtherCAT Automation Protocol)^Box 24 (Publisher)">
-				<Link VarA="PlcTask Outputs^GVL_Dome.CloseFlap" VarB="CloseFlap^Outputs^VarData"/>
-				<Link VarA="PlcTask Outputs^GVL_Dome.CloseShutter" VarB="CloseSlit^Outputs^VarData"/>
-				<Link VarA="PlcTask Outputs^GVL_Dome.OpenFlap" VarB="OpenFlap^Outputs^VarData"/>
-				<Link VarA="PlcTask Outputs^GVL_Dome.OpenShutter" VarB="OpenSlit^Outputs^VarData"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Azimuth">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.AzimuthAxisRef.NcToPlc" VarB="Outputs^ToPlc"/>

@@ -16,6 +16,24 @@ VAR
 	Azimuth_old: LREAL;
 	manual_enable : BOOL;
 	move_azimuth, stop_azimuth: BOOL;
+	OpenDome,
+	CloseDome,
+	DomeOpened,
+	DomeClosed,
+	Flatscreen:	BOOL;
+   
+	bWrite       : BOOL;(* Rising edge at this variable starts command execution *)
+	nState       : BYTE := 0;
+	bBusy        : BOOL;
+	bError       : BOOL;
+	nErrID       : UDINT;
+	arrBool       : ARRAY[0..3] OF BOOL;(* Server data to be written *)
+	i            : INT;
+
+
+	
+	fbWriteReq: ADSWRITE := ( NETID := '5.73.45.158.1.1', PORT := 851, TMOUT := DEFAULT_ADS_TIMEOUT );
+	fbReadReq: ADSREAD := ( NETID := '5.73.45.158.1.1', PORT := 851, TMOUT := DEFAULT_ADS_TIMEOUT );
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -56,7 +74,44 @@ DomeAxis(bPowerEnable := enable,
 
 Azimuth_old := Azimuth_set;
 stop_azimuth := FALSE;
-]]></ST>
+
+IF CloseDome THEN
+	OpenDome := FALSE;
+END_IF
+
+arrBool[0] := OpenDome;
+arrBool[1] := CloseDome;
+
+CASE nState OF
+   0:
+      IF bWrite THEN
+         bWrite := FALSE;
+         
+         bBusy := TRUE;
+         bError := FALSE;
+         nErrID := 0;
+         
+         fbWriteReq( WRITE := FALSE );
+         fbWriteReq( IDXGRP := 16#80000005, IDXOFFS := 7, 
+                  LEN := SIZEOF( arrBool ), SRCADDR := ADR( arrBool ), 
+                  WRITE := TRUE );
+         nState := 1;            
+      END_IF
+      
+   1:
+      fbWriteReq( WRITE := FALSE, BUSY=>bBusy, ERR=>bError, ERRID=>nErrID );
+      IF NOT bBusy THEN
+         IF NOT bError THEN
+            nState := 0;(* Success *)
+         ELSE
+            nState := 100;(* Error *)
+         END_IF
+      END_IF
+
+   100:(* TODO::Implement error handler *)
+      nState := 0;
+   
+END_CASE]]></ST>
     </Implementation>
     <LineIds Name="DomeControl">
       <LineId Id="5" Count="0" />
@@ -82,6 +137,9 @@ stop_azimuth := FALSE;
       <LineId Id="305" Count="0" />
       <LineId Id="329" Count="1" />
       <LineId Id="385" Count="0" />
+      <LineId Id="749" Count="3" />
+      <LineId Id="746" Count="2" />
+      <LineId Id="716" Count="29" />
       <LineId Id="349" Count="0" />
     </LineIds>
   </POU>

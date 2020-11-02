@@ -6,30 +6,31 @@ VAR_GLOBAL
 	
 	Clockwise				AT%I*:	BOOL;
 	CounterClockwise		AT%I*:	BOOL;
-	bDirectionMinus AT%I*: BOOL;
-	bDirectionPlus AT%I*: BOOL;
-	bVeloLow AT%I*: BOOL;
-	bVeloHigh AT%I*: BOOL;
-	bBreak AT%I*:		BOOL;
-	bBreakInv AT%I*:	BOOL;
+	bDirectionMinus 		AT%I*:	BOOL;
+	bDirectionPlus 			AT%I*:	BOOL;
+	bVeloLow 				AT%I*:	BOOL;
+	bVeloHigh 				AT%I*:	BOOL;
+	bBreak 					AT%I*:	BOOL;
+	bBreakInv 				AT%I*:	BOOL;
 	
-	Inverter_Enable AT%Q*:	BOOL;
+	Inverter_Enable 		AT%Q*:	BOOL;
 	Inverter_DirectionMinus AT%Q*: BOOL;
-	Inverter_Velocity AT%Q*: UINT;
+	Inverter_Velocity 		AT%Q*: UINT;
+	Light					AT%Q*: 	BOOL;
 	// EL5151
 	Azimut_raw				AT%I*:	INT;
 	Azimut_home				AT%I*:	BOOL;
 	
 	WatchDogReset:	BOOL;
-	OpenShutter  	AT%Q*: 	BOOL;
-	CloseShutter  	AT%Q*: 	BOOL;
-	OpenFlap  		AT%Q*: 	BOOL;
-	CloseFlap  		AT%Q*: 	BOOL;
+//	OpenShutter  	AT%Q*: 	BOOL;
+//	CloseShutter  	AT%Q*: 	BOOL;
+//	OpenFlap  		AT%Q*: 	BOOL;
+//	CloseFlap  		AT%Q*: 	BOOL;
 	
-	ShutterOpened:	BOOL;
-	ShutterClosed:	BOOL;
-	FlapOpened:		BOOL;
-	FlapClosed:		BOOL;
+//	ShutterOpened:	BOOL;
+//	ShutterClosed:	BOOL;
+//	FlapOpened:		BOOL;
+//	FlapClosed:		BOOL;
 	Stop:			BOOL;
 	DomeAxisRef: AXIS_REF;
 END_VAR]]></Declaration>
