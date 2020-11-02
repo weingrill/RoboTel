@@ -17,6 +17,7 @@ VAR_GLOBAL
 	Inverter_DirectionMinus AT%Q*: BOOL;
 	Inverter_Velocity 		AT%Q*: UINT;
 	Light					AT%Q*: 	BOOL;
+	DeHumidifier			AT%Q*: 	BOOL;
 	// EL5151
 	Azimut_raw				AT%I*:	INT;
 	Azimut_home				AT%I*:	BOOL;

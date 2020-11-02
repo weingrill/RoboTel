@@ -18,6 +18,7 @@ VAR
 	WindAverage,
 	HumidityAverage,
 	TemperatureAverage: FB_TimeAverage;
+	RainDelay:	TON;
 	avg_wind, max_wind: REAL;
 END_VAR
 ]]></Declaration>
@@ -28,8 +29,11 @@ WindDirection :=	F_YREAL(GVL_Environment.rawWindDirection, 	0, 32767,   0.0, 360
 Temperature :=  	F_YREAL(GVL_Environment.rawTemperature, 	0, 32767, -30.0, 70.0); // °C -40...80?
 Humidity :=			F_YREAL(GVL_Environment.rawHumidity, 		0, 32767,   0.0, 100.0); // %
 Pressure := 		F_YREAL(GVL_Environment.rawPressure,		0, 32767, 900.0, 1200.0); // mBar 300...1100? 800..1060?
-Rain :=    NOT GVL_Environment.rawRain;
 
+RainDelay(IN := NOT GVL_Environment.rawRain, PT := T#30S, Q => Rain);
+IF Rain THEN
+	DomeControl.CloseDome := TRUE;
+END_IF
 // TemperatureDome :=  F_YREAL(GVL_Environment.rawTemperatureDome, 0, 32767, -30.0, 70.0); // °C
 // HumidityDome := 	F_YREAL(GVL_Environment.rawHumidityDome, 	0, 32767,   0.0, 100.0); // %
 
@@ -69,6 +73,7 @@ PrecipitationEvent(	Trigger := Rain,
       <LineId Id="100" Count="0" />
       <LineId Id="99" Count="0" />
       <LineId Id="68" Count="0" />
+      <LineId Id="483" Count="2" />
       <LineId Id="71" Count="1" />
       <LineId Id="230" Count="1" />
       <LineId Id="143" Count="0" />
