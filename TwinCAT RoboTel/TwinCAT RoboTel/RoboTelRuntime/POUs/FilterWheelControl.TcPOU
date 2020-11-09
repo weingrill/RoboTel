@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+  <POU Name="FilterWheelControl" Id="{f0e4f375-0934-4386-a9fa-94537c34c7e1}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM FilterWheelControl
+VAR_INPUT
+	left:	BOOL;
+	right:	BOOL;
+	reset:	BOOL;
+	enable:	BOOL;
+END_VAR
+VAR
+	FilterWheelAxisJog:	FB_AxisJog;
+	FilterWheelAxis:	FB_Axis;
+	error: 				BOOL;
+	position:			LREAL;
+	act_position:		LREAL;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF PendantControl.manual THEN
+	FilterWheelAxisJog(	bPowerEnable := enable,
+						bEnable_Positive := TRUE,
+						bEnable_Negative := TRUE,
+						bForward := left,
+						bBackward := right,
+						bReset := reset,
+						bStop := left AND right,
+						bErr => error,
+						fActPos => act_position,
+						stAxis :=	GVL_FilterWheel.FilterWheel_AxisRef);	
+ELSE
+	FilterWheelAxis(	bPowerEnable := TelescopeControl.power,
+						bReset := reset,
+						fMoveAbsPos := position, 
+						fActPos => act_position,
+						bAxError => error,
+						stAxis :=	GVL_FilterWheel.FilterWheel_AxisRef);
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="FilterWheelControl">
+      <LineId Id="11" Count="18" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

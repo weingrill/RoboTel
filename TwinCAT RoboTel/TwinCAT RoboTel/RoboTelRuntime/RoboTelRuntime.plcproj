@@ -35,6 +35,10 @@
     <Compile Include="GVLs\GVL_Environment.TcGVL">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GVLs\GVL_FilterWheel.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="GVLs\GVL_pendant_control.TcGVL">
       <SubType>Code</SubType>
     </Compile>
@@ -70,6 +74,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FanControl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FilterWheelControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FocusControl.TcPOU">
