@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4023.119">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.10">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-000000000035}" TcBaseType="true" HideType="true">UINTARR2</Name>
@@ -1425,7 +1425,7 @@ External Setpoint Generation:
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{4C3FC5AC-D5AA-44C6-AC5A-159774BA0F6D}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_STATE</Name>
+			<Name GUID="{4C3FC5AC-D5AA-44C6-AC5A-159774BA0F6D}" Namespace="MC" TcBaseType="true" HideType="true" IecDeclaration="DWORD;">NCTOPLC_AXIS_REF_STATE_OLD</Name>
 			<BitSize>32</BitSize>
 			<SubItem>
 				<Name>Operational</Name>
@@ -1624,11 +1624,11 @@ External Setpoint Generation:
 			</Format>
 		</DataType>
 		<DataType>
-			<Name GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC" TcBaseType="true">NCTOPLC_AXIS_REF</Name>
+			<Name GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC" TcBaseType="true">NCTOPLC_AXIS_REF_OLD4</Name>
 			<BitSize>2048</BitSize>
 			<SubItem>
 				<Name>StateDWord</Name>
-				<Type GUID="{4C3FC5AC-D5AA-44C6-AC5A-159774BA0F6D}" Namespace="MC">NCTOPLC_AXIS_REF_STATE</Type>
+				<Type GUID="{4C3FC5AC-D5AA-44C6-AC5A-159774BA0F6D}" Namespace="MC">NCTOPLC_AXIS_REF_STATE_OLD</Type>
 				<BitSize>32</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>
@@ -2319,7 +2319,7 @@ External Setpoint Generation:
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000007}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..6] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000007}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..6] OF BIT</Name>
 			<BitSize>7</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -2409,7 +2409,7 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-00200000000D}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..12] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-00200000000D}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..12] OF BIT</Name>
 			<BitSize>13</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -2418,7 +2418,7 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000009}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..8] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000009}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..8] OF BIT</Name>
 			<BitSize>9</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -2445,7 +2445,7 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-00200000000E}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..13] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-00200000000E}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..13] OF BIT</Name>
 			<BitSize>14</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -2461,6 +2461,9 @@ External Setpoint Generation:
 				<LBound>0</LBound>
 				<Elements>10</Elements>
 			</ArrayInfo>
+			<Hides>
+				<Hide GUID="{0D9E782F-3778-A474-E51F-4F5C8E7FF3F2}"/>
+			</Hides>
 		</DataType>
 	</DataTypes>
 	<ImageDatas>
@@ -2531,13 +2534,6 @@ External Setpoint Generation:
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn2</Name>
 								</SubVar>
-								<SubVar>
-									<Name>nState4</Name>
-									<Comment><![CDATA[Encoder Status 4 (automatically linked):
-0x01 (Bit 0) = IO data invalid (e.g. EtherCAT 'WcState')
-0x02 (Bit 1) = IO data input toggle (e.g. EtherCAT 'InputToggle')
-]]></Comment>
-								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn3</Name>
 								</SubVar>
@@ -2598,16 +2594,6 @@ External Setpoint Generation:
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn2</Name>
-								</SubVar>
-								<SubVar>
-									<Name>nState4</Name>
-									<Comment><![CDATA[Drive Status 4 (automatically linked):
-0x01 (0000 0001) = IO data invalid (e.g. EtherCAT 'WcState')
-0x02 (0000 0010) = IO data input toggle (e.g. EtherCAT 'InputToggle')
-
-Drive Status 4 (manually linked):
-0x80 (1000 0000) = Fast axis stop (digital IO interrupt)
-]]></Comment>
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn3</Name>
@@ -2683,45 +2669,6 @@ Drive Status 4 (manually linked):
 						<Var>
 							<Name>ToPlc</Name>
 							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-							<SubVar>
-								<Name>AxisState</Name>
-								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
-0  = INACTIVE:		axis has no job
-1  = RUNNING:		axis is executing a motion job
-2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
-3  = PHASE_VELOCONST:	axis is moving at constant velocity
-4  = PHASE_ACCPOS:	axis is accelerating
-5  = PHASE_ACCNEG:	axis is decelerating
-Slaves only:
-11 = PREPHASE:		slave axis is in a motion pre-phase
-12 = SYNCHRONIZING:	slave axis is synchronizing
-13 = SYNCHRONOUS:	slave axis is moving synchronously
-External Setpoint Generation:
-41 = EXTSETGEN_MODE1:	external setpoint generation active
-42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>HomingState</Name>
-								<Comment><![CDATA[Axis Homing Status:
-0: idle
-1: start homing
-2: searching home switch
-3: stopping on home switch
-4: moving off home switch
-5: searching sync pulse
-6: stopping after homing
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>CoupleState</Name>
-								<Comment><![CDATA[Axis Coupling Status:
-0: axis is a single axis (not coupled)
-1: axis is a master axis
-2: axis is master and slave
-3: axis is a slave axis
-]]></Comment>
-							</SubVar>
 						</Var>
 					</Vars>
 				</Axis>
@@ -2746,13 +2693,6 @@ External Setpoint Generation:
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn2</Name>
-								</SubVar>
-								<SubVar>
-									<Name>nState4</Name>
-									<Comment><![CDATA[Encoder Status 4 (automatically linked):
-0x01 (Bit 0) = IO data invalid (e.g. EtherCAT 'WcState')
-0x02 (Bit 1) = IO data input toggle (e.g. EtherCAT 'InputToggle')
-]]></Comment>
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn3</Name>
@@ -2815,16 +2755,6 @@ External Setpoint Generation:
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn2</Name>
 								</SubVar>
-								<SubVar>
-									<Name>nState4</Name>
-									<Comment><![CDATA[Drive Status 4 (automatically linked):
-0x01 (0000 0001) = IO data invalid (e.g. EtherCAT 'WcState')
-0x02 (0000 0010) = IO data input toggle (e.g. EtherCAT 'InputToggle')
-
-Drive Status 4 (manually linked):
-0x80 (1000 0000) = Fast axis stop (digital IO interrupt)
-]]></Comment>
-								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn3</Name>
 								</SubVar>
@@ -2885,45 +2815,6 @@ Drive Status 4 (manually linked):
 							<Name>ToPlc</Name>
 							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 							<BitOffs>2688</BitOffs>
-							<SubVar>
-								<Name>AxisState</Name>
-								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
-0  = INACTIVE:		axis has no job
-1  = RUNNING:		axis is executing a motion job
-2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
-3  = PHASE_VELOCONST:	axis is moving at constant velocity
-4  = PHASE_ACCPOS:	axis is accelerating
-5  = PHASE_ACCNEG:	axis is decelerating
-Slaves only:
-11 = PREPHASE:		slave axis is in a motion pre-phase
-12 = SYNCHRONIZING:	slave axis is synchronizing
-13 = SYNCHRONOUS:	slave axis is moving synchronously
-External Setpoint Generation:
-41 = EXTSETGEN_MODE1:	external setpoint generation active
-42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>HomingState</Name>
-								<Comment><![CDATA[Axis Homing Status:
-0: idle
-1: start homing
-2: searching home switch
-3: stopping on home switch
-4: moving off home switch
-5: searching sync pulse
-6: stopping after homing
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>CoupleState</Name>
-								<Comment><![CDATA[Axis Coupling Status:
-0: axis is a single axis (not coupled)
-1: axis is a master axis
-2: axis is master and slave
-3: axis is a slave axis
-]]></Comment>
-							</SubVar>
 						</Var>
 					</Vars>
 				</Axis>
@@ -2948,13 +2839,6 @@ External Setpoint Generation:
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn2</Name>
-								</SubVar>
-								<SubVar>
-									<Name>nState4</Name>
-									<Comment><![CDATA[Encoder Status 4 (automatically linked):
-0x01 (Bit 0) = IO data invalid (e.g. EtherCAT 'WcState')
-0x02 (Bit 1) = IO data input toggle (e.g. EtherCAT 'InputToggle')
-]]></Comment>
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn3</Name>
@@ -3017,16 +2901,6 @@ External Setpoint Generation:
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn2</Name>
 								</SubVar>
-								<SubVar>
-									<Name>nState4</Name>
-									<Comment><![CDATA[Drive Status 4 (automatically linked):
-0x01 (0000 0001) = IO data invalid (e.g. EtherCAT 'WcState')
-0x02 (0000 0010) = IO data input toggle (e.g. EtherCAT 'InputToggle')
-
-Drive Status 4 (manually linked):
-0x80 (1000 0000) = Fast axis stop (digital IO interrupt)
-]]></Comment>
-								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn3</Name>
 								</SubVar>
@@ -3087,45 +2961,6 @@ Drive Status 4 (manually linked):
 							<Name>ToPlc</Name>
 							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 							<BitOffs>5376</BitOffs>
-							<SubVar>
-								<Name>AxisState</Name>
-								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
-0  = INACTIVE:		axis has no job
-1  = RUNNING:		axis is executing a motion job
-2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
-3  = PHASE_VELOCONST:	axis is moving at constant velocity
-4  = PHASE_ACCPOS:	axis is accelerating
-5  = PHASE_ACCNEG:	axis is decelerating
-Slaves only:
-11 = PREPHASE:		slave axis is in a motion pre-phase
-12 = SYNCHRONIZING:	slave axis is synchronizing
-13 = SYNCHRONOUS:	slave axis is moving synchronously
-External Setpoint Generation:
-41 = EXTSETGEN_MODE1:	external setpoint generation active
-42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>HomingState</Name>
-								<Comment><![CDATA[Axis Homing Status:
-0: idle
-1: start homing
-2: searching home switch
-3: stopping on home switch
-4: moving off home switch
-5: searching sync pulse
-6: stopping after homing
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>CoupleState</Name>
-								<Comment><![CDATA[Axis Coupling Status:
-0: axis is a single axis (not coupled)
-1: axis is a master axis
-2: axis is master and slave
-3: axis is a slave axis
-]]></Comment>
-							</SubVar>
 						</Var>
 					</Vars>
 				</Axis>
@@ -3150,13 +2985,6 @@ External Setpoint Generation:
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn2</Name>
-								</SubVar>
-								<SubVar>
-									<Name>nState4</Name>
-									<Comment><![CDATA[Encoder Status 4 (automatically linked):
-0x01 (Bit 0) = IO data invalid (e.g. EtherCAT 'WcState')
-0x02 (Bit 1) = IO data input toggle (e.g. EtherCAT 'InputToggle')
-]]></Comment>
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn3</Name>
@@ -3219,16 +3047,6 @@ External Setpoint Generation:
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn2</Name>
 								</SubVar>
-								<SubVar>
-									<Name>nState4</Name>
-									<Comment><![CDATA[Drive Status 4 (automatically linked):
-0x01 (0000 0001) = IO data invalid (e.g. EtherCAT 'WcState')
-0x02 (0000 0010) = IO data input toggle (e.g. EtherCAT 'InputToggle')
-
-Drive Status 4 (manually linked):
-0x80 (1000 0000) = Fast axis stop (digital IO interrupt)
-]]></Comment>
-								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn3</Name>
 								</SubVar>
@@ -3289,45 +3107,6 @@ Drive Status 4 (manually linked):
 							<Name>ToPlc</Name>
 							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 							<BitOffs>8064</BitOffs>
-							<SubVar>
-								<Name>AxisState</Name>
-								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
-0  = INACTIVE:		axis has no job
-1  = RUNNING:		axis is executing a motion job
-2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
-3  = PHASE_VELOCONST:	axis is moving at constant velocity
-4  = PHASE_ACCPOS:	axis is accelerating
-5  = PHASE_ACCNEG:	axis is decelerating
-Slaves only:
-11 = PREPHASE:		slave axis is in a motion pre-phase
-12 = SYNCHRONIZING:	slave axis is synchronizing
-13 = SYNCHRONOUS:	slave axis is moving synchronously
-External Setpoint Generation:
-41 = EXTSETGEN_MODE1:	external setpoint generation active
-42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>HomingState</Name>
-								<Comment><![CDATA[Axis Homing Status:
-0: idle
-1: start homing
-2: searching home switch
-3: stopping on home switch
-4: moving off home switch
-5: searching sync pulse
-6: stopping after homing
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>CoupleState</Name>
-								<Comment><![CDATA[Axis Coupling Status:
-0: axis is a single axis (not coupled)
-1: axis is a master axis
-2: axis is master and slave
-3: axis is a slave axis
-]]></Comment>
-							</SubVar>
 						</Var>
 					</Vars>
 				</Axis>
@@ -3354,13 +3133,6 @@ External Setpoint Generation:
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn2</Name>
-								</SubVar>
-								<SubVar>
-									<Name>nState4</Name>
-									<Comment><![CDATA[Encoder Status 4 (automatically linked):
-0x01 (Bit 0) = IO data invalid (e.g. EtherCAT 'WcState')
-0x02 (Bit 1) = IO data input toggle (e.g. EtherCAT 'InputToggle')
-]]></Comment>
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn3</Name>
@@ -3423,16 +3195,6 @@ External Setpoint Generation:
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn2</Name>
 								</SubVar>
-								<SubVar>
-									<Name>nState4</Name>
-									<Comment><![CDATA[Drive Status 4 (automatically linked):
-0x01 (0000 0001) = IO data invalid (e.g. EtherCAT 'WcState')
-0x02 (0000 0010) = IO data input toggle (e.g. EtherCAT 'InputToggle')
-
-Drive Status 4 (manually linked):
-0x80 (1000 0000) = Fast axis stop (digital IO interrupt)
-]]></Comment>
-								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn3</Name>
 								</SubVar>
@@ -3479,7 +3241,7 @@ Drive Status 4 (manually linked):
 						<Name>Ausgänge</Name>
 						<Var>
 							<Name>ToPlc</Name>
-							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF_OLD4</Type>
 							<BitOffs>10752</BitOffs>
 							<SubVar>
 								<Name>AxisState</Name>
@@ -3489,27 +3251,6 @@ Drive Status 4 (manually linked):
 2 = CHANGESPEED:	axis is changing speed
 3 = CREEPMOTION:	axis is moving at slow speed
 4 = STOPPING:		axis stopping (break distance)
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>HomingState</Name>
-								<Comment><![CDATA[Axis Homing Status:
-0: idle
-1: start homing
-2: searching home switch
-3: stopping on home switch
-4: moving off home switch
-5: searching sync pulse
-6: stopping after homing
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>CoupleState</Name>
-								<Comment><![CDATA[Axis Coupling Status:
-0: axis is a single axis (not coupled)
-1: axis is a master axis
-2: axis is master and slave
-3: axis is a slave axis
 ]]></Comment>
 							</SubVar>
 						</Var>
@@ -3536,13 +3277,6 @@ Drive Status 4 (manually linked):
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn2</Name>
-								</SubVar>
-								<SubVar>
-									<Name>nState4</Name>
-									<Comment><![CDATA[Encoder Status 4 (automatically linked):
-0x01 (Bit 0) = IO data invalid (e.g. EtherCAT 'WcState')
-0x02 (Bit 1) = IO data input toggle (e.g. EtherCAT 'InputToggle')
-]]></Comment>
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn3</Name>
@@ -3605,16 +3339,6 @@ Drive Status 4 (manually linked):
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn2</Name>
 								</SubVar>
-								<SubVar>
-									<Name>nState4</Name>
-									<Comment><![CDATA[Drive Status 4 (automatically linked):
-0x01 (0000 0001) = IO data invalid (e.g. EtherCAT 'WcState')
-0x02 (0000 0010) = IO data input toggle (e.g. EtherCAT 'InputToggle')
-
-Drive Status 4 (manually linked):
-0x80 (1000 0000) = Fast axis stop (digital IO interrupt)
-]]></Comment>
-								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn3</Name>
 								</SubVar>
@@ -3674,47 +3398,8 @@ Drive Status 4 (manually linked):
 						<Name>Ausgänge</Name>
 						<Var>
 							<Name>ToPlc</Name>
-							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF_OLD4</Type>
 							<BitOffs>13440</BitOffs>
-							<SubVar>
-								<Name>AxisState</Name>
-								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
-0  = INACTIVE:		axis has no job
-1  = RUNNING:		axis is executing a motion job
-2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
-3  = PHASE_VELOCONST:	axis is moving at constant velocity
-4  = PHASE_ACCPOS:	axis is accelerating
-5  = PHASE_ACCNEG:	axis is decelerating
-Slaves only:
-11 = PREPHASE:		slave axis is in a motion pre-phase
-12 = SYNCHRONIZING:	slave axis is synchronizing
-13 = SYNCHRONOUS:	slave axis is moving synchronously
-External Setpoint Generation:
-41 = EXTSETGEN_MODE1:	external setpoint generation active
-42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>HomingState</Name>
-								<Comment><![CDATA[Axis Homing Status:
-0: idle
-1: start homing
-2: searching home switch
-3: stopping on home switch
-4: moving off home switch
-5: searching sync pulse
-6: stopping after homing
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>CoupleState</Name>
-								<Comment><![CDATA[Axis Coupling Status:
-0: axis is a single axis (not coupled)
-1: axis is a master axis
-2: axis is master and slave
-3: axis is a slave axis
-]]></Comment>
-							</SubVar>
 						</Var>
 					</Vars>
 				</Axis>
@@ -3744,34 +3429,9 @@ External Setpoint Generation:
 							<Type GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Environment.rawRain</Name>
-							<Comment><![CDATA[ Digital Input 1]]></Comment>
+							<Name>GVL_Safety.Error</Name>
+							<Comment><![CDATA[ Safety Error Condition]]></Comment>
 							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawWindSpeed</Name>
-							<Comment><![CDATA[ Input 1]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawHumidity</Name>
-							<Comment><![CDATA[ Input 2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawTemperature</Name>
-							<Comment><![CDATA[ Input 3]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawWindDirection</Name>
-							<Comment><![CDATA[ Input 4]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawPressure</Name>
-							<Comment><![CDATA[ Input 5]]></Comment>
-							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.Clockwise</Name>
@@ -3815,6 +3475,99 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Environment.rawRain</Name>
+							<Comment><![CDATA[ Digital Input 1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawWindSpeed</Name>
+							<Comment><![CDATA[ Input 1]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawHumidity</Name>
+							<Comment><![CDATA[ Input 2]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
+							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawTemperature</Name>
+							<Comment><![CDATA[ Input 3]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawWindDirection</Name>
+							<Comment><![CDATA[ Input 4]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawPressure</Name>
+							<Comment><![CDATA[ Input 5]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD1</Name>
+							<Comment><![CDATA[DIN17 2.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD2</Name>
+							<Comment><![CDATA[DIN18 2.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
+							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD4</Name>
+							<Comment><![CDATA[DIN19 2.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD8</Name>
+							<Comment><![CDATA[DIN20 2.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.reset_switch</Name>
+							<Comment><![CDATA[DIN21 2.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_up</Name>
+							<Comment><![CDATA[DIN22 2.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_down</Name>
+							<Comment><![CDATA[DIN23 2.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.key_switch</Name>
+							<Comment><![CDATA[DIN24 2.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.start_switch</Name>
+							<Comment><![CDATA[DIN25 3.0 (enable)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_left</Name>
+							<Comment><![CDATA[DIN26 3.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_right</Name>
+							<Comment><![CDATA[DIN27 3.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Hydraulics.oil_low</Name>
 							<Comment><![CDATA[ 2.1]]></Comment>
 							<Type>BOOL</Type>
@@ -3850,62 +3603,19 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
-							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-							<SubVar>
-								<Name>AxisState</Name>
-								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
-0  = INACTIVE:		axis has no job
-1  = RUNNING:		axis is executing a motion job
-2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
-3  = PHASE_VELOCONST:	axis is moving at constant velocity
-4  = PHASE_ACCPOS:	axis is accelerating
-5  = PHASE_ACCNEG:	axis is decelerating
-Slaves only:
-11 = PREPHASE:		slave axis is in a motion pre-phase
-12 = SYNCHRONIZING:	slave axis is synchronizing
-13 = SYNCHRONOUS:	slave axis is moving synchronously
-External Setpoint Generation:
-41 = EXTSETGEN_MODE1:	external setpoint generation active
-42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>HomingState</Name>
-								<Comment><![CDATA[Axis Homing Status:
-0: idle
-1: start homing
-2: searching home switch
-3: stopping on home switch
-4: moving off home switch
-5: searching sync pulse
-6: stopping after homing
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>CoupleState</Name>
-								<Comment><![CDATA[Axis Coupling Status:
-0: axis is a single axis (not coupled)
-1: axis is a master axis
-2: axis is master and slave
-3: axis is a slave axis
-]]></Comment>
-							</SubVar>
-						</Var>
-						<Var>
 							<Name>GVL_Hydraulics.suction_running</Name>
 							<Comment><![CDATA[ 2.8]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oilpan_maximum</Name>
-							<Comment><![CDATA[DIN39 4.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Hydraulics.oil_temperature</Name>
 							<Comment><![CDATA[BT2]]></Comment>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oilpan_maximum</Name>
+							<Comment><![CDATA[DIN39 4.6]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Hydraulics.oil_reserve</Name>
@@ -4003,238 +3713,6 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_pendant_control.BCD1</Name>
-							<Comment><![CDATA[DIN17 2.0]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.BCD2</Name>
-							<Comment><![CDATA[DIN18 2.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.BCD4</Name>
-							<Comment><![CDATA[DIN19 2.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.BCD8</Name>
-							<Comment><![CDATA[DIN20 2.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.AzimuthAxisRef.NcToPlc</Name>
-							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-							<SubVar>
-								<Name>AxisState</Name>
-								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
-0  = INACTIVE:		axis has no job
-1  = RUNNING:		axis is executing a motion job
-2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
-3  = PHASE_VELOCONST:	axis is moving at constant velocity
-4  = PHASE_ACCPOS:	axis is accelerating
-5  = PHASE_ACCNEG:	axis is decelerating
-Slaves only:
-11 = PREPHASE:		slave axis is in a motion pre-phase
-12 = SYNCHRONIZING:	slave axis is synchronizing
-13 = SYNCHRONOUS:	slave axis is moving synchronously
-External Setpoint Generation:
-41 = EXTSETGEN_MODE1:	external setpoint generation active
-42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>HomingState</Name>
-								<Comment><![CDATA[Axis Homing Status:
-0: idle
-1: start homing
-2: searching home switch
-3: stopping on home switch
-4: moving off home switch
-5: searching sync pulse
-6: stopping after homing
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>CoupleState</Name>
-								<Comment><![CDATA[Axis Coupling Status:
-0: axis is a single axis (not coupled)
-1: axis is a master axis
-2: axis is master and slave
-3: axis is a slave axis
-]]></Comment>
-							</SubVar>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.ElevationAxisRef.NcToPlc</Name>
-							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-							<SubVar>
-								<Name>AxisState</Name>
-								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
-0  = INACTIVE:		axis has no job
-1  = RUNNING:		axis is executing a motion job
-2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
-3  = PHASE_VELOCONST:	axis is moving at constant velocity
-4  = PHASE_ACCPOS:	axis is accelerating
-5  = PHASE_ACCNEG:	axis is decelerating
-Slaves only:
-11 = PREPHASE:		slave axis is in a motion pre-phase
-12 = SYNCHRONIZING:	slave axis is synchronizing
-13 = SYNCHRONOUS:	slave axis is moving synchronously
-External Setpoint Generation:
-41 = EXTSETGEN_MODE1:	external setpoint generation active
-42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>HomingState</Name>
-								<Comment><![CDATA[Axis Homing Status:
-0: idle
-1: start homing
-2: searching home switch
-3: stopping on home switch
-4: moving off home switch
-5: searching sync pulse
-6: stopping after homing
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>CoupleState</Name>
-								<Comment><![CDATA[Axis Coupling Status:
-0: axis is a single axis (not coupled)
-1: axis is a master axis
-2: axis is master and slave
-3: axis is a slave axis
-]]></Comment>
-							</SubVar>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.DerotatorAxisRef.NcToPlc</Name>
-							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-							<SubVar>
-								<Name>AxisState</Name>
-								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
-0  = INACTIVE:		axis has no job
-1  = RUNNING:		axis is executing a motion job
-2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
-3  = PHASE_VELOCONST:	axis is moving at constant velocity
-4  = PHASE_ACCPOS:	axis is accelerating
-5  = PHASE_ACCNEG:	axis is decelerating
-Slaves only:
-11 = PREPHASE:		slave axis is in a motion pre-phase
-12 = SYNCHRONIZING:	slave axis is synchronizing
-13 = SYNCHRONOUS:	slave axis is moving synchronously
-External Setpoint Generation:
-41 = EXTSETGEN_MODE1:	external setpoint generation active
-42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>HomingState</Name>
-								<Comment><![CDATA[Axis Homing Status:
-0: idle
-1: start homing
-2: searching home switch
-3: stopping on home switch
-4: moving off home switch
-5: searching sync pulse
-6: stopping after homing
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>CoupleState</Name>
-								<Comment><![CDATA[Axis Coupling Status:
-0: axis is a single axis (not coupled)
-1: axis is a master axis
-2: axis is master and slave
-3: axis is a slave axis
-]]></Comment>
-							</SubVar>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.FocusAxisRef.NcToPlc</Name>
-							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-							<SubVar>
-								<Name>AxisState</Name>
-								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
-0  = INACTIVE:		axis has no job
-1  = RUNNING:		axis is executing a motion job
-2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
-3  = PHASE_VELOCONST:	axis is moving at constant velocity
-4  = PHASE_ACCPOS:	axis is accelerating
-5  = PHASE_ACCNEG:	axis is decelerating
-Slaves only:
-11 = PREPHASE:		slave axis is in a motion pre-phase
-12 = SYNCHRONIZING:	slave axis is synchronizing
-13 = SYNCHRONOUS:	slave axis is moving synchronously
-External Setpoint Generation:
-41 = EXTSETGEN_MODE1:	external setpoint generation active
-42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>HomingState</Name>
-								<Comment><![CDATA[Axis Homing Status:
-0: idle
-1: start homing
-2: searching home switch
-3: stopping on home switch
-4: moving off home switch
-5: searching sync pulse
-6: stopping after homing
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>CoupleState</Name>
-								<Comment><![CDATA[Axis Coupling Status:
-0: axis is a single axis (not coupled)
-1: axis is a master axis
-2: axis is master and slave
-3: axis is a slave axis
-]]></Comment>
-							</SubVar>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.reset_switch</Name>
-							<Comment><![CDATA[DIN21 2.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.direction_up</Name>
-							<Comment><![CDATA[DIN22 2.5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.direction_down</Name>
-							<Comment><![CDATA[DIN23 2.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.key_switch</Name>
-							<Comment><![CDATA[DIN24 2.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.start_switch</Name>
-							<Comment><![CDATA[DIN25 3.0 (enable)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.direction_left</Name>
-							<Comment><![CDATA[DIN26 3.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.direction_right</Name>
-							<Comment><![CDATA[DIN27 3.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.Error</Name>
-							<Comment><![CDATA[ Safety Error Condition]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Main.phase_available</Name>
 							<Comment><![CDATA[DIN1 0.0]]></Comment>
 							<Type>BOOL</Type>
@@ -4269,9 +3747,20 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.brake_clearing</Name>
-							<Comment><![CDATA[DIN15 1.6]]></Comment>
-							<Type>BOOL</Type>
+							<Name>GVL_Telescope.AzimuthAxisRef.NcToPlc</Name>
+							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.ElevationAxisRef.NcToPlc</Name>
+							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.DerotatorAxisRef.NcToPlc</Name>
+							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.FocusAxisRef.NcToPlc</Name>
+							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Main.main_cabinet_temperature</Name>
@@ -4279,47 +3768,9 @@ External Setpoint Generation:
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
-							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-							<SubVar>
-								<Name>AxisState</Name>
-								<Comment><![CDATA[Present State Of The Axis Movement (continuous axis):
-0  = INACTIVE:		axis has no job
-1  = RUNNING:		axis is executing a motion job
-2  = OVERRIDE_ZERO:	axis is executing a job but override is zero
-3  = PHASE_VELOCONST:	axis is moving at constant velocity
-4  = PHASE_ACCPOS:	axis is accelerating
-5  = PHASE_ACCNEG:	axis is decelerating
-Slaves only:
-11 = PREPHASE:		slave axis is in a motion pre-phase
-12 = SYNCHRONIZING:	slave axis is synchronizing
-13 = SYNCHRONOUS:	slave axis is moving synchronously
-External Setpoint Generation:
-41 = EXTSETGEN_MODE1:	external setpoint generation active
-42 = EXTSETGEN_MODE2:	internal and external setpoint gen. active
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>HomingState</Name>
-								<Comment><![CDATA[Axis Homing Status:
-0: idle
-1: start homing
-2: searching home switch
-3: stopping on home switch
-4: moving off home switch
-5: searching sync pulse
-6: stopping after homing
-]]></Comment>
-							</SubVar>
-							<SubVar>
-								<Name>CoupleState</Name>
-								<Comment><![CDATA[Axis Coupling Status:
-0: axis is a single axis (not coupled)
-1: axis is a master axis
-2: axis is master and slave
-3: axis is a slave axis
-]]></Comment>
-							</SubVar>
+							<Name>GVL_Main.brake_clearing</Name>
+							<Comment><![CDATA[DIN15 1.6]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
@@ -4339,6 +3790,21 @@ External Setpoint Generation:
 						<Var>
 							<Name>FanControl.Fan_axis.MDP5001_511_733_Output</Name>
 							<Type GUID="{0D3B3A77-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_O_32199BA1</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.Run</Name>
+							<Comment><![CDATA[ Run/Stop Safety]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.Restart</Name>
+							<Comment><![CDATA[ Restart Safety]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.ErrAck</Name>
+							<Comment><![CDATA[ Error Acknowledgement ]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.Inverter_Enable</Name>
@@ -4363,6 +3829,36 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Dome.DomeAxisRef.PlcToNc</Name>
 							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_FilterWheel.FilterWheel_AxisRef.PlcToNc</Name>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.lamp_up</Name>
+							<Comment><![CDATA[ Outputs
+DOUT9 1.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.lamp_down</Name>
+							<Comment><![CDATA[DOUT10 1.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.lamp_right</Name>
+							<Comment><![CDATA[DOUT11 1.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.lamp_left</Name>
+							<Comment><![CDATA[DOUT12 1.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.lamp_error</Name>
+							<Comment><![CDATA[DOUT13 1.4]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Hydraulics.oil_pump_enable</Name>
@@ -4411,47 +3907,6 @@ External Setpoint Generation:
 							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
-							<Name>GVL_pendant_control.lamp_up</Name>
-							<Comment><![CDATA[ Outputs
-DOUT9 1.0]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.lamp_down</Name>
-							<Comment><![CDATA[DOUT10 1.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.lamp_right</Name>
-							<Comment><![CDATA[DOUT11 1.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.lamp_left</Name>
-							<Comment><![CDATA[DOUT12 1.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.lamp_error</Name>
-							<Comment><![CDATA[DOUT13 1.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.Run</Name>
-							<Comment><![CDATA[ Run/Stop Safety]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.Restart</Name>
-							<Comment><![CDATA[ Restart Safety]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.ErrAck</Name>
-							<Comment><![CDATA[ Error Acknowledgement ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Main.lamp_power</Name>
 							<Comment><![CDATA[DOUT1 0.0]]></Comment>
 							<Type>BOOL</Type>
@@ -4471,10 +3926,6 @@ DOUT9 1.0]]></Comment>
 							<Comment><![CDATA[DOUT7 0.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
-						<Var>
-							<Name>GVL_FilterWheel.FilterWheel_AxisRef.PlcToNc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2020-11-02T13:21:21">
 						<OwnerA Name="OutputSrc" Prefix="TIPC^RoboTelRuntime^RoboTelRuntime Instance" Type="2">
@@ -4486,6 +3937,17 @@ DOUT9 1.0]]></Comment>
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
+					<Contexts>
+						<Context>
+							<Id NeedCalleeCall="true">0</Id>
+							<Name>PlcTask</Name>
+							<ManualConfig>
+								<OTCID>#x02010050</OTCID>
+							</ManualConfig>
+							<Priority>10</Priority>
+							<CycleTime>10000000</CycleTime>
+						</Context>
+					</Contexts>
 					<TaskPouOids>
 						<TaskPouOid Prio="10" OTCID="#x08502001"/>
 					</TaskPouOids>
@@ -8908,10 +8370,219 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 									<CoeProfile ProfileNo="33493897"/>
 								</EtherCAT>
 							</Box>
+							<Box Id="78" BoxType="9099" BoxFlags="#x00000020">
+								<Name>Klemme 78 (EL3024)</Name>
+								<ImageId>1004</ImageId>
+								<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x0bd03052" RevisionNo="#x00120000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL3024 4K. Ana. Eingang 4-20mA DIFF" Desc="EL3024" PortABoxInfo="#x0100004a">
+									<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
+									<SyncMan>801080002200010002000000800080008000801022010000</SyncMan>
+									<SyncMan>001100000400000003000000000000000000001104000000</SyncMan>
+									<SyncMan>801110002000010004000000000000001000801120010000</SyncMan>
+									<Fmmu>0000000000000000801100010100000002000000000000000000000000000000</Fmmu>
+									<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
+									<BootStrapData>0010f400f410f400</BootStrapData>
+									<Pdo Name="AI Standard Channel 1" Index="#x1a00" Flags="#x0010" SyncMan="3">
+										<ExcludePdo>#x1a01</ExcludePdo>
+										<Entry Name="Status__Underrange" Index="#x6000" Sub="#x01">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Underrange event active]]></Comment>
+										</Entry>
+										<Entry Name="Status__Overrange" Index="#x6000" Sub="#x02">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Overrange event active]]></Comment>
+										</Entry>
+										<Entry Name="Status__Limit 1" Index="#x6000" Sub="#x03">
+											<Type>BIT2</Type>
+											<Comment><![CDATA[Bit0: Value smaller/equal Limit1
+Bit1: Value bigger/equal Limit1]]></Comment>
+										</Entry>
+										<Entry Name="Status__Limit 2" Index="#x6000" Sub="#x05">
+											<Type>BIT2</Type>
+											<Comment><![CDATA[Bit0: Value smaller/equal Limit2
+Bit1: Value bigger/equal Limit2]]></Comment>
+										</Entry>
+										<Entry Name="Status__Error" Index="#x6000" Sub="#x07">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Bit set when Over- or Underrange]]></Comment>
+										</Entry>
+										<Entry Name="Status__">
+											<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+										</Entry>
+										<Entry Name="Status__">
+											<Type GUID="{18071995-0000-0000-0000-002000000006}">ARRAY [0..5] OF BIT</Type>
+										</Entry>
+										<Entry Name="Status__TxPDO State" Index="#x6000" Sub="#x0f">
+											<Type>BIT</Type>
+											<Comment><![CDATA[TRUE when this TxPDO is not valid]]></Comment>
+										</Entry>
+										<Entry Name="Status__TxPDO Toggle" Index="#x6000" Sub="#x10">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Bit toggles everytime when new value available]]></Comment>
+										</Entry>
+										<Entry Name="Value" Index="#x6000" Sub="#x11" Flags="#x00040000">
+											<Type>INT</Type>
+										</Entry>
+									</Pdo>
+									<Pdo Name="AI Compact Channel 1" Index="#x1a01" Flags="#x0010">
+										<ExcludePdo>#x1a00</ExcludePdo>
+										<Entry Name="Value" Index="#x6000" Sub="#x11" Flags="#x00040000">
+											<Type>INT</Type>
+										</Entry>
+									</Pdo>
+									<Pdo Name="AI Standard Channel 2" Index="#x1a02" Flags="#x0010" SyncMan="3">
+										<ExcludePdo>#x1a03</ExcludePdo>
+										<Entry Name="Status__Underrange" Index="#x6010" Sub="#x01">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Underrange event active]]></Comment>
+										</Entry>
+										<Entry Name="Status__Overrange" Index="#x6010" Sub="#x02">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Overrange event active]]></Comment>
+										</Entry>
+										<Entry Name="Status__Limit 1" Index="#x6010" Sub="#x03">
+											<Type>BIT2</Type>
+											<Comment><![CDATA[Bit0: Value smaller/equal Limit1
+Bit1: Value bigger/equal Limit1]]></Comment>
+										</Entry>
+										<Entry Name="Status__Limit 2" Index="#x6010" Sub="#x05">
+											<Type>BIT2</Type>
+											<Comment><![CDATA[Bit0: Value smaller/equal Limit2
+Bit1: Value bigger/equal Limit2]]></Comment>
+										</Entry>
+										<Entry Name="Status__Error" Index="#x6010" Sub="#x07">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Bit set when Over- or Underrange]]></Comment>
+										</Entry>
+										<Entry Name="Status__">
+											<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+										</Entry>
+										<Entry Name="Status__">
+											<Type GUID="{18071995-0000-0000-0000-002000000006}">ARRAY [0..5] OF BIT</Type>
+										</Entry>
+										<Entry Name="Status__TxPDO State" Index="#x6010" Sub="#x0f">
+											<Type>BIT</Type>
+											<Comment><![CDATA[TRUE when this TxPDO is not valid]]></Comment>
+										</Entry>
+										<Entry Name="Status__TxPDO Toggle" Index="#x6010" Sub="#x10">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Bit toggles everytime when new value available]]></Comment>
+										</Entry>
+										<Entry Name="Value" Index="#x6010" Sub="#x11" Flags="#x00040000">
+											<Type>INT</Type>
+										</Entry>
+									</Pdo>
+									<Pdo Name="AI Compact Channel 2" Index="#x1a03" Flags="#x0010">
+										<ExcludePdo>#x1a02</ExcludePdo>
+										<Entry Name="Value" Index="#x6010" Sub="#x11" Flags="#x00040000">
+											<Type>INT</Type>
+										</Entry>
+									</Pdo>
+									<Pdo Name="AI Standard Channel 3" Index="#x1a04" Flags="#x0010" SyncMan="3">
+										<ExcludePdo>#x1a05</ExcludePdo>
+										<Entry Name="Status__Underrange" Index="#x6020" Sub="#x01">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Underrange event active]]></Comment>
+										</Entry>
+										<Entry Name="Status__Overrange" Index="#x6020" Sub="#x02">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Overrange event active]]></Comment>
+										</Entry>
+										<Entry Name="Status__Limit 1" Index="#x6020" Sub="#x03">
+											<Type>BIT2</Type>
+											<Comment><![CDATA[Bit0: Value smaller/equal Limit1
+Bit1: Value bigger/equal Limit1]]></Comment>
+										</Entry>
+										<Entry Name="Status__Limit 2" Index="#x6020" Sub="#x05">
+											<Type>BIT2</Type>
+											<Comment><![CDATA[Bit0: Value smaller/equal Limit2
+Bit1: Value bigger/equal Limit2]]></Comment>
+										</Entry>
+										<Entry Name="Status__Error" Index="#x6020" Sub="#x07">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Bit set when Over- or Underrange]]></Comment>
+										</Entry>
+										<Entry Name="Status__">
+											<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+										</Entry>
+										<Entry Name="Status__">
+											<Type GUID="{18071995-0000-0000-0000-002000000006}">ARRAY [0..5] OF BIT</Type>
+										</Entry>
+										<Entry Name="Status__TxPDO State" Index="#x6020" Sub="#x0f">
+											<Type>BIT</Type>
+											<Comment><![CDATA[TRUE when this TxPDO is not valid]]></Comment>
+										</Entry>
+										<Entry Name="Status__TxPDO Toggle" Index="#x6020" Sub="#x10">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Bit toggles everytime when new value available]]></Comment>
+										</Entry>
+										<Entry Name="Value" Index="#x6020" Sub="#x11" Flags="#x00040000">
+											<Type>INT</Type>
+										</Entry>
+									</Pdo>
+									<Pdo Name="AI Compact Channel 3" Index="#x1a05" Flags="#x0010">
+										<ExcludePdo>#x1a04</ExcludePdo>
+										<Entry Name="Value" Index="#x6020" Sub="#x11" Flags="#x00040000">
+											<Type>INT</Type>
+										</Entry>
+									</Pdo>
+									<Pdo Name="AI Standard Channel 4" Index="#x1a06" Flags="#x0010" SyncMan="3">
+										<ExcludePdo>#x1a07</ExcludePdo>
+										<Entry Name="Status__Underrange" Index="#x6030" Sub="#x01">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Underrange event active]]></Comment>
+										</Entry>
+										<Entry Name="Status__Overrange" Index="#x6030" Sub="#x02">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Overrange event active]]></Comment>
+										</Entry>
+										<Entry Name="Status__Limit 1" Index="#x6030" Sub="#x03">
+											<Type>BIT2</Type>
+											<Comment><![CDATA[Bit0: Value smaller/equal Limit1
+Bit1: Value bigger/equal Limit1]]></Comment>
+										</Entry>
+										<Entry Name="Status__Limit 2" Index="#x6030" Sub="#x05">
+											<Type>BIT2</Type>
+											<Comment><![CDATA[Bit0: Value smaller/equal Limit2
+Bit1: Value bigger/equal Limit2]]></Comment>
+										</Entry>
+										<Entry Name="Status__Error" Index="#x6030" Sub="#x07">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Bit set when Over- or Underrange]]></Comment>
+										</Entry>
+										<Entry Name="Status__">
+											<Type GUID="{18071995-0000-0000-0000-002000000001}">ARRAY [0..0] OF BIT</Type>
+										</Entry>
+										<Entry Name="Status__">
+											<Type GUID="{18071995-0000-0000-0000-002000000006}">ARRAY [0..5] OF BIT</Type>
+										</Entry>
+										<Entry Name="Status__TxPDO State" Index="#x6030" Sub="#x0f">
+											<Type>BIT</Type>
+											<Comment><![CDATA[TRUE when this TxPDO is not valid]]></Comment>
+										</Entry>
+										<Entry Name="Status__TxPDO Toggle" Index="#x6030" Sub="#x10">
+											<Type>BIT</Type>
+											<Comment><![CDATA[Bit toggles everytime when new value available]]></Comment>
+										</Entry>
+										<Entry Name="Value" Index="#x6030" Sub="#x11" Flags="#x00040000">
+											<Type>INT</Type>
+										</Entry>
+									</Pdo>
+									<Pdo Name="AI Compact Channel 4" Index="#x1a07" Flags="#x0010">
+										<ExcludePdo>#x1a06</ExcludePdo>
+										<Entry Name="Value" Index="#x6030" Sub="#x11" Flags="#x00040000">
+											<Type>INT</Type>
+										</Entry>
+									</Pdo>
+									<CoeProfile ProfileNo="19665801"/>
+									<CoeProfile ProfileNo="19665801"/>
+									<CoeProfile ProfileNo="19665801"/>
+									<CoeProfile ProfileNo="19665801"/>
+								</EtherCAT>
+							</Box>
 							<Box Id="70" BoxType="9099">
 								<Name>Klemme 70 (EL9011)</Name>
 								<ImageId>1009</ImageId>
-								<EtherCAT CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x23333050" InfoDataState="false" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9011 Endklemme" Desc="EL9011" PortABoxInfo="#x0100004a"/>
+								<EtherCAT CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x23333050" InfoDataState="false" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL9011 Endklemme" Desc="EL9011" PortABoxInfo="#x0100004e"/>
 							</Box>
 						</Box>
 						<Box Id="69" BoxType="9099">
@@ -13093,21 +12764,21 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{03040030-0030-0304-3000-040330000403}" Id="#x02030060" Watchdog="04000000040000000400000004000000"/>
-		<MappingInfo Identifier="{08502001-0010-0304-0020-500810000403}" Id="#x02030050" Watchdog="00000000000000000000000000000000"/>
+		<MappingInfo Identifier="{00000000-2001-0850-0020-500831000403}" Id="#x02030020"/>
 		<MappingInfo Identifier="{00000000-0010-0304-6000-040310000403}" Id="#x02030010"/>
 		<MappingInfo Identifier="{00000000-0020-0304-6000-040322000403}" Id="#x02030030"/>
+		<MappingInfo Identifier="{08502001-0010-0304-0020-500810000403}" Id="#x02030050" Watchdog="00000000000000000000000000000000"/>
 		<MappingInfo Identifier="{05000010-2001-0850-6000-040300205008}" Id="#x02030040" Watchdog="14000000040000000400000004000000"/>
-		<MappingInfo Identifier="{00000000-2001-0850-0020-500831000403}" Id="#x02030020"/>
+		<MappingInfo Identifier="{03040030-0030-0304-3000-040330000403}" Id="#x02030060" Watchdog="04000000040000000400000004000000"/>
 		<OwnerA Name="TIID^Device 1 (EtherCAT)">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^TwinSAFE IN (EL1904)">
-				<Link VarA="Term 1 (EK1200)^TwinSAFE Logic (EL6910)^ConnectionInputs^Message_2 TxPDO" VarB="Module 1 (FSOES)^RxPDO^FSOE"/>
+				<Link VarA="Term 1 (EK1200)^TwinSAFE Logic (EL6910)^ConnectionOutputs^Message_2 RxPDO" VarB="Module 1 (FSOES)^TxPDO^FSOE"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^TwinSAFE Logic (EL6910)">
-				<Link VarA="Term 1 (EK1200)^TwinSAFE IN (EL1904)^Module 1 (FSOES)^TxPDO^FSOE" VarB="ConnectionOutputs^Message_2 RxPDO"/>
+				<Link VarA="Term 1 (EK1200)^TwinSAFE IN (EL1904)^Module 1 (FSOES)^RxPDO^FSOE" VarB="ConnectionInputs^Message_2 TxPDO"/>
+				<Link VarA="Term 1 (EK1200)^TwinSAFE OUT (EL2904)^Module 1 (FSOES)^RxPDO^FSOE" VarB="ConnectionInputs^Message_3 TxPDO"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^TwinSAFE OUT (EL2904)">
-				<Link VarA="Term 1 (EK1200)^TwinSAFE Logic (EL6910)^ConnectionInputs^Message_3 TxPDO" VarB="Module 1 (FSOES)^RxPDO^FSOE"/>
 				<Link VarA="Term 1 (EK1200)^TwinSAFE Logic (EL6910)^ConnectionOutputs^Message_3 RxPDO" VarB="Module 1 (FSOES)^TxPDO^FSOE"/>
 			</OwnerB>
 		</OwnerA>
