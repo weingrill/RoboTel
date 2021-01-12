@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <POU Name="FB_Axis2" Id="{a3e55664-127b-4a99-a2ba-301ba26f68b3}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Axis2
 VAR_INPUT
@@ -72,6 +72,7 @@ END_IF
 Axis_Move( Axis := AxisRef,
 	Execute := MoveAxis AND Ready,
 	Position := Position,
+	BufferMode := MC_BlendingHigh OR MC_BlendingNext,
 	Done => MoveDone,
 	Busy => Busy,
 	Active => Active,
@@ -104,7 +105,9 @@ Axis_Position(Axis := AxisRef,
 ]]></ST>
     </Implementation>
     <LineIds Name="FB_Axis2">
-      <LineId Id="27" Count="52" />
+      <LineId Id="27" Count="23" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="51" Count="28" />
       <LineId Id="9" Count="0" />
     </LineIds>
   </POU>
