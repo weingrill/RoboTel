@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <POU Name="AzimuthControl" Id="{8e08648a-b748-4448-9dcc-aa13dfcf6a06}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM AzimuthControl
 VAR_INPUT
@@ -11,7 +11,7 @@ END_VAR
 
 VAR
 	AzimuthAxisJog:	FB_AxisJog;
-	AzimuthAxis:		FB_Axis;
+	AzimuthAxis:		FB_Axis2;
 	error: BOOL;
 	position: LREAL;
 	act_position: LREAL;
@@ -30,12 +30,12 @@ END_VAR
 						fActPos => act_position,
 						stAxis :=	GVL_Telescope.AzimuthAxisRef);	
 ELSE
-	AzimuthAxis(	bPowerEnable := TelescopeControl.power AND Main.power_OK,
-					bReset := reset,
-					fMoveAbsPos := position, 
-					fActPos => act_position,
-					bAxError => error,
-					stAxis :=	GVL_Telescope.AzimuthAxisRef);
+	AzimuthAxis(	Enable := TelescopeControl.power AND Main.power_OK,
+					Reset := reset,
+					Position := position, 
+					ActualPosition => act_position,
+					Error => error,
+					AxisRef :=	GVL_Telescope.AzimuthAxisRef);
 END_IF
 ]]></ST>
     </Implementation>

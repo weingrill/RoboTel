@@ -30,7 +30,7 @@ WindSpeed := 		F_YREAL(GVL_Environment.rawWindSpeed, 		0, 32767,   0.0, 50.0); /
 WindDirection :=	F_YREAL(GVL_Environment.rawWindDirection, 	0, 32767,   0.0, 360.0); // °
 Temperature :=  	F_YREAL(GVL_Environment.rawTemperature, 	0, 32767, -30.0, 70.0); // °C -40...80?
 Humidity :=			F_YREAL(GVL_Environment.rawHumidity, 		0, 32767,   0.0, 100.0); // %
-Pressure := 		F_YREAL(GVL_Environment.rawPressure,		0, 32767, 900.0, 1200.0); // mBar 300...1100? 800..1060?
+Pressure := 		F_YREAL(GVL_Environment.rawPressure,		0, 32767, 800.0, 1060.0); // mBar 600...1060? 800..1060?
 
 HumidityDome :=			F_YREAL(GVL_Environment.rawHumidityDome, 		0, 32767,   0.0, 100.0); // %
 TemperatureDome :=  	F_YREAL(GVL_Environment.rawTemperatureDome, 	0, 32767, -30.0, 70.0); // °C
@@ -51,21 +51,21 @@ HumidityDomeAverage(IN := HumidityDome, PT := T#2M);
 WindEvent(	Trigger := avg_wind > 10.0, 
 			Level := ADSLOG_MSGTYPE_WARN,
 			FormatString := 'Wind Speed: %s',
-			OnMessage := LREAL_TO_STRING(WindSpeed),
+			OnMessage := LREAL_TO_FMTSTR(WindSpeed, 2, TRUE),
 			OffMessage := 'OK',
 			OffLevel := ADSLOG_MSGTYPE_HINT);
 
-HumidityEvent(	Trigger :=  HumidityAverage.AVG> 80.0, 
+HumidityEvent(	Trigger :=  HumidityAverage.AVG>= 80.0, 
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := 'Humidity: %s',
-				OnMessage := LREAL_TO_STRING( HumidityAverage.AVG),
+				OnMessage := LREAL_TO_FMTSTR( HumidityAverage.AVG, 1, TRUE),
 				OffMessage := 'OK',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
 
-HumidityDomeEvent(	Trigger :=  HumidityDomeAverage.AVG> 80.0, 
+HumidityDomeEvent(	Trigger :=  HumidityDomeAverage.AVG>= 80.0, 
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := 'Humidity in Dome: %s',
-				OnMessage := LREAL_TO_STRING( HumidityAverage.AVG),
+				OnMessage := LREAL_TO_FMTSTR( HumidityDomeAverage.AVG, 1, TRUE),
 				OffMessage := 'OK',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
 

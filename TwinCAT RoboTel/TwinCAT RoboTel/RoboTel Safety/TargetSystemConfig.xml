@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TargetSystemConfig Crc="545911200" Version="1.4">
+<TargetSystemConfig Crc="2277937833" Version="1.4">
   <TargetSystemType>HSafetyPLC</TargetSystemType>
   <TargetSystemSubType>EL6910</TargetSystemSubType>
   <IsExternalDevice>false</IsExternalDevice>
   <TargetSystemObjectId>50462722</TargetSystemObjectId>
-  <TargetSystemObjectName>Klemme 2 (EL6910)</TargetSystemObjectName>
+  <TargetSystemObjectName>TwinSAFE Logic (EL6910)</TargetSystemObjectName>
   <SoftwareVersion>03 (V01.09)     </SoftwareVersion>
   <SerialNumber>2102577</SerialNumber>
   <ProjectCRC>59043</ProjectCRC>
@@ -16,7 +16,7 @@
   <AmsNetID>5.78.96.50.2.1</AmsNetID>
   <AmsPort>1001</AmsPort>
   <ConnectionInfoDataConfigOld>false</ConnectionInfoDataConfigOld>
-  <TakeOverSafetyAliasDeviceNamesInProcessImage>false</TakeOverSafetyAliasDeviceNamesInProcessImage>
-  <TakeOverStandardAliasDeviceNamesInProcessImage>false</TakeOverStandardAliasDeviceNamesInProcessImage>
+  <TakeOverSafetyAliasDeviceNamesInProcessImage>true</TakeOverSafetyAliasDeviceNamesInProcessImage>
+  <TakeOverStandardAliasDeviceNamesInProcessImage>true</TakeOverStandardAliasDeviceNamesInProcessImage>
   <BackupRestore Needed="0" Activated="false" RestoreUserAdministration="false" />
 </TargetSystemConfig>

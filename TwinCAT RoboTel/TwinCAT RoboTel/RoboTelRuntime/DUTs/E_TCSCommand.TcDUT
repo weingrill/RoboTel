@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <DUT Name="E_TCSCommand" Id="{455814c6-4fba-4cec-90aa-a71c1d2a50ea}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
@@ -11,8 +11,6 @@ TYPE E_TCSCommand :
 	track,
 	goto,
 	stop,
-	east,
-	west,
 	pumping
 );
 END_TYPE
