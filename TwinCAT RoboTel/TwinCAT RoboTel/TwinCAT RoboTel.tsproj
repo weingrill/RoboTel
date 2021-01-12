@@ -2409,7 +2409,7 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-00200000000D}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..12] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-00200000000D}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..12] OF BIT</Name>
 			<BitSize>13</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -3475,40 +3475,6 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Environment.rawRain</Name>
-							<Comment><![CDATA[ Digital Input 1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawWindSpeed</Name>
-							<Comment><![CDATA[ Input 1]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawHumidity</Name>
-							<Comment><![CDATA[ Input 2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
-							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawTemperature</Name>
-							<Comment><![CDATA[ Input 3]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawWindDirection</Name>
-							<Comment><![CDATA[ Input 4]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawPressure</Name>
-							<Comment><![CDATA[ Input 5]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_pendant_control.BCD1</Name>
 							<Comment><![CDATA[DIN17 2.0]]></Comment>
 							<Type>BOOL</Type>
@@ -3517,10 +3483,6 @@ External Setpoint Generation:
 							<Name>GVL_pendant_control.BCD2</Name>
 							<Comment><![CDATA[DIN18 2.1]]></Comment>
 							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
-							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.BCD4</Name>
@@ -3536,6 +3498,14 @@ External Setpoint Generation:
 							<Name>GVL_pendant_control.reset_switch</Name>
 							<Comment><![CDATA[DIN21 2.4]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
+							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
+							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.direction_up</Name>
@@ -3608,14 +3578,14 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Hydraulics.oil_temperature</Name>
-							<Comment><![CDATA[BT2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Hydraulics.oilpan_maximum</Name>
 							<Comment><![CDATA[DIN39 4.6]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_temperature</Name>
+							<Comment><![CDATA[BT2]]></Comment>
+							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Hydraulics.oil_reserve</Name>
@@ -3722,6 +3692,22 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Telescope.AzimuthAxisRef.NcToPlc</Name>
+							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.ElevationAxisRef.NcToPlc</Name>
+							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.DerotatorAxisRef.NcToPlc</Name>
+							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.FocusAxisRef.NcToPlc</Name>
+							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Main.key_switch</Name>
 							<Comment><![CDATA[DIN2 0.1]]></Comment>
 							<Type>BOOL</Type>
@@ -3747,20 +3733,9 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Telescope.AzimuthAxisRef.NcToPlc</Name>
-							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.ElevationAxisRef.NcToPlc</Name>
-							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.DerotatorAxisRef.NcToPlc</Name>
-							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.FocusAxisRef.NcToPlc</Name>
-							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<Name>GVL_Main.brake_clearing</Name>
+							<Comment><![CDATA[DIN15 1.6]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Main.main_cabinet_temperature</Name>
@@ -3768,9 +3743,43 @@ External Setpoint Generation:
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.brake_clearing</Name>
-							<Comment><![CDATA[DIN15 1.6]]></Comment>
+							<Name>GVL_Environment.rawWindSpeed</Name>
+							<Comment><![CDATA[ Input 1]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawHumidity</Name>
+							<Comment><![CDATA[ Input 2]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawTemperature</Name>
+							<Comment><![CDATA[ Input 3]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawWindDirection</Name>
+							<Comment><![CDATA[ Input 4]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawPressure</Name>
+							<Comment><![CDATA[ Input 5]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawRain</Name>
+							<Comment><![CDATA[ Digital Input 1]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawHumidityDome</Name>
+							<Comment><![CDATA[ indoors]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawTemperatureDome</Name>
+							<Type>INT</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
@@ -8371,7 +8380,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="78" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 78 (EL3024)</Name>
+								<Name>Analog IN (EL3024)</Name>
 								<ImageId>1004</ImageId>
 								<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x0bd03052" RevisionNo="#x00120000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL3024 4K. Ana. Eingang 4-20mA DIFF" Desc="EL3024" PortABoxInfo="#x0100004a">
 									<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
@@ -9074,7 +9083,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								</Pdo>
 							</EtherCAT>
 							<Box Id="88" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 88 (EL7211-0010)</Name>
+								<Name>Motor4 (EL7211-0010)</Name>
 								<ImageId>1007</ImageId>
 								<Xml>
 									<EL72xxDriveTool>
@@ -10466,7 +10475,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="91" BoxType="9099" BoxFlags="#x00000020">
-								<Name>Klemme 91 (EL3202-0010)</Name>
+								<Name>Temp5 (EL3202-0010)</Name>
 								<ImageId>1004</ImageId>
 								<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x0c823052" RevisionNo="#x0016000a" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL3202-0010 2K. Ana. Eingang PT100 (RTD), hochgenau" Desc="EL3202-0010" PortABoxInfo="#x0100005a">
 									<SyncMan>001080002600010001000000800080008000001026010000</SyncMan>
@@ -10539,7 +10548,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								</EtherCAT>
 							</Box>
 							<Box Id="92" BoxType="9101" BoxFlags="#x00000020">
-								<Name>Klemme 92 (EL6001)</Name>
+								<Name>Serial IO (EL6001)</Name>
 								<ImageId>1011</ImageId>
 								<EtherCAT SlaveType="7" PdiType="#x0005" MboxDataLinkLayer="true" CycleMBoxPolling="true" CoeType="7" FoeType="1" VendorId="#x00000002" ProductCode="#x17713052" RevisionNo="#x00140000" InfoDataAddr="true" TimeoutMailbox2="2000" CheckRevisionNoType="3" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6001 Schnittstelle (RS232)" Desc="EL6001" PortABoxInfo="#x0100005b">
 									<SyncMan>0018f6002600010001000000f600f600f600001826010000</SyncMan>
@@ -12857,7 +12866,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^Filterrad">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 84 (EK1521)^Term 87 (EK1501)^Term 88 (EL7211-0010)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 84 (EK1521)^Term 87 (EK1501)^Motor4 (EL7211-0010)">
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
 				<Link VarA="Drive^Inputs^In^nState1" VarB="DRV Statusword^Statusword"/>
 				<Link VarA="Drive^Inputs^In^nState2" VarB="DRV Statusword^Statusword" Size="8" OffsB="8"/>
@@ -12966,6 +12975,10 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^GVL_Main.lamp_error" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_Main.lamp_power" VarB="Channel 1^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_Main.lamp_ready" VarB="Channel 2^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Dome Azimuth (EK1501)^Analog IN (EL3024)">
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawHumidityDome" VarB="AI Standard Channel 1^Value"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawTemperatureDome" VarB="AI Standard Channel 2^Value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Dome Azimuth (EK1501)^Dome IN (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_Dome.Azimut_home" VarB="Channel 4^Input"/>
