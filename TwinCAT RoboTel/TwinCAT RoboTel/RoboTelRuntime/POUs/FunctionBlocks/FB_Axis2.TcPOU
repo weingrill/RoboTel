@@ -11,6 +11,10 @@ VAR_INPUT
 	MoveAxis: 	BOOL;
 	// position to move to
 	Position: 	LREAL;
+	// Enable movement in positive direction
+	Enable_Positive:	BOOL := TRUE;
+	// Enable movement in negative direction
+	Enable_Negative:	BOOL := TRUE;
 END_VAR
 VAR_OUTPUT
 	// Reset has been executed
@@ -50,8 +54,8 @@ END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[Axis_Power(Axis := AxisRef,
 			Enable := Enable,
-			Enable_Positive := Enable,
-			Enable_Negative := Enable,
+			Enable_Positive := Enable_Positive,
+			Enable_Negative := Enable_Negative,
 			Override := 100.0,
 			Status => Ready,
 			Busy => Busy,
