@@ -26,13 +26,12 @@ In Programmen 1-9 löscht "Reset" etwaige Motorfehler. (Fehleranzeige an Handste
 
 # ToDo
 * Glasfasern in Triflexkette einziehen (MW+FT)
-* Elektronik für Filterrad einbauen (WB)
-* Relais für Kuppellicht in Kuppelsteuerung (WB)
-* Schalter für Kuppellicht in Kuppelsteuerung (WB)
-* Halbleiterrelais für Trockner in Kuppelsteuerung (WB)
 * RoboTel Server mit InfluxDB+Grafana (Dockercontainer?) (AJ)
 * Software (JW+TG)
 
 ## Optional:
-* Thermo-Hygrosensor 4–20mA für Kuppel bestellen (MW)
 * Hauptschranklüfter über Ralais (WB)
+
+# Programmierhinweise
+* MC_SetAcceptBlockedDriveSignal verfaehrt den Antrieb aus der Endlage
+* MC_ExtSetPointGenFeed -Enable / -Disable fuer externen Sollwertgenerator
