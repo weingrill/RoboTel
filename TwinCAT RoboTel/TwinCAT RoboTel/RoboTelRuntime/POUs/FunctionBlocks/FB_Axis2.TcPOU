@@ -31,6 +31,16 @@ VAR_OUTPUT
 	Busy: 			BOOL;
 	// axis is moving
 	Active: 		BOOL;
+	// axis is stopping
+	Stopping:		BOOL;
+	// axis is standing still (no commands issued) this should be the default
+	StandStill:		BOOL;
+	// axis is in motion
+	InMotion:		BOOL;
+	// axis is homing
+	Homing:			BOOL;
+	// axis is Accelerating or Decelerating
+	InRamp:			BOOL;
 	//	error condition
 	Error: 			BOOL;
 	// number of error
@@ -39,20 +49,25 @@ VAR_OUTPUT
 	ActualPosition: LREAL;
 END_VAR
 VAR
-	Axis_Power:	MC_Power;
-	Axis_Reset:	MC_Reset;
-	Axis_Move:	MC_MoveAbsolute;
+	Axis_Power:		MC_Power;
+	Axis_Reset:		MC_Reset;
+	Axis_Move:		MC_MoveAbsolute;
 	Axis_Position:	MC_ReadActualPosition;
-	Axis_Stop:	MC_Stop;
-	bStop: BOOL;
-
+	Axis_Stop:		MC_Stop;
+	Axis_Status:	MC_ReadStatus;
+	Axis_Home:		MC_Home;
+	bStop: 			BOOL;
 END_VAR
+
 VAR_IN_OUT
 	// axis reference
 	AxisRef:	AXIS_REF;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[Axis_Power(Axis := AxisRef,
+      <ST><![CDATA[Axis_Status(Enable := TRUE,
+			Axis := AxisRef);
+
+Axis_Power(Axis := AxisRef,
 			Enable := Enable,
 			Enable_Positive := Enable_Positive,
 			Enable_Negative := Enable_Negative,
@@ -106,13 +121,28 @@ Axis_Position(Axis := AxisRef,
 	Error => Error,
 	ErrorID => ErrorID,
 	Position => ActualPosition);
+
+
+InMotion := Axis_Status.ConstantVelocity OR
+			Axis_Status.DiscreteMotion OR
+			Axis_Status.ContinuousMotion OR
+			Axis_Status.SynchronizedMotion; 
+InRamp :=	Axis_Status.Accelerating OR
+			Axis_Status.Decelerating;
 ]]></ST>
     </Implementation>
     <LineIds Name="FB_Axis2">
+      <LineId Id="200" Count="1" />
+      <LineId Id="198" Count="0" />
       <LineId Id="27" Count="23" />
       <LineId Id="125" Count="0" />
       <LineId Id="51" Count="28" />
-      <LineId Id="9" Count="0" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="188" Count="2" />
+      <LineId Id="195" Count="1" />
+      <LineId Id="187" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
