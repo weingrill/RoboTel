@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <POU Name="ElevationControl" Id="{c0371b19-3d1d-4f20-bd19-ce60539d69cd}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM ElevationControl
 VAR_INPUT
@@ -17,6 +17,7 @@ VAR
 	position: 			LREAL;
 	act_position: 		LREAL;
 	ErrorID: UDINT;
+	ElevationAxisEvent: FB_Eventlog;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -32,13 +33,6 @@ END_VAR
 						fActPos => act_position,
 						stAxis :=	GVL_Telescope.ElevationAxisRef);	
 ELSE
-(*	ElevationAxis(	bPowerEnable := TelescopeControl.power AND Main.power_OK,
-					bReset := reset,
-					fMoveAbsPos := position, 
-					fActPos => act_position,
-					bAxError => error,
-					stAxis :=	GVL_Telescope.ElevationAxisRef);
-					*)
 	ElevationAxis(Enable := TelescopeControl.power AND HydraulicsControl.open_brake,
 					Reset := reset,
 					MoveAxis := MoveAxis,
@@ -49,10 +43,17 @@ ELSE
 					AxisRef := GVL_Telescope.ElevationAxisRef);
 					
 END_IF
-]]></ST>
+ElevationAxisEvent(	Trigger := Error, 
+				Level := ADSLOG_MSGTYPE_ERROR,
+				FormatString := 'Elevation Axis Error: %s',
+				OnMessage := UDINT_TO_STRING(ErrorID),
+				OffMEssage := 'OK');
+				]]></ST>
     </Implementation>
     <LineIds Name="ElevationControl">
-      <LineId Id="109" Count="28" />
+      <LineId Id="109" Count="11" />
+      <LineId Id="128" Count="9" />
+      <LineId Id="156" Count="4" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

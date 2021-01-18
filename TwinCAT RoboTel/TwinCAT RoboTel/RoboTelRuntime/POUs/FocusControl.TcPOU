@@ -1,19 +1,78 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <POU Name="FocusControl" Id="{d08d0458-4211-4cc5-9e25-2b5c152fb2d4}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM FocusControl
 VAR_INPUT
-	manual: BOOL := TRUE;	
+	inward: 	BOOL;
+	outward: 	BOOL;	
+	enable:		BOOL;
+	reset: 		BOOL;
+	// focus position in millimeters
+	position: 		LREAL;
+END_VAR
+
+VAR_OUTPUT
+	error: BOOL;
 END_VAR
 
 VAR
-	position: LREAL;
+	Focusstate:		RS;
+	FocusAxisJog:	FB_AxisJog;
+	FocusAxis:		FB_Axis2;
+	stopped: 		BOOL;
+	last_position:	LREAL;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[GVL_Telescope.focus_lock := FALSE;
+IF PendantControl.manual THEN
+	Focusstate(SET := enable,
+				RESET1 := reset,
+				Q1 => GVL_Telescope.focus_lock);
+	
+	FocusAxisJog(bPowerEnable := Focusstate.Q1,
+					bEnable_Positive := NOT GVL_Telescope.focus_limit_far,
+					bEnable_Negative := NOT GVL_Telescope.focus_limit_near,
+					bForward := outward,
+					bBackward := inward,
+					bReset := reset,
+					bStop := enable,
+					bErr => error,
+					stAxis :=	GVL_Telescope.FocusAxisRef);
+ELSE
+	Focusstate(SET := enable AND (position <> last_position),
+				RESET1 := stopped,
+				Q1 => GVL_Telescope.focus_lock);
+	// TODO: check if delay is necessary to unlock the focus
+	FocusAxis(Enable := 	enable,
+				Reset := 	reset,
+				MoveAxis := position <> last_position,
+				Position := position,
+				Enable_Positive := NOT GVL_Telescope.focus_limit_far,
+				Enable_Negative := NOT GVL_Telescope.focus_limit_near,
+				StopDone => stopped,
+				Error =>	error,
+				AxisRef := GVL_Telescope.FocusAxisRef);	
+	IF stopped THEN
+		last_position := position;
+	END_IF
+END_IF
+]]></ST>
     </Implementation>
     <LineIds Name="FocusControl">
+      <LineId Id="54" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="34" Count="2" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="18" Count="8" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="57" Count="3" />
+      <LineId Id="46" Count="3" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="50" Count="1" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="62" Count="2" />
+      <LineId Id="45" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <POU Name="DomeControl" Id="{0e02434d-920e-4c0f-81fc-5ff7d5573875}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM DomeControl
 VAR_INPUT
@@ -12,17 +12,19 @@ VAR_INPUT
 	Light: BOOL;
 END_VAR
 VAR
-	DomeAxis: FB_ModuloAxis;
+	DomeAxis: 	FB_ModuloAxis;
 	DomeJogAxis: FB_AxisJog;
 	Azimuth_set,
 	Azimuth_current,
 	Azimuth_old: LREAL;
 	manual_enable : BOOL;
-	move_azimuth, stop_azimuth: BOOL;
+	move_azimuth, 
+	stop_azimuth: BOOL;
 	DomeOpened,
-	DomeClosed:		BOOL;
+	DomeClosed:			BOOL;
    	DomeControlWord:	WORD;
 	DeHumidifierDelay : TON;
+	LightTimer:		TP;
 	bWrite       : BOOL;(* Rising edge at this variable starts command execution *)
 	nState       : BYTE := 0;
 	bBusy        : BOOL;
@@ -87,7 +89,9 @@ IF CloseDome THEN
 END_IF
 
 DeHumidifierDelay(IN := NOT OpenDome, PT := T#10S, Q => GVL_Dome.DeHumidifier);
-GVL_Dome.Light := Light;
+LightTimer(IN := Light, PT := T#60M);
+// Light is switched off after 60 minutes or if Light signal is low
+GVL_Dome.Light := Light AND LightTimer.Q;
 
 DomeControlWord.0 := TRUE;
 DomeControlWord.1 := OpenDome;
@@ -165,6 +169,7 @@ DomeCommEvent(	Trigger := bError,
       <LineId Id="385" Count="0" />
       <LineId Id="749" Count="3" />
       <LineId Id="771" Count="1" />
+      <LineId Id="830" Count="1" />
       <LineId Id="775" Count="1" />
       <LineId Id="747" Count="1" />
       <LineId Id="754" Count="0" />

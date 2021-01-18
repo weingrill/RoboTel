@@ -26,13 +26,21 @@ In Programmen 1-9 löscht "Reset" etwaige Motorfehler. (Fehleranzeige an Handste
 
 # ToDo
 * Glasfasern in Triflexkette einziehen (MW+FT)
-* Elektronik für Filterrad einbauen (WB)
-* Relais für Kuppellicht in Kuppelsteuerung (WB)
-* Schalter für Kuppellicht in Kuppelsteuerung (WB)
-* Halbleiterrelais für Trockner in Kuppelsteuerung (WB)
 * RoboTel Server mit InfluxDB+Grafana (Dockercontainer?) (AJ)
 * Software (JW+TG)
+* Homing Focus
+* Homing Azimut
+* Homing Elevation
+* Homing FilterWheel
+* Homing Derotator
 
 ## Optional:
-* Thermo-Hygrosensor 4–20mA für Kuppel bestellen (MW)
 * Hauptschranklüfter über Ralais (WB)
+
+# Programmierhinweise
+* MC_SetAcceptBlockedDriveSignal verfaehrt den Antrieb aus der Endlage
+* MC_ExtSetPointGenFeed -Enable / -Disable fuer externen Sollwertgenerator
+
+# Informations
+## Probe Unit / Homing
+[https://infosys.beckhoff.com/index.php?content=../content/1031/ax5000_usermanual/html/AX5000_Homing_ProbeUnit.htm]

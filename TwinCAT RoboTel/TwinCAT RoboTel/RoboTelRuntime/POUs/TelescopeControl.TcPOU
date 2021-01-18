@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <POU Name="TelescopeControl" Id="{6a4f2e3a-c9ee-4352-b4f6-4f9d94b2c472}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM TelescopeControl
 VAR
@@ -12,15 +12,14 @@ VAR
 	// altitude of the telescope pointing 
 	altitude,
 	// azimut of the telescope pointing 
-	azimut,
+	azimuth,
 	// local siderial time calculated from Julian date
 	lst,
 	// values calulated when ra and dec are set by TCS
 	altitude_calc, azimuth_calc: LREAL;
 	
 	(* Declination section *)
-	fbDeclinationAxis:		FB_Axis;
-	fbDeclinationAxisJog:	FB_AxisJog;
+	
 	// absolute encoder value of the declination axis
 	Declination_absolute: LREAL;
 	// encoder value of the declination axis derived from absolute encoder in [-90 ... 0 ... +90]
@@ -76,16 +75,17 @@ VAR
 	HourangleError: BOOL;
 	HourangleErrorID: UDINT;
 	
-	fbTime: FB_LocalSystemTime := ( bEnable := TRUE, dwCycle := 1);
-	SUNPOS:	FB_SUNPOS;
-	eq2hor:	FB_EQ2HOR;
+	//fbTime: FB_LocalSystemTime := ( bEnable := TRUE, dwCycle := 1);
+	fbTime: FB_AstroClock;
+	//SUNPOS:	FB_SUNPOS;
+	//eq2hor:	FB_EQ2HOR;
 	eq2hor2:	FB_EQ2HOR2;
-	hadec2altaz:	FB_HADEC2ALTAZ;
+	//hadec2altaz:	FB_HADEC2ALTAZ;
 	
-	AxDecMcHome:	MC_Home; // FIXME MC_Home does not serve the Done and Busy signals!
-	AxHourMcHome:	MC_Home;
+	//AxDecMcHome:	MC_Home; // FIXME MC_Home does not serve the Done and Busy signals!
+	//AxHourMcHome:	MC_Home;
 	
-	HomeTrigger: 	R_TRIG;
+	//HomeTrigger: 	R_TRIG;
 	
 	poweron_delay: 	TON;
 	homing_pulse:	TP;
@@ -94,8 +94,6 @@ VAR
 (*	calibration_offset,
 	calibration_factor : LREAL;
 *)	
-	east_of_pier,
-	west_of_pier:	BOOL;
 	reset,
 	softreset:	BOOL;
 	calibrate,
@@ -123,10 +121,6 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	goto: BOOL;	
 	// boolean, TRUE: Stop motion OF telescope immediately, set goto AND track TO FALSE. FALSE: Allow motion OF telescope again via track/goto).
 	stop: BOOL;	
-	//boolean, TRUE: Swap telescope TO observe eastern hemisphere. Set TO FALSE once there. IF already there, set TO FALSE immediately.FALSE: no effect)
-	east: BOOL;
-	//(boolean, TRUE: Swap telescope TO observe western hemisphere. Set TO FALSE once there. IF already there, set TO FALSE immediately.FALSE: no effect)
-	west: BOOL;	
 	// internal command: telescope is moved to pumping position
 	pumping: BOOL;
 	//	offset TO current tracking point on axis tau, degrees, double
@@ -193,8 +187,8 @@ VAR CONSTANT
 	height: LREAL := 33.0;
 	siderial_velocity: LREAL := 360.0 / 86164.099;
 	position_velocity: LREAL := 1.0;
-	declination_park: LREAL := 294.0;
-	hourangle_park: LREAL := 359.5;
+	altitude_park: LREAL := 85.0;
+	azimuth_park: LREAL := 170.0;
 
 	declination_home: LREAL := 270.0;
 	hourangle_home: LREAL := 270.0;
@@ -206,9 +200,7 @@ END_VAR
     <Implementation>
       <ST><![CDATA[// get the system time
 fbTime();
-IF fbTime.bValid THEN
-	jd := DateTime2JD(fbTime.systemTime);
-END_IF
+jd := DateTime2JD(fbTime.time_RTCEX2);
 lst := CT2LST(longitude, jd);
 // set reset state either by hardware (key pressed) or by software (set by e.g. tcs)
 reset := softreset OR GVL_Main.reset_switch;
@@ -232,7 +224,10 @@ eq2hor2(alpha := ra,
 	alt => altitude_calc,
 	az => azimuth_calc,
 	ha => hourangle_calc);
-							
+
+azimuth := AzimuthControl.act_position;
+altitude := ElevationControl.act_position;
+					
 // set TCS_command according to state variables ordered by precedence
 IF track THEN
 	TCS_command := E_TCSCommand.track;
@@ -242,10 +237,6 @@ ELSIF gohome THEN
 	TCS_command := E_TCSCommand.gohome;
 ELSIF park THEN
 	TCS_command := E_TCSCommand.park;
-ELSIF east THEN
-	TCS_command := E_TCSCommand.east;
-ELSIF west THEN
-	TCS_command := E_TCSCommand.west;
 ELSIF pumping THEN
 	TCS_command := E_TCSCommand.pumping;
 ELSIF stop THEN
@@ -280,26 +271,16 @@ TCSstopEvent(	Trigger := stop,
 				OnMessage := 'commencing',
 				OffMEssage := 'completed',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
-TCSstopEvent(	Trigger := stop, 
-				Level := ADSLOG_MSGTYPE_WARN,
-				FormatString := 'STOP %s',
-				OnMessage := 'commencing',
-				OffMEssage := 'completed',
-				OffLevel := ADSLOG_MSGTYPE_HINT);
 AltitudeEvent(	Trigger := altitude_calc<0.0, 
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := '%s',
 				OnMessage := 'Target below horizon',
 				OffMEssage := '');
-GVL_Main.lamp_error :=	DeclinationError OR HourangleError OR 
-								Declination_lagerror OR Hourangle_lagerror OR 
-								DeclinationAxisError OR HourangleAxisError;]]></ST>
+				]]></ST>
     </Implementation>
     <LineIds Name="TelescopeControl">
-      <LineId Id="58" Count="1" />
-      <LineId Id="353" Count="0" />
-      <LineId Id="60" Count="0" />
-      <LineId Id="354" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="3290" Count="1" />
       <LineId Id="65" Count="0" />
       <LineId Id="628" Count="1" />
       <LineId Id="643" Count="0" />
@@ -314,14 +295,15 @@ GVL_Main.lamp_error :=	DeclinationError OR HourangleError OR
       <LineId Id="1794" Count="0" />
       <LineId Id="1282" Count="0" />
       <LineId Id="1795" Count="3" />
-      <LineId Id="2008" Count="3" />
+      <LineId Id="2008" Count="2" />
+      <LineId Id="3301" Count="2" />
+      <LineId Id="2011" Count="0" />
       <LineId Id="1499" Count="0" />
       <LineId Id="1501" Count="0" />
       <LineId Id="1527" Count="2" />
       <LineId Id="1513" Count="0" />
       <LineId Id="1526" Count="0" />
       <LineId Id="1547" Count="1" />
-      <LineId Id="1520" Count="3" />
       <LineId Id="2867" Count="1" />
       <LineId Id="1524" Count="1" />
       <LineId Id="1511" Count="0" />
@@ -346,9 +328,8 @@ GVL_Main.lamp_error :=	DeclinationError OR HourangleError OR
       <LineId Id="1187" Count="0" />
       <LineId Id="1186" Count="0" />
       <LineId Id="1209" Count="0" />
-      <LineId Id="1485" Count="10" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="1279" Count="1" />
+      <LineId Id="1491" Count="4" />
+      <LineId Id="3293" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

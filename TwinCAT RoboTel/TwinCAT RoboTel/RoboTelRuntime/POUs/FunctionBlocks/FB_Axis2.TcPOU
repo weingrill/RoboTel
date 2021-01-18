@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <POU Name="FB_Axis2" Id="{a3e55664-127b-4a99-a2ba-301ba26f68b3}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Axis2
 VAR_INPUT
@@ -9,103 +9,211 @@ VAR_INPUT
 	Reset: 		BOOL;
 	// Move the Axis to a given position
 	MoveAxis: 	BOOL;
+	// HomeAxis;
+	HomeAxis:	BOOL;
 	// position to move to
 	Position: 	LREAL;
+	// Enable movement in positive direction (considering limit switch)
+	Enable_Positive:	BOOL := TRUE;
+	// Enable movement in negative direction (considering limit switch)
+	Enable_Negative:	BOOL := TRUE;
+	// jog forward
+	Jog_Forward:	BOOL := TRUE;
+	// jog backward
+	Jog_Backwards:	BOOL := TRUE;
 END_VAR
 VAR_OUTPUT
 	// Reset has been executed
 	ResetDone:	BOOL; 
 	// the axis is in target position
 	MoveDone:	BOOL;
+	// the axis hass jogged
+	JogDone:	BOOL;
 	// the axis has stopped
-	StopDone: BOOL;
+	StopDone: 	BOOL;
 	// the axis is ready
-	Ready:			BOOL;
+	Ready:		BOOL;
 	// the command has been aborted
 	CommandAborted: BOOL;
 	// axis busy
-	Busy: 			BOOL;
+	Busy: 		BOOL;
 	// axis is moving
-	Active: 		BOOL;
+	Active: 	BOOL;
+	// axis is stopping
+	Stopping:	BOOL;
+	// axis is standing still (no commands issued) this should be the default
+	StandStill:	BOOL;
+	// axis is in motion
+	InMotion:	BOOL;
+	// axis is homing
+	Homing:		BOOL;
+	// axis is Accelerating or Decelerating
+	InRamp:		BOOL;
 	//	error condition
-	Error: 			BOOL;
+	Error: 		BOOL;
 	// number of error
-	ErrorID: 		UDINT;
+	ErrorID: 	UDINT;
 	// actual position of the axis
 	ActualPosition: LREAL;
 END_VAR
 VAR
-	Axis_Power:	MC_Power;
-	Axis_Reset:	MC_Reset;
-	Axis_Move:	MC_MoveAbsolute;
+	Axis_Power:		MC_Power;
+	Axis_Reset:		MC_Reset;
+	Axis_Move:		MC_MoveAbsolute;
 	Axis_Position:	MC_ReadActualPosition;
-	Axis_Stop:	MC_Stop;
-	bStop: BOOL;
-
+	Axis_Stop:		MC_Stop;
+	Axis_Status:	MC_ReadStatus;
+	Axis_Home:		MC_Home;
+	Axis_Jog: 		MC_Jog;
+	bStop: 			BOOL;
 END_VAR
+
 VAR_IN_OUT
 	// axis reference
 	AxisRef:	AXIS_REF;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[Axis_Power(Axis := AxisRef,
-			Enable := Enable,
-			Enable_Positive := Enable,
-			Enable_Negative := Enable,
-			Override := 100.0,
-			Status => Ready,
-			Busy => Busy,
-			Active => Active,
-			Error => Error,
-			ErrorID => ErrorID);
+      <ST><![CDATA[// query the status of the axis at the beginning of the cycle
+Axis_Status(Enable := TRUE,
+			Axis := AxisRef);
 
-Axis_Reset(Axis := AxisRef,
-			Execute := Reset,
-			Done => ResetDone,
-			Busy => Busy,
-			Error => Error,
-			ErrorID => ErrorID);
+// Enable the axis (power signal or manual enable)
+Axis_Power(
+	Axis := AxisRef,
+	Enable := Enable,
+	Enable_Positive := Enable_Positive,
+	Enable_Negative := Enable_Negative,
+	Override := 100.0,
+	Status => Ready,
+	Busy => Busy,
+	Active => Active,
+	Error => Error,
+	ErrorID => ErrorID);
+
+Axis_Reset(
+	Axis := 	AxisRef,
+	Execute := 	Reset,
+	Done => 	ResetDone,
+	Busy => 	Busy,
+	Error => 	Error,
+	ErrorID => 	ErrorID);
+	
 IF ResetDone THEN
 	Reset := FALSE;
 END_IF
 			
-Axis_Move( Axis := AxisRef,
-	Execute := MoveAxis AND Ready,
-	Position := Position,
-	Done => MoveDone,
-	Busy => Busy,
-	Active => Active,
+Axis_Move( 
+	Axis := 		AxisRef,
+	Execute := 		MoveAxis AND Ready,
+	Position := 	Position,
+	BufferMode := 	MC_BlendingHigh OR MC_BlendingNext,
+	Done => 		MoveDone,
+	Busy => 		Busy,
+	Active => 		Active,
 	CommandAborted => CommandAborted,
-	Error => Error,
-	ErrorID => ErrorID);
+	Error => 		Error,
+	ErrorID => 		ErrorID);
+
+Axis_Jog(
+	JogForward := 	Jog_Forward AND Ready,
+	JogBackwards := Jog_Backwards AND Ready,
+	Mode := 		MC_JOGMODE_STANDARD_FAST,
+	Done => 		JogDone, 
+	Busy => 		Busy, 
+	Active => 		Active, 
+	CommandAborted => CommandAborted, 
+	Error => 		Error, 
+	ErrorID	=> 		ErrorID, 
+ 	Axis := 		AxisRef);
+	
+Axis_Home(
+	Axis := 		AxisRef,
+	Execute := 		HomeAxis AND Ready,
+	Position := 	Position,
+	Done => 		MoveDone,
+	Busy => 		Busy,
+	Active => 		Active,
+	CommandAborted => CommandAborted,
+	Error => 		Error,
+	ErrorID => 		ErrorID);	
 	
 IF MoveDone THEN
 	MoveAxis := FALSE;
 END_IF
 
-IF MoveAxis THEN
+IF JogDone THEN
+	Jog_Forward := FALSE;
+	Jog_Backwards := FALSE;
+END_IF
+
+IF MoveAxis OR Jog_Forward OR Jog_Backwards THEN
 	bStop := FALSE;
 ELSE
 	bStop := TRUE;
 END_IF
 
-Axis_Stop( Axis := AxisRef,
-	Execute := bStop,
-	Done => StopDone,
-	Error => Error,
-	ErrorID => ErrorID);
+Axis_Stop( 
+	Axis := 	AxisRef,
+	Execute := 	bStop,
+	Done => 	StopDone,
+	Error => 	Error,
+	ErrorID => 	ErrorID);
 
-Axis_Position(Axis := AxisRef,
-	Enable := TRUE,
-	Busy => Busy,
-	Error => Error,
-	ErrorID => ErrorID,
+Axis_Position(
+	Axis := 	AxisRef,
+	Enable := 	TRUE,
+	Busy => 	Busy,
+	Error => 	Error,
+	ErrorID => 	ErrorID,
 	Position => ActualPosition);
+
+InMotion := Axis_Status.ConstantVelocity OR
+			Axis_Status.DiscreteMotion OR
+			Axis_Status.ContinuousMotion OR
+			Axis_Status.SynchronizedMotion; 
+InRamp :=	Axis_Status.Accelerating OR
+			Axis_Status.Decelerating;
 ]]></ST>
     </Implementation>
     <LineIds Name="FB_Axis2">
-      <LineId Id="27" Count="52" />
-      <LineId Id="9" Count="0" />
+      <LineId Id="292" Count="0" />
+      <LineId Id="200" Count="1" />
+      <LineId Id="293" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="294" Count="0" />
+      <LineId Id="28" Count="10" />
+      <LineId Id="286" Count="0" />
+      <LineId Id="39" Count="4" />
+      <LineId Id="287" Count="0" />
+      <LineId Id="44" Count="4" />
+      <LineId Id="285" Count="0" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="51" Count="5" />
+      <LineId Id="264" Count="0" />
+      <LineId Id="266" Count="3" />
+      <LineId Id="275" Count="5" />
+      <LineId Id="265" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="303" Count="2" />
+      <LineId Id="307" Count="0" />
+      <LineId Id="309" Count="5" />
+      <LineId Id="302" Count="0" />
+      <LineId Id="58" Count="2" />
+      <LineId Id="297" Count="2" />
+      <LineId Id="301" Count="0" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="61" Count="7" />
+      <LineId Id="290" Count="0" />
+      <LineId Id="69" Count="5" />
+      <LineId Id="291" Count="0" />
+      <LineId Id="75" Count="4" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="188" Count="2" />
+      <LineId Id="195" Count="1" />
+      <LineId Id="187" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
