@@ -13,8 +13,10 @@ VAR
 	AzimuthAxisJog:	FB_AxisJog;
 	AzimuthAxis:		FB_Axis2;
 	error: BOOL;
+	ErrorID: UDINT;
 	position: LREAL;
 	act_position: LREAL;
+	AzimuthAxisEvent: FB_EventLog;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -35,9 +37,16 @@ ELSE
 					Position := position, 
 					ActualPosition => act_position,
 					Error => error,
+					ErrorID => ErrorID,
 					AxisRef :=	GVL_Telescope.AzimuthAxisRef);
 END_IF
-]]></ST>
+
+AzimuthAxisEvent(	Trigger := Error, 
+				Level := ADSLOG_MSGTYPE_ERROR,
+				FormatString := 'Azimuth Axis Error: %s',
+				OnMessage := UDINT_TO_STRING(ErrorID),
+				OffMEssage := 'OK');
+				]]></ST>
     </Implementation>
     <LineIds Name="AzimuthControl">
       <LineId Id="16" Count="0" />
@@ -49,8 +58,10 @@ END_IF
       <LineId Id="41" Count="0" />
       <LineId Id="38" Count="0" />
       <LineId Id="40" Count="0" />
+      <LineId Id="85" Count="0" />
       <LineId Id="35" Count="0" />
       <LineId Id="18" Count="0" />
+      <LineId Id="78" Count="5" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

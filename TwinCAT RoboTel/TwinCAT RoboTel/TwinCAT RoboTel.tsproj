@@ -2973,7 +2973,9 @@ External Setpoint Generation:
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="8">
-						<EncPara ScaleFactorNumerator="360" ScaleFactorDenominator="1048576" MaxCount="#xffffffff"/>
+						<EncPara ScaleFactorNumerator="360" ScaleFactorDenominator="1048576" MaxCount="#xffffffff">
+							<Inc RefPosition="45" RefMode="4"/>
+						</EncPara>
 						<Vars VarGrpType="1">
 							<Name>Eingänge</Name>
 							<Var>
@@ -12527,6 +12529,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<InitCmd DriveNo="0" IDN="32861" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32918" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32922" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="33088" MotorDataLevel="0" DisableMode="0">
+									<RetainData>24002400d5000600ca0002002c9d5b002c9d5b000000000000000000000000002260000000000000</RetainData>
+								</InitCmd>
 								<InitCmd DriveNo="0" IDN="33093" MotorDataLevel="0" DisableMode="0">
 									<RetainData>16001a004a616e2020332032303230202c2030383a32313a3437</RetainData>
 								</InitCmd>
@@ -12536,14 +12541,15 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 							<StatusBar>
 								<Element option="0" SortOder="0" SubIdx="0">
 									<Index>135</Index>
+									<Width>158</Width>
 								</Element>
 								<Element option="0" SortOder="0" SubIdx="0">
 									<Index>390</Index>
-									<Width>85</Width>
+									<Width>160</Width>
 								</Element>
 								<Element option="0" SortOder="0" SubIdx="0">
 									<Index>95</Index>
-									<Width>241</Width>
+									<Width>469</Width>
 								</Element>
 								<Element option="1" SortOder="0" SubIdx="0">
 									<Index>32821</Index>
