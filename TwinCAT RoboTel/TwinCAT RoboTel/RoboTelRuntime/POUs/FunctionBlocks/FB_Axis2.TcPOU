@@ -9,6 +9,8 @@ VAR_INPUT
 	Reset: 		BOOL;
 	// Move the Axis to a given position
 	MoveAxis: 	BOOL;
+	// HomeAxis;
+	HomeAxis:	BOOL;
 	// position to move to
 	Position: 	LREAL;
 	// Enable movement in positive direction (considering limit switch)
@@ -126,7 +128,7 @@ Axis_Jog(
 	
 Axis_Home(
 	Axis := 		AxisRef,
-	Execute := 		FALSE AND Ready,
+	Execute := 		HomeAxis AND Ready,
 	Position := 	Position,
 	Done => 		MoveDone,
 	Busy => 		Busy,
@@ -164,7 +166,6 @@ Axis_Position(
 	Error => 	Error,
 	ErrorID => 	ErrorID,
 	Position => ActualPosition);
-
 
 InMotion := Axis_Status.ConstantVelocity OR
 			Axis_Status.DiscreteMotion OR
@@ -208,7 +209,6 @@ InRamp :=	Axis_Status.Accelerating OR
       <LineId Id="69" Count="5" />
       <LineId Id="291" Count="0" />
       <LineId Id="75" Count="4" />
-      <LineId Id="177" Count="0" />
       <LineId Id="186" Count="0" />
       <LineId Id="178" Count="0" />
       <LineId Id="188" Count="2" />
