@@ -173,7 +173,9 @@ InMotion := Axis_Status.ConstantVelocity OR
 			Axis_Status.SynchronizedMotion; 
 InRamp :=	Axis_Status.Accelerating OR
 			Axis_Status.Decelerating;
-]]></ST>
+Stopping := Axis_Status.Stopping;
+StandStill := Axis_Status.StandStill;
+Homing :=	Axis_Status.Homing;]]></ST>
     </Implementation>
     <LineIds Name="FB_Axis2">
       <LineId Id="292" Count="0" />
@@ -214,6 +216,7 @@ InRamp :=	Axis_Status.Accelerating OR
       <LineId Id="188" Count="2" />
       <LineId Id="195" Count="1" />
       <LineId Id="187" Count="0" />
+      <LineId Id="385" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>
