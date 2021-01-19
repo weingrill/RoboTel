@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <GVL Name="GVL_Telescope" Id="{a7572ab9-17bf-4e0d-b71f-e76e531b6203}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
@@ -51,7 +51,12 @@ VAR_GLOBAL
 	nasmyth_lock	AT%Q*: BOOL;
 	//Horn 4.7
 	horn			AT%Q*: BOOL;
-
+	
+	// calibration signal for elevation
+	elevation_calibration	AT%I*: BOOL;
+	// calibration signal for azimuth
+	azimuth_calibration	AT%I*: BOOL;
+	
 	
 	// Zyklisches Interface zwischen NC und Achse
 	AzimuthAxisRef: 	AXIS_REF;
