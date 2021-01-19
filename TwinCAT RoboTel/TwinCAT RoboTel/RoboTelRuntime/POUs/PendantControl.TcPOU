@@ -34,7 +34,8 @@ VAR
 	manual_hydraulics_stop:		BOOL;
 	
 	brake_state:	RS;
-	brake_open : BOOL;
+	// manually open the brake
+	open_brake: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -160,15 +161,15 @@ CASE Selection OF
 		FilterWheelControl.right := right;
 		FilterWheelControl.reset := reset;
 	
-	15:	GVL_pendant_control.lamp_up := HydraulicsControl.oil_pressure_OK AND NOT brake_open;
-		GVL_pendant_control.lamp_down := HydraulicsControl.oil_pressure_OK AND brake_open;
+	15:	GVL_pendant_control.lamp_up := HydraulicsControl.oil_pressure_OK AND NOT Hydraulicscontrol.brake_open;
+		GVL_pendant_control.lamp_down := HydraulicsControl.oil_pressure_OK AND Hydraulicscontrol.brake_open;
 		GVL_pendant_control.lamp_left := HydraulicsControl.pump_running;
 		GVL_pendant_control.lamp_right := HydraulicsControl.suction_running;
 		manual_hydraulics_start := manual AND enable;
 		manual_hydraulics_stop := manual AND reset;
 		brake_state(SET := up,
 					Reset1 := down,
-					Q1 => brake_open);
+					Q1 => Hydraulicscontrol.open_brake);
 		
 END_CASE
 
@@ -252,7 +253,7 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="419" Count="1" />
       <LineId Id="244" Count="1" />
       <LineId Id="256" Count="1" />
-      <LineId Id="259" Count="0" />
+      <LineId Id="557" Count="0" />
       <LineId Id="23" Count="0" />
       <LineId Id="13" Count="0" />
       <LineId Id="508" Count="0" />

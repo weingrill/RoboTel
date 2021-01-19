@@ -16,84 +16,23 @@ VAR
 	// local siderial time calculated from Julian date
 	lst,
 	// values calulated when ra and dec are set by TCS
-	altitude_calc, azimuth_calc: LREAL;
+	altitude_calc, 
+	azimuth_calc: LREAL;
 	
-	(* Declination section *)
-	
-	// absolute encoder value of the declination axis
-	Declination_absolute: LREAL;
-	// encoder value of the declination axis derived from absolute encoder in [-90 ... 0 ... +90]
-	Declination_real: LREAL;
-	// encoder value from the motor
-	Declination_current: LREAL;
-	// difference between motor encoder and absolute encoder
-	Declination_lag: LREAL;
-	// true, if declination lag exceeds error boundaries
-	Declination_lagerror: BOOL;
-	// current set coordinates
-	Declination_set: LREAL := -720.0;
-	// current velocity
-	Declination_velocity: LREAL := 0.0;
-	// True if Move has been executed
-	DeclinationDone: BOOL;
-	//Declination_execute: RS;
-	// True if motor controller reports an arror
-	DeclinationAxisError, 
-	// true if axis has been calibrated
-	DeclinationCalibrated: BOOL;
-	// true if axis is moving
-	DeclinationBusy: BOOL;
-	// True if calibration has been aborted
-	DeclinationAborted: BOOL;
-	// true if general error in the axis control occured
-	DeclinationError: BOOL;
-	// error id from axis controller
-	DeclinationErrorID: UDINT;
-	
-	(* Richt Ascension section *)
-	Rightascension_set,
-	Rightascension_current: LREAL;
 	
 	(* Hour Angle part *)
-	fbHourAxis : FB_Axis;
-	fbHourAxisJog 	: FB_AxisJog;
-	Hourangle_absolute,
-	Hourangle_real,
-	Hourangle_current,
-	Hourangle_calc,
-	Hourangle_lag: LREAL;
-	Hourangle_lagerror: BOOL;
-	Hourangle_set: LREAL := -720.0;
-	Hourangle_velocity : LREAL := 0.0;
-	Hourangle_execute: RS;
-	HourangleAxisError, 
-	HourangleCalibrated: BOOL;
-	HourangleDone: BOOL;
-	HourangleBusy: BOOL;
-	HourangleActive: BOOL;
-	HourangleAborted: BOOL;
-	HourangleError: BOOL;
-	HourangleErrorID: UDINT;
+	Hourangle_calc: LREAL;
+	
 	
 	//fbTime: FB_LocalSystemTime := ( bEnable := TRUE, dwCycle := 1);
 	fbTime: FB_AstroClock;
 	//SUNPOS:	FB_SUNPOS;
 	//eq2hor:	FB_EQ2HOR;
 	eq2hor2:	FB_EQ2HOR2;
-	//hadec2altaz:	FB_HADEC2ALTAZ;
-	
-	//AxDecMcHome:	MC_Home; // FIXME MC_Home does not serve the Done and Busy signals!
-	//AxHourMcHome:	MC_Home;
-	
-	//HomeTrigger: 	R_TRIG;
 	
 	poweron_delay: 	TON;
 	homing_pulse:	TP;
-	//tracking_delay: TON;
 	
-(*	calibration_offset,
-	calibration_factor : LREAL;
-*)	
 	reset,
 	softreset:	BOOL;
 	calibrate,

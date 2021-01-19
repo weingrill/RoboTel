@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <POU Name="HydraulicsControl" Id="{6bf4055d-2300-4039-bb16-5b9f94622e06}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM HydraulicsControl
 VAR
@@ -41,6 +41,8 @@ VAR
 	suction_running :	BOOL := FALSE;
 	// wait for the brake to open after pressure has been established
 	brake_open_delay:	TON;
+	// report brake opend after a short delay
+	brake_opened_delay:	TON;
 	HydraulicsLog,
 	ReserveLog,
 	oil_low_log,
@@ -82,7 +84,11 @@ oil_pump_state(SET := Main.start,
 						NOT MAIN.phase_available);
 
 GVL_Hydraulics.oil_pump_enable := oil_pump_state.Q1;
-open_brake := Main.brake_clearing OR PendantControl.brake_open;
+(* This section controls the hydraulic brake responsible for azimuth and elevation. 
+Especially the elevation is imbalanced if not in the position control loop. 
+The brake must only be opened, if the elevation drive is activated concurrently.
+*)
+
 // wait for pressure to build up (hack for oil_pressure_ok)
 brake_open_delay(IN := pump_running AND oil_pressure_OK,
 				PT := T#3S);
@@ -94,6 +100,13 @@ brake_state(SET := brake_open_delay.Q AND open_brake,
 					  OR NOT open_brake 
 					  OR NOT oil_pump_state.Q1,
 			Q1 => GVL_Telescope.brake_azimuth_eve);
+
+brake_opened_delay(	IN :=brake_state.Q1, 
+					PT := T#500MS,
+					Q => brake_open);
+
+(* This is the end of the brake control section *)
+
 // measure suction pump cycle
 suction_timer(	bStart := suction_running AND NOT suction_pump_timer.Q, 
 				bStop := GVL_Hydraulics.oilpan_maximum);  
@@ -161,11 +174,21 @@ SuctionLog(Trigger := suction_failure,
       <LineId Id="321" Count="5" />
       <LineId Id="333" Count="3" />
       <LineId Id="493" Count="0" />
-      <LineId Id="337" Count="9" />
+      <LineId Id="337" Count="3" />
+      <LineId Id="549" Count="0" />
+      <LineId Id="551" Count="1" />
+      <LineId Id="550" Count="0" />
+      <LineId Id="341" Count="5" />
       <LineId Id="416" Count="0" />
       <LineId Id="347" Count="1" />
       <LineId Id="455" Count="1" />
-      <LineId Id="349" Count="2" />
+      <LineId Id="349" Count="0" />
+      <LineId Id="559" Count="0" />
+      <LineId Id="558" Count="0" />
+      <LineId Id="560" Count="1" />
+      <LineId Id="554" Count="1" />
+      <LineId Id="547" Count="0" />
+      <LineId Id="350" Count="1" />
       <LineId Id="494" Count="0" />
       <LineId Id="352" Count="14" />
       <LineId Id="369" Count="40" />

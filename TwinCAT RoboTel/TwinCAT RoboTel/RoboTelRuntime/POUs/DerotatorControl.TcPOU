@@ -3,14 +3,16 @@
   <POU Name="DerotatorControl" Id="{75f3d994-c6e1-4455-a5dc-0a32056448e8}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK DerotatorControl
 VAR_INPUT
-	enable:	BOOL;
-	reset:	BOOL;
-	left:	BOOL;
-	right:	BOOL;
+	enable:		BOOL;
+	reset:		BOOL;
+	left:		BOOL;
+	right:		BOOL;
+	position:	LREAL;
 END_VAR
 VAR_OUTPUT
 	Error:		BOOL;
 	ErrorID:	UDINT;
+	actual_position:	LREAL;
 END_VAR
 VAR
 	DerotatorAxis:	FB_Axis2;

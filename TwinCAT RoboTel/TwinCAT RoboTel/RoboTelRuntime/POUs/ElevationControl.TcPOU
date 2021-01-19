@@ -33,14 +33,19 @@ END_VAR
 						fActPos => act_position,
 						stAxis :=	GVL_Telescope.ElevationAxisRef);	
 ELSE
-	ElevationAxis(Enable := TelescopeControl.power AND HydraulicsControl.open_brake,
-					Reset := reset,
-					MoveAxis := MoveAxis,
-					Position := position,
-					Error => Error,
-					ErrorID => ErrorID,
-					ActualPosition => act_position,
-					AxisRef := GVL_Telescope.ElevationAxisRef);
+ElevationAxis(
+	Enable := TelescopeControl.power AND HydraulicsControl.open_brake,
+	Reset := reset,
+	MoveAxis := MoveAxis,
+	Position := position,
+	Enable_Positive := TRUE,
+	Enable_Negative := TRUE,
+	Jog_Forward := up,
+	Jog_Backwards := down,
+	Error => Error,
+	ErrorID => ErrorID,
+	ActualPosition => act_position,
+	AxisRef := GVL_Telescope.ElevationAxisRef);
 					
 END_IF
 ElevationAxisEvent(	Trigger := Error, 
@@ -52,7 +57,11 @@ ElevationAxisEvent(	Trigger := Error,
     </Implementation>
     <LineIds Name="ElevationControl">
       <LineId Id="109" Count="11" />
-      <LineId Id="128" Count="9" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="129" Count="2" />
+      <LineId Id="180" Count="3" />
+      <LineId Id="132" Count="5" />
       <LineId Id="156" Count="4" />
       <LineId Id="5" Count="0" />
     </LineIds>

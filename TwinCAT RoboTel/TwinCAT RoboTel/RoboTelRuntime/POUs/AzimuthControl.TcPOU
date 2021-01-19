@@ -7,61 +7,63 @@ VAR_INPUT
 	right: BOOL;
 	reset: BOOL;
 	enable :  BOOL;
+	position: LREAL;
 END_VAR
 
 VAR
-	AzimuthAxisJog:	FB_AxisJog;
-	AzimuthAxis:		FB_Axis2;
-	error: BOOL;
-	ErrorID: UDINT;
-	position: LREAL;
-	act_position: LREAL;
+	AzimuthUnlock:	RS;
+	AzimuthDelay:	TON;
+	AzimuthAxis:	FB_Axis2;
+	error: 			BOOL;
+	ErrorID:		UDINT;
+	act_position:	LREAL;
 	AzimuthAxisEvent: FB_EventLog;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF PendantControl.manual THEN
-	AzimuthAxisJog(	bPowerEnable := enable AND Main.power_OK,
-						bEnable_Positive := GVL_Telescope.brake_azimuth_eve,
-						bEnable_Negative := GVL_Telescope.brake_azimuth_eve,
-						bForward := left,
-						bBackward := right,
-						bReset := reset,
-						bStop := left AND right,
-						bErr => error,
-						fActPos => act_position,
-						stAxis :=	GVL_Telescope.AzimuthAxisRef);	
-ELSE
-	AzimuthAxis(	Enable := TelescopeControl.power AND Main.power_OK,
-					Reset := reset,
-					Position := position, 
-					ActualPosition => act_position,
-					Error => error,
-					ErrorID => ErrorID,
-					AxisRef :=	GVL_Telescope.AzimuthAxisRef);
-END_IF
+      <ST><![CDATA[AzimuthUnlock(SET := enable,
+			RESET1 := reset OR StopDone,
+			Q1 => GVL_Telescope.focus_lock);
+// wait until the focus is unlocked for n milliseconds
+AzimuthDelay(IN :=AzimuthUnlock.Q1, PT := T#500MS);
 
-AzimuthAxisEvent(	Trigger := Error, 
-				Level := ADSLOG_MSGTYPE_ERROR,
-				FormatString := 'Azimuth Axis Error: %s',
-				OnMessage := UDINT_TO_STRING(ErrorID),
-				OffMEssage := 'OK');
+
+AzimuthAxis(	
+	Enable := 			TelescopeControl.power AND Main.power_OK,
+	Reset := 			reset,
+	Position := 		position, 
+	Enable_Positive := 	GVL_Telescope.azimut_limit_switch,
+	Enable_Negative := 	GVL_Telescope.azimut_limit_switch,
+	Jog_Forward :=		left,
+	Jog_Backwards := 	right,
+	ActualPosition => 	act_position,
+	Error => 			error,
+	ErrorID => 			ErrorID,
+	AxisRef :=			GVL_Telescope.AzimuthAxisRef);
+
+AzimuthAxisEvent(	
+	Trigger := 		Error, 
+	Level := 		ADSLOG_MSGTYPE_ERROR,
+	FormatString :=	'Azimuth Axis Error: %s',
+	OnMessage := 	UDINT_TO_STRING(ErrorID),
+	OffMEssage := 	'OK');
 				]]></ST>
     </Implementation>
     <LineIds Name="AzimuthControl">
-      <LineId Id="16" Count="0" />
-      <LineId Id="19" Count="7" />
-      <LineId Id="62" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="32" Count="1" />
+      <LineId Id="116" Count="4" />
+      <LineId Id="114" Count="1" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="108" Count="0" />
       <LineId Id="39" Count="0" />
       <LineId Id="41" Count="0" />
+      <LineId Id="104" Count="3" />
       <LineId Id="38" Count="0" />
       <LineId Id="40" Count="0" />
       <LineId Id="85" Count="0" />
       <LineId Id="35" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="78" Count="5" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="80" Count="3" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
