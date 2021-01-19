@@ -9,34 +9,29 @@ VAR
 	TCS_command: 	E_TCSCommand;
 	// current Julian Date calculated from system time
 	jd,
-	// altitude of the telescope pointing 
-	altitude,
+	// elevation of the telescope pointing 
+	elevation,
 	// azimut of the telescope pointing 
 	azimuth,
 	// local siderial time calculated from Julian date
 	lst,
 	// values calulated when ra and dec are set by TCS
-	altitude_calc, 
-	azimuth_calc: LREAL;
-	
+	elevation_calc, 
+	azimuth_calc,
+	rightascension_calc,
+	declination_calc: LREAL;
 	
 	(* Hour Angle part *)
 	Hourangle_calc: LREAL;
 	
-	
-	//fbTime: FB_LocalSystemTime := ( bEnable := TRUE, dwCycle := 1);
 	fbTime: FB_AstroClock;
-	//SUNPOS:	FB_SUNPOS;
-	//eq2hor:	FB_EQ2HOR;
-	eq2hor2:	FB_EQ2HOR2;
 	
-	poweron_delay: 	TON;
-	homing_pulse:	TP;
+	eq2hor2:	FB_EQ2HOR2;
+	hor2eq:		FB_HOR2EQ;
 	
 	reset,
 	softreset:	BOOL;
-	calibrate,
-	softcalibrate:	BOOL;
+
 (*
 TCS interface section
 see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
@@ -123,7 +118,7 @@ VAR CONSTANT
 	// telescope site latitude, source: Google
 	latitude: LREAL := 52.404940;
 	// telescope site height above sea level: estimated
-	height: LREAL := 33.0;
+	altitude: LREAL := 33.0;
 	siderial_velocity: LREAL := 360.0 / 86164.099;
 	position_velocity: LREAL := 1.0;
 	altitude_park: LREAL := 85.0;
@@ -132,8 +127,7 @@ VAR CONSTANT
 	declination_home: LREAL := 270.0;
 	hourangle_home: LREAL := 270.0;
 	
-	lag_error : LREAL := 0.5;
-	position_error : LREAL := 10.0/3600.0;
+	
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -160,13 +154,22 @@ eq2hor2(alpha := ra,
 	lon := longitude,
 	lat := latitude,
 	JD := jd,
-	alt => altitude_calc,
+	alt => elevation_calc,
 	az => azimuth_calc,
 	ha => hourangle_calc);
 
 azimuth := AzimuthControl.act_position;
-altitude := ElevationControl.act_position;
-					
+elevation := ElevationControl.act_position;
+
+hor2eq(alt := elevation, 
+		az := azimuth,
+		jd := jd,
+		lat := latitude,
+		lon := longitude,
+		altitude := altitude,
+		ra => rightascension_calc,
+		dec => declination_calc);		
+			
 // set TCS_command according to state variables ordered by precedence
 IF track THEN
 	TCS_command := E_TCSCommand.track;
@@ -210,7 +213,7 @@ TCSstopEvent(	Trigger := stop,
 				OnMessage := 'commencing',
 				OffMEssage := 'completed',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
-AltitudeEvent(	Trigger := altitude_calc<0.0, 
+AltitudeEvent(	Trigger := elevation_calc<0.0, 
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := '%s',
 				OnMessage := 'Target below horizon',
@@ -236,7 +239,11 @@ AltitudeEvent(	Trigger := altitude_calc<0.0,
       <LineId Id="1795" Count="3" />
       <LineId Id="2008" Count="2" />
       <LineId Id="3301" Count="2" />
+      <LineId Id="3520" Count="0" />
       <LineId Id="2011" Count="0" />
+      <LineId Id="3521" Count="4" />
+      <LineId Id="3528" Count="1" />
+      <LineId Id="3519" Count="0" />
       <LineId Id="1499" Count="0" />
       <LineId Id="1501" Count="0" />
       <LineId Id="1527" Count="2" />
