@@ -2,36 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <POU Name="TelescopeControl" Id="{6a4f2e3a-c9ee-4352-b4f6-4f9d94b2c472}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM TelescopeControl
-VAR
-	// manual or automatic operation of the telescope
-	telescope_mode : E_TelescopeMode;	
-	// actual command from the TCS
-	TCS_command: 	E_TCSCommand;
-	// current Julian Date calculated from system time
-	jd,
-	// elevation of the telescope pointing 
-	elevation,
-	// azimut of the telescope pointing 
-	azimuth,
-	// local siderial time calculated from Julian date
-	lst,
-	// values calulated when ra and dec are set by TCS
-	elevation_calc, 
-	azimuth_calc,
-	rightascension_calc,
-	declination_calc: LREAL;
-	
-	(* Hour Angle part *)
-	Hourangle_calc: LREAL;
-	
-	fbTime: FB_AstroClock;
-	
-	eq2hor2:	FB_EQ2HOR2;
-	hor2eq:		FB_HOR2EQ;
-	
-	reset,
-	softreset:	BOOL;
-
+VAR_INPUT
 (*
 TCS interface section
 see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
@@ -61,6 +32,42 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	tauoffset: LREAL;
 	// 	offset TO current tracking point on axis dec, degrees, double 
 	deoffset: LREAL;
+END_VAR
+VAR
+	// manual or automatic operation of the telescope
+	telescope_mode : E_TelescopeMode;	
+	// actual command from the TCS
+	TCS_command: 	E_TCSCommand;
+	// current Julian Date calculated from system time
+	jd,
+	// desired elevation of the telescope pointing 
+	elevation,
+	// desired azimut of the telescope pointing 
+	azimuth,
+	// local siderial time calculated from Julian date
+	lst,
+	// values calulated when ra and dec are set by TCS
+	elevation_calc, 
+	azimuth_calc,
+	elevation_current,
+	azimuth_current,
+	rightascension_calc,
+	declination_calc: LREAL;
+	
+	(* Hour Angle part *)
+	Hourangle_calc: LREAL;
+	
+	fbTime: FB_AstroClock;
+	
+	eq2hor2:	FB_EQ2HOR2;
+	hor2eq:		FB_HOR2EQ;
+	
+	// initiates hard-reset on all axis
+	reset:		BOOL;
+	// initiates hard-reset on all axis
+	softreset:	BOOL;
+	// triggers power-failure event
+	powerfailure: BOOL;
 
 	
 	
@@ -74,6 +81,7 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	HourangleErrorEvent,
 	HourangleLagEvent,
 	HourangleAxisEvent,
+	TCSpowerEvent,
 	TCSgohomeEvent,
 	TCSparkEvent,
 	TCSgotoEvent,
@@ -121,13 +129,11 @@ VAR CONSTANT
 	altitude: LREAL := 33.0;
 	siderial_velocity: LREAL := 360.0 / 86164.099;
 	position_velocity: LREAL := 1.0;
-	altitude_park: LREAL := 85.0;
-	azimuth_park: LREAL := 170.0;
+	elevation_park: LREAL := 85.0;
+	azimuth_park: LREAL := 190.0;
 
-	declination_home: LREAL := 270.0;
-	hourangle_home: LREAL := 270.0;
-	
-	
+	elevation_home: LREAL := 45.0;
+	azimuth_home: LREAL := 180.0;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -158,8 +164,8 @@ eq2hor2(alpha := ra,
 	az => azimuth_calc,
 	ha => hourangle_calc);
 
-azimuth := AzimuthControl.act_position;
-elevation := ElevationControl.act_position;
+azimuth_current := AzimuthControl.act_position;
+elevation_current := ElevationControl.act_position;
 
 hor2eq(alt := elevation, 
 		az := azimuth,
@@ -169,6 +175,28 @@ hor2eq(alt := elevation,
 		altitude := altitude,
 		ra => rightascension_calc,
 		dec => declination_calc);		
+
+IF power THEN
+	IF NOT Main.brake_clearing THEN
+		powerfailure := TRUE;
+		TCSpowerEvent.OnMessage := 'failure: brake clearing not set';
+		power := FALSE;
+	ELSIF NOT PendantControl.manual THEN
+		powerfailure := TRUE;
+		TCSpowerEvent.OnMessage := 'failure: manual override';
+		power := FALSE;
+	ELSIF NOT Main.power_OK THEN
+		powerfailure := TRUE;
+		TCSpowerEvent.OnMessage := 'failure: main power failure';
+		power := FALSE;
+	ELSIF NOT Main.phase_available THEN
+		powerfailure := TRUE;
+		TCSpowerEvent.OnMessage := 'failure: hydraulics power failure';
+		power := FALSE;
+	ELSE
+		powerfailure := FALSE;		
+	END_IF
+END_IF
 			
 // set TCS_command according to state variables ordered by precedence
 IF track THEN
@@ -186,6 +214,22 @@ ELSIF stop THEN
 ELSE
 	TCS_command := E_TCSCommand.no_command;
 END_IF
+
+IF TCS_command = E_TCSCommand.park THEN
+	ElevationControl.position := elevation_park;
+	AzimuthControl.position := azimuth_park;
+ELSIF TCS_command = E_TCSCommand.gohome THEN
+	ElevationControl.position := elevation_home;
+	AzimuthControl.position := azimuth_home;
+END_IF
+ 
+
+
+(* Event function blocks start here. *)
+TCSpowerEvent(	Trigger := powerfailure, 
+				Level := ADSLOG_MSGTYPE_ERROR,
+				FormatString := 'power %s',
+				OffMEssage := 'OK');
 
 TCSgohomeEvent(	Trigger := gohome, 
 				Level := ADSLOG_MSGTYPE_HINT,
@@ -243,6 +287,24 @@ AltitudeEvent(	Trigger := elevation_calc<0.0,
       <LineId Id="2011" Count="0" />
       <LineId Id="3521" Count="4" />
       <LineId Id="3528" Count="1" />
+      <LineId Id="3591" Count="0" />
+      <LineId Id="3547" Count="0" />
+      <LineId Id="3592" Count="0" />
+      <LineId Id="3548" Count="0" />
+      <LineId Id="3594" Count="0" />
+      <LineId Id="3608" Count="0" />
+      <LineId Id="3595" Count="0" />
+      <LineId Id="3599" Count="1" />
+      <LineId Id="3611" Count="0" />
+      <LineId Id="3596" Count="0" />
+      <LineId Id="3602" Count="1" />
+      <LineId Id="3612" Count="0" />
+      <LineId Id="3605" Count="2" />
+      <LineId Id="3613" Count="0" />
+      <LineId Id="3604" Count="0" />
+      <LineId Id="3609" Count="0" />
+      <LineId Id="3593" Count="0" />
+      <LineId Id="3549" Count="0" />
       <LineId Id="3519" Count="0" />
       <LineId Id="1499" Count="0" />
       <LineId Id="1501" Count="0" />
@@ -255,6 +317,15 @@ AltitudeEvent(	Trigger := elevation_calc<0.0,
       <LineId Id="1511" Count="0" />
       <LineId Id="1519" Count="0" />
       <LineId Id="1509" Count="0" />
+      <LineId Id="3532" Count="2" />
+      <LineId Id="3538" Count="0" />
+      <LineId Id="3541" Count="0" />
+      <LineId Id="3543" Count="1" />
+      <LineId Id="3535" Count="0" />
+      <LineId Id="3540" Count="0" />
+      <LineId Id="3539" Count="0" />
+      <LineId Id="3530" Count="1" />
+      <LineId Id="3583" Count="3" />
       <LineId Id="3085" Count="0" />
       <LineId Id="931" Count="1" />
       <LineId Id="1179" Count="0" />

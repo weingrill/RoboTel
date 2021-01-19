@@ -18,9 +18,11 @@ VAR_INPUT
 	// Enable movement in negative direction (considering limit switch)
 	Enable_Negative:	BOOL := TRUE;
 	// jog forward
-	Jog_Forward:	BOOL := TRUE;
+	Jog_Forward:		BOOL := FALSE;
 	// jog backward
-	Jog_Backwards:	BOOL := TRUE;
+	Jog_Backwards:		BOOL := FALSE;
+	// calibration input for homing
+	bCalibrationCam:	BOOL;
 END_VAR
 VAR_OUTPUT
 	// Reset has been executed
@@ -31,6 +33,8 @@ VAR_OUTPUT
 	JogDone:	BOOL;
 	// the axis has stopped
 	StopDone: 	BOOL;
+	// the axis was calibrated and has come to a standstill
+	HomeDone:	BOOL;
 	// the axis is ready
 	Ready:		BOOL;
 	// the command has been aborted
@@ -55,6 +59,9 @@ VAR_OUTPUT
 	ErrorID: 	UDINT;
 	// actual position of the axis
 	ActualPosition: LREAL;
+	// axis is calibrated;
+	Calibrated:	BOOL := FALSE;
+	
 END_VAR
 VAR
 	Axis_Power:		MC_Power;
@@ -101,7 +108,7 @@ Axis_Reset(
 IF ResetDone THEN
 	Reset := FALSE;
 END_IF
-			
+
 Axis_Move( 
 	Axis := 		AxisRef,
 	Execute := 		MoveAxis AND Ready,
@@ -130,7 +137,7 @@ Axis_Home(
 	Axis := 		AxisRef,
 	Execute := 		HomeAxis AND Ready,
 	Position := 	Position,
-	Done => 		MoveDone,
+	Done => 		HomeDone,
 	Busy => 		Busy,
 	Active => 		Active,
 	CommandAborted => CommandAborted,
@@ -146,7 +153,11 @@ IF JogDone THEN
 	Jog_Backwards := FALSE;
 END_IF
 
-IF MoveAxis OR Jog_Forward OR Jog_Backwards THEN
+IF HomeDone THEN
+	Calibrated := TRUE;
+END_IF
+
+IF MoveAxis OR Jog_Forward OR Jog_Backwards OR HomeDone THEN
 	bStop := FALSE;
 ELSE
 	bStop := TRUE;
@@ -188,7 +199,9 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="286" Count="0" />
       <LineId Id="39" Count="4" />
       <LineId Id="287" Count="0" />
-      <LineId Id="44" Count="4" />
+      <LineId Id="44" Count="2" />
+      <LineId Id="391" Count="0" />
+      <LineId Id="48" Count="0" />
       <LineId Id="285" Count="0" />
       <LineId Id="49" Count="1" />
       <LineId Id="125" Count="0" />
@@ -206,6 +219,7 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="297" Count="2" />
       <LineId Id="301" Count="0" />
       <LineId Id="300" Count="0" />
+      <LineId Id="394" Count="3" />
       <LineId Id="61" Count="7" />
       <LineId Id="290" Count="0" />
       <LineId Id="69" Count="5" />
