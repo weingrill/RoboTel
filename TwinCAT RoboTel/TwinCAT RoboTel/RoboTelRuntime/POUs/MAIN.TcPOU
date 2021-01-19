@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <POU Name="MAIN" Id="{c39aef1e-7c14-41dc-ad83-03bececdc52a}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
@@ -72,6 +72,7 @@ HydraulicsControl();
 FanControl(enable := NOT PendantControl.manual);
 ElevationControl();
 AzimuthControl();
+DerotatorControl();
 Environment();
 
 GVL_Main.softstart_trafo := key_switch AND NOT power_failure;
@@ -123,6 +124,7 @@ SafetyHandling();]]></ST>
       <LineId Id="171" Count="0" />
       <LineId Id="173" Count="0" />
       <LineId Id="197" Count="0" />
+      <LineId Id="274" Count="0" />
       <LineId Id="167" Count="0" />
       <LineId Id="237" Count="0" />
       <LineId Id="69" Count="0" />

@@ -3,11 +3,16 @@
   <POU Name="AzimuthControl" Id="{8e08648a-b748-4448-9dcc-aa13dfcf6a06}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM AzimuthControl
 VAR_INPUT
-	left:	BOOL;
-	right: BOOL;
-	reset: BOOL;
-	enable :  BOOL;
-	position: LREAL;
+	left:		BOOL;
+	right: 		BOOL;
+	// reset the axis
+	Reset: 		BOOL;
+	// enable the axis and its position control loop
+	Enable:		BOOL;
+	// Move azimuth to given position
+	MoveAxis:	BOOL;
+	// position to move the axis to
+	position: 	LREAL;
 END_VAR
 
 VAR
@@ -21,8 +26,9 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[AzimuthUnlock(SET := enable,
-			RESET1 := reset OR StopDone,
+      <ST><![CDATA[// todo: brake logic
+AzimuthUnlock(SET := enable,
+			RESET1 := reset,
 			Q1 => GVL_Telescope.focus_lock);
 // wait until the focus is unlocked for n milliseconds
 AzimuthDelay(IN :=AzimuthUnlock.Q1, PT := T#500MS);
@@ -31,6 +37,7 @@ AzimuthDelay(IN :=AzimuthUnlock.Q1, PT := T#500MS);
 AzimuthAxis(	
 	Enable := 			TelescopeControl.power AND Main.power_OK,
 	Reset := 			reset,
+	MoveAxis :=			MoveAxis,
 	Position := 		position, 
 	Enable_Positive := 	GVL_Telescope.azimut_limit_switch,
 	Enable_Negative := 	GVL_Telescope.azimut_limit_switch,
@@ -50,11 +57,13 @@ AzimuthAxisEvent(
 				]]></ST>
     </Implementation>
     <LineIds Name="AzimuthControl">
+      <LineId Id="128" Count="0" />
       <LineId Id="116" Count="4" />
       <LineId Id="114" Count="1" />
       <LineId Id="33" Count="0" />
       <LineId Id="108" Count="0" />
       <LineId Id="39" Count="0" />
+      <LineId Id="126" Count="0" />
       <LineId Id="41" Count="0" />
       <LineId Id="104" Count="3" />
       <LineId Id="38" Count="0" />

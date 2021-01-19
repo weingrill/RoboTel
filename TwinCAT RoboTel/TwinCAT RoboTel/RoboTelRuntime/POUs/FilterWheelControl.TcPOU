@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <POU Name="FilterWheelControl" Id="{f0e4f375-0934-4386-a9fa-94537c34c7e1}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM FilterWheelControl
 VAR_INPUT
@@ -7,40 +7,38 @@ VAR_INPUT
 	right:	BOOL;
 	reset:	BOOL;
 	enable:	BOOL;
+	MoveAxis: BOOL;
 END_VAR
 VAR
-	FilterWheelAxisJog:	FB_AxisJog;
-	FilterWheelAxis:	FB_Axis;
+	FilterWheelAxis:	FB_Axis2;
 	error: 				BOOL;
+	ErrorID:			UDINT;
 	position:			LREAL;
 	act_position:		LREAL;
 
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF PendantControl.manual THEN
-	FilterWheelAxisJog(	bPowerEnable := enable,
-						bEnable_Positive := TRUE,
-						bEnable_Negative := TRUE,
-						bForward := left,
-						bBackward := right,
-						bReset := reset,
-						bStop := left AND right,
-						bErr => error,
-						fActPos => act_position,
-						stAxis :=	GVL_FilterWheel.FilterWheel_AxisRef);	
-ELSE
-	FilterWheelAxis(	bPowerEnable := TelescopeControl.power,
-						bReset := reset,
-						fMoveAbsPos := position, 
-						fActPos => act_position,
-						bAxError => error,
-						stAxis :=	GVL_FilterWheel.FilterWheel_AxisRef);
-END_IF
+      <ST><![CDATA[FilterWheelAxis(
+	Enable := 			TelescopeControl.power OR PendantControl.FilterWheel_enable,
+	Reset := 			reset,
+	MoveAxis :=			MoveAxis,
+	Position := 		position, 
+	Enable_Positive :=  TRUE,
+	Enable_Negative := 	TRUE,
+	Jog_Forward :=		left,
+	Jog_Backwards := 	right,
+	ActualPosition => 	act_position,
+	Error => 			error,
+	ErrorID => 			ErrorID,
+	AxisRef :=			GVL_FilterWheel.FilterWheel_AxisRef);
 ]]></ST>
     </Implementation>
     <LineIds Name="FilterWheelControl">
-      <LineId Id="11" Count="18" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="46" Count="9" />
+      <LineId Id="28" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

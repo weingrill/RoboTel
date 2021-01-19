@@ -13,7 +13,7 @@ VAR_INPUT
 END_VAR
 VAR
 	DomeAxis: 	FB_ModuloAxis;
-	DomeJogAxis: FB_AxisJog;
+	DomeJogAxis: FB_Axis2;
 	Azimuth_set,
 	Azimuth_current,
 	Azimuth_old: LREAL;
@@ -64,10 +64,13 @@ END_IF
 
 GVL_Dome.Inverter_DirectionMinus := GVL_Dome.bDirectionPlus;
 
+(*
+TODO: use FB_Axis2
 DomeJogAxis(bPowerEnable := enable OR manual_enable,
 	bForward := right OR GVL_Dome.Clockwise,
 	bBackward := left OR GVL_Dome.CounterClockwise,
 	stAxis := GVL_Dome.DomeAxisRef);
+*)
 
 DomeAxis(bPowerEnable := enable,
 		bMoveModExec	:= (Azimuth_set <> Azimuth_old) OR move_azimuth, //Environment.WindSpeed > 15.0,
@@ -153,9 +156,13 @@ DomeCommEvent(	Trigger := bError,
       <LineId Id="640" Count="2" />
       <LineId Id="648" Count="0" />
       <LineId Id="643" Count="2" />
-      <LineId Id="652" Count="3" />
+      <LineId Id="871" Count="0" />
+      <LineId Id="652" Count="0" />
+      <LineId Id="873" Count="0" />
+      <LineId Id="653" Count="2" />
       <LineId Id="657" Count="0" />
       <LineId Id="550" Count="0" />
+      <LineId Id="872" Count="0" />
       <LineId Id="291" Count="0" />
       <LineId Id="294" Count="0" />
       <LineId Id="296" Count="2" />

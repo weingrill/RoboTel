@@ -7,47 +7,33 @@ VAR_INPUT
 	down:	BOOL;
 	reset:	BOOL;
 	enable: BOOL;
+	position:	LREAL;
+	MoveAxis:			BOOL;
 END_VAR
 
 VAR
-	ElevationAxisJog:	FB_AxisJog;
 	ElevationAxis:		FB_Axis2;
 	error: 				BOOL;
-	MoveAxis:			BOOL;
-	position: 			LREAL;
 	act_position: 		LREAL;
 	ErrorID: UDINT;
 	ElevationAxisEvent: FB_Eventlog;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF PendantControl.manual THEN
-	ElevationAxisJog(	bPowerEnable := enable AND HydraulicsControl.open_brake,
-						bEnable_Positive := TRUE,
-						bEnable_Negative := TRUE,
-						bForward := up,
-						bBackward := down,
-						bReset := reset,
-						bStop := up AND down,
-						bErr => error,
-						fActPos => act_position,
-						stAxis :=	GVL_Telescope.ElevationAxisRef);	
-ELSE
-ElevationAxis(
-	Enable := TelescopeControl.power AND HydraulicsControl.open_brake,
-	Reset := reset,
-	MoveAxis := MoveAxis,
-	Position := position,
-	Enable_Positive := TRUE,
-	Enable_Negative := TRUE,
-	Jog_Forward := up,
-	Jog_Backwards := down,
-	Error => Error,
-	ErrorID => ErrorID,
-	ActualPosition => act_position,
-	AxisRef := GVL_Telescope.ElevationAxisRef);
+      <ST><![CDATA[ElevationAxis(
+	Enable := 			TelescopeControl.power OR PendantControl.Elevation_enable,
+	Reset := 			reset,
+	MoveAxis :=			MoveAxis,
+	Position := 		position, 
+	Enable_Positive :=  TRUE,
+	Enable_Negative := 	TRUE,
+	Jog_Forward :=		up,
+	Jog_Backwards := 	down,
+	ActualPosition => 	act_position,
+	Error => 			error,
+	ErrorID => 			ErrorID,
+	AxisRef :=			GVL_Telescope.ElevationAxisRef);
 					
-END_IF
 ElevationAxisEvent(	Trigger := Error, 
 				Level := ADSLOG_MSGTYPE_ERROR,
 				FormatString := 'Elevation Axis Error: %s',
@@ -56,12 +42,9 @@ ElevationAxisEvent(	Trigger := Error,
 				]]></ST>
     </Implementation>
     <LineIds Name="ElevationControl">
-      <LineId Id="109" Count="11" />
       <LineId Id="128" Count="0" />
-      <LineId Id="179" Count="0" />
-      <LineId Id="129" Count="2" />
-      <LineId Id="180" Count="3" />
-      <LineId Id="132" Count="5" />
+      <LineId Id="184" Count="10" />
+      <LineId Id="135" Count="1" />
       <LineId Id="156" Count="4" />
       <LineId Id="5" Count="0" />
     </LineIds>

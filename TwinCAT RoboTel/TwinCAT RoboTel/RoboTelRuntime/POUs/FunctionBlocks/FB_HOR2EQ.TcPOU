@@ -33,7 +33,8 @@ VAR
 	lmst,
 	J_now: LREAL;
 	co_nutate: 		FB_CO_NUTATE;
-	co_aberation: 	CO_ABERRATION;
+	co_aberration: 	CO_ABERRATION;
+	co_refract:		CO_REFRACT;
 	fbprecess:		FB_PRECESS;
 	altaz2hadec:	FB_ALTAZ2HADEC;
 	last: LREAL;

@@ -2,6 +2,10 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <POU Name="HydraulicsControl" Id="{6bf4055d-2300-4039-bb16-5b9f94622e06}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM HydraulicsControl
+VAR_INPUT
+	// command to open the brake
+	open_brake:	BOOL := FALSE;
+END_VAR
 VAR
 	// monitors the pressure of the pump is running
 	pressure_watchdog:	TON;
@@ -13,8 +17,6 @@ VAR
 	oil_pump_state:		RS;
 	// represents the state of the brake
 	brake_state: RS;
-	// command to open the brake
-	open_brake:	BOOL := FALSE;
 	// status of the brake: is the brake open?
 	brake_open:			BOOL;
 	// pump is running, but the pressure remains low

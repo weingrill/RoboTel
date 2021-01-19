@@ -61,6 +61,9 @@
     <Compile Include="POUs\CoverControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\DerotatorControl.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\DomeControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -88,16 +91,13 @@
     <Compile Include="POUs\FunctionBlocks\CO_REFRACT.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FunctionBlocks\FB_ALTAZ2HADEC.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_AstroClock.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_Axis.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_Axis2.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_AxisJog.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_BLINK.TcPOU">
@@ -122,6 +122,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_HADEC2ALTAZ.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FunctionBlocks\FB_HOR2EQ.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_HTMLFile.TcPOU">
@@ -257,8 +260,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-  <Data>
-    <o xml:space="preserve" t="OptionKey">
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -285,13 +288,13 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-  </Data>
-  <TypeList>
-    <Type n="Hashtable">System.Collections.Hashtable</Type>
-    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-    <Type n="String">System.String</Type>
-  </TypeList>
-</XmlArchive>
+        </Data>
+        <TypeList>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>
