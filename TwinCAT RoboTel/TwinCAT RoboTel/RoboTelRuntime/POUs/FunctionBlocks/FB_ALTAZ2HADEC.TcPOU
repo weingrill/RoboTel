@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <POU Name="FB_ALTAZ2HADEC" Id="{c9e9fae4-f444-4bfc-a187-9c746df0d157}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ALTAZ2HADEC
+VAR_INPUT
+	// the local apparent altitude, in DEGREES
+	alt:	LREAL;
+	// the local apparent azimuth, in DEGREES
+	az:		LREAL;
+	// the local geodetic latitude, in DEGREES
+	lat: 	LREAL;
+END_VAR
+VAR_OUTPUT
+	// the local apparent hour angle, in DEGREES
+	ha:		LREAL;
+	// the local apparent declination, in DEGREES
+	dec:	LREAL;
+END_VAR
+VAR
+	alt_r:	LREAL;
+	az_r:	LREAL;
+	lat_r:	LREAL;
+	sindec: LREAL;
+END_VAR
+VAR CONSTANT
+	d2r:	LREAL := PI/180.0;
+	r2d:	LREAL := 180.0/PI;
+	h2r:	LREAL := PI/12.0;
+	h2d:	LREAL := 15.0;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+
+  NAME:
+    ALTAZ2HADEC
+ PURPOSE:
+    Convert Horizon (Alt-Az) coordinates to Hour Angle and Declination.
+ EXPLANATION::
+    Can deal with the NCP singularity.    Intended mainly to be used by
+    program hor2eq.pro
+ CALLING SEQUENCE:
+   ALTAZ2HADEC, alt, az, lat, ha, dec
+
+ INPUTS
+   alt - the local apparent altitude, in DEGREES, scalar or vector
+   az  - the local apparent azimuth, in DEGREES, scalar or vector,
+         measured EAST of NORTH!!!  If you have measured azimuth west-of-south
+        (like the book MEEUS does), convert it to east of north via:
+                       az = (az + 180) mod 360
+
+   lat -  the local geodetic latitude, in DEGREES, scalar or vector.
+
+ OUTPUTS
+   ha  -  the local apparent hour angle, in DEGREES.  The hour angle is the 
+          time that right ascension of 0 hours crosses the local meridian.  
+          It is unambiguously defined.
+   dec -  the local apparent declination, in DEGREES.
+
+ EXAMPLE:
+     Arcturus is observed at an apparent altitude of 59d,05m,10s and an 
+     azimuth (measured east of north) of 133d,18m,29s while at the 
+     latitude of +43.07833 degrees.
+     What are the local hour angle and declination of this object?
+
+     IDL> altaz2hadec, ten(59,05,10), ten(133,18,29), 43.07833, ha, dec
+     ===> Hour angle ha = 336.683 degrees
+          Declination, dec = 19.1824 degrees
+
+       The widely available XEPHEM code gets:
+                 Hour Angle = 336.683
+                 Declination = 19.1824
+
+ REVISION HISTORY:
+    Written  Chris O'Dell Univ. of Wisconsin-Madison May 2002
+*)
+alt_r  := alt*d2r;
+az_r := az*d2r;
+lat_r := lat*d2r;
+
+//******************************************************************************
+// find local HOUR ANGLE (in degrees, from 0. to 360.)
+ha := atan2( -SIN(az_r)*COS(alt_r), 
+           -COS(az_r)*SIN(lat_r)*COS(alt_r)+SIN(alt_r)*COS(lat_r));
+ha := ha / d2r;
+IF ha < 0.0 THEN 
+	ha := ha + 360.0;
+END_IF
+ ha := MODABS(ha, 360.0);
+
+// Find declination (positive if north of Celestial Equator, negative if south)
+sindec := SIN(lat_r)*SIN(alt_r) + COS(lat_r)*COS(alt_r)*COS(az_r);
+// convert dec to degrees
+dec := ASIN(sindec)/d2r;
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_ALTAZ2HADEC">
+      <LineId Id="9" Count="0" />
+      <LineId Id="12" Count="41" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="66" Count="9" />
+      <LineId Id="86" Count="1" />
+      <LineId Id="77" Count="3" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="64" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

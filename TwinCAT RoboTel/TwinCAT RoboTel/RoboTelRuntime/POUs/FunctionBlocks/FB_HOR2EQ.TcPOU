@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <POU Name="FB_HOR2EQ" Id="{a0256175-d56a-4186-a182-fc276b1c60fe}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_HOR2EQ
+VAR_INPUT
+	//altitude (in degrees) [scalar OR vector]
+	alt: LREAL;  
+	//azimuth angle (in degrees, measured EAST from NORTH, but see keyword WS below.) [scalar or vector]
+	az: LREAL;
+	// Julian Date [scalar or vector], double precision
+	JD: LREAL;
+	lat:	LREAL;
+	lon:	LREAL;
+	WS:	BOOL;
+	precess:	BOOL := TRUE;
+	NUTATE:		BOOL := TRUE;
+	aberration:	BOOL := TRUE;
+	refract:	BOOL := TRUE;
+	altitude:	LREAL := 0.0;
+END_VAR
+VAR_OUTPUT
+	// Right Ascension of object  (J2000) in degrees (FK5)
+	ra: 	LREAL;
+	// Declination of object (J2000) in degrees (FK5)
+	dec:	LREAL;
+	// hour angle (in degrees) (optional)
+	ha:		LREAL;
+END_VAR
+VAR
+	
+	alt_,
+	az_,
+	lmst,
+	J_now: LREAL;
+	co_nutate: 		FB_CO_NUTATE;
+	co_aberation: 	CO_ABERRATION;
+	fbprecess:		FB_PRECESS;
+	altaz2hadec:	FB_ALTAZ2HADEC;
+	last: LREAL;
+	dra1: LREAL;
+	ddec1: LREAL;
+	eps: LREAL;
+	d_psi: LREAL;
+	dra2: LREAL;
+	ddec2: LREAL;
+END_VAR
+VAR CONSTANT
+	d2r:	LREAL := PI/180.0;
+	r2d:	LREAL := 180.0/PI;
+	h2r:	LREAL := PI/12.0;
+	h2d:	LREAL := 15.0;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+alt_ := alt;   //do this so we don't change ra, dec arrays.
+az_ := az;
+
+
+//*******************************************************************************************
+// Make Correction for ATMOSPHERIC REFRACTION
+// (use this for visible and radio wavelengths; author is unsure about other wavelengths)
+IF refract THEN 
+	co_refract(	old_alt := alt, 
+				altitude := altitude, 
+				to_observed := TRUE, 
+				new_alt => alt);
+END_IF
+
+IF WS THEN 
+	az_ := az_ - 180.0;
+END_IF
+
+co_nutate(	jd := jd, 
+			ra := 45.0, 
+			dec := 45.0, 
+			d_ra => dra1, 
+			d_dec => ddec1, 
+			eps => eps, 
+			d_psi => d_psi);
+//******************************************************************************
+//Calculate LOCAL APPARENT SIDEREAL TIME
+// first get local mean sidereal time (lmst)
+// get LST (in hours) - note:this is indep of tzone since giving jd
+lmst := ct2lst( lon, jd);
+// convert LMST TO degrees (btw, THIS is the RA OF the zenith)
+lmst := lmst*h2d;
+// calculate local APPARENT sidereal time (last)
+// ADD correction in degrees
+last := lmst + d_psi *COS(eps)/3600.0 ; 
+
+//****************************************************************************
+// Now do the spherical trig to get APPARENT Hour Angle [degrees], and
+// declination [degrees].
+altaz2hadec( alt := alt_, az := az_, lat := lat, ha => ha, dec => dec);
+
+// Find Right Ascension (in degrees, from 0 to 360.)
+ ra := MODABS(last - ha + 360.0, 360.0);
+
+
+
+//*****************************************************************************
+// calculate NUTATION and ABERRATION Corrections to Ra-Dec
+IF NUTATE THEN
+	co_nutate(	jd := jd, 
+			ra := ra, 
+			dec := dec, 
+			d_ra => dra1, 
+			d_dec => ddec1, 
+			eps => eps, 
+			d_psi => d_psi);
+ELSE
+	dra1 := 0.0;
+	ddec1 := 0.0;	
+END_IF
+IF aberration THEN
+	co_aberration(	jd := jd, 
+				ra := ra, 
+				dec := dec, 
+				d_ra => dra2, 
+				d_dec => ddec2, 
+				eps := eps);
+ELSE
+	dra2 := 0.0;
+	ddec2 := 0.0;	
+END_IF
+//******************************************************************************
+// Make Nutation and Aberration Corrections (if wanted)
+
+ra := ra - (dra1 + dra2)/3600.0;
+dec := dec - (ddec1 + ddec2)/3600.0;
+ //compute current equinox
+J_now := (JD - 2451545.0)/365.25 + 2000.0 ;
+
+//*****************************************************************************
+// PRECESS coordinates to current date
+// (uses astro lib procedure PRECESS.pro)
+
+IF precess THEN 
+	fbprecess( ra := ra, dec := dec, 
+	EQUINOX1 := 2000.0, EQUINOX2 := J_now, 
+	ra_precessed =>ra, dec_precessed => dec);                   
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_HOR2EQ">
+      <LineId Id="39" Count="4" />
+      <LineId Id="47" Count="4" />
+      <LineId Id="189" Count="2" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="53" Count="1" />
+      <LineId Id="131" Count="1" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="141" Count="5" />
+      <LineId Id="57" Count="5" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="63" Count="1" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="68" Count="8" />
+      <LineId Id="79" Count="3" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="152" Count="5" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="179" Count="1" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="169" Count="1" />
+      <LineId Id="173" Count="5" />
+      <LineId Id="184" Count="2" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="86" Count="1" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="88" Count="1" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="96" Count="4" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="193" Count="1" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
