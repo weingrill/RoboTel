@@ -15,11 +15,12 @@ VAR
 	Nasmyth_delay:		TON;
 	Nasmyth_unlock,
 	Nasmyth_unlocked:	BOOL;
-	DerotatorAxisJog:	FB_AxisJog;
+	
 	//AzimuthAxisJog:		FB_AxisJog;
 	Focus_enable,
 	Elevation_enable,
 	Azimuth_enable,
+	Derotator_enable,
 	Dome_enable,
 	FilterWheel_enable : BOOL := FALSE;
 	manual,
@@ -65,10 +66,11 @@ Nasmyth_delay(IN := GVL_Telescope.nasmyth_lock,
 				PT := T#500MS,
 				Q => Nasmyth_unlocked);
 
-Focus_enable := FALSE;
+Focus_enable := 	FALSE;
 Elevation_enable := FALSE;
-Azimuth_enable := FALSE;
-Dome_enable := FALSE;
+Azimuth_enable := 	FALSE;
+Derotator_enable := FALSE;
+Dome_enable := 		FALSE;
 FilterWheel_enable := FALSE;
 
 CASE Selection OF
@@ -124,15 +126,10 @@ CASE Selection OF
 						
 	6:	GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
-		DeRotatorAxisJog(bPowerEnable := manual AND Main.power_OK,
-						bEnable_Positive := TRUE,
-						bEnable_Negative := TRUE,
-						bForward := right,
-						bBackward := left,
-						bReset := manual AND reset,
-						bStop := manual AND enable,
-						bErr => error,
-						stAxis :=	GVL_Telescope.DerotatorAxisRef);
+		Derotator_enable := manual;
+		DerotatorControl.left := left;
+		DerotatorControl.right := right;
+		DerotatorControl.reset := reset;
 						
 	7:	Elevation_enable := manual;
 		GVL_pendant_control.lamp_up := Elevation_enable;
@@ -175,9 +172,10 @@ CASE Selection OF
 		
 END_CASE
 
-FocusControl.enable := Focus_enable;
+//FocusControl.enable := Focus_enable;
 ElevationControl.enable := Elevation_enable;
 AzimuthControl.enable := Azimuth_enable;
+//DerotatorControl.enable := Derotator_enable;
 DomeControl.enable := Dome_enable;
 FilterWheelControl.enable := FilterWheel_enable;
 GVL_pendant_control.lamp_error := Main.error;]]></ST>
@@ -199,7 +197,9 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="504" Count="0" />
       <LineId Id="10" Count="0" />
       <LineId Id="178" Count="0" />
-      <LineId Id="374" Count="1" />
+      <LineId Id="374" Count="0" />
+      <LineId Id="550" Count="0" />
+      <LineId Id="375" Count="0" />
       <LineId Id="467" Count="0" />
       <LineId Id="331" Count="0" />
       <LineId Id="11" Count="1" />
@@ -226,11 +226,9 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="505" Count="0" />
       <LineId Id="240" Count="0" />
       <LineId Id="238" Count="1" />
-      <LineId Id="215" Count="0" />
-      <LineId Id="218" Count="3" />
-      <LineId Id="249" Count="1" />
-      <LineId Id="247" Count="0" />
+      <LineId Id="551" Count="0" />
       <LineId Id="222" Count="0" />
+      <LineId Id="554" Count="1" />
       <LineId Id="465" Count="0" />
       <LineId Id="311" Count="0" />
       <LineId Id="336" Count="0" />
@@ -260,6 +258,7 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="508" Count="0" />
       <LineId Id="334" Count="1" />
       <LineId Id="373" Count="0" />
+      <LineId Id="552" Count="0" />
       <LineId Id="381" Count="0" />
       <LineId Id="466" Count="0" />
       <LineId Id="121" Count="0" />
