@@ -37,15 +37,25 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[Selection := 1*BOOL_TO_UINT(GVL_pendant_control.BCD1) + 
+      <ST><![CDATA[(* 
+This program is responsible for the manual control of the telescope.
+all movable parts can be controlled from here. This is mainly for testing and
+maintenance.
+WARNING! Some of the safety routines are disabled, when operating the telescope manually.
+*)
+// calculate the value of the selector
+Selection := 1*BOOL_TO_UINT(GVL_pendant_control.BCD1) + 
 			 2*BOOL_TO_UINT(GVL_pendant_control.BCD2) + 
 			 4*BOOL_TO_UINT(GVL_pendant_control.BCD4) +
 			 8*BOOL_TO_UINT(GVL_pendant_control.BCD8);
 
+// disable all the lamps
 GVL_pendant_control.lamp_left := FALSE;
 GVL_pendant_control.lamp_right := FALSE;
 GVL_pendant_control.lamp_up := FALSE;
 GVL_pendant_control.lamp_down := FALSE;
+
+// clooect the state of all buttons
 manual := GVL_pendant_control.key_switch;
 enable := GVL_pendant_control.start_switch;
 reset := GVL_pendant_control.reset_switch;
@@ -54,17 +64,20 @@ down := GVL_pendant_control.direction_down;
 left := GVL_pendant_control.direction_left;
 right := GVL_pendant_control.direction_right;
 
+// the error lamp is the same as the error lamp of the main panel
 GVL_pendant_control.lamp_error := GVL_Main.lamp_error;
 
+// this program is only for manual operation, if the key switch is on automatic we return to MAIN
 IF NOT manual THEN 
 	// we have nothing to do further
 	RETURN;
 END_IF;
 
+// disable all items by default
 Cover1_enable :=	FALSE;
 Cover2_enable :=	FALSE;
 Cover3_enable :=	FALSE;
-
+Nasmyth_enable :=	FALSE;
 Focus_enable := 	FALSE;
 Elevation_enable := FALSE;
 Azimuth_enable := 	FALSE;
@@ -72,6 +85,7 @@ Derotator_enable := FALSE;
 Dome_enable := 		FALSE;
 FilterWheel_enable := FALSE;
 
+// enable only the selected item and connect lamps and buttons accordingly
 CASE Selection OF
 	1:	// reserved for Cover1 control
 		GVL_pendant_control.lamp_left := TRUE;
@@ -87,8 +101,7 @@ CASE Selection OF
 						axis_ref := Cover2_axis);
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover2_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover2_closed;
- 
-	
+ 	
 	3:  // Cover3 control
 		 Cover3_control(open := up,
 						close := down,
@@ -100,6 +113,7 @@ CASE Selection OF
 						axis_ref := Cover3_axis);
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover3_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover3_closed;
+		
 	4:	// Nasmyth / mirror M3 control
 		GVL_pendant_control.lamp_left := GVL_Telescope.nasmyth_limit_left;
 		GVL_pendant_control.lamp_right := GVL_Telescope.nasmyth_limit_right;
@@ -117,14 +131,16 @@ CASE Selection OF
 		FocusControl.inward := down;
 		Focuscontrol.reset := reset;
 						
-	6:	GVL_pendant_control.lamp_left := TRUE;
+	6:	// Derotator control
+		GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
 		Derotator_enable := manual;
 		DerotatorControl.left := left;
 		DerotatorControl.right := right;
 		DerotatorControl.reset := reset;
 						
-	7:	Elevation_enable := manual;
+	7:	// Elevation Control
+		Elevation_enable := manual;
 		GVL_pendant_control.lamp_up := Elevation_enable;
 		GVL_pendant_control.lamp_down := Elevation_enable;
 		ElevationControl.up := up;
@@ -139,21 +155,24 @@ CASE Selection OF
 		AzimuthControl.right := right;
 		AzimuthControl.reset := reset;
 		
-	9: 	Dome_enable := manual;
+	9: 	// Dome control
+		Dome_enable := manual;
 		GVL_pendant_control.lamp_left := Dome_enable;
 		GVL_pendant_control.lamp_right := Dome_enable;
 		DomeControl.left := left;
 		DomeControl.right := right;
 		DomeControl.reset := reset;
 		
-	10:	FilterWheel_enable := manual;
+	10:	// FilterWheel control
+		FilterWheel_enable := manual;
 		GVL_pendant_control.lamp_left := FilterWheel_enable;
 		GVL_pendant_control.lamp_right := FilterWheel_enable;
 		FilterWheelControl.left := left;
 		FilterWheelControl.right := right;
 		FilterWheelControl.reset := reset;
 	
-	15:	GVL_pendant_control.lamp_up := HydraulicsControl.oil_pressure_OK AND NOT Hydraulicscontrol.brake_open;
+	15:	// Hydraulics control
+		GVL_pendant_control.lamp_up := HydraulicsControl.oil_pressure_OK AND NOT Hydraulicscontrol.brake_open;
 		GVL_pendant_control.lamp_down := HydraulicsControl.oil_pressure_OK AND Hydraulicscontrol.brake_open;
 		GVL_pendant_control.lamp_left := HydraulicsControl.pump_running;
 		GVL_pendant_control.lamp_right := HydraulicsControl.suction_running;
@@ -174,17 +193,27 @@ FilterWheelControl.enable := FilterWheel_enable;
 GVL_pendant_control.lamp_error := Main.error;]]></ST>
     </Implementation>
     <LineIds Name="PendantControl">
+      <LineId Id="614" Count="0" />
+      <LineId Id="616" Count="0" />
+      <LineId Id="618" Count="2" />
+      <LineId Id="615" Count="0" />
+      <LineId Id="613" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="7" Count="2" />
+      <LineId Id="621" Count="0" />
       <LineId Id="17" Count="2" />
       <LineId Id="25" Count="1" />
+      <LineId Id="622" Count="1" />
       <LineId Id="232" Count="0" />
       <LineId Id="318" Count="5" />
+      <LineId Id="624" Count="0" />
       <LineId Id="326" Count="0" />
       <LineId Id="27" Count="0" />
+      <LineId Id="625" Count="0" />
       <LineId Id="510" Count="2" />
       <LineId Id="514" Count="0" />
       <LineId Id="158" Count="0" />
+      <LineId Id="626" Count="0" />
       <LineId Id="513" Count="0" />
       <LineId Id="504" Count="0" />
       <LineId Id="596" Count="2" />
@@ -194,6 +223,7 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="550" Count="0" />
       <LineId Id="375" Count="0" />
       <LineId Id="467" Count="0" />
+      <LineId Id="627" Count="0" />
       <LineId Id="331" Count="0" />
       <LineId Id="11" Count="1" />
       <LineId Id="594" Count="0" />
@@ -203,10 +233,10 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="95" Count="5" />
       <LineId Id="105" Count="2" />
       <LineId Id="101" Count="0" />
-      <LineId Id="52" Count="0" />
       <LineId Id="59" Count="0" />
       <LineId Id="109" Count="8" />
       <LineId Id="81" Count="0" />
+      <LineId Id="628" Count="0" />
       <LineId Id="80" Count="0" />
       <LineId Id="137" Count="1" />
       <LineId Id="241" Count="0" />
@@ -220,12 +250,15 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="506" Count="0" />
       <LineId Id="505" Count="0" />
       <LineId Id="240" Count="0" />
-      <LineId Id="238" Count="1" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="608" Count="0" />
+      <LineId Id="239" Count="0" />
       <LineId Id="551" Count="0" />
       <LineId Id="222" Count="0" />
       <LineId Id="554" Count="1" />
       <LineId Id="465" Count="0" />
       <LineId Id="311" Count="0" />
+      <LineId Id="609" Count="0" />
       <LineId Id="336" Count="0" />
       <LineId Id="289" Count="0" />
       <LineId Id="327" Count="2" />
@@ -237,13 +270,18 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="309" Count="0" />
       <LineId Id="371" Count="1" />
       <LineId Id="463" Count="0" />
-      <LineId Id="377" Count="2" />
+      <LineId Id="377" Count="0" />
+      <LineId Id="610" Count="0" />
+      <LineId Id="378" Count="1" />
       <LineId Id="382" Count="2" />
       <LineId Id="464" Count="0" />
       <LineId Id="298" Count="0" />
+      <LineId Id="611" Count="0" />
       <LineId Id="456" Count="4" />
       <LineId Id="455" Count="0" />
-      <LineId Id="233" Count="1" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="612" Count="0" />
+      <LineId Id="234" Count="0" />
       <LineId Id="419" Count="1" />
       <LineId Id="244" Count="1" />
       <LineId Id="256" Count="1" />

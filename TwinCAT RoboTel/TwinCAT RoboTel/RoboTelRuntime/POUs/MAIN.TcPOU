@@ -68,6 +68,7 @@ TelescopeControl();
 //TODO: implement dome control
 DomeControl();
 PendantControl();
+NasmythControl();
 HydraulicsControl();
 FanControl(enable := NOT PendantControl.manual);
 ElevationControl();
@@ -120,6 +121,7 @@ SafetyHandling();]]></ST>
       <LineId Id="6" Count="0" />
       <LineId Id="165" Count="0" />
       <LineId Id="9" Count="0" />
+      <LineId Id="311" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="171" Count="0" />
       <LineId Id="173" Count="0" />
