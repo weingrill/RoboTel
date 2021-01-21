@@ -152,7 +152,7 @@ Axis_Jog(
 Axis_Home(
 	Axis := 		AxisRef,
 	Execute := 		HomeAxis AND Ready,
-	Position := 	Position,
+	//Position := 	Position,	// use DEFAULT_HOME_POSITION
 	Done => 		HomeDone,
 	Busy => 		Busy,
 	Active => 		Active,

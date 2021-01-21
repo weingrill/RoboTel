@@ -3122,7 +3122,8 @@ External Setpoint Generation:
 					</AxisPara>
 					<Encoder Name="Enc" EncType="4">
 						<EncPara ScaleFactorNumerator="0.0003641" Inverse="true" MaxCount="#x0000ffff">
-							<Inc RefMode="2" RefSoftSyncMask="#x0000ffff"/>
+							<Inc RefPosition="200" RefMode="2" RefSoftSyncMask="#x0000ffff"/>
+							<ParameterChanged>259</ParameterChanged>
 						</EncPara>
 						<Vars VarGrpType="1">
 							<Name>Eingänge</Name>

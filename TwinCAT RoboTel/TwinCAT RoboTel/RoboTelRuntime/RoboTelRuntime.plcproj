@@ -139,15 +139,6 @@
     <Compile Include="POUs\FunctionBlocks\FB_Mittelwert.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_ModuloAxis.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_MoveSingleaxis.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_MoveSingleaxis_Case.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_NUTATE.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -206,6 +197,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\NasmythControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\PendantControl.TcPOU">

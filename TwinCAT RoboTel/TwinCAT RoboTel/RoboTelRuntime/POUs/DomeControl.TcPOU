@@ -75,7 +75,6 @@ END_IF
 
 IF NOT DomeAxis.Calibrated THEN
 	DomeAxis.HomeAxis := TRUE;
-	position := 200.0;
 ELSE
 	DomeAxis.HomeAxis := FALSE;
 END_IF
@@ -184,7 +183,6 @@ DomeAxisEvent(
       <LineId Id="643" Count="2" />
       <LineId Id="934" Count="5" />
       <LineId Id="954" Count="2" />
-      <LineId Id="958" Count="0" />
       <LineId Id="960" Count="1" />
       <LineId Id="957" Count="0" />
       <LineId Id="871" Count="0" />
