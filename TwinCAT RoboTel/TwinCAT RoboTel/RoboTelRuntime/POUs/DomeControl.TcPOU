@@ -6,20 +6,22 @@ VAR_INPUT
 	enable,
 	reset,
 	left,
-	right: BOOL;
+	right: 		BOOL;
 	OpenDome,
 	CloseDome,
-	Light: BOOL;
+	Light: 		BOOL;
+	position:	LREAL;
+END_VAR
+VAR_OUTPUT
+	Error:		BOOL;
+	ErrorID:	UDINT;
 END_VAR
 VAR
-	DomeAxis: 	FB_ModuloAxis;
-	DomeJogAxis: FB_Axis2;
-	Azimuth_set,
-	Azimuth_current,
-	Azimuth_old: LREAL;
-	manual_enable : BOOL;
-	move_azimuth, 
-	stop_azimuth: BOOL;
+	DomeAxis: FB_Axis2;
+	Azimuth_current: 	LREAL;
+	manual_enable:	BOOL;
+	move_azimuth:	BOOL;
+	stop_done:		BOOL;
 	DomeOpened,
 	DomeClosed:			BOOL;
    	DomeControlWord:	WORD;
@@ -39,6 +41,7 @@ VAR
 	fbReadReq: ADSREAD := ( NETID := '5.73.45.158.1.1', PORT := 851, TMOUT := DEFAULT_ADS_TIMEOUT );
 	DomeCalibration: MC_SetPosition;
 	DomeCommEvent:	FB_Eventlog;
+	DomeAxisEvent:	FB_Eventlog;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -64,28 +67,42 @@ END_IF
 
 GVL_Dome.Inverter_DirectionMinus := GVL_Dome.bDirectionPlus;
 
-(*
-TODO: use FB_Axis2
-DomeJogAxis(bPowerEnable := enable OR manual_enable,
-	bForward := right OR GVL_Dome.Clockwise,
-	bBackward := left OR GVL_Dome.CounterClockwise,
-	stAxis := GVL_Dome.DomeAxisRef);
-*)
+IF ABS(Azimuth_current - position) > 1.0 THEN
+	move_azimuth := TRUE;
+END_IF
 
-DomeAxis(bPowerEnable := enable,
-		bMoveModExec	:= (Azimuth_set <> Azimuth_old) OR move_azimuth, //Environment.WindSpeed > 15.0,
-		fMoveModPos 	:= Azimuth_set,
-		fMoveModVelo	:= 2.22, // 180° in 81s, 360° in 120s
-		bHalt			:= stop_azimuth,
-		fActPos 		=> Azimuth_current,
-		stAxis			:= GVL_Dome.DomeAxisRef);
+// velocity = 2.22? or 180° in 81s, 360° in 120s
 
+IF NOT DomeAxis.Calibrated THEN
+	DomeAxis.HomeAxis := TRUE;
+	position := 200.0;
+ELSE
+	DomeAxis.HomeAxis := FALSE;
+END_IF
+
+DomeAxis(
+	Enable := 		enable OR manual_enable,
+	Reset := 		reset,
+	MoveAxis := 	move_azimuth,
+	Position := 	position,
+	Jog_Forward :=	right OR GVL_Dome.Clockwise,
+	Jog_Backwards := left OR GVL_Dome.CounterClockwise,
+	bCalibrationCam := GVL_Dome.Azimut_home,
+	isModuloAxis := TRUE,
+	StopDone =>	stop_done,
+	Error =>		error,
+	ErrorID =>		ErrorID,
+	ActualPosition => Azimuth_current,
+	AxisRef	:= 		GVL_Dome.DomeAxisRef);
+
+// re-calibrate the dome, if we pass the reference switch
 DomeCalibration(Axis := GVL_Dome.DomeAxisRef,
 	Execute := GVL_Dome.Azimut_home,
 	Position := 200.0); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
 		
-Azimuth_old := Azimuth_set;
-stop_azimuth := FALSE;
+IF stop_done THEN
+	move_azimuth := FALSE;
+END_IF
 
 IF CloseDome THEN
 	OpenDome := FALSE;
@@ -95,6 +112,8 @@ DeHumidifierDelay(IN := NOT OpenDome, PT := T#10S, Q => GVL_Dome.DeHumidifier);
 LightTimer(IN := Light, PT := T#60M);
 // Light is switched off after 60 minutes or if Light signal is low
 GVL_Dome.Light := Light AND LightTimer.Q;
+
+(* Here starts the remote section for moving parts of the dome. *)
 
 DomeControlWord.0 := TRUE;
 DomeControlWord.1 := OpenDome;
@@ -140,7 +159,14 @@ DomeCommEvent(	Trigger := bError,
 					FormatString := 'DomeCommunicationsError: %s',
 					OnMessage := UDINT_TO_STRING(nErrID),
 					OffMessage := 'OK',
-					OffLevel := ADSLOG_MSGTYPE_HINT);]]></ST>
+					OffLevel := ADSLOG_MSGTYPE_HINT);
+DomeAxisEvent(	
+	Trigger := 		Error, 
+	Level := 		ADSLOG_MSGTYPE_ERROR,
+	FormatString :=	'Dome Axis Error: %s',
+	OnMessage := 	UDINT_TO_STRING(ErrorID),
+	OffMEssage := 	'OK');
+				]]></ST>
     </Implementation>
     <LineIds Name="DomeControl">
       <LineId Id="5" Count="0" />
@@ -156,28 +182,36 @@ DomeCommEvent(	Trigger := bError,
       <LineId Id="640" Count="2" />
       <LineId Id="648" Count="0" />
       <LineId Id="643" Count="2" />
+      <LineId Id="934" Count="5" />
+      <LineId Id="954" Count="2" />
+      <LineId Id="958" Count="0" />
+      <LineId Id="960" Count="1" />
+      <LineId Id="957" Count="0" />
       <LineId Id="871" Count="0" />
-      <LineId Id="652" Count="0" />
-      <LineId Id="873" Count="0" />
-      <LineId Id="653" Count="2" />
-      <LineId Id="657" Count="0" />
-      <LineId Id="550" Count="0" />
-      <LineId Id="872" Count="0" />
-      <LineId Id="291" Count="0" />
-      <LineId Id="294" Count="0" />
-      <LineId Id="296" Count="2" />
+      <LineId Id="913" Count="0" />
+      <LineId Id="925" Count="0" />
+      <LineId Id="914" Count="2" />
+      <LineId Id="919" Count="1" />
+      <LineId Id="950" Count="0" />
+      <LineId Id="933" Count="0" />
+      <LineId Id="951" Count="0" />
+      <LineId Id="921" Count="0" />
+      <LineId Id="923" Count="0" />
       <LineId Id="307" Count="0" />
       <LineId Id="305" Count="0" />
+      <LineId Id="941" Count="0" />
       <LineId Id="778" Count="0" />
       <LineId Id="329" Count="0" />
       <LineId Id="780" Count="1" />
       <LineId Id="779" Count="0" />
       <LineId Id="330" Count="0" />
-      <LineId Id="385" Count="0" />
+      <LineId Id="952" Count="1" />
       <LineId Id="749" Count="3" />
       <LineId Id="771" Count="1" />
       <LineId Id="830" Count="1" />
-      <LineId Id="775" Count="1" />
+      <LineId Id="775" Count="0" />
+      <LineId Id="931" Count="1" />
+      <LineId Id="776" Count="0" />
       <LineId Id="747" Count="1" />
       <LineId Id="754" Count="0" />
       <LineId Id="756" Count="0" />
@@ -190,6 +224,8 @@ DomeCommEvent(	Trigger := bError,
       <LineId Id="349" Count="0" />
       <LineId Id="758" Count="5" />
       <LineId Id="757" Count="0" />
+      <LineId Id="943" Count="5" />
+      <LineId Id="942" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

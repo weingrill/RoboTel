@@ -23,6 +23,7 @@ VAR_INPUT
 	Jog_Backwards:		BOOL := FALSE;
 	// calibration input for homing
 	bCalibrationCam:	BOOL;
+	isModuloAxis:		BOOL := FALSE;
 END_VAR
 VAR_OUTPUT
 	// Reset has been executed
@@ -67,6 +68,7 @@ VAR
 	Axis_Power:		MC_Power;
 	Axis_Reset:		MC_Reset;
 	Axis_Move:		MC_MoveAbsolute;
+	Axis_Modulo:	MC_MoveModulo;
 	Axis_Position:	MC_ReadActualPosition;
 	Axis_Stop:		MC_Stop;
 	Axis_Status:	MC_ReadStatus;
@@ -108,18 +110,32 @@ Axis_Reset(
 IF ResetDone THEN
 	Reset := FALSE;
 END_IF
-
-Axis_Move( 
-	Axis := 		AxisRef,
-	Execute := 		MoveAxis AND Ready,
-	Position := 	Position,
-	BufferMode := 	MC_BlendingHigh OR MC_BlendingNext,
-	Done => 		MoveDone,
-	Busy => 		Busy,
-	Active => 		Active,
-	CommandAborted => CommandAborted,
-	Error => 		Error,
-	ErrorID => 		ErrorID);
+IF isModuloAxis THEN
+	Axis_Modulo( 
+		Axis := 		AxisRef,
+		Execute := 		MoveAxis AND Ready,
+		Position := 	Position,
+		Direction := MC_Shortest_Way,
+		BufferMode := 	MC_BlendingHigh OR MC_BlendingNext, // MC_Buffered ?
+		Done => 		MoveDone,
+		Busy => 		Busy,
+		Active => 		Active,
+		CommandAborted => CommandAborted,
+		Error => 		Error,
+		ErrorID => 		ErrorID);
+ELSE
+	Axis_Move( 
+		Axis := 		AxisRef,
+		Execute := 		MoveAxis AND Ready,
+		Position := 	Position,
+		BufferMode := 	MC_BlendingHigh OR MC_BlendingNext,
+		Done => 		MoveDone,
+		Busy => 		Busy,
+		Active => 		Active,
+		CommandAborted => CommandAborted,
+		Error => 		Error,
+		ErrorID => 		ErrorID);
+END_IF
 
 Axis_Jog(
 	JogForward := 	Jog_Forward AND Ready,
@@ -201,11 +217,12 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="287" Count="0" />
       <LineId Id="44" Count="2" />
       <LineId Id="391" Count="0" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="285" Count="0" />
-      <LineId Id="49" Count="1" />
-      <LineId Id="125" Count="0" />
-      <LineId Id="51" Count="5" />
+      <LineId Id="491" Count="3" />
+      <LineId Id="523" Count="0" />
+      <LineId Id="495" Count="6" />
+      <LineId Id="476" Count="0" />
+      <LineId Id="479" Count="10" />
+      <LineId Id="477" Count="0" />
       <LineId Id="264" Count="0" />
       <LineId Id="266" Count="3" />
       <LineId Id="275" Count="5" />
