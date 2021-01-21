@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+  <POU Name="NasmythControl" Id="{44cc95a4-2714-4f68-86b9-267e29c12088}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM NasmythControl
+VAR_INPUT
+	// unlocks the brake and enables the drive
+	enable:	BOOL;
+	// resets the drive
+	reset: BOOL;
+	left:	BOOL;
+	right:	BOOL;
+END_VAR
+VAR_OUTPUT
+	error:	BOOL;
+END_VAR
+VAR
+	Nasmyth_axis:		MDP5001_511_733_5131DD77;
+	Nasmyth_control:	FB_DCAxis;
+	Nasmyth_delay:		TON;
+	Nasmyth_unlock,
+	Nasmyth_unlocked:	BOOL;
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[GVL_Telescope.nasmyth_lock := enable;
+// report Nasmyth unlocked after n milliseconds										
+Nasmyth_delay(
+	IN := enable,
+	PT := T#500MS,
+	Q => Nasmyth_unlocked);
+	
+Nasmyth_control(
+	open := left,
+	close := right,
+	enable := Nasmyth_unlocked,
+	reset := reset,
+	limit_open := NOT GVL_Telescope.nasmyth_limit_right,
+	limit_close := NOT GVL_Telescope.nasmyth_limit_left,
+	error => error,
+	velocity := 18000,
+	axis_ref := Nasmyth_axis);
+
+IF NOT GVL_Telescope.nasmyth_limit_right THEN
+	left := FALSE;
+END_IF
+
+IF  NOT GVL_Telescope.nasmyth_limit_left THEN
+	right := FALSE;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="NasmythControl">
+      <LineId Id="33" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="16" Count="7" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="49" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

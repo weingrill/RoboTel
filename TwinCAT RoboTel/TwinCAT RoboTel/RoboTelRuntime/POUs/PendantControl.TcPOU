@@ -9,14 +9,12 @@ VAR
 	Cover3_control:		FB_DCAxis;
 	Cover2_axis: 		MDP5001_511_733_5131DD77;
 	Cover2_control:		FB_DCAxis;
-	Nasmyth_axis:		MDP5001_511_733_5131DD77;
-	Nasmyth_control:	FB_DCAxis;
 	error:				BOOL;
-	Nasmyth_delay:		TON;
-	Nasmyth_unlock,
-	Nasmyth_unlocked:	BOOL;
 	
-	//AzimuthAxisJog:		FB_AxisJog;
+	Cover1_enable,
+	Cover2_enable,
+	Cover3_enable,
+	Nasmyth_enable,
 	Focus_enable,
 	Elevation_enable,
 	Azimuth_enable,
@@ -63,9 +61,9 @@ IF NOT manual THEN
 	RETURN;
 END_IF;
 
-Nasmyth_delay(IN := GVL_Telescope.nasmyth_lock,
-				PT := T#500MS,
-				Q => Nasmyth_unlocked);
+Cover1_enable :=	FALSE;
+Cover2_enable :=	FALSE;
+Cover3_enable :=	FALSE;
 
 Focus_enable := 	FALSE;
 Elevation_enable := FALSE;
@@ -75,9 +73,11 @@ Dome_enable := 		FALSE;
 FilterWheel_enable := FALSE;
 
 CASE Selection OF
-	1:	GVL_pendant_control.lamp_left := TRUE;
+	1:	// reserved for Cover1 control
+		GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
-	2: Cover2_control(open := up,
+	2: // Cover2 control
+		Cover2_control(open := up,
 						close := down,
 						enable := manual AND GVL_Telescope.cover3_closed,
 						reset := MAIN.reset,
@@ -89,7 +89,7 @@ CASE Selection OF
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover2_closed;
  
 	
-	3:  
+	3:  // Cover3 control
 		 Cover3_control(open := up,
 						close := down,
 						enable := manual,
@@ -100,25 +100,17 @@ CASE Selection OF
 						axis_ref := Cover3_axis);
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover3_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover3_closed;
-	4:
-		GVL_Telescope.nasmyth_lock :=  manual AND 
-										( left OR 
- 										right OR
-										enable);
-										
-		 Nasmyth_control(open := left AND Nasmyth_unlocked,
-						close := right AND Nasmyth_unlocked,
-						enable := GVL_pendant_control.key_switch,
-						reset := MAIN.reset,
-						limit_open := NOT GVL_Telescope.nasmyth_limit_right,
-						limit_close := NOT GVL_Telescope.nasmyth_limit_left,
-						error => error,
-						velocity := 18000,
-						axis_ref := Nasmyth_axis);
+	4:	// Nasmyth / mirror M3 control
 		GVL_pendant_control.lamp_left := GVL_Telescope.nasmyth_limit_left;
 		GVL_pendant_control.lamp_right := GVL_Telescope.nasmyth_limit_right;
 		
-	5:	GVL_pendant_control.lamp_up := NOT GVL_Telescope.focus_limit_far;
+		NasmythControl.enable := enable AND manual;
+		NasmythControl.left := left;
+		NasmythControl.right := right;
+		NasmythControl.reset := reset;
+		
+	5:	// Focus Control
+		GVL_pendant_control.lamp_up := NOT GVL_Telescope.focus_limit_far;
 		GVL_pendant_control.lamp_down := NOT GVL_Telescope.focus_limit_near;
 		Focus_enable := manual;
 		FocusControl.outward := up;
@@ -194,8 +186,8 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="514" Count="0" />
       <LineId Id="158" Count="0" />
       <LineId Id="513" Count="0" />
-      <LineId Id="159" Count="2" />
       <LineId Id="504" Count="0" />
+      <LineId Id="596" Count="2" />
       <LineId Id="10" Count="0" />
       <LineId Id="178" Count="0" />
       <LineId Id="374" Count="0" />
@@ -204,8 +196,10 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="467" Count="0" />
       <LineId Id="331" Count="0" />
       <LineId Id="11" Count="1" />
+      <LineId Id="594" Count="0" />
       <LineId Id="16" Count="0" />
       <LineId Id="34" Count="0" />
+      <LineId Id="595" Count="0" />
       <LineId Id="95" Count="5" />
       <LineId Id="105" Count="2" />
       <LineId Id="101" Count="0" />
@@ -214,13 +208,13 @@ GVL_pendant_control.lamp_error := Main.error;]]></ST>
       <LineId Id="109" Count="8" />
       <LineId Id="81" Count="0" />
       <LineId Id="80" Count="0" />
-      <LineId Id="139" Count="3" />
-      <LineId Id="180" Count="0" />
-      <LineId Id="129" Count="6" />
-      <LineId Id="155" Count="0" />
-      <LineId Id="136" Count="2" />
+      <LineId Id="137" Count="1" />
       <LineId Id="241" Count="0" />
-      <LineId Id="236" Count="1" />
+      <LineId Id="607" Count="0" />
+      <LineId Id="602" Count="3" />
+      <LineId Id="236" Count="0" />
+      <LineId Id="606" Count="0" />
+      <LineId Id="237" Count="0" />
       <LineId Id="126" Count="0" />
       <LineId Id="507" Count="0" />
       <LineId Id="506" Count="0" />
