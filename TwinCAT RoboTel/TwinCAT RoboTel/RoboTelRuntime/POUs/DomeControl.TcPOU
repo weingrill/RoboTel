@@ -35,6 +35,7 @@ VAR
 	DomeClosed:			BOOL;
    	DomeControlWord:	WORD;
 	DeHumidifierDelay : TON;
+	PermanentError:		TON;
 	LightTimer:		TP;
 	bWrite       : BOOL;(* Rising edge at this variable starts command execution *)
 	nState       : BYTE := 0;
@@ -196,14 +197,19 @@ CASE nState OF
 END_CASE
 
 CASE NErrID OF
-	1861: DomeCommEvent.OnMessage := 'TimeOut';
+	29: DomeCommEvent.OnMessage := 'ERR_AMSSYNC_TIMEOUT';
+
+	1861: DomeCommEvent.OnMessage := 'ADSERR_CLIENT_SYNCTIMEOUT';
 ELSE
 	DomeCommEvent.OnMessage := UDINT_TO_STRING(nErrID);
 END_CASE
 
-DomeError := bError OR Error;
+PermanentError(IN := bError, PT := T#30S);
 
-DomeCommEvent(	Trigger := bError, 
+DomeError := PermanentError.Q OR Error;
+
+
+DomeCommEvent(	Trigger := PermanentError.Q, 
 					Level := ADSLOG_MSGTYPE_ERROR,
 					FormatString := 'Dome Communication Error: %s',
 					OffMessage := 'OK',
@@ -285,10 +291,14 @@ DomeAxisEvent(
       <LineId Id="963" Count="0" />
       <LineId Id="742" Count="3" />
       <LineId Id="349" Count="0" />
-      <LineId Id="1068" Count="2" />
+      <LineId Id="1068" Count="1" />
+      <LineId Id="1074" Count="1" />
+      <LineId Id="1070" Count="0" />
       <LineId Id="1072" Count="1" />
       <LineId Id="1071" Count="0" />
+      <LineId Id="1079" Count="1" />
       <LineId Id="998" Count="1" />
+      <LineId Id="1077" Count="0" />
       <LineId Id="758" Count="3" />
       <LineId Id="763" Count="0" />
       <LineId Id="757" Count="0" />
