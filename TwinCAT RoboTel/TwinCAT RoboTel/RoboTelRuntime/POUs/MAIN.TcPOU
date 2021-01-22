@@ -65,11 +65,12 @@ END_IF
 ready := power_OK AND HydraulicsControl.oil_pressure_OK;
 		
 TelescopeControl();
-//TODO: implement dome control
 DomeControl();
+CoverControl();
 PendantControl();
 NasmythControl();
 HydraulicsControl();
+// deactivate noisy fan if we are on manual
 FanControl(enable := NOT PendantControl.manual);
 ElevationControl();
 AzimuthControl();
@@ -118,11 +119,12 @@ SafetyHandling();]]></ST>
       <LineId Id="23" Count="0" />
       <LineId Id="22" Count="0" />
       <LineId Id="2" Count="0" />
-      <LineId Id="6" Count="0" />
       <LineId Id="165" Count="0" />
+      <LineId Id="313" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="311" Count="0" />
       <LineId Id="15" Count="0" />
+      <LineId Id="312" Count="0" />
       <LineId Id="171" Count="0" />
       <LineId Id="173" Count="0" />
       <LineId Id="197" Count="0" />

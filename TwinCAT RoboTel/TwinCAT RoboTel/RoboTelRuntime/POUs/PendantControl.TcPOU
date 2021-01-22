@@ -87,8 +87,11 @@ FilterWheel_enable := FALSE;
 CASE Selection OF
 	1:	// reserved for Cover1 control
 		Cover1_enable := TRUE;
-		GVL_pendant_control.lamp_left := TRUE;
-		GVL_pendant_control.lamp_right := TRUE;
+		CoverControl.Cover2_open := up;
+		CoverControl.Cover2_close := down;
+		GVL_pendant_control.lamp_up := GVL_Telescope.cover1_open;
+		GVL_pendant_control.lamp_down := GVL_Telescope.cover1_closed;
+
 	2: // Cover2 control
 		Cover2_enable := TRUE;
 		CoverControl.Cover2_open := up;
@@ -216,8 +219,7 @@ FilterWheelControl.enable := FilterWheel_enable;
       <LineId Id="331" Count="0" />
       <LineId Id="11" Count="1" />
       <LineId Id="634" Count="0" />
-      <LineId Id="594" Count="0" />
-      <LineId Id="16" Count="0" />
+      <LineId Id="639" Count="4" />
       <LineId Id="34" Count="0" />
       <LineId Id="632" Count="0" />
       <LineId Id="635" Count="1" />
