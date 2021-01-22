@@ -14,7 +14,6 @@ VAR_OUTPUT
 	error:	BOOL;
 END_VAR
 VAR
-	Nasmyth_axis:		MDP5001_511_733_5131DD77;
 	Nasmyth_control:	FB_DCAxis;
 	Nasmyth_delay:		TON;
 	Nasmyth_unlock,
@@ -39,7 +38,7 @@ Nasmyth_control(
 	limit_close := NOT GVL_Telescope.nasmyth_limit_left,
 	error => error,
 	velocity := 18000,
-	axis_ref := Nasmyth_axis);
+	axis_ref := GVL_Telescope.Nasmyth_axis);
 
 IF NOT GVL_Telescope.nasmyth_limit_right THEN
 	left := FALSE;

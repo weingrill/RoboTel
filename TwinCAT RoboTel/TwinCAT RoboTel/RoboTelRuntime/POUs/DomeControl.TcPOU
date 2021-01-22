@@ -195,12 +195,17 @@ CASE nState OF
    
 END_CASE
 
+CASE NErrID OF
+	1861: DomeCommEvent.OnMessage := 'TimeOut';
+ELSE
+	DomeCommEvent.OnMessage := UDINT_TO_STRING(nErrID);
+END_CASE
+
 DomeError := bError OR Error;
 
 DomeCommEvent(	Trigger := bError, 
 					Level := ADSLOG_MSGTYPE_ERROR,
 					FormatString := 'Dome Communication Error: %s',
-					OnMessage := UDINT_TO_STRING(nErrID),
 					OffMessage := 'OK',
 					OffLevel := ADSLOG_MSGTYPE_HINT);
 DomeAxisEvent(	
@@ -280,8 +285,12 @@ DomeAxisEvent(
       <LineId Id="963" Count="0" />
       <LineId Id="742" Count="3" />
       <LineId Id="349" Count="0" />
+      <LineId Id="1068" Count="2" />
+      <LineId Id="1072" Count="1" />
+      <LineId Id="1071" Count="0" />
       <LineId Id="998" Count="1" />
-      <LineId Id="758" Count="5" />
+      <LineId Id="758" Count="3" />
+      <LineId Id="763" Count="0" />
       <LineId Id="757" Count="0" />
       <LineId Id="943" Count="5" />
       <LineId Id="942" Count="0" />

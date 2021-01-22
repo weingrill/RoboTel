@@ -33,9 +33,6 @@ VAR
 	Cover2_control:		FB_DCAxis;
 	Cover1_control:		FB_DCAxis;
 	Cover3_state: RS;
-	Cover3_axis: 		MDP5001_511_733_5131DD77;
-	Cover2_axis: 		MDP5001_511_733_5131DD77;
-	Cover1_axis: 		MDP5001_511_733_5131DD77;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -80,20 +77,20 @@ Cover1_control(
 	reset := 	reset,
 	limit_open := 	GVL_Telescope.cover1_open,
 	limit_close := 	GVL_Telescope.cover1_closed,
-	axis_ref := Cover1_axis);
+	axis_ref := GVL_Telescope.Cover1_axis);
 // Cover 2 can only be moved in manual operation if cover 3 is still closed to protect the lid.
 Cover2_control(
 	enable := enable OR (Pendantcontrol.Cover2_enable AND GVL_Telescope.cover3_closed),
 	reset := reset,
 	limit_open := GVL_Telescope.cover2_open,
 	limit_close := GVL_Telescope.cover2_closed,
-	axis_ref := Cover2_axis);
+	axis_ref := GVL_Telescope.Cover2_axis);
 Cover3_control(
 	enable := 	enable OR Pendantcontrol.Cover3_enable,
 	reset := 	reset,
 	limit_open := GVL_Telescope.cover3_open,
 	limit_close := GVL_Telescope.cover3_closed,
-	axis_ref := Cover3_axis);
+	axis_ref := GVL_Telescope.Cover3_axis);
 
 
 isopen := GVL_Telescope.cover3_open AND GVL_Telescope.cover2_open;
