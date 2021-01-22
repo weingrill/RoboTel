@@ -1,21 +1,50 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <POU Name="CoverControl" Id="{c323d474-9f57-40fd-ba67-b4ebd08c9f7c}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM CoverControl
+VAR_INPUT
+	// enables all cover drivers
+	enable:		BOOL;
+	// resets all drives after an error has occured
+	reset:		BOOL;
+	// open the cover in proper order
+	open:		BOOL;
+	// close the cover in proper order
+	close:		BOOL;
+	Cover1_open:	BOOL;
+	Cover1_close:	BOOL;
+	Cover2_open:	BOOL;
+	Cover2_close:	BOOL;
+	Cover3_open:	BOOL;
+	Cover3_Close:	BOOL;
+END_VAR
+VAR_OUTPUT
+	// is TRUE, if all covers are open
+	isopen:			BOOL;
+	// is TRUE, if all covers are closed
+	isclosed:		BOOL;
+	// is TRUE if any cover-driver reports an error
+	Cover_error: 	BOOL;
+END_VAR
 VAR
 	open_delay	: TON;
 	close_delay : TON;
-	open:		BOOL;
-	close:		BOOL;
-	error: 		BOOL;
-	enable:		BOOL;
 	Cover3_control:		FB_DCAxis;
 	Cover2_control:		FB_DCAxis;
-
+	Cover1_control:		FB_DCAxis;
+	Cover3_state: RS;
+	Cover3_axis: 		MDP5001_511_733_5131DD77;
+	Cover2_axis: 		MDP5001_511_733_5131DD77;
+	Cover1_axis: 		MDP5001_511_733_5131DD77;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// close has precedence over open
+      <ST><![CDATA[(*
+This is the control for the two (three) telescope covers. 
+The correct order for opening is 1->3->2 and for closing 2->3->1.
+*)
+
+// close has precedence over open
 IF close THEN
 	open := FALSE;
 END_IF
@@ -24,30 +53,65 @@ open_delay(IN := open AND NOT GVL_Telescope.cover3_closed,
 			PT := T#3S);
 close_delay(IN := close AND NOT GVL_Telescope.cover2_open,
 			PT := T#3S);
-			
-enable := GVL_pendant_control.key_switch;
-// open cover 3 first then cover 2 after 3 seconds
-Cover3_control(open := open,
-						close := close_delay.Q,
-						enable := enable,
-						reset := MAIN.reset,
-						limit_open := GVL_Telescope.cover3_open,
-						limit_close := GVL_Telescope.cover3_closed,
-						error => error,
-						axis_ref := PendantControl.Cover3_axis);
-// close cover 2 first then cover 3 after 3 seconds
-Cover2_control(open := open_delay.Q,
-						close := close,
-						enable := enable,
-						reset := MAIN.reset,
-						limit_open := GVL_Telescope.cover2_open,
-						limit_close := GVL_Telescope.cover2_closed,
-						error => error,
-						axis_ref := PendantControl.Cover2_axis);
-		GVL_pendant_control.lamp_up := GVL_Telescope.cover2_open;
-		GVL_pendant_control.lamp_down := GVL_Telescope.cover2_closed;]]></ST>
+		
+// TODO: remove IF...THEN clause and replace with proper boolen logic that covers manual and automatic cases	
+IF Pendantcontrol.manual THEN
+	Cover1_control(
+		open := 	Cover1_open,
+		close := 	Cover1_close,
+		enable := 	Pendantcontrol.Cover1_enable,
+		reset := 	reset,
+		limit_open := 	GVL_Telescope.cover1_open,
+		limit_close := 	GVL_Telescope.cover1_closed,
+		axis_ref := Cover1_axis);
+	// Cover 2 can only be moved if cover 3 is still closed.
+	Cover2_control(
+		open := 	Cover2_open,
+		close := 	Cover2_close,
+		enable := 	Pendantcontrol.Cover2_enable AND GVL_Telescope.cover3_closed,
+		reset := 	reset,
+		limit_open := 	GVL_Telescope.cover2_open,
+		limit_close := 	GVL_Telescope.cover2_closed,
+		axis_ref := Cover2_axis);
+
+	 Cover3_control(
+		open := 	Cover3_open,
+		close := 	Cover3_close,
+		enable := 	Pendantcontrol.Cover3_enable,
+		reset := 	reset,
+		limit_open := GVL_Telescope.cover3_open,
+		limit_close := GVL_Telescope.cover3_closed,
+		axis_ref := Cover3_axis);
+ELSE
+	// open cover 3 first then cover 2 after 3 seconds
+	Cover3_control(
+		open := 	open,
+		close := 	close_delay.Q,
+		enable := 	enable,
+		reset := 	reset,
+		limit_open := GVL_Telescope.cover3_open,
+		limit_close := GVL_Telescope.cover3_closed,
+		axis_ref := Cover3_axis);
+	// close cover 2 first then cover 3 after 3 seconds
+	Cover2_control(
+		open := open_delay.Q,
+		close := close,
+		enable := enable,
+		reset := reset,
+		limit_open := GVL_Telescope.cover2_open,
+		limit_close := GVL_Telescope.cover2_closed,
+		axis_ref := Cover2_axis);
+END_IF
+
+isopen := GVL_Telescope.cover3_open AND GVL_Telescope.cover2_open;
+isclosed := GVL_Telescope.cover2_closed AND GVL_Telescope.cover3_closed;
+Cover_error := Cover1_control.error OR Cover2_control.error OR Cover3_control.error;]]></ST>
     </Implementation>
     <LineIds Name="CoverControl">
+      <LineId Id="146" Count="0" />
+      <LineId Id="149" Count="1" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="147" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="16" Count="1" />
@@ -56,12 +120,33 @@ Cover2_control(open := open_delay.Q,
       <LineId Id="33" Count="0" />
       <LineId Id="35" Count="1" />
       <LineId Id="34" Count="0" />
-      <LineId Id="20" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="128" Count="6" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="102" Count="4" />
+      <LineId Id="108" Count="2" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="111" Count="4" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="126" Count="0" />
       <LineId Id="19" Count="0" />
-      <LineId Id="23" Count="6" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="24" Count="4" />
       <LineId Id="22" Count="0" />
       <LineId Id="21" Count="0" />
-      <LineId Id="38" Count="8" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="39" Count="4" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="143" Count="0" />
       <LineId Id="37" Count="0" />
     </LineIds>
   </POU>

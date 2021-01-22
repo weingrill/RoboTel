@@ -7,11 +7,6 @@ VAR
 	manual_override:	BOOL := FALSE;
 	// program selection of the pendant control
 	Selection: UINT;
-	Cover3_state: RS;
-	Cover3_axis: 		MDP5001_511_733_5131DD77;
-	Cover3_control:		FB_DCAxis;
-	Cover2_axis: 		MDP5001_511_733_5131DD77;
-	Cover2_control:		FB_DCAxis;
 	error:				BOOL;
 	
 	Cover1_enable,
@@ -91,29 +86,20 @@ FilterWheel_enable := FALSE;
 // enable only the selected item and connect lamps and buttons accordingly
 CASE Selection OF
 	1:	// reserved for Cover1 control
+		Cover1_enable := TRUE;
 		GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
 	2: // Cover2 control
-		Cover2_control(open := up,
-						close := down,
-						enable := manual AND GVL_Telescope.cover3_closed,
-						reset := MAIN.reset,
-						limit_open := GVL_Telescope.cover2_open,
-						limit_close := GVL_Telescope.cover2_closed,
-						error => error,
-						axis_ref := Cover2_axis);
+		Cover2_enable := TRUE;
+		CoverControl.Cover2_open := up;
+		CoverControl.Cover2_close := down;
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover2_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover2_closed;
  	
 	3:  // Cover3 control
-		 Cover3_control(open := up,
-						close := down,
-						enable := manual,
-						reset := MAIN.reset,
-						limit_open := GVL_Telescope.cover3_open,
-						limit_close := GVL_Telescope.cover3_closed,
-						error => error,
-						axis_ref := Cover3_axis);
+		Cover3_enable := TRUE;
+		CoverControl.Cover3_open := up;
+		CoverControl.Cover3_close := down;
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover3_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover3_closed;
 		
@@ -229,15 +215,18 @@ FilterWheelControl.enable := FilterWheel_enable;
       <LineId Id="627" Count="0" />
       <LineId Id="331" Count="0" />
       <LineId Id="11" Count="1" />
+      <LineId Id="634" Count="0" />
       <LineId Id="594" Count="0" />
       <LineId Id="16" Count="0" />
       <LineId Id="34" Count="0" />
-      <LineId Id="595" Count="0" />
-      <LineId Id="95" Count="5" />
-      <LineId Id="105" Count="2" />
+      <LineId Id="632" Count="0" />
+      <LineId Id="635" Count="1" />
+      <LineId Id="106" Count="1" />
       <LineId Id="101" Count="0" />
       <LineId Id="59" Count="0" />
-      <LineId Id="109" Count="8" />
+      <LineId Id="633" Count="0" />
+      <LineId Id="637" Count="1" />
+      <LineId Id="117" Count="0" />
       <LineId Id="81" Count="0" />
       <LineId Id="628" Count="0" />
       <LineId Id="80" Count="0" />
