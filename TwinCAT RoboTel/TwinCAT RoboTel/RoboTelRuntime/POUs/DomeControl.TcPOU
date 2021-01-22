@@ -3,18 +3,27 @@
   <POU Name="DomeControl" Id="{0e02434d-920e-4c0f-81fc-5ff7d5573875}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM DomeControl
 VAR_INPUT
-	enable,
-	reset,
-	left,
+	// enable the dome azimuth
+	enable:		BOOL;
+	// reset the dome axis after an error
+	reset:		BOOL;
+	// rotate the dome left (ccw)
+	left:		BOOL;
+	// rotate the dome right (cw)
 	right: 		BOOL;
-	OpenDome,
-	CloseDome,
+	// open the dome
+	OpenDome:	BOOL;
+	// close the dome
+	CloseDome:	BOOL;
+	// turn on the light in the dome
 	Light: 		BOOL;
+	// azimuth position to move to
 	position:	LREAL;
 END_VAR
 VAR_OUTPUT
 	Error:		BOOL;
 	ErrorID:	UDINT;
+	DomeError:	BOOL;
 END_VAR
 VAR
 	DomeAxis: FB_Axis2;
@@ -43,9 +52,17 @@ VAR
 	DomeCommEvent:	FB_Eventlog;
 	DomeAxisEvent:	FB_Eventlog;
 END_VAR
-]]></Declaration>
+VAR CONSTANT
+	tolerance:	LREAL := 3.0;
+END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* source: https://infosys.beckhoff.de/english.php?content=../content/1033/tcplclib_tc2_system/18014399220202635.html&id= *)
+      <ST><![CDATA[(* This program is responsible for the dome control. 
+The first section controls the signas for the inverter.
+The second section controls the dome axis.
+The third section handles the communications via ADS with the dome PLC.
+*)
+
+(* source: https://infosys.beckhoff.de/english.php?content=../content/1033/tcplclib_tc2_system/18014399220202635.html&id= *)
 GVL_Dome.Inverter_Enable := FALSE;
 GVL_Dome.Inverter_Velocity := 0;
 manual_enable := GVL_Dome.Clockwise OR GVL_Dome.CounterClockwise;
@@ -67,17 +84,18 @@ END_IF
 
 GVL_Dome.Inverter_DirectionMinus := GVL_Dome.bDirectionPlus;
 
-IF ABS(Azimuth_current - position) > 1.0 THEN
+IF ABS(Azimuth_current - position) > tolerance THEN
 	move_azimuth := TRUE;
 END_IF
 
-// velocity = 2.22? or 180° in 81s, 360° in 120s
 
 IF NOT DomeAxis.Calibrated THEN
 	DomeAxis.HomeAxis := TRUE;
 ELSE
 	DomeAxis.HomeAxis := FALSE;
 END_IF
+
+// velocity = 2°/s or 180° in 81s, 360° in 120s (was 2.22)
 
 DomeAxis(
 	Enable := 		enable OR manual_enable,
@@ -107,12 +125,15 @@ IF CloseDome THEN
 	OpenDome := FALSE;
 END_IF
 
+// delay startup of the dehumidifiert to prevent power-spike
+// turn off dehumidifier if dome is open
 DeHumidifierDelay(IN := NOT OpenDome, PT := T#10S, Q => GVL_Dome.DeHumidifier);
-LightTimer(IN := Light, PT := T#60M);
+
 // Light is switched off after 60 minutes or if Light signal is low
+LightTimer(IN := Light, PT := T#60M);
 GVL_Dome.Light := Light AND LightTimer.Q;
 
-(* Here starts the remote section for moving parts of the dome. *)
+(* The remote section for moving parts of the dome starts here. *)
 
 DomeControlWord.0 := TRUE;
 DomeControlWord.1 := OpenDome;
@@ -136,26 +157,49 @@ CASE nState OF
          nState := 1;            
       END_IF
       
-   1:
+   1:  // remain in this state until bBusy is FALSE
       fbWriteReq( WRITE := FALSE, BUSY=>bBusy, ERR=>bError, ERRID=>nErrID );
       IF NOT bBusy THEN
          IF NOT bError THEN
-			DomeControlWord.0 := TRUE;
-            nState := 0;(* Success *)
+			nState := 2;	// Success: continue with read cycle
          ELSE
-			DomeControlWord.0 := FALSE;
-            nState := 100;(* Error *)
+			nState := 100;(* Error *)
          END_IF
       END_IF
+	2:
+         bBusy := TRUE;
+         bError := FALSE;
+         nErrID := 0;
+         
+         fbReadReq( READ := FALSE );
+         fbReadReq( IDXGRP := 16#4020, IDXOFFS := 0, 
+                  LEN := SIZEOF( DomeControlWord ), DESTADDR := ADR( DomeControlWord ), 
+                  READ := TRUE );
+         nState := 3;            
+	3:
+		fbReadReq( READ := FALSE, BUSY=>bBusy, ERR=>bError, ERRID=>nErrID );
+		IF NOT bBusy THEN
+			IF NOT bError THEN
+				DomeOpened := DomeControlWord.3;
+				DomeClosed := DomeControlWord.4;
+				nState := 0;// Success: wait for write cycle
+			ELSE
+				DomeControlWord.0 := FALSE;
+				nState := 100; // error
+			END_IF
+		END_IF
+		
 
-   100:(* TODO::Implement error handler *)
-      nState := 0;
+	100: // error handling: we try again
+		nState := 0;
    
 END_CASE
 
+DomeError := bError OR Error;
+
 DomeCommEvent(	Trigger := bError, 
 					Level := ADSLOG_MSGTYPE_ERROR,
-					FormatString := 'DomeCommunicationsError: %s',
+					FormatString := 'Dome Communication Error: %s',
 					OnMessage := UDINT_TO_STRING(nErrID),
 					OffMessage := 'OK',
 					OffLevel := ADSLOG_MSGTYPE_HINT);
@@ -168,6 +212,10 @@ DomeAxisEvent(
 				]]></ST>
     </Implementation>
     <LineIds Name="DomeControl">
+      <LineId Id="1008" Count="0" />
+      <LineId Id="1011" Count="2" />
+      <LineId Id="1010" Count="0" />
+      <LineId Id="1009" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="650" Count="0" />
       <LineId Id="673" Count="0" />
@@ -181,10 +229,12 @@ DomeAxisEvent(
       <LineId Id="640" Count="2" />
       <LineId Id="648" Count="0" />
       <LineId Id="643" Count="2" />
-      <LineId Id="934" Count="5" />
+      <LineId Id="934" Count="4" />
       <LineId Id="954" Count="2" />
       <LineId Id="960" Count="1" />
       <LineId Id="957" Count="0" />
+      <LineId Id="1001" Count="0" />
+      <LineId Id="1000" Count="0" />
       <LineId Id="871" Count="0" />
       <LineId Id="913" Count="0" />
       <LineId Id="925" Count="0" />
@@ -205,8 +255,12 @@ DomeAxisEvent(
       <LineId Id="330" Count="0" />
       <LineId Id="952" Count="1" />
       <LineId Id="749" Count="3" />
-      <LineId Id="771" Count="1" />
-      <LineId Id="830" Count="1" />
+      <LineId Id="771" Count="0" />
+      <LineId Id="1006" Count="1" />
+      <LineId Id="772" Count="0" />
+      <LineId Id="1005" Count="0" />
+      <LineId Id="1004" Count="0" />
+      <LineId Id="830" Count="0" />
       <LineId Id="775" Count="0" />
       <LineId Id="931" Count="1" />
       <LineId Id="776" Count="0" />
@@ -216,10 +270,17 @@ DomeAxisEvent(
       <LineId Id="755" Count="0" />
       <LineId Id="716" Count="20" />
       <LineId Id="789" Count="0" />
-      <LineId Id="737" Count="1" />
+      <LineId Id="738" Count="0" />
       <LineId Id="790" Count="0" />
-      <LineId Id="739" Count="6" />
+      <LineId Id="740" Count="1" />
+      <LineId Id="962" Count="0" />
+      <LineId Id="964" Count="13" />
+      <LineId Id="996" Count="0" />
+      <LineId Id="978" Count="5" />
+      <LineId Id="963" Count="0" />
+      <LineId Id="742" Count="3" />
       <LineId Id="349" Count="0" />
+      <LineId Id="998" Count="1" />
       <LineId Id="758" Count="5" />
       <LineId Id="757" Count="0" />
       <LineId Id="943" Count="5" />

@@ -3,6 +3,9 @@
   <POU Name="PendantControl" Id="{4c9494b1-b987-44f6-88ae-faae341979f2}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PendantControl
 VAR
+	// manual override allows remote operation of the telescope
+	manual_override:	BOOL := FALSE;
+	// program selection of the pendant control
 	Selection: UINT;
 	Cover3_state: RS;
 	Cover3_axis: 		MDP5001_511_733_5131DD77;
@@ -190,7 +193,7 @@ AzimuthControl.enable := Azimuth_enable;
 //DerotatorControl.enable := Derotator_enable;
 DomeControl.enable := Dome_enable;
 FilterWheelControl.enable := FilterWheel_enable;
-GVL_pendant_control.lamp_error := Main.error;]]></ST>
+]]></ST>
     </Implementation>
     <LineIds Name="PendantControl">
       <LineId Id="614" Count="0" />
