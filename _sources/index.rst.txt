@@ -9,6 +9,7 @@ Welcome to RoboTel's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   
    safety
    init
    manual
