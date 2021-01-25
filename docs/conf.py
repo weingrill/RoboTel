@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'RoboTel'
+project = 'RoboTel Telescope Firmware'
 copyright = '2021, Jörg Weingrill'
 author = 'Jörg Weingrill'
 
