@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome to RoboTel’s documentation! &#8212; RoboTel  documentation</title>
+    <title>Safety Instructions &#8212; RoboTel  documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -30,24 +30,31 @@
 
           <div class="body" role="main">
             
-  <div class="section" id="welcome-to-robotel-s-documentation">
-<h1>Welcome to RoboTel’s documentation!<a class="headerlink" href="#welcome-to-robotel-s-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
-<p>RoboTel was build by Halfmann and upgraded by AIP in 2020/2021. All important
-electronic components have been replaced by Beckhoff modules.
-A central Beckhoff PLC controls the servo controllers, DC controllers,
-temperature sensors and digital I/Os.</p>
-<p>Please read the <a class="reference internal" href="safety.html"><span class="doc">Safety Instructions</span></a> before operating the telescope.</p>
+  <div class="section" id="safety-instructions">
+<h1>Safety Instructions<a class="headerlink" href="#safety-instructions" title="Permalink to this headline">¶</a></h1>
+<p>RoboTel is designed to mainly operate in robotic or autonomous mode.
+This implies that only the minimum required set of safety precautions have been
+installed on this system.</p>
+<p>The telescope can start at any time when automatic operation is enabled.</p>
+<p>To stop the motion of the telescope or the operation of the hydraulics system
+press the emergency button either on the main panel or on the manual controls.</p>
+<p>Pressing the emergency button deactivates the high power modules within the
+servo drivers. This stops any motion of the azimuth, elevation and de-rotator
+axis immediately. As a consequence the TwinSAFE logic module and the AX5000
+servo drivers go into an error condition.</p>
+<div class="section" id="error-acknowledgement">
+<h2>Error Acknowledgement<a class="headerlink" href="#error-acknowledgement" title="Permalink to this headline">¶</a></h2>
+<p>To reset this error condition the TWINSAFE has to be restarted:
+* Turn the power switch on the main panel to “OFF”.
+* Press the RESET button on the main panel.</p>
+<p>The error signal should disappear.</p>
 </div>
+<div class="section" id="maintenance">
+<h2>Maintenance<a class="headerlink" href="#maintenance" title="Permalink to this headline">¶</a></h2>
+<p>Press the emergency button when performing maintenance on the telescope. If e.g.
+operating the telescope cover is required, put the telescope in manual operation
+mode, see <a class="reference internal" href="manual.html"><span class="doc">Manual Operation</span></a></p>
 </div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
 </div>
 
 
@@ -57,7 +64,7 @@ temperature sensors and digital I/Os.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="#">RoboTel</a></h1>
+<h1 class="logo"><a href="index.html">RoboTel</a></h1>
 
 
 
@@ -71,7 +78,7 @@ temperature sensors and digital I/Os.</p>
 <div class="relations">
 <h3>Related Topics</h3>
 <ul>
-  <li><a href="#">Documentation overview</a><ul>
+  <li><a href="index.html">Documentation overview</a><ul>
   </ul></li>
 </ul>
 </div>
@@ -105,7 +112,7 @@ temperature sensors and digital I/Os.</p>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |
-      <a href="_sources/index.rst.txt"
+      <a href="_sources/safety.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 
