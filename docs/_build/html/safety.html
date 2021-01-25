@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Safety Instructions &#8212; RoboTel  documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="safety-instructions">
+<h1>Safety Instructions<a class="headerlink" href="#safety-instructions" title="Permalink to this headline">¶</a></h1>
+<p>RoboTel is designed to mainly operate in robotic or autonomous mode.
+This implies that only the minimum required set of safety precautions have been
+installed on this system.</p>
+<p>The telescope can start at any time when automatic operation is enabled.</p>
+<p>To stop the motion of the telescope or the operation of the hydraulics system
+press the emergency button either on the main panel or on the manual controls.</p>
+<p>Pressing the emergency button deactivates the high power modules within the
+servo drivers. This stops any motion of the azimuth, elevation and de-rotator
+axis immediately. As a consequence the TwinSAFE logic module and the AX5000
+servo drivers go into an error condition.</p>
+<div class="section" id="error-acknowledgement">
+<h2>Error Acknowledgement<a class="headerlink" href="#error-acknowledgement" title="Permalink to this headline">¶</a></h2>
+<p>To reset this error condition the TWINSAFE has to be restarted:
+* Turn the power switch on the main panel to “OFF”.
+* Press the RESET button on the main panel.</p>
+<p>The error signal should disappear.</p>
+</div>
+<div class="section" id="maintenance">
+<h2>Maintenance<a class="headerlink" href="#maintenance" title="Permalink to this headline">¶</a></h2>
+<p>Press the emergency button when performing maintenance on the telescope. If e.g.
+operating the telescope cover is required, put the telescope in manual operation
+mode, see <a class="reference internal" href="manual.html"><span class="doc">Manual Operation</span></a></p>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">RoboTel</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Jörg Weingrill.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 3.4.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/safety.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
