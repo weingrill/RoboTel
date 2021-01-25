@@ -7,10 +7,22 @@ Welcome to RoboTel's documentation!
 ===================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
+   safety.rst
+   init.rst
+   manual.rst
+   hydraulics.rst
+   dome.rst
 
+Introduction
+------------
+RoboTel was build by Halfmann and upgraded by AIP in 2020/2021. All important
+electronic components have been replaced by Beckhoff modules.
+A central Beckhoff PLC controls the servo controllers, DC controllers,
+temperature sensors and digital I/Os.
 
+Please read the :doc:`safety` before operating the telescope.
 
 Indices and tables
 ==================
