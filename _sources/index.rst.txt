@@ -7,13 +7,13 @@ Welcome to RoboTel's documentation!
 ===================================
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
    :caption: Contents:
-   safety.rst
-   init.rst
-   manual.rst
-   hydraulics.rst
-   dome.rst
+   safety
+   init
+   manual
+   hydraulics
+   dome
 
 Introduction
 ------------
