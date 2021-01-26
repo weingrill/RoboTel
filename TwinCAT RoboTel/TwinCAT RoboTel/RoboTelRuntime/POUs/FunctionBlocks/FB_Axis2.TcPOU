@@ -148,11 +148,11 @@ Axis_Jog(
 	Error => 		Error, 
 	ErrorID	=> 		ErrorID, 
  	Axis := 		AxisRef);
-	
+
 Axis_Home(
 	Axis := 		AxisRef,
 	Execute := 		HomeAxis AND Ready,
-	//Position := 	Position,	// use DEFAULT_HOME_POSITION
+	Position := 	position, //DEFAULT_HOME_POSITION,
 	Done => 		HomeDone,
 	Busy => 		Busy,
 	Active => 		Active,
@@ -185,14 +185,20 @@ Axis_Stop(
 	Done => 	StopDone,
 	Error => 	Error,
 	ErrorID => 	ErrorID);
-
+(*
 Axis_Position(
 	Axis := 	AxisRef,
-	Enable := 	TRUE,
+	Enable := 	Enable AND Ready,
 	Busy => 	Busy,
 	Error => 	Error,
 	ErrorID => 	ErrorID,
 	Position => ActualPosition);
+*)
+IF isModuloAxis THEN
+	ActualPosition := AxisRef.NcToPlc.ModuloActPos;
+ELSE
+	ActualPosition := AxisRef.NcToPlc.ActPos;
+END_IF
 
 InMotion := Axis_Status.ConstantVelocity OR
 			Axis_Status.DiscreteMotion OR
@@ -227,7 +233,7 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="266" Count="3" />
       <LineId Id="275" Count="5" />
       <LineId Id="265" Count="0" />
-      <LineId Id="57" Count="0" />
+      <LineId Id="611" Count="0" />
       <LineId Id="303" Count="2" />
       <LineId Id="307" Count="0" />
       <LineId Id="309" Count="5" />
@@ -243,6 +249,10 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="291" Count="0" />
       <LineId Id="75" Count="4" />
       <LineId Id="186" Count="0" />
+      <LineId Id="603" Count="1" />
+      <LineId Id="606" Count="1" />
+      <LineId Id="605" Count="0" />
+      <LineId Id="608" Count="0" />
       <LineId Id="178" Count="0" />
       <LineId Id="188" Count="2" />
       <LineId Id="195" Count="1" />

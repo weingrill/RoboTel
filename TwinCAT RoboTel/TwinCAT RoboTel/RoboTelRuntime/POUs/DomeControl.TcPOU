@@ -14,7 +14,7 @@ VAR_INPUT
 	// open the dome
 	OpenDome:	BOOL;
 	// close the dome
-	CloseDome:	BOOL;
+	CloseDome:	BOOL := TRUE;
 	// turn on the light in the dome
 	Light: 		BOOL;
 	// azimuth position to move to
@@ -86,12 +86,13 @@ END_IF
 GVL_Dome.Inverter_DirectionMinus := GVL_Dome.bDirectionPlus;
 
 IF ABS(Azimuth_current - position) > tolerance THEN
-	move_azimuth := TRUE;
+	// move_azimuth := TRUE;
 END_IF
 
 
 IF NOT DomeAxis.Calibrated THEN
 	DomeAxis.HomeAxis := TRUE;
+	position := 200.0;
 ELSE
 	DomeAxis.HomeAxis := FALSE;
 END_IF
@@ -107,7 +108,7 @@ DomeAxis(
 	Jog_Backwards := left OR GVL_Dome.CounterClockwise,
 	bCalibrationCam := GVL_Dome.Azimut_home,
 	isModuloAxis := TRUE,
-	StopDone =>	stop_done,
+	StopDone =>		stop_done,
 	Error =>		error,
 	ErrorID =>		ErrorID,
 	ActualPosition => Azimuth_current,
@@ -122,10 +123,6 @@ IF stop_done THEN
 	move_azimuth := FALSE;
 END_IF
 
-IF CloseDome THEN
-	OpenDome := FALSE;
-END_IF
-
 // delay startup of the dehumidifiert to prevent power-spike
 // turn off dehumidifier if dome is open
 DeHumidifierDelay(IN := NOT OpenDome, PT := T#10S, Q => GVL_Dome.DeHumidifier);
@@ -137,8 +134,12 @@ GVL_Dome.Light := Light AND LightTimer.Q;
 (* The remote section for moving parts of the dome starts here. *)
 
 DomeControlWord.0 := TRUE;
-DomeControlWord.1 := OpenDome;
-DomeControlWord.2 := CloseDome;
+IF CloseDome THEN
+	OpenDome := FALSE;
+ELSIF OpenDome THEN
+	DomeControlWord.1 := TRUE; // OpenFlap
+	DomeControlWord.2 := TRUE; // OpenSlit
+END_IF
 
 WriteCycle(ENABLE := TRUE, ON_TIME := T#5S, OFF_TIME := T#5S, Q => bWrite);
 
@@ -242,6 +243,7 @@ DomeAxisEvent(
       <LineId Id="643" Count="2" />
       <LineId Id="934" Count="4" />
       <LineId Id="954" Count="2" />
+      <LineId Id="1151" Count="0" />
       <LineId Id="960" Count="1" />
       <LineId Id="957" Count="0" />
       <LineId Id="1001" Count="0" />
@@ -265,7 +267,6 @@ DomeAxisEvent(
       <LineId Id="779" Count="0" />
       <LineId Id="330" Count="0" />
       <LineId Id="952" Count="1" />
-      <LineId Id="749" Count="3" />
       <LineId Id="771" Count="0" />
       <LineId Id="1006" Count="1" />
       <LineId Id="772" Count="0" />
@@ -275,8 +276,12 @@ DomeAxisEvent(
       <LineId Id="775" Count="0" />
       <LineId Id="931" Count="1" />
       <LineId Id="776" Count="0" />
-      <LineId Id="747" Count="1" />
-      <LineId Id="754" Count="0" />
+      <LineId Id="747" Count="0" />
+      <LineId Id="1135" Count="0" />
+      <LineId Id="1145" Count="0" />
+      <LineId Id="1138" Count="0" />
+      <LineId Id="1146" Count="1" />
+      <LineId Id="1137" Count="0" />
       <LineId Id="756" Count="0" />
       <LineId Id="755" Count="0" />
       <LineId Id="716" Count="20" />
