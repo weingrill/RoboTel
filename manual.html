@@ -50,10 +50,98 @@ observation. To enable manual operation:
 * On the pendant control turn the manual key switch to “ON”.</p>
 <p>The manual operation overrides any remote command.</p>
 <p>The selector switch (1-15) enables the individual components on the telescope.
+If not otherwise noted, these general rules apply for all selections:
 * “ENABLE” enables the drive.
 * “RESET” disables the drive or resets the error.
-* Buttons that can be pressed are lighted up.
+* Buttons that can be pressed are illuminated.
 * When a limit switch is reached, the respective button is disabled.</p>
+<div class="section" id="cover-1">
+<h2>1 Cover 1<a class="headerlink" href="#cover-1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Buttons “↑” and “↓” open and close the cover.</p></li>
+<li><p>Cover 1 is not installed on RoboTel.</p></li>
+</ul>
+</div>
+<div class="section" id="cover-2">
+<h2>2 Cover 2<a class="headerlink" href="#cover-2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Buttons “↑” and “↓” open and close the cover.</p></li>
+<li><p>Cover 3 must be opened first, for cover 2 to operate.</p></li>
+</ul>
+</div>
+<div class="section" id="cover-3">
+<h2>3 Cover 3<a class="headerlink" href="#cover-3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Buttons “↑” and “↓” open and close the cover.</p></li>
+</ul>
+</div>
+<div class="section" id="nasmyth-mirror-m3-control">
+<h2>4 Nasmyth / Mirror M3 Control<a class="headerlink" href="#nasmyth-mirror-m3-control" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>“ENABLE” opens the lock.</p></li>
+<li><p>Buttons “←” and “→” rotate the mirror left and right.</p></li>
+<li><p>Moving the mirror without unlocking will cause in an error.</p></li>
+<li><p>“RESET” locks the mirror in position.</p></li>
+</ul>
+</div>
+<div class="section" id="focus">
+<h2>5 Focus<a class="headerlink" href="#focus" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>“ENABLE” opens the lock.</p></li>
+<li><p>Buttons “↑” and “↓” move the mirror outwards and inwards.</p></li>
+<li><p>Moving the focus without unlocking will cause in an error.</p></li>
+<li><p>“RESET” locks the focus in position.</p></li>
+</ul>
+</div>
+<div class="section" id="de-rotator">
+<h2>6 De-rotator<a class="headerlink" href="#de-rotator" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Buttons “←” and “→” rotate the de-rotator counter-clockwise and clockwise.</p></li>
+<li><p><em>WARNING</em> The limit switches are currently not implemented.</p></li>
+</ul>
+</div>
+<div class="section" id="elevation">
+<h2>7 Elevation<a class="headerlink" href="#elevation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Buttons “↑” and “↓” increase and decrease the elevation.</p></li>
+<li><p><em>WARNING</em> This behaviour will change in future. It is envisioned to implement
+an alt-az control in this program.</p></li>
+</ul>
+</div>
+<div class="section" id="azimuth">
+<h2>8 Azimuth<a class="headerlink" href="#azimuth" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Buttons “←” and “→” rotate the azimuth counter-clockwise and clockwise.</p></li>
+<li><p><em>WARNING</em> This behaviour will change in future. It is planned to implement a
+equatorial positioning in right-ascension and declination.</p></li>
+</ul>
+</div>
+<div class="section" id="dome-control">
+<h2>9 Dome Control<a class="headerlink" href="#dome-control" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Buttons “←” and “→” rotate the dome counter-clockwise and clockwise.</p></li>
+</ul>
+</div>
+<div class="section" id="filter-wheel">
+<h2>10 Filter Wheel<a class="headerlink" href="#filter-wheel" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Buttons “←” and “→” rotate the filter wheel counter-clockwise and clockwise.</p></li>
+</ul>
+</div>
+<div class="section" id="hydraulics">
+<h2>15 Hydraulics<a class="headerlink" href="#hydraulics" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>“ENABLE” starts the hydraulic system.</p></li>
+<li><p>“RESET” stops the hydraulic system.</p></li>
+<li><p>The button “↑” opens (releases) the brake.</p></li>
+<li><p>The button “↓” closes (locks) the brake.</p></li>
+<li><p>The lamp “←” indicates that the main pump is running.</p></li>
+<li><p>The lamp “→” indicates that the suction pump is running.</p></li>
+<li><p>The lamp “↑” indicates an open brake.</p></li>
+<li><p>The lamp “↓” indicates a closed brake.</p></li>
+</ul>
+<p><em>To immediately stop the hydraulic system press the emergency button.</em></p>
+</div>
 </div>
 
 
@@ -63,6 +151,24 @@ observation. To enable manual operation:
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Manual Operation</a><ul>
+<li><a class="reference internal" href="#cover-1">1 Cover 1</a></li>
+<li><a class="reference internal" href="#cover-2">2 Cover 2</a></li>
+<li><a class="reference internal" href="#cover-3">3 Cover 3</a></li>
+<li><a class="reference internal" href="#nasmyth-mirror-m3-control">4 Nasmyth / Mirror M3 Control</a></li>
+<li><a class="reference internal" href="#focus">5 Focus</a></li>
+<li><a class="reference internal" href="#de-rotator">6 De-rotator</a></li>
+<li><a class="reference internal" href="#elevation">7 Elevation</a></li>
+<li><a class="reference internal" href="#azimuth">8 Azimuth</a></li>
+<li><a class="reference internal" href="#dome-control">9 Dome Control</a></li>
+<li><a class="reference internal" href="#filter-wheel">10 Filter Wheel</a></li>
+<li><a class="reference internal" href="#hydraulics">15 Hydraulics</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="init.html"
                         title="previous chapter">Telescope Initialisation</a></p>
