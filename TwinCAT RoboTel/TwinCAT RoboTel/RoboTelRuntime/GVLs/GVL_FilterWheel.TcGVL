@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
   <GVL Name="GVL_FilterWheel" Id="{3db1272d-8c2a-4997-9634-91e0f675134e}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
-	FilterWheel_AxisRef:		AXIS_REF;
+	FilterWheel_AxisRef:	AXIS_REF;
+	bCalibrationCam			AT%I*:	BOOL;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

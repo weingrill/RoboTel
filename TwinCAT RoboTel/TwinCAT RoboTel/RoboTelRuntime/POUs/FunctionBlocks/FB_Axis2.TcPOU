@@ -95,17 +95,13 @@ Axis_Power(
 	Override := 100.0,
 	Status => Ready,
 	Busy => Busy,
-	Active => Active,
-	Error => Error,
-	ErrorID => ErrorID);
+	Active => Active);
 
 Axis_Reset(
 	Axis := 	AxisRef,
 	Execute := 	Reset,
 	Done => 	ResetDone,
-	Busy => 	Busy,
-	Error => 	Error,
-	ErrorID => 	ErrorID);
+	Busy => 	Busy);
 	
 IF ResetDone THEN
 	Reset := FALSE;
@@ -183,9 +179,7 @@ END_IF
 Axis_Stop( 
 	Axis := 	AxisRef,
 	Execute := 	bStop,
-	Done => 	StopDone,
-	Error => 	Error,
-	ErrorID => 	ErrorID);
+	Done => 	StopDone);
 (*
 Axis_Position(
 	Axis := 	AxisRef,
@@ -200,6 +194,30 @@ IF isModuloAxis THEN
 ELSE
 	ActualPosition := AxisRef.NcToPlc.ActPos;
 END_IF
+
+IF Axis_Power.Error THEN
+	ErrorID := Axis_Power.ErrorID;
+END_IF
+
+IF Axis_Reset.Error THEN
+	ErrorID := Axis_Reset.ErrorID;
+END_IF
+
+// TODO AxisMoveModulo is missing.
+
+IF Axis_Move.Error THEN
+	ErrorID := Axis_Move.ErrorID;
+END_IF
+
+IF Axis_Jog.Error THEN
+	ErrorID := Axis_Jog.ErrorID;
+END_IF
+
+IF Axis_Stop.Error THEN
+	ErrorID := Axis_Stop.ErrorID;
+END_IF
+
+Error := Axis_Power.Error OR Axis_Reset.Error OR Axis_Move.Error OR Axis_Jog.Error OR Axis_Stop.Error;
 
 InMotion := Axis_Status.ConstantVelocity OR
 			Axis_Status.DiscreteMotion OR
@@ -218,9 +236,11 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="198" Count="0" />
       <LineId Id="27" Count="0" />
       <LineId Id="294" Count="0" />
-      <LineId Id="28" Count="10" />
+      <LineId Id="28" Count="5" />
+      <LineId Id="36" Count="2" />
       <LineId Id="286" Count="0" />
-      <LineId Id="39" Count="4" />
+      <LineId Id="39" Count="1" />
+      <LineId Id="43" Count="0" />
       <LineId Id="287" Count="0" />
       <LineId Id="44" Count="2" />
       <LineId Id="391" Count="0" />
@@ -248,14 +268,30 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="397" Count="0" />
       <LineId Id="61" Count="7" />
       <LineId Id="290" Count="0" />
-      <LineId Id="69" Count="5" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="72" Count="2" />
       <LineId Id="291" Count="0" />
       <LineId Id="75" Count="4" />
       <LineId Id="186" Count="0" />
       <LineId Id="603" Count="1" />
       <LineId Id="606" Count="1" />
       <LineId Id="605" Count="0" />
+      <LineId Id="772" Count="0" />
+      <LineId Id="771" Count="0" />
+      <LineId Id="773" Count="1" />
+      <LineId Id="776" Count="0" />
+      <LineId Id="775" Count="0" />
+      <LineId Id="777" Count="1" />
+      <LineId Id="794" Count="0" />
+      <LineId Id="793" Count="0" />
+      <LineId Id="788" Count="0" />
+      <LineId Id="787" Count="0" />
+      <LineId Id="789" Count="1" />
+      <LineId Id="783" Count="3" />
+      <LineId Id="779" Count="3" />
+      <LineId Id="791" Count="0" />
       <LineId Id="608" Count="0" />
+      <LineId Id="792" Count="0" />
       <LineId Id="178" Count="0" />
       <LineId Id="188" Count="2" />
       <LineId Id="195" Count="1" />

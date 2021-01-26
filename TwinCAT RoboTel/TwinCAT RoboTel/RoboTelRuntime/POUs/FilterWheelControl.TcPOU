@@ -8,26 +8,44 @@ VAR_INPUT
 	reset:	BOOL;
 	enable:	BOOL;
 	MoveAxis: BOOL;
+	HomeAxis:	BOOL;
+	filter_position: INT;
+END_VAR
+VAR_OUTPUT
+	error: 				BOOL;
+	ErrorID:			UDINT;
+	act_position:		LREAL;
 END_VAR
 VAR
 	FilterWheelAxis:	FB_Axis2;
-	error: 				BOOL;
-	ErrorID:			UDINT;
 	position:			LREAL;
-	act_position:		LREAL;
-
 END_VAR
-]]></Declaration>
+VAR CONSTANT
+	filters:	INT := 24;
+END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[FilterWheelAxis(
-	Enable := 			TelescopeControl.power OR PendantControl.FilterWheel_enable,
+      <ST><![CDATA[// enable := TelescopeControl.power OR PendantControl.FilterWheel_enable;
+(*
+IF NOT FilterWheelAxis.Calibrated THEN
+	position := 0.0;
+	FilterWheelAxis.HomeAxis := TRUE;
+ELSE
+	FilterWheelAxis.HomeAxis := FALSE;
+	position := 360.0 * INT_TO_LREAL(filter_position) / INT_TO_LREAL(filters);
+END_IF
+*)
+FilterWheelAxis(
+	Enable := 			enable,
 	Reset := 			reset,
 	MoveAxis :=			MoveAxis,
+	HomeAxis :=			HomeAxis,
 	Position := 		position, 
 	Enable_Positive :=  TRUE,
 	Enable_Negative := 	TRUE,
 	Jog_Forward :=		left,
 	Jog_Backwards := 	right,
+	bCalibrationCam :=	NOT GVL_FilterWheel.bCalibrationCam,
+	isModuloAxis :=		TRUE,
 	ActualPosition => 	act_position,
 	Error => 			error,
 	ErrorID => 			ErrorID,
@@ -35,9 +53,21 @@ END_VAR
 ]]></ST>
     </Implementation>
     <LineIds Name="FilterWheelControl">
+      <LineId Id="85" Count="0" />
+      <LineId Id="87" Count="2" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="84" Count="0" />
       <LineId Id="45" Count="0" />
       <LineId Id="58" Count="0" />
-      <LineId Id="46" Count="9" />
+      <LineId Id="46" Count="1" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="48" Count="4" />
+      <LineId Id="96" Count="1" />
+      <LineId Id="53" Count="2" />
       <LineId Id="28" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>

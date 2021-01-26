@@ -3375,7 +3375,7 @@ External Setpoint Generation:
 				<Axis Id="3" CreateSymbols="true" AxisType="1">
 					<Name>Filterrad</Name>
 					<AxisPara>
-						<General UnitName="Â°"/>
+						<General UnitName="°" UnitFlags="#x00000004"/>
 						<Dynamic Acceleration="311.5" Deceleration="311.5" Jerk="934.5"/>
 						<Velo RefSearch="2.07666666666667" RefSync="2.07666666666667" SlowManual="10.3833333333333" FastManual="62.3" Fast="207.666666666667" Maximum="207.667"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
@@ -3533,6 +3533,209 @@ External Setpoint Generation:
 							<Type GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Dome.Clockwise</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.CounterClockwise</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bDirectionMinus</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bDirectionPlus</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bVeloLow</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bVeloHigh</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bBreak</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.bBreakInv</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Azimut_home</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Azimut_raw</Name>
+							<Comment><![CDATA[ EL5151]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawWindSpeed</Name>
+							<Comment><![CDATA[ Input 1]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
+							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawHumidity</Name>
+							<Comment><![CDATA[ Input 2]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawTemperature</Name>
+							<Comment><![CDATA[ Input 3]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawWindDirection</Name>
+							<Comment><![CDATA[ Input 4]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawPressure</Name>
+							<Comment><![CDATA[ Input 5]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawRain</Name>
+							<Comment><![CDATA[ Digital Input 1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD1</Name>
+							<Comment><![CDATA[DIN17 2.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawHumidityDome</Name>
+							<Comment><![CDATA[ indoors]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawTemperatureDome</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD2</Name>
+							<Comment><![CDATA[DIN18 2.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD4</Name>
+							<Comment><![CDATA[DIN19 2.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
+							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.BCD8</Name>
+							<Comment><![CDATA[DIN20 2.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.reset_switch</Name>
+							<Comment><![CDATA[DIN21 2.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_up</Name>
+							<Comment><![CDATA[DIN22 2.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_down</Name>
+							<Comment><![CDATA[DIN23 2.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.key_switch</Name>
+							<Comment><![CDATA[DIN24 2.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.start_switch</Name>
+							<Comment><![CDATA[DIN25 3.0 (enable)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_left</Name>
+							<Comment><![CDATA[DIN26 3.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_right</Name>
+							<Comment><![CDATA[DIN27 3.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_low</Name>
+							<Comment><![CDATA[ 2.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_high</Name>
+							<Comment><![CDATA[ ?]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_pressure_OK</Name>
+							<Comment><![CDATA[ 2.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_overtemperature</Name>
+							<Comment><![CDATA[ 2.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_undertemperature</Name>
+							<Comment><![CDATA[ 2.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oilfilter_dirty</Name>
+							<Comment><![CDATA[ 2.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.pump_running</Name>
+							<Comment><![CDATA[ 2.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.suction_running</Name>
+							<Comment><![CDATA[ 2.8]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oilpan_maximum</Name>
+							<Comment><![CDATA[DIN39 4.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_temperature</Name>
+							<Comment><![CDATA[BT2]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_reserve</Name>
+							<Comment><![CDATA[DIN40 4.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.Error</Name>
+							<Comment><![CDATA[ Safety Error Condition]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Telescope.temperature_mirror2</Name>
 							<Comment><![CDATA[ BT9 mirror]]></Comment>
 							<Type>INT</Type>
@@ -3633,27 +3836,12 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.Clockwise</Name>
+							<Name>GVL_Main.phase_available</Name>
+							<Comment><![CDATA[DIN1 0.0]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.CounterClockwise</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.bDirectionMinus</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.bDirectionPlus</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.bVeloLow</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.bVeloHigh</Name>
+							<Name>GVL_Main.power_available</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -3687,194 +3875,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Telescope.Cover3_axis.MDP5001_511_733_Input</Name>
 							<Type GUID="{1FBBF2EC-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_I_2BD37790</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.bBreak</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.bBreakInv</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.Azimut_raw</Name>
-							<Comment><![CDATA[ EL5151]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.Azimut_home</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawRain</Name>
-							<Comment><![CDATA[ Digital Input 1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawWindSpeed</Name>
-							<Comment><![CDATA[ Input 1]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
-							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawHumidity</Name>
-							<Comment><![CDATA[ Input 2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawTemperature</Name>
-							<Comment><![CDATA[ Input 3]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawWindDirection</Name>
-							<Comment><![CDATA[ Input 4]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawPressure</Name>
-							<Comment><![CDATA[ Input 5]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawHumidityDome</Name>
-							<Comment><![CDATA[ indoors]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawTemperatureDome</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.BCD1</Name>
-							<Comment><![CDATA[DIN17 2.0]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.BCD2</Name>
-							<Comment><![CDATA[DIN18 2.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.BCD4</Name>
-							<Comment><![CDATA[DIN19 2.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.BCD8</Name>
-							<Comment><![CDATA[DIN20 2.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
-							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.reset_switch</Name>
-							<Comment><![CDATA[DIN21 2.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.direction_up</Name>
-							<Comment><![CDATA[DIN22 2.5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.direction_down</Name>
-							<Comment><![CDATA[DIN23 2.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.key_switch</Name>
-							<Comment><![CDATA[DIN24 2.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.start_switch</Name>
-							<Comment><![CDATA[DIN25 3.0 (enable)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.direction_left</Name>
-							<Comment><![CDATA[DIN26 3.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_pendant_control.direction_right</Name>
-							<Comment><![CDATA[DIN27 3.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_low</Name>
-							<Comment><![CDATA[ 2.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_high</Name>
-							<Comment><![CDATA[ ?]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_pressure_OK</Name>
-							<Comment><![CDATA[ 2.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_overtemperature</Name>
-							<Comment><![CDATA[ 2.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_undertemperature</Name>
-							<Comment><![CDATA[ 2.5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oilfilter_dirty</Name>
-							<Comment><![CDATA[ 2.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.pump_running</Name>
-							<Comment><![CDATA[ 2.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.suction_running</Name>
-							<Comment><![CDATA[ 2.8]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_temperature</Name>
-							<Comment><![CDATA[BT2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oilpan_maximum</Name>
-							<Comment><![CDATA[DIN39 4.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_reserve</Name>
-							<Comment><![CDATA[DIN40 4.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.Error</Name>
-							<Comment><![CDATA[ Safety Error Condition]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.phase_available</Name>
-							<Comment><![CDATA[DIN1 0.0]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.power_available</Name>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Main.key_switch</Name>
@@ -3911,64 +3911,16 @@ External Setpoint Generation:
 							<Comment><![CDATA[BT1]]></Comment>
 							<Type>INT</Type>
 						</Var>
+						<Var>
+							<Name>GVL_FilterWheel.bCalibrationCam</Name>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="2">
 						<Name>PlcTask Outputs</Name>
 						<Var>
 							<Name>FanControl.Fan_axis.MDP5001_511_733_Output</Name>
 							<Type GUID="{0D3B3A77-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_O_32199BA1</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.brake_azimuth_eve</Name>
-							<Comment><![CDATA[DOUT6 0.5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.focus_lock</Name>
-							<Comment><![CDATA[DOUT14 1.5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.nasmyth_lock</Name>
-							<Comment><![CDATA[DOUT15 4.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.horn</Name>
-							<Comment><![CDATA[Horn 4.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.AzimuthAxisRef.PlcToNc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.ElevationAxisRef.PlcToNc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.DerotatorAxisRef.PlcToNc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.FocusAxisRef.PlcToNc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Output</Name>
-							<Type GUID="{1FBBF2ED-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_O_2BD37790</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.Cover1_axis.MDP5001_511_733_Output</Name>
-							<Type GUID="{1FBBF2ED-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_O_2BD37790</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.Cover2_axis.MDP5001_511_733_Output</Name>
-							<Type GUID="{1FBBF2ED-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_O_2BD37790</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.Cover3_axis.MDP5001_511_733_Output</Name>
-							<Type GUID="{1FBBF2ED-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_O_2BD37790</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.Inverter_Enable</Name>
@@ -3979,12 +3931,12 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.Inverter_Velocity</Name>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Dome.Light</Name>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Inverter_Velocity</Name>
+							<Type>UINT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.DeHumidifier</Name>
@@ -4048,6 +4000,58 @@ DOUT9 1.0]]></Comment>
 							<Name>GVL_Safety.ErrAck</Name>
 							<Comment><![CDATA[ Error Acknowledgement ]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.brake_azimuth_eve</Name>
+							<Comment><![CDATA[DOUT6 0.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.focus_lock</Name>
+							<Comment><![CDATA[DOUT14 1.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.nasmyth_lock</Name>
+							<Comment><![CDATA[DOUT15 4.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.horn</Name>
+							<Comment><![CDATA[Horn 4.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.AzimuthAxisRef.PlcToNc</Name>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.ElevationAxisRef.PlcToNc</Name>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.DerotatorAxisRef.PlcToNc</Name>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.FocusAxisRef.PlcToNc</Name>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Output</Name>
+							<Type GUID="{1FBBF2ED-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_O_2BD37790</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.Cover1_axis.MDP5001_511_733_Output</Name>
+							<Type GUID="{1FBBF2ED-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_O_2BD37790</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.Cover2_axis.MDP5001_511_733_Output</Name>
+							<Type GUID="{1FBBF2ED-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_O_2BD37790</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.Cover3_axis.MDP5001_511_733_Output</Name>
+							<Type GUID="{1FBBF2ED-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_O_2BD37790</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Main.lamp_power</Name>
@@ -9992,7 +9996,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 										</Entry>
 									</Pdo>
 									<Pdo Name="FB Touch probe status" Index="#x1a07" Flags="#x0000" SyncMan="3">
-										<Entry Name="Touch probe status__TP1 Enable" BitLen="1" Index="#x6001" Sub="#x01">
+										<Entry Name="Touch probe status__TP1 Enable" BitLen="1" Index="#x6001" Sub="#x01" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
 										<Entry Name="Touch probe status__TP1 Pos value stored" BitLen="1" Index="#x6001" Sub="#x02">
@@ -10004,7 +10008,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 										<Entry Name="Touch probe status__" BitLen="4">
 											<Type GUID="{18071995-0000-0000-0000-002000000004}">ARRAY [0..3] OF BIT</Type>
 										</Entry>
-										<Entry Name="Touch probe status__TP1 Input" BitLen="1" Index="#x6001" Sub="#x08">
+										<Entry Name="Touch probe status__TP1 Input" BitLen="1" Index="#x6001" Sub="#x08" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
 										<Entry Name="Touch probe status__TP2 Enable" BitLen="1" Index="#x6001" Sub="#x09">
@@ -10019,7 +10023,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 										<Entry Name="Touch probe status__" BitLen="4">
 											<Type GUID="{18071995-0000-0000-0000-002000000004}">ARRAY [0..3] OF BIT</Type>
 										</Entry>
-										<Entry Name="Touch probe status__TP2 Input" BitLen="1" Index="#x6001" Sub="#x10">
+										<Entry Name="Touch probe status__TP2 Input" BitLen="1" Index="#x6001" Sub="#x10" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
 									</Pdo>
@@ -13276,6 +13280,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Weather (EK1501)^Rain IN (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_Environment.rawRain" VarB="Channel 1^Input"/>
 			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 84 (EK1521)^Term 87 (EK1501)^Motor4 (EL7211-0010)">
+				<Link VarA="PlcTask Inputs^GVL_FilterWheel.bCalibrationCam" VarB="FB Touch probe status^Touch probe status^TP1 Input"/>
+			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^TwinSAFE Logic (EL6910)">
 				<Link VarA="PlcTask Inputs^GVL_Safety.Error" VarB="StandardInputs^TwinSafeGroup1.SafetyError_14"/>
 				<Link VarA="PlcTask Outputs^GVL_Safety.ErrAck" VarB="StandardOutputs^TwinSafeGroup1.ErrorAcknowledgement_1"/>
@@ -13303,6 +13310,10 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Elevation">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.ElevationAxisRef.NcToPlc" VarB="Outputs^ToPlc"/>
 				<Link VarA="PlcTask Outputs^GVL_Telescope.ElevationAxisRef.PlcToNc" VarB="Inputs^FromPlc"/>
+			</OwnerB>
+			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Filterrad">
+				<Link VarA="PlcTask Inputs^GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc" VarB="Outputs^ToPlc"/>
+				<Link VarA="PlcTask Outputs^GVL_FilterWheel.FilterWheel_AxisRef.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Focus">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.FocusAxisRef.NcToPlc" VarB="Outputs^ToPlc"/>

@@ -181,7 +181,7 @@ ElevationControl.enable := Elevation_enable;
 AzimuthControl.enable := Azimuth_enable;
 //DerotatorControl.enable := Derotator_enable;
 DomeControl.enable := Dome_enable;
-FilterWheelControl.enable := FilterWheel_enable;
+//FilterWheelControl.enable := FilterWheel_enable;
 ]]></ST>
     </Implementation>
     <LineIds Name="PendantControl">
