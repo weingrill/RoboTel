@@ -171,9 +171,10 @@ END_IF
 
 IF HomeDone THEN
 	Calibrated := TRUE;
+	HomeAxis := FALSE;
 END_IF
 
-IF MoveAxis OR Jog_Forward OR Jog_Backwards OR HomeDone THEN
+IF MoveAxis OR HomeAxis OR Jog_Forward OR Jog_Backwards THEN
 	bStop := FALSE;
 ELSE
 	bStop := TRUE;
@@ -242,7 +243,9 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="297" Count="2" />
       <LineId Id="301" Count="0" />
       <LineId Id="300" Count="0" />
-      <LineId Id="394" Count="3" />
+      <LineId Id="394" Count="2" />
+      <LineId Id="691" Count="0" />
+      <LineId Id="397" Count="0" />
       <LineId Id="61" Count="7" />
       <LineId Id="290" Count="0" />
       <LineId Id="69" Count="5" />
