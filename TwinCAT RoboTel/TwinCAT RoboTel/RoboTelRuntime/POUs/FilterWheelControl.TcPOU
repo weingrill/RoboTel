@@ -19,6 +19,7 @@ END_VAR
 VAR
 	FilterWheelAxis:	FB_Axis2;
 	position:			LREAL;
+	FilterWheelEvent:	FB_EventLog;
 END_VAR
 VAR CONSTANT
 	filters:	INT := 24;
@@ -50,7 +51,13 @@ FilterWheelAxis(
 	Error => 			error,
 	ErrorID => 			ErrorID,
 	AxisRef :=			GVL_FilterWheel.FilterWheel_AxisRef);
-]]></ST>
+
+FilterWheelEvent(	
+	Trigger := 		Error, 
+	Level := 		ADSLOG_MSGTYPE_ERROR,
+	FormatString :=	'Filter Wheel Axis Error: %s',
+	OnMessage := 	UDINT_TO_STRING(ErrorID),
+	OffMEssage := 	'OK');]]></ST>
     </Implementation>
     <LineIds Name="FilterWheelControl">
       <LineId Id="85" Count="0" />
@@ -69,6 +76,7 @@ FilterWheelAxis(
       <LineId Id="96" Count="1" />
       <LineId Id="53" Count="2" />
       <LineId Id="28" Count="0" />
+      <LineId Id="122" Count="5" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
