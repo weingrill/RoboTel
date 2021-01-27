@@ -3,12 +3,19 @@
   <POU Name="FilterWheelControl" Id="{f0e4f375-0934-4386-a9fa-94537c34c7e1}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM FilterWheelControl
 VAR_INPUT
+	// move counter-clockwise
 	left:	BOOL;
+	// move clockwise
 	right:	BOOL;
+	// reset the axis(-error)
 	reset:	BOOL;
+	// enable the axis
 	enable:	BOOL;
+	// move to given psoition
 	MoveAxis: BOOL;
+	// calibrate the axis
 	HomeAxis:	BOOL;
+	// filter position
 	filter_position: INT;
 END_VAR
 VAR_OUTPUT
@@ -52,12 +59,25 @@ FilterWheelAxis(
 	ErrorID => 			ErrorID,
 	AxisRef :=			GVL_FilterWheel.FilterWheel_AxisRef);
 
+IF FilterWheelAxis.MoveDone THEN
+	MoveAxis := FALSE;
+END_IF
+
+IF FilterWheelAxis.HomeDone THEN
+	HomeAxis := FALSE;
+END_IF
+	
+IF FilterWheelAxis.ResetDone THEN
+	reset := FALSE;
+END_IF
+
 FilterWheelEvent(	
 	Trigger := 		Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
 	FormatString :=	'Filter Wheel Axis Error: %s',
-	OnMessage := 	UDINT_TO_STRING(ErrorID),
-	OffMEssage := 	'OK');]]></ST>
+	OnMessage := 	DWORD_TO_HEXSTR(ErrorID, 4, FALSE),
+	OffMEssage := 	'OK',
+	OffLevel := 	ADSLOG_MSGTYPE_HINT);]]></ST>
     </Implementation>
     <LineIds Name="FilterWheelControl">
       <LineId Id="85" Count="0" />
@@ -76,8 +96,18 @@ FilterWheelEvent(
       <LineId Id="96" Count="1" />
       <LineId Id="53" Count="2" />
       <LineId Id="28" Count="0" />
-      <LineId Id="122" Count="5" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="130" Count="1" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="134" Count="1" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="137" Count="2" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="123" Count="4" />
       <LineId Id="5" Count="0" />
+      <LineId Id="147" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
