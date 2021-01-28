@@ -33,15 +33,15 @@ VAR CONSTANT
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[// enable := TelescopeControl.power OR PendantControl.FilterWheel_enable;
-(*
-IF NOT FilterWheelAxis.Calibrated THEN
-	position := 0.0;
-	FilterWheelAxis.HomeAxis := TRUE;
-ELSE
-	FilterWheelAxis.HomeAxis := FALSE;
+
+IF FilterWheelAxis.Calibrated THEN
+	HomeAxis := FALSE;
 	position := 360.0 * INT_TO_LREAL(filter_position) / INT_TO_LREAL(filters);
+ELSE
+	position := 0.0;
+	HomeAxis := TRUE;
 END_IF
-*)
+
 FilterWheelAxis(
 	Enable := 			enable,
 	Reset := 			reset,
@@ -81,13 +81,12 @@ FilterWheelEvent(
     </Implementation>
     <LineIds Name="FilterWheelControl">
       <LineId Id="85" Count="0" />
-      <LineId Id="87" Count="2" />
-      <LineId Id="94" Count="0" />
+      <LineId Id="87" Count="1" />
+      <LineId Id="177" Count="1" />
       <LineId Id="91" Count="0" />
-      <LineId Id="93" Count="0" />
-      <LineId Id="92" Count="0" />
+      <LineId Id="179" Count="1" />
       <LineId Id="90" Count="0" />
-      <LineId Id="84" Count="0" />
+      <LineId Id="181" Count="0" />
       <LineId Id="45" Count="0" />
       <LineId Id="58" Count="0" />
       <LineId Id="46" Count="1" />

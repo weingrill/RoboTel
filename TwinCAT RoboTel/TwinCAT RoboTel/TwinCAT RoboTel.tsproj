@@ -3376,12 +3376,12 @@ External Setpoint Generation:
 					<Name>Filterrad</Name>
 					<AxisPara>
 						<General UnitName="°" UnitFlags="#x00000004"/>
-						<Dynamic Acceleration="311.5" Deceleration="311.5" Jerk="934.5"/>
-						<Velo RefSearch="2.07666666666667" RefSync="2.07666666666667" SlowManual="10.3833333333333" FastManual="62.3" Fast="207.666666666667" Maximum="207.667"/>
+						<Dynamic Acceleration="155.75" Deceleration="155.75" Jerk="467.25"/>
+						<Velo RefSearch="1.03833333333333" RefSync="1.03833333333333" SlowManual="5.19166666666667" FastManual="31.15" Fast="103.833333333333" Maximum="103.833333333333"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="19">
-						<EncPara ScaleFactorNumerator="10" ScaleFactorDenominator="1048576" MaxCount="#xffffffff"/>
+						<EncPara ScaleFactorNumerator="5" ScaleFactorDenominator="1048576" MaxCount="#xffffffff"/>
 						<Vars VarGrpType="1">
 							<Name>Eingänge</Name>
 							<Var>
@@ -3440,7 +3440,7 @@ External Setpoint Generation:
 					</Encoder>
 					<Drive Name="Drive" DrvType="16">
 						<DrvPara MaxCount="#xffffffff" DriveControlDWord="#x00020000">
-							<Analog VeloReferenz="228.433333333333" VeloScale="32" TorqueScale="10" ScaleFactorActTorque="0.1"/>
+							<Analog VeloReferenz="114.216666666667" VeloScale="32" TorqueScale="10" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">

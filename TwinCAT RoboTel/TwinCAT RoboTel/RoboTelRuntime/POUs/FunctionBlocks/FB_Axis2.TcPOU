@@ -146,6 +146,7 @@ Axis_Home(
 	Axis := 		AxisRef,
 	Execute := 		HomeAxis AND Ready,
 	Position := 	position, //DEFAULT_HOME_POSITION,
+	bCalibrationCam := bCalibrationCam,
 	Done => 		HomeDone,
 	Active => 		Active,
 	CommandAborted => CommandAborted);	
@@ -283,6 +284,7 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="611" Count="0" />
       <LineId Id="303" Count="2" />
       <LineId Id="307" Count="0" />
+      <LineId Id="1002" Count="0" />
       <LineId Id="309" Count="1" />
       <LineId Id="314" Count="0" />
       <LineId Id="302" Count="0" />
