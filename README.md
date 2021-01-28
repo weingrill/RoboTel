@@ -17,7 +17,7 @@ https://weingrill.github.io/RoboTel/index.html
 * Homing Derotator
 
 ## Optional:
-* Hauptschranklüfter über Ralais (WB)
+* Hauptschranklüfter über Relais (WB)
 
 # Programmierhinweise
 * MC_SetAcceptBlockedDriveSignal verfaehrt den Antrieb aus der Endlage
