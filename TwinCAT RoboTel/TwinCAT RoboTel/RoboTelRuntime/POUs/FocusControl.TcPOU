@@ -3,10 +3,18 @@
   <POU Name="FocusControl" Id="{d08d0458-4211-4cc5-9e25-2b5c152fb2d4}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM FocusControl
 VAR_INPUT
+	// Move M2 closer to M1
 	inward: 	BOOL;
+	// Move M2 away from M1
 	outward: 	BOOL;	
+	// enable / unlock M2
 	enable:		BOOL;
+	// reset the axis(-error)
 	reset: 		BOOL;
+	// move the axis to new position
+	MoveAxis:	BOOL;
+	// calibrate the focus axis
+	HomeAxis:	BOOL;
 	// focus position in millimeters
 	position: 		LREAL;
 END_VAR
@@ -22,6 +30,8 @@ VAR
 	FocusAxis:		FB_Axis2;
 	StopDone: 		BOOL;
 	actual_position:	LREAL;
+	FocusUnlocked:	BOOL;
+	FocusAxisEvent:	FB_EventLog;
 END_VAR
 
 VAR CONSTANT
@@ -31,30 +41,51 @@ END_VAR]]></Declaration>
       <ST><![CDATA[// Focus is locked by default
 GVL_Telescope.focus_lock := FALSE;
 
-enable := TelescopeControl.power OR PendantControl.Focus_enable;
+//enable := TelescopeControl.power OR PendantControl.Focus_enable;
 // unlock the Focus 
 FocusUnlock(SET := enable,
-			RESET1 := reset OR StopDone,
+			RESET1 := reset OR NOT enable,
 			Q1 => GVL_Telescope.focus_lock);
 // wait until the focus is unlocked for n milliseconds
-FocusDelay(IN :=FocusUnlock.Q1, PT := T#500MS);
+FocusDelay(IN :=FocusUnlock.Q1, PT := T#500MS, Q => FocusUnlocked);
 
-FocusAxis(Enable := 		FocusDelay.Q,
-			Reset := 		reset,
-			MoveAxis := 	ABS(position - actual_position) > Focus_precision,
-			Position := 	position,
-			Enable_Positive := NOT GVL_Telescope.focus_limit_far,
-			Enable_Negative := NOT GVL_Telescope.focus_limit_near,
-			Jog_Forward :=	outward,
-			Jog_Backwards := inward,
-			StopDone =>		StopDone,
-			Error =>		error,
-			ErrorID =>		ErrorID,
-			AxisRef :=		GVL_Telescope.FocusAxisRef);	
+FocusAxis(	
+	Enable := 			FocusUnlocked,
+	Reset := 			reset,
+	MoveAxis := 		MoveAxis,
+	HomeAxis :=			HomeAxis,
+	Position := 		position,
+	Enable_Positive := 	NOT GVL_Telescope.focus_limit_far,
+	Enable_Negative := 	NOT GVL_Telescope.focus_limit_near,
+	Jog_Forward :=		outward,
+	Jog_Backwards := 	inward,
+	bCalibrationCam :=  GVL_Telescope.focus_limit_near,
+	ActualPosition => 	actual_position,
+	StopDone =>			StopDone,
+	Error =>			error,
+	ErrorID =>			ErrorID,
+	AxisRef :=			GVL_Telescope.FocusAxisRef);	
 
-IF StopDone THEN
-	actual_position := position;
-END_IF]]></ST>
+IF FocusAxis.MoveDone THEN
+	MoveAxis := FALSE;
+END_IF
+
+IF FocusAxis.HomeDone THEN
+	HomeAxis := FALSE;
+END_IF
+	
+IF FocusAxis.ResetDone THEN
+	reset := FALSE;
+END_IF
+
+FocusAxisEvent(	
+	Trigger := 		Error, 
+	Level := 		ADSLOG_MSGTYPE_ERROR,
+	FormatString :=	'Focus Axis Error: %s',
+	OnMessage := 	DWORD_TO_HEXSTR(ErrorID, 4, FALSE),
+	OffMEssage := 	'OK',
+	OffLevel := 	ADSLOG_MSGTYPE_HINT);
+]]></ST>
     </Implementation>
     <LineIds Name="FocusControl">
       <LineId Id="115" Count="0" />
@@ -64,14 +95,19 @@ END_IF]]></ST>
       <LineId Id="99" Count="2" />
       <LineId Id="112" Count="0" />
       <LineId Id="110" Count="1" />
-      <LineId Id="90" Count="5" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="91" Count="1" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="93" Count="2" />
       <LineId Id="106" Count="1" />
+      <LineId Id="177" Count="1" />
       <LineId Id="96" Count="1" />
       <LineId Id="114" Count="0" />
       <LineId Id="98" Count="0" />
-      <LineId Id="121" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="122" Count="1" />
+      <LineId Id="179" Count="11" />
+      <LineId Id="192" Count="6" />
+      <LineId Id="156" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>

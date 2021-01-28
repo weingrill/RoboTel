@@ -137,7 +137,6 @@ Axis_Jog(
 	JogBackwards := Jog_Backwards AND Ready,
 	Mode := 		MC_JOGMODE_STANDARD_FAST,
 	Done => 		JogDone, 
-	Busy => 		Busy, 
 	Active => 		Active, 
 	CommandAborted => CommandAborted, 
 	Axis := 		AxisRef);
@@ -187,9 +186,6 @@ Axis_Stop(
 Axis_Position(
 	Axis := 	AxisRef,
 	Enable := 	Enable AND Ready,
-	Busy => 	Busy,
-	//Error => 	Error,
-	//ErrorID => 	ErrorID,
 	Position => AbsolutePosition);
 
 IF isModuloAxis THEN
@@ -279,7 +275,8 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="477" Count="0" />
       <LineId Id="264" Count="0" />
       <LineId Id="266" Count="3" />
-      <LineId Id="275" Count="3" />
+      <LineId Id="275" Count="1" />
+      <LineId Id="278" Count="0" />
       <LineId Id="265" Count="0" />
       <LineId Id="611" Count="0" />
       <LineId Id="303" Count="2" />
@@ -304,7 +301,8 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="69" Count="0" />
       <LineId Id="72" Count="2" />
       <LineId Id="291" Count="0" />
-      <LineId Id="75" Count="4" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="79" Count="0" />
       <LineId Id="186" Count="0" />
       <LineId Id="603" Count="1" />
       <LineId Id="606" Count="1" />

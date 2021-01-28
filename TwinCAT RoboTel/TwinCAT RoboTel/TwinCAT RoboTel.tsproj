@@ -2629,7 +2629,7 @@ External Setpoint Generation:
 					<Name>Focus</Name>
 					<AxisPara>
 						<Dynamic AccelerationMaximum="1000" DecelerationMaximum="1000" Acceleration="30" Deceleration="30" Jerk="180"/>
-						<Velo SlowManual="1" FastManual="5" Maximum="5"/>
+						<Velo RefSearch="2" RefSync="2" SlowManual="1" FastManual="5" Maximum="5"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="4">

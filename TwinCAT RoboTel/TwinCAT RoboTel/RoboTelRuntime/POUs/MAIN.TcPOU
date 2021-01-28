@@ -78,6 +78,7 @@ ElevationControl();	//
 AzimuthControl();	//
 DerotatorControl();	//
 FilterWheelControl();	//
+FocusControl();
 Environment();	//
 
 GVL_Main.softstart_trafo := key_switch AND NOT power_failure;
@@ -140,6 +141,7 @@ PowerEvent(
       <LineId Id="197" Count="0" />
       <LineId Id="274" Count="0" />
       <LineId Id="350" Count="0" />
+      <LineId Id="398" Count="0" />
       <LineId Id="167" Count="0" />
       <LineId Id="237" Count="0" />
       <LineId Id="69" Count="0" />
