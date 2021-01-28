@@ -32,10 +32,13 @@ VAR CONSTANT
 	filters:	INT := 24;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// enable := TelescopeControl.power OR PendantControl.FilterWheel_enable;
+      <ST><![CDATA[(* This program controls the filter wheel. *)
+enable := TelescopeControl.power OR PendantControl.FilterWheel_enable;
 
 IF FilterWheelAxis.Calibrated THEN
 	HomeAxis := FALSE;
+	// limit filter_position to [0...filters-1]
+	filter_position := filter_position MOD filters;
 	position := 360.0 * INT_TO_LREAL(filter_position) / INT_TO_LREAL(filters);
 ELSE
 	position := 0.0;
@@ -80,9 +83,13 @@ FilterWheelEvent(
 	OffLevel := 	ADSLOG_MSGTYPE_HINT);]]></ST>
     </Implementation>
     <LineIds Name="FilterWheelControl">
+      <LineId Id="184" Count="0" />
       <LineId Id="85" Count="0" />
       <LineId Id="87" Count="1" />
-      <LineId Id="177" Count="1" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="178" Count="0" />
       <LineId Id="91" Count="0" />
       <LineId Id="179" Count="1" />
       <LineId Id="90" Count="0" />
