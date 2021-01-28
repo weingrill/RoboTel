@@ -3,10 +3,8 @@
   <POU Name="PendantControl" Id="{4c9494b1-b987-44f6-88ae-faae341979f2}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PendantControl
 VAR
-	// manual override allows remote operation of the telescope
-	manual_override:	BOOL := FALSE;
 	// program selection of the pendant control
-	Selection: UINT;
+	Selection:			UINT;
 	error:				BOOL;
 	
 	Cover1_enable,
@@ -46,7 +44,6 @@ Selection := 1*BOOL_TO_UINT(GVL_pendant_control.BCD1) +
 			 2*BOOL_TO_UINT(GVL_pendant_control.BCD2) + 
 			 4*BOOL_TO_UINT(GVL_pendant_control.BCD4) +
 			 8*BOOL_TO_UINT(GVL_pendant_control.BCD8);
-
 // disable all the lamps
 GVL_pendant_control.lamp_left := FALSE;
 GVL_pendant_control.lamp_right := FALSE;
@@ -181,7 +178,7 @@ ElevationControl.enable := Elevation_enable;
 AzimuthControl.enable := Azimuth_enable;
 //DerotatorControl.enable := Derotator_enable;
 DomeControl.enable := Dome_enable;
-//FilterWheelControl.enable := FilterWheel_enable;
+
 ]]></ST>
     </Implementation>
     <LineIds Name="PendantControl">
@@ -192,7 +189,6 @@ DomeControl.enable := Dome_enable;
       <LineId Id="613" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="7" Count="2" />
-      <LineId Id="621" Count="0" />
       <LineId Id="17" Count="2" />
       <LineId Id="25" Count="1" />
       <LineId Id="622" Count="1" />
