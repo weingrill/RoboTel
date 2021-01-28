@@ -13,6 +13,8 @@ VAR_INPUT
 	HomeAxis:	BOOL;
 	// position to move to
 	Position: 	LREAL;
+	// maximum velocity
+	Velocity:	LREAL := 10.0;
 	// Enable movement in positive direction (considering limit switch)
 	Enable_Positive:	BOOL := TRUE;
 	// Enable movement in negative direction (considering limit switch)
@@ -60,6 +62,8 @@ VAR_OUTPUT
 	ErrorID: 	UDINT;
 	// actual position of the axis
 	ActualPosition: LREAL;
+	// absolute position of the axis
+	AbsolutePosition:	LREAL;
 	// axis is calibrated;
 	Calibrated:	BOOL := FALSE;
 	
@@ -75,6 +79,7 @@ VAR
 	Axis_Home:		MC_Home;
 	Axis_Jog: 		MC_Jog;
 	bStop: 			BOOL;
+	StopAllowed:	BOOL;
 END_VAR
 
 VAR_IN_OUT
@@ -94,18 +99,12 @@ Axis_Power(
 	Enable_Negative := Enable_Negative,
 	Override := 100.0,
 	Status => Ready,
-	Busy => Busy,
-	Active => Active,
-	Error => Error,
-	ErrorID => ErrorID);
+	Active => Active);
 
 Axis_Reset(
 	Axis := 	AxisRef,
 	Execute := 	Reset,
-	Done => 	ResetDone,
-	Busy => 	Busy,
-	Error => 	Error,
-	ErrorID => 	ErrorID);
+	Done => 	ResetDone);
 	
 IF ResetDone THEN
 	Reset := FALSE;
@@ -115,26 +114,22 @@ IF isModuloAxis THEN
 		Axis := 		AxisRef,
 		Execute := 		MoveAxis AND Ready,
 		Position := 	Position,
-		Direction := MC_Shortest_Way,
+		Velocity :=		Velocity,
+		Direction := 	MC_Shortest_Way,
 		BufferMode := 	MC_BlendingHigh OR MC_BlendingNext, // MC_Buffered ?
 		Done => 		MoveDone,
-		Busy => 		Busy,
 		Active => 		Active,
-		CommandAborted => CommandAborted,
-		Error => 		Error,
-		ErrorID => 		ErrorID);
+		CommandAborted => CommandAborted);
 ELSE
 	Axis_Move( 
 		Axis := 		AxisRef,
 		Execute := 		MoveAxis AND Ready,
 		Position := 	Position,
+		Velocity := 	Velocity,
 		BufferMode := 	MC_BlendingHigh OR MC_BlendingNext,
 		Done => 		MoveDone,
-		Busy => 		Busy,
 		Active => 		Active,
-		CommandAborted => CommandAborted,
-		Error => 		Error,
-		ErrorID => 		ErrorID);
+		CommandAborted => CommandAborted);
 END_IF
 
 Axis_Jog(
@@ -145,21 +140,20 @@ Axis_Jog(
 	Busy => 		Busy, 
 	Active => 		Active, 
 	CommandAborted => CommandAborted, 
-	Error => 		Error, 
-	ErrorID	=> 		ErrorID, 
- 	Axis := 		AxisRef);
-	
+	Axis := 		AxisRef);
+
 Axis_Home(
 	Axis := 		AxisRef,
 	Execute := 		HomeAxis AND Ready,
-	//Position := 	Position,	// use DEFAULT_HOME_POSITION
+	Position := 	position, //DEFAULT_HOME_POSITION,
 	Done => 		HomeDone,
-	Busy => 		Busy,
 	Active => 		Active,
-	CommandAborted => CommandAborted,
-	Error => 		Error,
-	ErrorID => 		ErrorID);	
+	CommandAborted => CommandAborted);	
 	
+IF MoveDone OR HomeDone OR JogDone THEN
+	bStop := TRUE;
+END_IF
+
 IF MoveDone THEN
 	MoveAxis := FALSE;
 END_IF
@@ -171,28 +165,81 @@ END_IF
 
 IF HomeDone THEN
 	Calibrated := TRUE;
+	HomeAxis := FALSE;
 END_IF
 
-IF MoveAxis OR Jog_Forward OR Jog_Backwards OR HomeDone THEN
+IF StopDone THEN
 	bStop := FALSE;
-ELSE
-	bStop := TRUE;
 END_IF
+
+StopAllowed :=	Axis_Status.StandStill OR  
+				Axis_Status.ContinuousMotion OR
+				Axis_Status.DiscreteMotion OR
+				Axis_Status.SynchronizedMotion OR
+				Axis_Status.Homing;
 
 Axis_Stop( 
 	Axis := 	AxisRef,
-	Execute := 	bStop,
-	Done => 	StopDone,
-	Error => 	Error,
-	ErrorID => 	ErrorID);
+	Execute := 	bStop AND StopAllowed,
+	Done => 	StopDone);
 
 Axis_Position(
 	Axis := 	AxisRef,
-	Enable := 	TRUE,
+	Enable := 	Enable AND Ready,
 	Busy => 	Busy,
-	Error => 	Error,
-	ErrorID => 	ErrorID,
-	Position => ActualPosition);
+	//Error => 	Error,
+	//ErrorID => 	ErrorID,
+	Position => AbsolutePosition);
+
+IF isModuloAxis THEN
+	ActualPosition := AxisRef.NcToPlc.ModuloActPos;
+ELSE
+	ActualPosition := AxisRef.NcToPlc.ActPos;
+END_IF
+
+IF Axis_Power.Error THEN
+	ErrorID := Axis_Power.ErrorID;
+END_IF
+
+IF Axis_Reset.Error THEN
+	ErrorID := Axis_Reset.ErrorID;
+END_IF
+
+IF Axis_Modulo.Error THEN
+	ErrorID := Axis_Modulo.ErrorID;
+END_IF
+
+IF Axis_Move.Error THEN
+	ErrorID := Axis_Move.ErrorID;
+END_IF
+
+IF Axis_Home.Error THEN
+	ErrorID := Axis_Home.ErrorID;
+END_IF
+
+IF Axis_Jog.Error THEN
+	ErrorID := Axis_Jog.ErrorID;
+END_IF
+
+IF Axis_Stop.Error THEN
+	ErrorID := Axis_Stop.ErrorID;
+END_IF
+
+Busy := Axis_Power.Busy OR 
+			Axis_Reset.Busy OR 
+			Axis_Modulo.Busy OR
+			Axis_Move.Busy OR 
+			Axis_Home.Busy OR
+			Axis_Jog.Busy OR
+			Axis_Position.Busy;
+
+Error := 	Axis_Power.Error OR 
+			Axis_Reset.Error OR 
+			Axis_Modulo.Error OR
+			Axis_Move.Error OR 
+			Axis_Home.Error OR
+			Axis_Jog.Error OR 
+			Axis_Stop.Error;
 
 InMotion := Axis_Status.ConstantVelocity OR
 			Axis_Status.DiscreteMotion OR
@@ -211,38 +258,81 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="198" Count="0" />
       <LineId Id="27" Count="0" />
       <LineId Id="294" Count="0" />
-      <LineId Id="28" Count="10" />
+      <LineId Id="28" Count="4" />
+      <LineId Id="36" Count="2" />
       <LineId Id="286" Count="0" />
-      <LineId Id="39" Count="4" />
+      <LineId Id="39" Count="1" />
       <LineId Id="287" Count="0" />
       <LineId Id="44" Count="2" />
       <LineId Id="391" Count="0" />
       <LineId Id="491" Count="3" />
+      <LineId Id="891" Count="0" />
       <LineId Id="523" Count="0" />
-      <LineId Id="495" Count="6" />
+      <LineId Id="495" Count="2" />
+      <LineId Id="501" Count="0" />
       <LineId Id="476" Count="0" />
-      <LineId Id="479" Count="10" />
+      <LineId Id="479" Count="3" />
+      <LineId Id="892" Count="0" />
+      <LineId Id="483" Count="2" />
+      <LineId Id="489" Count="0" />
       <LineId Id="477" Count="0" />
       <LineId Id="264" Count="0" />
       <LineId Id="266" Count="3" />
-      <LineId Id="275" Count="5" />
+      <LineId Id="275" Count="3" />
       <LineId Id="265" Count="0" />
-      <LineId Id="57" Count="0" />
+      <LineId Id="611" Count="0" />
       <LineId Id="303" Count="2" />
       <LineId Id="307" Count="0" />
-      <LineId Id="309" Count="5" />
+      <LineId Id="309" Count="1" />
+      <LineId Id="314" Count="0" />
       <LineId Id="302" Count="0" />
+      <LineId Id="898" Count="2" />
+      <LineId Id="897" Count="0" />
       <LineId Id="58" Count="2" />
       <LineId Id="297" Count="2" />
       <LineId Id="301" Count="0" />
       <LineId Id="300" Count="0" />
-      <LineId Id="394" Count="3" />
-      <LineId Id="61" Count="7" />
+      <LineId Id="394" Count="2" />
+      <LineId Id="691" Count="0" />
+      <LineId Id="397" Count="0" />
+      <LineId Id="893" Count="3" />
+      <LineId Id="875" Count="5" />
+      <LineId Id="67" Count="1" />
       <LineId Id="290" Count="0" />
-      <LineId Id="69" Count="5" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="72" Count="2" />
       <LineId Id="291" Count="0" />
       <LineId Id="75" Count="4" />
       <LineId Id="186" Count="0" />
+      <LineId Id="603" Count="1" />
+      <LineId Id="606" Count="1" />
+      <LineId Id="605" Count="0" />
+      <LineId Id="772" Count="0" />
+      <LineId Id="771" Count="0" />
+      <LineId Id="773" Count="1" />
+      <LineId Id="776" Count="0" />
+      <LineId Id="775" Count="0" />
+      <LineId Id="777" Count="1" />
+      <LineId Id="881" Count="0" />
+      <LineId Id="794" Count="0" />
+      <LineId Id="882" Count="1" />
+      <LineId Id="788" Count="0" />
+      <LineId Id="787" Count="0" />
+      <LineId Id="789" Count="1" />
+      <LineId Id="917" Count="0" />
+      <LineId Id="913" Count="2" />
+      <LineId Id="783" Count="3" />
+      <LineId Id="779" Count="3" />
+      <LineId Id="903" Count="0" />
+      <LineId Id="905" Count="3" />
+      <LineId Id="911" Count="0" />
+      <LineId Id="909" Count="1" />
+      <LineId Id="791" Count="0" />
+      <LineId Id="608" Count="0" />
+      <LineId Id="884" Count="2" />
+      <LineId Id="912" Count="0" />
+      <LineId Id="887" Count="1" />
+      <LineId Id="792" Count="0" />
       <LineId Id="178" Count="0" />
       <LineId Id="188" Count="2" />
       <LineId Id="195" Count="1" />

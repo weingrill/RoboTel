@@ -36,6 +36,8 @@ VAR
 	cabinet_temperature:	REAL;
 	// measures time between soft start command and power available
 	power_timer:		FB_Timer;
+	PowerEvent:	FB_EventLog;
+	
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -64,18 +66,19 @@ END_IF
 // telescope is ready when power available and hydraulics ok
 ready := power_OK AND HydraulicsControl.oil_pressure_OK;
 		
-TelescopeControl();
-DomeControl();
-CoverControl();
-PendantControl();
-NasmythControl();
-HydraulicsControl();
+TelescopeControl();	//
+DomeControl();	//
+CoverControl();	//
+PendantControl();	//
+NasmythControl();	//
+HydraulicsControl();	//
 // deactivate noisy fan if we are on manual
-FanControl(enable := NOT PendantControl.manual);
-ElevationControl();
-AzimuthControl();
-DerotatorControl();
-Environment();
+FanControl(enable := NOT PendantControl.manual);	//
+ElevationControl();	//
+AzimuthControl();	//
+DerotatorControl();	//
+FilterWheelControl();	//
+Environment();	//
 
 GVL_Main.softstart_trafo := key_switch AND NOT power_failure;
 power_timer(bStart := key_switch, bStop := power_OK);
@@ -95,7 +98,14 @@ error := power_failure OR
 GVL_Main.lamp_ready := ready;
 GVL_Main.lamp_error := error OR warning;
 GVL_Main.lamp_power := power_ok;
-SafetyHandling();]]></ST>
+SafetyHandling();
+
+PowerEvent(	
+	Trigger := 		power_failure, 
+	Level := 		ADSLOG_MSGTYPE_ERROR,
+	FormatString :=	'Power:	%s',
+	OnMessage := 	'FAILURE!',
+	OffMEssage := 	'OK');]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="28" Count="0" />
@@ -129,6 +139,7 @@ SafetyHandling();]]></ST>
       <LineId Id="173" Count="0" />
       <LineId Id="197" Count="0" />
       <LineId Id="274" Count="0" />
+      <LineId Id="350" Count="0" />
       <LineId Id="167" Count="0" />
       <LineId Id="237" Count="0" />
       <LineId Id="69" Count="0" />
@@ -147,6 +158,8 @@ SafetyHandling();]]></ST>
       <LineId Id="40" Count="0" />
       <LineId Id="44" Count="0" />
       <LineId Id="78" Count="0" />
+      <LineId Id="354" Count="5" />
+      <LineId Id="353" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
