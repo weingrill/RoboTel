@@ -8,12 +8,19 @@ VAR_INPUT
 	enable,
 	reset,
 	limit_open,
-	limit_close: BOOL;
-	velocity:	INT := 24000;
+	limit_close: 		BOOL;
+	velocity:			INT := 24000;
+	Threshold_active:	BOOL;
 END_VAR
 VAR_OUTPUT
 	error,
 	warning: BOOL;
+	Ready_to_enable:	BOOL;
+	Ready:				BOOL;
+	Moving_negative:	BOOL;
+	Moving_positive:	BOOL;
+	Digital_input1:		BOOL;
+	Digital_input2:		BOOL;
 END_VAR
 VAR_IN_OUT
 	axis_ref:	MDP5001_511_733_2BD37790;
@@ -35,16 +42,33 @@ IF close AND limit_close THEN
 END_IF
 axis_ref.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := enable_state.Q1;
 axis_ref.MDP5001_511_733_Output.MDP5001_733_Control_1.Reset := reset;
+axis_ref.MDP5001_511_733_Output.MDP5001_733_Control_1.Threshold_active := Threshold_active;
 
-error := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Error;
-warning := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Warning;]]></ST>
+error := 	axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Error OR
+			axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Sync_error;
+warning := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Warning;
+Ready_to_enable := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Ready_to_enable;
+Ready := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Ready;
+Moving_negative := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Moving_negative;
+Moving_positive := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Moving_positive;
+Digital_input1 := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Digital_input_1;
+Digital_input2 := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Digital_input_2;
+]]></ST>
     </Implementation>
     <LineIds Name="FB_DCAxis">
       <LineId Id="26" Count="1" />
       <LineId Id="30" Count="9" />
       <LineId Id="42" Count="0" />
+      <LineId Id="79" Count="0" />
       <LineId Id="9" Count="0" />
+      <LineId Id="80" Count="0" />
       <LineId Id="43" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="72" Count="1" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="76" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
