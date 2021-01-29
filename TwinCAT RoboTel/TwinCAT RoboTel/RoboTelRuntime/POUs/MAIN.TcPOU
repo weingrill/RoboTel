@@ -91,9 +91,15 @@ error := power_failure OR
 			HydraulicsControl.pressure_failure OR 
 			(NOT phase_available)
 			OR GVL_Telescope.azimut_limit_switch
-			OR PendantControl.error
+			//OR PendantControl.error
 			OR FanControl.error
 			OR ElevationControl.error
+			OR FilterWheelControl.Error
+			OR DomeControl.Error
+			OR Focuscontrol.Error
+			OR NasmythControl.error
+			OR CoverControl.Error
+			OR AzimuthControl.error
 			OR GVL_Safety.Error;
 // set control lights					
 GVL_Main.lamp_ready := ready;
@@ -154,7 +160,7 @@ PowerEvent(
       <LineId Id="80" Count="0" />
       <LineId Id="82" Count="0" />
       <LineId Id="172" Count="0" />
-      <LineId Id="107" Count="0" />
+      <LineId Id="437" Count="6" />
       <LineId Id="113" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="40" Count="0" />
