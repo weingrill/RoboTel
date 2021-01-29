@@ -16,7 +16,7 @@ VAR_INPUT
 	// calibrate the axis
 	HomeAxis:	BOOL;
 	// filter position
-	filter_position: INT;
+	filter_position: WORD;
 END_VAR
 VAR_OUTPUT
 	error: 				BOOL;

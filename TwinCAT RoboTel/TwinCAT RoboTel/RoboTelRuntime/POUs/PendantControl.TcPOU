@@ -5,8 +5,9 @@
 VAR
 	// program selection of the pendant control
 	Selection:			UINT;
-	error:				BOOL;
-	
+	// error on the pendant control
+	Error:				BOOL;
+	// cover1
 	Cover1_enable,
 	Cover2_enable,
 	Cover3_enable,
@@ -16,20 +17,21 @@ VAR
 	Azimuth_enable,
 	Derotator_enable,
 	Dome_enable,
-	FilterWheel_enable : BOOL := FALSE;
-	manual,
-	enable,
-	reset,
-	up,
-	down,
-	left,
-	right,
-	manual_hydraulics_start,
+	FilterWheel_enable:	BOOL := FALSE;
+	manual:		BOOL;
+	enable:		BOOL;
+	reset:		BOOL;
+	up:			BOOL;
+	down:		BOOL;
+	left:		BOOL;
+	right:		BOOL;
+	manual_hydraulics_start:	BOOL;
 	manual_hydraulics_stop:		BOOL;
 	
 	brake_state:	RS;
 	// manually open the brake
-	open_brake: BOOL;
+	open_brake: 	BOOL;
+	Filter_position:	CTUD;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -44,6 +46,10 @@ Selection := 1*BOOL_TO_UINT(GVL_pendant_control.BCD1) +
 			 2*BOOL_TO_UINT(GVL_pendant_control.BCD2) + 
 			 4*BOOL_TO_UINT(GVL_pendant_control.BCD4) +
 			 8*BOOL_TO_UINT(GVL_pendant_control.BCD8);
+
+// detect disconnection of the manual controls (should also trigger emergency stop).			 
+Error := (Selection = 0);
+
 // disable all the lamps
 GVL_pendant_control.lamp_left := FALSE;
 GVL_pendant_control.lamp_right := FALSE;
@@ -153,11 +159,17 @@ CASE Selection OF
 		DomeControl.reset := reset;
 		
 	10:	// FilterWheel control
-		FilterWheel_enable := manual;
+		FilterWheel_enable := TRUE;
 		GVL_pendant_control.lamp_left := FilterWheel_enable;
 		GVL_pendant_control.lamp_right := FilterWheel_enable;
 		FilterWheelControl.left := left;
 		FilterWheelControl.right := right;
+		Filter_position(CU := up, CD := down, RESET := reset, PV := 15);
+		GVL_pendant_control.lamp_up := NOT Filter_position.QU;
+		GVL_pendant_control.lamp_down := NOT Filter_position.QD;
+		IF NOT manual THEN
+			FilterWheelControl.filter_position := Filter_position.CV;
+		END_IF
 		FilterWheelControl.reset := reset;
 	
 	15:	// Hydraulics control
@@ -189,6 +201,8 @@ DomeControl.enable := Dome_enable;
       <LineId Id="613" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="7" Count="2" />
+      <LineId Id="677" Count="0" />
+      <LineId Id="674" Count="2" />
       <LineId Id="17" Count="2" />
       <LineId Id="25" Count="1" />
       <LineId Id="622" Count="1" />
@@ -267,7 +281,12 @@ DomeControl.enable := Dome_enable;
       <LineId Id="464" Count="0" />
       <LineId Id="298" Count="0" />
       <LineId Id="611" Count="0" />
-      <LineId Id="456" Count="4" />
+      <LineId Id="456" Count="3" />
+      <LineId Id="680" Count="0" />
+      <LineId Id="684" Count="1" />
+      <LineId Id="682" Count="0" />
+      <LineId Id="686" Count="1" />
+      <LineId Id="460" Count="0" />
       <LineId Id="455" Count="0" />
       <LineId Id="233" Count="0" />
       <LineId Id="612" Count="0" />
