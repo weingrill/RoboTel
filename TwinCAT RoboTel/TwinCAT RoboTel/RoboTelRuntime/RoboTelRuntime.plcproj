@@ -112,6 +112,9 @@
     <Compile Include="POUs\FunctionBlocks\FB_DCAxis.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FunctionBlocks\FB_DCAxis_1.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_EQ2HOR.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -250,6 +253,9 @@
     <None Include="RoboTelRuntime.tmc">
       <SubType>Content</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PinnedGlobalDataType Include="MDP5001_511_733_BA4AEFF1" />
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>

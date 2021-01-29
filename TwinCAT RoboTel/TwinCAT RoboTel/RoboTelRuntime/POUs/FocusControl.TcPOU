@@ -7,8 +7,6 @@ VAR_INPUT
 	inward: 	BOOL;
 	// Move M2 away from M1
 	outward: 	BOOL;	
-	// enable / unlock M2
-	enable:		BOOL;
 	// reset the axis(-error)
 	reset: 		BOOL;
 	// move the axis to new position
@@ -25,13 +23,14 @@ VAR_OUTPUT
 END_VAR
 
 VAR
-	FocusUnlock:	RS;
-	FocusDelay:		TON;
-	FocusAxis:		FB_Axis2;
-	StopDone: 		BOOL;
+	// enable / unlock M2
+	enable:		BOOL := FALSE;
+	FocusUnlock:		RS;
+	FocusDelay:			TON;
+	FocusAxis:			FB_Axis2;
 	actual_position:	LREAL;
-	FocusUnlocked:	BOOL;
-	FocusAxisEvent:	FB_EventLog;
+	FocusUnlocked:		BOOL;
+	FocusAxisEvent:		FB_EventLog;
 END_VAR
 
 VAR CONSTANT
@@ -43,25 +42,27 @@ GVL_Telescope.focus_lock := FALSE;
 
 //enable := TelescopeControl.power OR PendantControl.Focus_enable;
 // unlock the Focus 
+(*
 FocusUnlock(SET := enable,
 			RESET1 := reset OR NOT enable,
 			Q1 => GVL_Telescope.focus_lock);
 // wait until the focus is unlocked for n milliseconds
-FocusDelay(IN :=FocusUnlock.Q1, PT := T#500MS, Q => FocusUnlocked);
-
+FocusDelay(IN :=FocusUnlock.Q1, PT := T#2000MS, Q => FocusUnlocked);
+*)
+GVL_Telescope.focus_lock := FocusUnlocked;
 FocusAxis(	
-	Enable := 			FocusUnlocked,
+	Enable := 			enable, // FocusUnlocked,
 	Reset := 			reset,
 	MoveAxis := 		MoveAxis,
 	HomeAxis :=			HomeAxis,
 	Position := 		position,
+	Velocity :=			5.0,
 	Enable_Positive := 	NOT GVL_Telescope.focus_limit_far,
 	Enable_Negative := 	NOT GVL_Telescope.focus_limit_near,
 	Jog_Forward :=		outward,
 	Jog_Backwards := 	inward,
 	bCalibrationCam :=  GVL_Telescope.focus_limit_near,
 	ActualPosition => 	actual_position,
-	StopDone =>			StopDone,
 	Error =>			error,
 	ErrorID =>			ErrorID,
 	AxisRef :=			GVL_Telescope.FocusAxisRef);	
@@ -79,10 +80,10 @@ IF FocusAxis.ResetDone THEN
 END_IF
 
 FocusAxisEvent(	
-	Trigger := 		Error, 
+	Trigger := 		FocusAxis.Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
 	FormatString :=	'Focus Axis Error: %s',
-	OnMessage := 	DWORD_TO_HEXSTR(ErrorID, 4, FALSE),
+	OnMessage := 	DWORD_TO_HEXSTR(FocusAxis.ErrorID, 4, FALSE),
 	OffMEssage := 	'OK',
 	OffLevel := 	ADSLOG_MSGTYPE_HINT);
 ]]></ST>
@@ -92,17 +93,21 @@ FocusAxisEvent(
       <LineId Id="54" Count="0" />
       <LineId Id="102" Count="1" />
       <LineId Id="87" Count="0" />
+      <LineId Id="236" Count="0" />
       <LineId Id="99" Count="2" />
       <LineId Id="112" Count="0" />
       <LineId Id="110" Count="1" />
+      <LineId Id="237" Count="0" />
       <LineId Id="90" Count="0" />
       <LineId Id="176" Count="0" />
       <LineId Id="91" Count="1" />
       <LineId Id="175" Count="0" />
-      <LineId Id="93" Count="2" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="239" Count="0" />
+      <LineId Id="94" Count="1" />
       <LineId Id="106" Count="1" />
       <LineId Id="177" Count="1" />
-      <LineId Id="96" Count="1" />
+      <LineId Id="97" Count="0" />
       <LineId Id="114" Count="0" />
       <LineId Id="98" Count="0" />
       <LineId Id="179" Count="11" />

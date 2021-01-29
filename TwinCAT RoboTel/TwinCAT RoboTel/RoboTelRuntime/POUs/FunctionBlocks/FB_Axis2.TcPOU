@@ -238,6 +238,10 @@ Error := 	Axis_Power.Error OR
 			Axis_Jog.Error OR 
 			Axis_Stop.Error;
 
+IF NOT Error THEN
+	ErrorID := 0;
+END_IF
+			
 InMotion := Axis_Status.ConstantVelocity OR
 			Axis_Status.DiscreteMotion OR
 			Axis_Status.ContinuousMotion OR
@@ -332,7 +336,10 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="884" Count="2" />
       <LineId Id="912" Count="0" />
       <LineId Id="887" Count="1" />
+      <LineId Id="1089" Count="0" />
       <LineId Id="792" Count="0" />
+      <LineId Id="1091" Count="1" />
+      <LineId Id="1090" Count="0" />
       <LineId Id="178" Count="0" />
       <LineId Id="188" Count="2" />
       <LineId Id="195" Count="1" />
