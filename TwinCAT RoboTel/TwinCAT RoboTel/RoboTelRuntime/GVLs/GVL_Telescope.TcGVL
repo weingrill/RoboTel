@@ -72,7 +72,7 @@ VAR_GLOBAL
 	// Motor2 Channel 2: MDP5001_511_733_2BD37790
 	Cover2_axis: 		MDP5001_511_733_2BD37790;
 	// Motor3 Channel 1: MDP5001_511_733_BA4AEFF1
-	Cover3_axis: 		MDP5001_511_733_2BD37790;
+	Cover3_axis: 		MDP5001_511_733_BA4AEFF1;
 		
 END_VAR]]></Declaration>
   </GVL>
