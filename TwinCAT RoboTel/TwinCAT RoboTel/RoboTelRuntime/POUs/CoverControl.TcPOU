@@ -24,12 +24,12 @@ VAR_OUTPUT
 	// is TRUE, if all covers are closed
 	isclosed:		BOOL;
 	// is TRUE if any cover-driver reports an error
-	Cover_error: 	BOOL;
+	Error: 	BOOL;
 END_VAR
 VAR
 	open2_delay	: TON;
 	close3_delay : TON;
-	Cover3_control:		FB_DCAxis;
+	Cover3_control:		FB_DCAxis_1;
 	Cover2_control:		FB_DCAxis;
 	Cover1_control:		FB_DCAxis;
 	Cover3_state: RS;
@@ -95,7 +95,7 @@ Cover3_control(
 
 isopen := GVL_Telescope.cover3_open AND GVL_Telescope.cover2_open;
 isclosed := GVL_Telescope.cover2_closed AND GVL_Telescope.cover3_closed;
-Cover_error := Cover1_control.error OR Cover2_control.error OR Cover3_control.error;]]></ST>
+Error := Cover1_control.error OR Cover2_control.error OR Cover3_control.error;]]></ST>
     </Implementation>
     <LineIds Name="CoverControl">
       <LineId Id="146" Count="0" />
