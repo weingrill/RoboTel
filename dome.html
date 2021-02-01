@@ -40,8 +40,31 @@
   <div class="section" id="dome-operation">
 <h1>Dome Operation<a class="headerlink" href="#dome-operation" title="Permalink to this headline">¶</a></h1>
 <p>The dome is operated by its own PLC but governed by the main PLC.
-If the weather conditions are bad, the dome will be closed automatically.
 Closing or opening the dome requires approximately 70 seconds.</p>
+<div class="section" id="manual-operation">
+<h2>Manual Operation<a class="headerlink" href="#manual-operation" title="Permalink to this headline">¶</a></h2>
+<p>The dome can always be operated by pressing a button on the two-button
+control, directly connected to the azimuth dome control.</p>
+<p>The second operating mode is by using the pendant control (selection 9).
+* Buttons “←” and “→” rotate the dome counter-clockwise and clockwise.
+* “RESET” resets the dome axis</p>
+</div>
+<div class="section" id="api-description">
+<h2>API description<a class="headerlink" href="#api-description" title="Permalink to this headline">¶</a></h2>
+<p>The dome is enabled automatically as soon as <cite>TelescopeControl.power</cite> is TRUE.
+If the dome has not yet been calibrated, it moves to the calibration position.
+If the calibration has been completed, the dome azimuth is tied to the
+telescope azimuth.</p>
+<ul class="simple">
+<li><p><cite>DomeControl.Reset</cite> resets the axis, after an error has occurred.</p></li>
+<li><p><cite>DomeControl.OpenDome</cite> opens slit and flap.</p></li>
+<li><p><cite>DomeControl.CloseDome</cite> closes slit and flap.</p></li>
+<li><p><cite>DomeControl.Light</cite> alters the state of the dome illumination.
+The light is deactivated automatically after 60 minutes.</p></li>
+</ul>
+<p>If the weather conditions are bad, the dome will be closed automatically.
+If the Dome is opened, the dehumidifier is stopped.</p>
+</div>
 </div>
 
 
@@ -51,6 +74,15 @@ Closing or opening the dome requires approximately 70 seconds.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Dome Operation</a><ul>
+<li><a class="reference internal" href="#manual-operation">Manual Operation</a></li>
+<li><a class="reference internal" href="#api-description">API description</a></li>
+</ul>
+</li>
+</ul>
+
   <h4>Previous topic</h4>
   <p class="topless"><a href="filterwheel.html"
                         title="previous chapter">Filter-Wheel</a></p>
