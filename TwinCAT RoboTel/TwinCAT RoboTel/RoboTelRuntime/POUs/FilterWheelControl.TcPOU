@@ -3,51 +3,74 @@
   <POU Name="FilterWheelControl" Id="{f0e4f375-0934-4386-a9fa-94537c34c7e1}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM FilterWheelControl
 VAR_INPUT
-	// move counter-clockwise
-	left:	BOOL;
-	// move clockwise
-	right:	BOOL;
-	// reset the axis(-error)
-	reset:	BOOL;
 	// enable the axis
-	enable:	BOOL;
-	// move to given psoition
-	MoveAxis: BOOL;
-	// calibrate the axis
-	HomeAxis:	BOOL;
+	Enable:				BOOL;
+	// reset the axis(-error)
+	Reset:				BOOL;
+	// move counter-clockwise
+	left:				BOOL;
+	// move clockwise
+	right:				BOOL;
+	// TRUE, if the filter is in position and wheel has come to rest
+	Ready:				BOOL;
 	// filter position
-	filter_position: WORD;
+	filter_position: 	WORD;
 END_VAR
 VAR_OUTPUT
+	// is true if an error occurred
 	error: 				BOOL;
+	// number of current axis error
 	ErrorID:			UDINT;
 	act_position:		LREAL;
 END_VAR
 VAR
+	// move to given psoition
+	MoveAxis: 			BOOL;
+	// calibrate the axis
+	HomeAxis:			BOOL;
 	FilterWheelAxis:	FB_Axis2;
+	// axis position to set to with `MoveAxis`
 	position:			LREAL;
+	// current filter determined from the axis position
+	actual_filter:		WORD;
 	FilterWheelEvent:	FB_EventLog;
 END_VAR
 VAR CONSTANT
-	filters:	INT := 24;
+	// total number of filters in the filter wheel
+	filters:			WORD := 24;
+	// current position of the calibration cam. Apply an offset here if necessary
+	calibration_position:	LREAL := 0.0;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* This program controls the filter wheel. *)
+      <ST><![CDATA[(* This program controls the filter wheel. 
+The current optical filter is selected through `filter_position`.
+The number of filters is hard coded to 24.
+Use `MoveAxis` to position the 
+*)
 enable := TelescopeControl.power OR PendantControl.FilterWheel_enable;
+
+// limit filter_position to [0...filters-1]
+filter_position := filter_position MOD filters;
+// calculate the actual filter position
+actual_filter := LREAL_TO_WORD(act_position * filters / 360.0);
+
+Ready := (filter_position = actual_filter) AND FilterWheelAxis.StandStill;
 
 IF FilterWheelAxis.Calibrated THEN
 	HomeAxis := FALSE;
-	// limit filter_position to [0...filters-1]
-	filter_position := filter_position MOD filters;
-	position := 360.0 * INT_TO_LREAL(filter_position) / INT_TO_LREAL(filters);
+	// if we are on automatic mode then position the filterwheel
+	IF TelescopeControl.power THEN
+		position := 360.0 * INT_TO_LREAL(filter_position) / INT_TO_LREAL(filters);
+		MoveAxis := filter_position <> actual_filter;
+	END_IF
 ELSE
-	position := 0.0;
+	position := calibration_position;
 	HomeAxis := TRUE;
 END_IF
 
 FilterWheelAxis(
-	Enable := 			enable,
-	Reset := 			reset,
+	Enable := 			Enable,
+	Reset := 			Reset,
 	MoveAxis :=			MoveAxis,
 	HomeAxis :=			HomeAxis,
 	Position := 		position, 
@@ -84,12 +107,21 @@ FilterWheelEvent(
     </Implementation>
     <LineIds Name="FilterWheelControl">
       <LineId Id="184" Count="0" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="217" Count="0" />
       <LineId Id="85" Count="0" />
+      <LineId Id="214" Count="2" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="235" Count="1" />
       <LineId Id="87" Count="1" />
       <LineId Id="177" Count="0" />
-      <LineId Id="183" Count="0" />
-      <LineId Id="182" Count="0" />
-      <LineId Id="178" Count="0" />
+      <LineId Id="254" Count="0" />
+      <LineId Id="249" Count="0" />
+      <LineId Id="252" Count="1" />
+      <LineId Id="251" Count="0" />
       <LineId Id="91" Count="0" />
       <LineId Id="179" Count="1" />
       <LineId Id="90" Count="0" />
