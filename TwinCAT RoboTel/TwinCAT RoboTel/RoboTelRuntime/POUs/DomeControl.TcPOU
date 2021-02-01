@@ -6,7 +6,7 @@ VAR_INPUT
 	// enable the dome azimuth
 	enable:		BOOL;
 	// reset the dome axis after an error
-	reset:		BOOL;
+	Reset:		BOOL;
 	// rotate the dome left (ccw)
 	left:		BOOL;
 	// rotate the dome right (cw)
@@ -54,11 +54,15 @@ VAR
 	DomeAxisEvent:	FB_Eventlog;
 END_VAR
 VAR CONSTANT
-	tolerance:	LREAL := 3.0;
+	tolerance:				LREAL := 3.0;
+	calibration_position:	LREAL := 200.0;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* This program is responsible for the dome control. 
-The first section controls the signas for the inverter.
+The dome is enabled unless the emergency button is pressed.
+The two-button manual box steers the dome counter-clockwise or clockwise
+If the dome is in automatic mode, homing is performed first.
+The first section controls the signals for the inverter.
 The second section controls the dome axis.
 The third section handles the communications via ADS with the dome PLC.
 *)
@@ -66,7 +70,8 @@ The third section handles the communications via ADS with the dome PLC.
 (* source: https://infosys.beckhoff.de/english.php?content=../content/1033/tcplclib_tc2_system/18014399220202635.html&id= *)
 GVL_Dome.Inverter_Enable := FALSE;
 GVL_Dome.Inverter_Velocity := 0;
-manual_enable := GVL_Dome.Clockwise OR GVL_Dome.CounterClockwise;
+
+enable := GVL_Safety.Run;
 
 IF GVL_Dome.bVeloHigh THEN
 	GVL_Dome.Inverter_Velocity := 32000;
@@ -85,22 +90,23 @@ END_IF
 
 GVL_Dome.Inverter_DirectionMinus := GVL_Dome.bDirectionPlus;
 
-IF ABS(Azimuth_current - position) > tolerance THEN
-	// move_azimuth := TRUE;
-END_IF
-
-
-IF NOT DomeAxis.Calibrated THEN
-	DomeAxis.HomeAxis := TRUE;
-	position := 200.0;
-ELSE
+IF DomeAxis.Calibrated THEN
 	DomeAxis.HomeAxis := FALSE;
+	// if we are on automatic, tie the dome to the telescope
+	IF TelescopeControl.power THEN
+		position := TelescopeControl.azimuth_current;
+		move_azimuth := ABS(Azimuth_current - position) > tolerance;
+	END_IF
+ELSE
+	// perform homing only, when in automatic or manual/pendant mode
+	DomeAxis.HomeAxis := TelescopeControl.power;
+	position := 200.0;
 END_IF
 
 // velocity = 2°/s or 180° in 81s, 360° in 120s (was 2.22)
 
 DomeAxis(
-	Enable := 		enable OR manual_enable,
+	Enable := 		enable,
 	Reset := 		reset,
 	MoveAxis := 	move_azimuth,
 	Position := 	position,
@@ -219,18 +225,20 @@ DomeAxisEvent(
 	Trigger := 		Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
 	FormatString :=	'Dome Axis Error: %s',
-	OnMessage := 	UDINT_TO_STRING(ErrorID),
+	OnMessage := 	DWORD_TO_HEXSTR(ErrorID, 4, FALSE),
 	OffMEssage := 	'OK');
 				]]></ST>
     </Implementation>
     <LineIds Name="DomeControl">
       <LineId Id="1008" Count="0" />
+      <LineId Id="1223" Count="2" />
       <LineId Id="1011" Count="2" />
       <LineId Id="1010" Count="0" />
       <LineId Id="1009" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="650" Count="0" />
       <LineId Id="673" Count="0" />
+      <LineId Id="1215" Count="0" />
       <LineId Id="666" Count="0" />
       <LineId Id="636" Count="0" />
       <LineId Id="635" Count="0" />
@@ -241,10 +249,16 @@ DomeAxisEvent(
       <LineId Id="640" Count="2" />
       <LineId Id="648" Count="0" />
       <LineId Id="643" Count="2" />
-      <LineId Id="934" Count="4" />
-      <LineId Id="954" Count="2" />
-      <LineId Id="1151" Count="0" />
-      <LineId Id="960" Count="1" />
+      <LineId Id="1216" Count="0" />
+      <LineId Id="955" Count="0" />
+      <LineId Id="1209" Count="0" />
+      <LineId Id="1221" Count="0" />
+      <LineId Id="1210" Count="0" />
+      <LineId Id="1213" Count="0" />
+      <LineId Id="1211" Count="1" />
+      <LineId Id="960" Count="0" />
+      <LineId Id="1222" Count="0" />
+      <LineId Id="1207" Count="1" />
       <LineId Id="957" Count="0" />
       <LineId Id="1001" Count="0" />
       <LineId Id="1000" Count="0" />
