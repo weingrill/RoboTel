@@ -1,8 +1,23 @@
 Filter-Wheel
 ============
 
-Basic parameters
-----------------
+The filter wheel can be either controlled manually on the pendant control or
+by using the API.
+
+API Description
+---------------
+
+* The axis is enabled automatically as soon as `TelescopeControl.power` is TRUE.
+* If the axis is not calibrated, the filter wheel moves to the calibration
+  position first.
+* `Reset` resets the axis
+* The desired optical filter is selected by setting the `filter_position` to
+  a value between 0 and 23. If the actual filter differs from the set position,
+  the filter wheel starts repositioning itself.
+* `Ready` indicates, if the desired filter has been selected.
+
+System parameters
+-----------------
 
 | reference velocity (110%) = 114.216667 deg/s
 | maximum velocity (100%) = 103.833333 deg/s

@@ -43,8 +43,23 @@
             
   <div class="section" id="filter-wheel">
 <h1>Filter-Wheel<a class="headerlink" href="#filter-wheel" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="basic-parameters">
-<h2>Basic parameters<a class="headerlink" href="#basic-parameters" title="Permalink to this headline">¶</a></h2>
+<p>The filter wheel can be either controlled manually on the pendant control or
+by using the API.</p>
+<div class="section" id="api-description">
+<h2>API Description<a class="headerlink" href="#api-description" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>The axis is enabled automatically as soon as <cite>TelescopeControl.power</cite> is TRUE.</p></li>
+<li><p>If the axis is not calibrated, the filter wheel moves to the calibration
+position first.</p></li>
+<li><p><cite>Reset</cite> resets the axis</p></li>
+<li><p>The desired optical filter is selected by setting the <cite>filter_position</cite> to
+a value between 0 and 23. If the actual filter differs from the set position,
+the filter wheel starts repositioning itself.</p></li>
+<li><p><cite>Ready</cite> indicates, if the desired filter has been selected.</p></li>
+</ul>
+</div>
+<div class="section" id="system-parameters">
+<h2>System parameters<a class="headerlink" href="#system-parameters" title="Permalink to this headline">¶</a></h2>
 <div class="line-block">
 <div class="line">reference velocity (110%) = 114.216667 deg/s</div>
 <div class="line">maximum velocity (100%) = 103.833333 deg/s</div>
@@ -79,7 +94,8 @@
   <h3><a href="index.html">Table of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Filter-Wheel</a><ul>
-<li><a class="reference internal" href="#basic-parameters">Basic parameters</a></li>
+<li><a class="reference internal" href="#api-description">API Description</a></li>
+<li><a class="reference internal" href="#system-parameters">System parameters</a></li>
 </ul>
 </li>
 </ul>
