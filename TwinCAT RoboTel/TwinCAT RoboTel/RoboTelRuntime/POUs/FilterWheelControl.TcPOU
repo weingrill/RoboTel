@@ -60,7 +60,7 @@ IF FilterWheelAxis.Calibrated THEN
 	HomeAxis := FALSE;
 	// if we are on automatic mode then position the filterwheel
 	IF TelescopeControl.power THEN
-		position := 360.0 * INT_TO_LREAL(filter_position) / INT_TO_LREAL(filters);
+		position := 360.0 * WORD_TO_LREAL(filter_position) / WORD_TO_LREAL(filters);
 		MoveAxis := filter_position <> actual_filter;
 	END_IF
 ELSE
