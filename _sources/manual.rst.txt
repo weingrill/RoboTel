@@ -49,7 +49,7 @@ If not otherwise noted, these general rules apply for all selections:
 * "RESET" locks the focus in position.
 
 6 De-rotator
------------
+------------
 
 * Buttons "←" and "→" rotate the de-rotator counter-clockwise and clockwise.
 * *WARNING* The limit switches are currently not implemented.
