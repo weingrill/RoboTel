@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="MAIN" Id="{c39aef1e-7c14-41dc-ad83-03bececdc52a}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
@@ -100,6 +100,7 @@ error := power_failure OR
 			OR NasmythControl.error
 			OR CoverControl.Error
 			OR AzimuthControl.error
+			OR DerotatorControl.Error
 			OR GVL_Safety.Error;
 // set control lights					
 GVL_Main.lamp_ready := ready;
@@ -160,7 +161,9 @@ PowerEvent(
       <LineId Id="80" Count="0" />
       <LineId Id="82" Count="0" />
       <LineId Id="172" Count="0" />
-      <LineId Id="437" Count="6" />
+      <LineId Id="437" Count="5" />
+      <LineId Id="482" Count="0" />
+      <LineId Id="443" Count="0" />
       <LineId Id="113" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="40" Count="0" />

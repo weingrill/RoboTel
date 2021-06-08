@@ -29,7 +29,9 @@ VAR
 	FocusDelay:			TON;
 	FocusAxis:			FB_Axis2;
 	actual_position:	LREAL;
+	Focus_max:			LREAL;
 	FocusUnlocked:		BOOL;
+	FocusCalibration:	MC_SetPosition;
 	FocusAxisEvent:		FB_EventLog;
 END_VAR
 
@@ -79,6 +81,14 @@ IF FocusAxis.ResetDone THEN
 	reset := FALSE;
 END_IF
 
+FocusCalibration(Axis := GVL_Telescope.FocusAxisRef,
+	Execute := GVL_Telescope.focus_limit_near,
+	Position := 0.0);
+
+IF GVL_Telescope.focus_limit_far THEN
+	Focus_max := actual_position;
+END_IF
+
 FocusAxisEvent(	
 	Trigger := 		FocusAxis.Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
@@ -112,7 +122,12 @@ FocusAxisEvent(
       <LineId Id="114" Count="0" />
       <LineId Id="98" Count="0" />
       <LineId Id="179" Count="11" />
-      <LineId Id="192" Count="6" />
+      <LineId Id="314" Count="0" />
+      <LineId Id="316" Count="2" />
+      <LineId Id="315" Count="0" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="320" Count="2" />
+      <LineId Id="193" Count="5" />
       <LineId Id="156" Count="1" />
     </LineIds>
   </POU>
