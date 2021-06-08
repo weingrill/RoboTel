@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="AzimuthControl" Id="{8e08648a-b748-4448-9dcc-aa13dfcf6a06}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM AzimuthControl
 VAR_INPUT
@@ -26,10 +26,10 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// todo: brake logic
+      <ST><![CDATA[// todo: verify brake logic
 AzimuthUnlock(SET := enable,
 			RESET1 := reset,
-			Q1 => GVL_Telescope.focus_lock);
+			Q1 => GVL_Telescope.brake_azimuth_eve);
 // wait until the focus is unlocked for n milliseconds
 AzimuthDelay(IN :=AzimuthUnlock.Q1, PT := T#500MS);
 

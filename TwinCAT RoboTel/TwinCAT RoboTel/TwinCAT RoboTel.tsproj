@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.10">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.12">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-000000000035}" TcBaseType="true" HideType="true">UINTARR2</Name>
@@ -126,6 +126,8 @@
 			<SubItem>
 				<Name>nDataIn7</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000035}">UINTARR2</Type>
+				<Comment><![CDATA[Drive Velocity Actual Value
+]]></Comment>
 				<BitSize>32</BitSize>
 				<BitOffs>288</BitOffs>
 			</SubItem>
@@ -325,6 +327,8 @@ Drive Status 4 (manually linked):
 			<SubItem>
 				<Name>nState8</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<Comment><![CDATA[Digital Inputs 1..8
+]]></Comment>
 				<BitSize>8</BitSize>
 				<BitOffs>248</BitOffs>
 			</SubItem>
@@ -2754,7 +2758,7 @@ External Setpoint Generation:
 				<Axis Id="1" CreateSymbols="true" AxisType="1">
 					<Name>Focus</Name>
 					<AxisPara>
-						<Dynamic AccelerationMaximum="1000" DecelerationMaximum="1000" Acceleration="30" Deceleration="30" Jerk="180"/>
+						<Dynamic AccelerationMaximum="1000" DecelerationMaximum="1000" Acceleration="2" Deceleration="2" Jerk="0.8"/>
 						<Velo RefSearch="2" RefSync="2" SlowManual="1" FastManual="5" Maximum="5"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
@@ -2788,6 +2792,8 @@ External Setpoint Generation:
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn7</Name>
+									<Comment><![CDATA[Drive Velocity Actual Value
+]]></Comment>
 								</SubVar>
 							</Var>
 						</Vars>
@@ -2820,7 +2826,7 @@ External Setpoint Generation:
 					</Encoder>
 					<Drive Name="Drive" DrvType="23">
 						<DrvPara>
-							<Analog VeloReferenz="10.271318" ScaleFactorActTorque="0.1"/>
+							<Analog VeloReferenz="1" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
@@ -2912,7 +2918,7 @@ External Setpoint Generation:
 						</Var>
 					</Vars>
 				</Axis>
-				<Axis Id="7" CreateSymbols="true" AxisType="1">
+				<Axis Id="7" CreateSymbols="true" AxisType="1" GroupId="2">
 					<Name>Derotator</Name>
 					<AxisPara>
 						<General UnitName="°"/>
@@ -2948,6 +2954,8 @@ External Setpoint Generation:
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn7</Name>
+									<Comment><![CDATA[Drive Velocity Actual Value
+]]></Comment>
 								</SubVar>
 							</Var>
 						</Vars>
@@ -3058,7 +3066,7 @@ External Setpoint Generation:
 						</Var>
 					</Vars>
 				</Axis>
-				<Axis Id="9" CreateSymbols="true" AxisType="1">
+				<Axis Id="9" CreateSymbols="true" AxisType="1" GroupId="3">
 					<Name>Azimuth</Name>
 					<AxisPara>
 						<General UnitName="°"/>
@@ -3094,6 +3102,8 @@ External Setpoint Generation:
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn7</Name>
+									<Comment><![CDATA[Drive Velocity Actual Value
+]]></Comment>
 								</SubVar>
 							</Var>
 						</Vars>
@@ -3204,7 +3214,7 @@ External Setpoint Generation:
 						</Var>
 					</Vars>
 				</Axis>
-				<Axis Id="10" CreateSymbols="true" AxisType="1">
+				<Axis Id="10" CreateSymbols="true" AxisType="1" GroupId="4">
 					<Name>Elevation</Name>
 					<AxisPara>
 						<General UnitName="°"/>
@@ -3242,6 +3252,8 @@ External Setpoint Generation:
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn7</Name>
+									<Comment><![CDATA[Drive Velocity Actual Value
+]]></Comment>
 								</SubVar>
 							</Var>
 						</Vars>
@@ -3352,7 +3364,7 @@ External Setpoint Generation:
 						</Var>
 					</Vars>
 				</Axis>
-				<Axis Id="2" CreateSymbols="true" AxisType="2">
+				<Axis Id="2" CreateSymbols="true" AxisType="2" GroupId="5">
 					<Name>DomeAzimuth</Name>
 					<AxisPara>
 						<General UnitName="°" UnitFlags="#x00000004"/>
@@ -3390,6 +3402,8 @@ External Setpoint Generation:
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn7</Name>
+									<Comment><![CDATA[Drive Velocity Actual Value
+]]></Comment>
 								</SubVar>
 							</Var>
 						</Vars>
@@ -3498,7 +3512,7 @@ External Setpoint Generation:
 						</Var>
 					</Vars>
 				</Axis>
-				<Axis Id="3" CreateSymbols="true" AxisType="1">
+				<Axis Id="3" CreateSymbols="true" AxisType="1" GroupId="6">
 					<Name>Filterrad</Name>
 					<AxisPara>
 						<General UnitName="°" UnitFlags="#x00000004"/>
@@ -3534,6 +3548,8 @@ External Setpoint Generation:
 								</SubVar>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn7</Name>
+									<Comment><![CDATA[Drive Velocity Actual Value
+]]></Comment>
 								</SubVar>
 							</Var>
 						</Vars>
@@ -3866,6 +3882,50 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Main.phase_available</Name>
+							<Comment><![CDATA[DIN1 0.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.power_available</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.key_switch</Name>
+							<Comment><![CDATA[DIN2 0.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.key_switch_remote</Name>
+							<Comment><![CDATA[DIN3 0.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.start_switch</Name>
+							<Comment><![CDATA[DIN4 0.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.stop_switch</Name>
+							<Comment><![CDATA[DIN5 0.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.reset_switch</Name>
+							<Comment><![CDATA[DIN8 0.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.main_cabinet_temperature</Name>
+							<Comment><![CDATA[BT1]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.brake_clearing</Name>
+							<Comment><![CDATA[DIN15 1.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Telescope.temperature_mirror2</Name>
 							<Comment><![CDATA[ BT9 mirror]]></Comment>
 							<Type>INT</Type>
@@ -3997,52 +4057,8 @@ External Setpoint Generation:
 							<Name>GVL_Telescope.Cover3_axis.MDP5001_511_733_Input</Name>
 							<Type GUID="{2D9F1DEF-D0A1-8CE8-8800-12F336222FE8}">MDP5001_511_733_I_BA4AEFF1</Type>
 						</Var>
-						<Var>
-							<Name>GVL_Main.phase_available</Name>
-							<Comment><![CDATA[DIN1 0.0]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.power_available</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.key_switch</Name>
-							<Comment><![CDATA[DIN2 0.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.key_switch_remote</Name>
-							<Comment><![CDATA[DIN3 0.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.start_switch</Name>
-							<Comment><![CDATA[DIN4 0.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.stop_switch</Name>
-							<Comment><![CDATA[DIN5 0.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.reset_switch</Name>
-							<Comment><![CDATA[DIN8 0.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.brake_clearing</Name>
-							<Comment><![CDATA[DIN15 1.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.main_cabinet_temperature</Name>
-							<Comment><![CDATA[BT1]]></Comment>
-							<Type>INT</Type>
-						</Var>
 					</Vars>
-					<Vars VarGrpType="2">
+					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
 						<Var>
 							<Name>FanControl.Fan_axis.MDP5001_511_733_Output</Name>
@@ -4128,6 +4144,26 @@ DOUT9 1.0]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Main.lamp_power</Name>
+							<Comment><![CDATA[DOUT1 0.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.lamp_ready</Name>
+							<Comment><![CDATA[DOUT2 0.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.lamp_error</Name>
+							<Comment><![CDATA[DOUT3 0.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.softstart_trafo</Name>
+							<Comment><![CDATA[DOUT7 0.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Telescope.brake_azimuth_eve</Name>
 							<Comment><![CDATA[DOUT6 0.5]]></Comment>
 							<Type>BOOL</Type>
@@ -4178,26 +4214,6 @@ DOUT9 1.0]]></Comment>
 						<Var>
 							<Name>GVL_Telescope.Cover3_axis.MDP5001_511_733_Output</Name>
 							<Type GUID="{2D9F1DF0-D0A1-8CE8-8800-12F336222FE8}">MDP5001_511_733_O_BA4AEFF1</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.lamp_power</Name>
-							<Comment><![CDATA[DOUT1 0.0]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.lamp_ready</Name>
-							<Comment><![CDATA[DOUT2 0.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.lamp_error</Name>
-							<Comment><![CDATA[DOUT3 0.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.softstart_trafo</Name>
-							<Comment><![CDATA[DOUT7 0.6]]></Comment>
-							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2020-11-02T13:21:21">
@@ -4328,7 +4344,7 @@ DOUT9 1.0]]></Comment>
 					<Box Id="2" BoxType="9099" BoxFlags="#x00000020">
 						<Name>TwinSAFE Logic (EL6910)</Name>
 						<ImageId>1001</ImageId>
-						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x1afe3052" RevisionNo="#x00120000" InfoDataAddr="true" RepeatSupport="true" TimeoutStateChange1="5000" TimeoutMailbox2="10000" TComSupport="true" PortPhys="51" DebugMemory="true" SafetyLogicSupported="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6910, TwinSAFE PLC" Desc="EL6910" PortABoxInfo="#x01000001">
+						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x1afe3052" RevisionNo="#x00120000" InfoDataAddr="true" RepeatSupport="true" TimeoutStateChange1="5000" TimeoutMailbox2="10000" TComSupport="true" PortPhys="51" DebugMemory="1" SafetyLogicSupported="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6910, TwinSAFE PLC" Desc="EL6910" PortABoxInfo="#x01000001">
 							<SyncMan>001000012600010001000000000100010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000000100010001001122010000</SyncMan>
 							<SyncMan>00120f002400010003000000000000000200001224010000</SyncMan>
@@ -5596,7 +5612,6 @@ DOUT9 1.0]]></Comment>
 									<BootStrapData>0010f400f410f400</BootStrapData>
 									<DcMode>53796e6368726f6e00000000000000004672656552756e2f534d2d53796e6368726f6e00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</DcMode>
 									<DcMode>4443000000000000000000000000000044432d53796e6368726f6e000000000000000000000000000000000000000000000000000000000000000000000000030100000000000000000000000000000000000000000000000000000000000000</DcMode>
-									<MBoxUserCmdData>004003000c0000000000000003000000000000000000000000000000000000002081f001040000000000170000</MBoxUserCmdData>
 									<MBoxUserCmdData>004003000a00000000000000030010000000000000000000000000000000000020f3100502000000010000</MBoxUserCmdData>
 									<Pdo Name="ENC Status compact Channel 1" Index="#x1a00" Flags="#x0010" SyncMan="3">
 										<ExcludePdo>#x1a01</ExcludePdo>
@@ -11953,9 +11968,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<InitCmd DriveNo="0" IDN="32861" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32918" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="1" IDN="33072" MotorDataLevel="0" DisableMode="2"/>
-								<InitCmd DriveNo="0" IDN="33088" MotorDataLevel="0" DisableMode="0">
-									<RetainData>24002400d2001000ca0002002b9d5b002b9d5b000000000000000000000000002260000000000000</RetainData>
-								</InitCmd>
 								<InitCmd DriveNo="0" IDN="33093" MotorDataLevel="0" DisableMode="0">
 									<RetainData>16001a005365702020352032303137202c2030393a35333a3230</RetainData>
 								</InitCmd>
@@ -13088,7 +13100,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 		<MappingInfo Identifier="{00000000-0020-0304-6000-040322000403}" Id="#x02030030"/>
 		<MappingInfo Identifier="{08502001-0010-0304-0020-500810000403}" Id="#x02030070" Watchdog="00000000000000000000000000000000"/>
 		<MappingInfo Identifier="{05000010-2001-0850-6000-040300205008}" Id="#x02030040" Watchdog="14000000040000000400000004000000"/>
-		<MappingInfo Identifier="{05000010-0030-0304-6000-040330000403}" Id="#x02030050" Watchdog="00000000000000000000000000000000"/>
 		<MappingInfo Identifier="{03040030-0030-0304-3000-040330000403}" Id="#x02030060" Watchdog="04000000040000000400000004000000"/>
 		<OwnerA Name="TIID^Device 1 (EtherCAT)">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^TwinSAFE IN (EL1904)">
@@ -13243,8 +13254,24 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="Enc^Outputs^Out^nDataOut1[0]" VarB="ENC Control compact^Set counter value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Motor1 (EL7342)">
+				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Error" Size="1" OffsA="3"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Moving negative" Size="1" OffsA="5"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Moving positive" Size="1" OffsA="4"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Ready" Size="1" OffsA="1"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Ready to enable"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Torque reduced" Size="1" OffsA="6"/>
+				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Warning" Size="1" OffsA="2"/>
+				<Link VarA="Drive^Inputs^In^nState2" VarB="DCM Status Channel 1^Status^Digital input 1" Size="1" OffsA="3"/>
+				<Link VarA="Drive^Inputs^In^nState2" VarB="DCM Status Channel 1^Status^Digital input 2" Size="1" OffsA="4"/>
+				<Link VarA="Drive^Inputs^In^nState2" VarB="DCM Status Channel 1^Status^Sync error" Size="1" OffsA="5"/>
+				<Link VarA="Drive^Inputs^In^nState2" VarB="DCM Status Channel 1^Status^TxPDO Toggle" Size="1" OffsA="7"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Drive^Inputs^In^nState4" VarB="WcState^WcState"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="DCM Control Channel 1^Control^Enable"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="DCM Control Channel 1^Control^Reduce torque" Size="1" OffsA="2"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="DCM Control Channel 1^Control^Reset" Size="1" OffsA="1"/>
+				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="DCM Control Channel 1^Control^Threshold active" Size="1" OffsA="3"/>
+				<Link VarA="Drive^Outputs^Out^nDataOut2[0]" VarB="DCM Velocity Channel 1^Velocity"/>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TIPC^RoboTelRuntime^RoboTelRuntime Instance">

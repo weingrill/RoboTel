@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="PendantControl" Id="{4c9494b1-b987-44f6-88ae-faae341979f2}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PendantControl
 VAR
@@ -68,12 +68,6 @@ right := GVL_pendant_control.direction_right;
 // the error lamp is the same as the error lamp of the main panel
 GVL_pendant_control.lamp_error := GVL_Main.lamp_error;
 
-// this program is only for manual operation, if the key switch is on automatic we return to MAIN
-IF NOT manual THEN 
-	// we have nothing to do further
-	RETURN;
-END_IF;
-
 // disable all items by default
 Cover1_enable :=	FALSE;
 Cover2_enable :=	FALSE;
@@ -113,7 +107,7 @@ CASE Selection OF
 		GVL_pendant_control.lamp_left := GVL_Telescope.nasmyth_limit_left;
 		GVL_pendant_control.lamp_right := GVL_Telescope.nasmyth_limit_right;
 		
-		NasmythControl.enable := enable AND manual;
+		NasmythControl.enable := manual;
 		NasmythControl.left := left;
 		NasmythControl.right := right;
 		NasmythControl.reset := reset;
@@ -122,6 +116,7 @@ CASE Selection OF
 		GVL_pendant_control.lamp_up := NOT GVL_Telescope.focus_limit_far;
 		GVL_pendant_control.lamp_down := NOT GVL_Telescope.focus_limit_near;
 		Focus_enable := manual;
+		FocusControl.enable := Focus_enable;
 		FocusControl.outward := up;
 		FocusControl.inward := down;
 		Focuscontrol.reset := reset;
@@ -130,6 +125,7 @@ CASE Selection OF
 		GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
 		Derotator_enable := manual;
+		DerotatorControl.enable := Derotator_enable;
 		DerotatorControl.left := left;
 		DerotatorControl.right := right;
 		DerotatorControl.reset := reset;
@@ -185,10 +181,8 @@ CASE Selection OF
 		
 END_CASE
 
-//FocusControl.enable := Focus_enable;
 ElevationControl.enable := Elevation_enable;
 AzimuthControl.enable := Azimuth_enable;
-//DerotatorControl.enable := Derotator_enable;
 DomeControl.enable := Dome_enable;
 
 ]]></ST>
@@ -211,10 +205,6 @@ DomeControl.enable := Dome_enable;
       <LineId Id="624" Count="0" />
       <LineId Id="326" Count="0" />
       <LineId Id="27" Count="0" />
-      <LineId Id="625" Count="0" />
-      <LineId Id="510" Count="2" />
-      <LineId Id="514" Count="0" />
-      <LineId Id="158" Count="0" />
       <LineId Id="626" Count="0" />
       <LineId Id="513" Count="0" />
       <LineId Id="504" Count="0" />
@@ -250,6 +240,7 @@ DomeControl.enable := Dome_enable;
       <LineId Id="606" Count="0" />
       <LineId Id="237" Count="0" />
       <LineId Id="126" Count="0" />
+      <LineId Id="726" Count="0" />
       <LineId Id="507" Count="0" />
       <LineId Id="506" Count="0" />
       <LineId Id="505" Count="0" />
@@ -258,6 +249,7 @@ DomeControl.enable := Dome_enable;
       <LineId Id="608" Count="0" />
       <LineId Id="239" Count="0" />
       <LineId Id="551" Count="0" />
+      <LineId Id="727" Count="0" />
       <LineId Id="222" Count="0" />
       <LineId Id="554" Count="1" />
       <LineId Id="465" Count="0" />
@@ -298,9 +290,8 @@ DomeControl.enable := Dome_enable;
       <LineId Id="23" Count="0" />
       <LineId Id="13" Count="0" />
       <LineId Id="508" Count="0" />
-      <LineId Id="334" Count="1" />
+      <LineId Id="335" Count="0" />
       <LineId Id="373" Count="0" />
-      <LineId Id="552" Count="0" />
       <LineId Id="381" Count="0" />
       <LineId Id="466" Count="0" />
       <LineId Id="121" Count="0" />

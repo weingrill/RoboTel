@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="DomeControl" Id="{0e02434d-920e-4c0f-81fc-5ff7d5573875}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM DomeControl
 VAR_INPUT
@@ -104,7 +104,7 @@ ELSE
 END_IF
 
 // velocity = 2°/s or 180° in 81s, 360° in 120s (was 2.22)
-
+// TODO: Reset does not propagate to the FB and therefor does not reset the error
 DomeAxis(
 	Enable := 		enable,
 	Reset := 		reset,
