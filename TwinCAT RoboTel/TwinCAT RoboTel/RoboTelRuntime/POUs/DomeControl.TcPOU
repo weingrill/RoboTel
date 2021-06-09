@@ -52,6 +52,7 @@ VAR
 	DomeCalibration: MC_SetPosition;
 	DomeCommEvent:	FB_Eventlog;
 	DomeAxisEvent:	FB_Eventlog;
+	DomeCalibrationEvent: FB_Eventlog;
 END_VAR
 VAR CONSTANT
 	tolerance:				LREAL := 3.0;
@@ -123,7 +124,7 @@ DomeAxis(
 // re-calibrate the dome, if we pass the reference switch
 DomeCalibration(Axis := GVL_Dome.DomeAxisRef,
 	Execute := GVL_Dome.Azimut_home,
-	Position := 200.0); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
+	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
 		
 IF stop_done THEN
 	move_azimuth := FALSE;
@@ -227,7 +228,13 @@ DomeAxisEvent(
 	FormatString :=	'Dome Axis Error: %s',
 	OnMessage := 	DWORD_TO_HEXSTR(ErrorID, 4, FALSE),
 	OffMEssage := 	'OK');
-				]]></ST>
+				
+DomeCalibrationEvent(	
+	Trigger := 		GVL_Dome.Azimut_home, 
+	Level := 		ADSLOG_MSGTYPE_HINT,
+	FormatString :=	'Dome Calibration: %s',
+	OnMessage := 	'OK');
+]]></ST>
     </Implementation>
     <LineIds Name="DomeControl">
       <LineId Id="1008" Count="0" />
@@ -323,6 +330,8 @@ DomeAxisEvent(
       <LineId Id="757" Count="0" />
       <LineId Id="943" Count="5" />
       <LineId Id="942" Count="0" />
+      <LineId Id="1283" Count="4" />
+      <LineId Id="1282" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

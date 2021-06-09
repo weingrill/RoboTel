@@ -163,7 +163,7 @@ CASE Selection OF
 		Filter_position(CU := up, CD := down, RESET := reset, PV := 15);
 		GVL_pendant_control.lamp_up := NOT Filter_position.QU;
 		GVL_pendant_control.lamp_down := NOT Filter_position.QD;
-		IF NOT manual THEN
+		IF enable THEN
 			FilterWheelControl.filter_position := Filter_position.CV;
 		END_IF
 		FilterWheelControl.reset := reset;

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="FilterWheelControl" Id="{f0e4f375-0934-4386-a9fa-94537c34c7e1}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM FilterWheelControl
 VAR_INPUT
@@ -59,7 +59,7 @@ Ready := (filter_position = actual_filter) AND FilterWheelAxis.StandStill;
 IF FilterWheelAxis.Calibrated THEN
 	HomeAxis := FALSE;
 	// if we are on automatic mode then position the filterwheel
-	IF TelescopeControl.power THEN
+	IF TelescopeControl.power OR PendantControl.enable THEN
 		position := 360.0 * WORD_TO_LREAL(filter_position) / WORD_TO_LREAL(filters);
 		MoveAxis := filter_position <> actual_filter;
 	END_IF
