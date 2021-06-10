@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="DerotatorControl" Id="{75f3d994-c6e1-4455-a5dc-0a32056448e8}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM DerotatorControl
 VAR_INPUT
@@ -15,29 +15,75 @@ VAR_OUTPUT
 	actual_position:	LREAL;
 END_VAR
 VAR
+	// move to given position
+	MoveAxis: 			BOOL;
+	// calibrate the axis
+	HomeAxis:			BOOL;
+
 	DerotatorAxis:	FB_Axis2;
+	DerotatorEvent:	FB_EventLog;
+END_VAR
+VAR CONSTANT
+	// current position of the calibration cam. Apply an offset here if necessary
+	calibration_position:	LREAL := 0.0;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[// TODO: Limit switch for Derotator axis!
+enable := TelescopeControl.power OR PendantControl.Derotator_enable;
+
 DeRotatorAxis(
-	enable := TelescopeControl.power OR PendantControl.Derotator_enable,
-	Enable_Positive := TRUE,
-	Enable_Negative := TRUE,
-	Jog_Forward := right,
-	Jog_Backwards := left,
-	Reset := reset,
-	Error => Error,
-	ErrorID => ErrorID,
-	AxisRef :=	GVL_Telescope.DerotatorAxisRef);]]></ST>
+	enable := 			enable,
+	Reset := 			Reset,
+	MoveAxis :=			MoveAxis,
+	HomeAxis :=			HomeAxis,
+	Position := 		position, 
+	Enable_Positive := 	TRUE,
+	Enable_Negative := 	TRUE,
+	Jog_Forward := 		right,
+	Jog_Backwards := 	left,
+	bCalibrationCam :=	FALSE,	// TODO: place limit switch from DIO here
+	isModuloAxis :=		TRUE,
+	ActualPosition => 	actual_position,
+	Error => 			Error,
+	ErrorID => 			ErrorID,
+	AxisRef :=			GVL_Telescope.DerotatorAxisRef);
+	
+IF DeRotatorAxis.MoveDone THEN
+	MoveAxis := FALSE;
+END_IF
+
+IF DeRotatorAxis.HomeDone THEN
+	HomeAxis := FALSE;
+END_IF
+	
+IF DeRotatorAxis.ResetDone THEN
+	reset := FALSE;
+END_IF
+
+DerotatorEvent(	
+	Trigger := 		Error, 
+	Level := 		ADSLOG_MSGTYPE_ERROR,
+	FormatString :=	'Derotator Axis Error: %s',
+	OnMessage := 	DWORD_TO_HEXSTR(ErrorID, 4, FALSE),
+	OffMEssage := 	'OK',
+	OffLevel := 	ADSLOG_MSGTYPE_HINT);]]></ST>
     </Implementation>
     <LineIds Name="DerotatorControl">
       <LineId Id="25" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="100" Count="0" />
       <LineId Id="10" Count="0" />
       <LineId Id="23" Count="0" />
-      <LineId Id="11" Count="5" />
+      <LineId Id="93" Count="3" />
+      <LineId Id="11" Count="3" />
+      <LineId Id="97" Count="2" />
+      <LineId Id="16" Count="0" />
       <LineId Id="24" Count="0" />
       <LineId Id="9" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="44" Count="17" />
+      <LineId Id="43" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

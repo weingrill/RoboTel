@@ -24,7 +24,7 @@ VAR_OUTPUT
 	act_position:		LREAL;
 END_VAR
 VAR
-	// move to given psoition
+	// move to given position
 	MoveAxis: 			BOOL;
 	// calibrate the axis
 	HomeAxis:			BOOL;
