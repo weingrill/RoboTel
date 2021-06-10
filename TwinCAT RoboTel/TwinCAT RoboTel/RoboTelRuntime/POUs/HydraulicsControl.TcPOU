@@ -1,10 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="HydraulicsControl" Id="{6bf4055d-2300-4039-bb16-5b9f94622e06}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM HydraulicsControl
 VAR_INPUT
 	// command to open the brake
 	open_brake:	BOOL := FALSE;
+	// command to open the brake
+	close_brake: BOOL;
 END_VAR
 VAR
 	// monitors the pressure of the pump is running
@@ -19,6 +21,8 @@ VAR
 	brake_state: RS;
 	// status of the brake: is the brake open?
 	brake_open:			BOOL;
+	// is the brake closed?
+	brake_closed:		BOOL;
 	// pump is running, but the pressure remains low
 	pressure_failure:	BOOL;
 	// suction was started, but it is not running
@@ -90,6 +94,8 @@ GVL_Hydraulics.oil_pump_enable := oil_pump_state.Q1;
 Especially the elevation is imbalanced if not in the position control loop. 
 The brake must only be opened, if the elevation drive is activated concurrently.
 *)
+// reset the open_brake command if the close_brake is active
+
 
 // wait for pressure to build up (hack for oil_pressure_ok)
 brake_open_delay(IN := pump_running AND oil_pressure_OK,
@@ -99,13 +105,16 @@ brake_open_delay(IN := pump_running AND oil_pressure_OK,
 // close the brake if the pump is not running			
 brake_state(SET := brake_open_delay.Q AND open_brake,
 			RESET1 := GVL_Telescope.azimut_limit_switch 
-					  OR NOT open_brake 
+					  OR close_brake 
 					  OR NOT oil_pump_state.Q1,
 			Q1 => GVL_Telescope.brake_azimuth_eve);
 
 brake_opened_delay(	IN :=brake_state.Q1, 
 					PT := T#500MS,
 					Q => brake_open);
+
+brake_closed := NOT brake_open;
+
 
 (* This is the end of the brake control section *)
 
@@ -180,7 +189,10 @@ SuctionLog(Trigger := suction_failure,
       <LineId Id="549" Count="0" />
       <LineId Id="551" Count="1" />
       <LineId Id="550" Count="0" />
-      <LineId Id="341" Count="5" />
+      <LineId Id="621" Count="0" />
+      <LineId Id="620" Count="0" />
+      <LineId Id="622" Count="0" />
+      <LineId Id="342" Count="4" />
       <LineId Id="416" Count="0" />
       <LineId Id="347" Count="1" />
       <LineId Id="455" Count="1" />
@@ -188,7 +200,11 @@ SuctionLog(Trigger := suction_failure,
       <LineId Id="559" Count="0" />
       <LineId Id="558" Count="0" />
       <LineId Id="560" Count="1" />
-      <LineId Id="554" Count="1" />
+      <LineId Id="625" Count="0" />
+      <LineId Id="554" Count="0" />
+      <LineId Id="629" Count="0" />
+      <LineId Id="626" Count="0" />
+      <LineId Id="555" Count="0" />
       <LineId Id="547" Count="0" />
       <LineId Id="350" Count="1" />
       <LineId Id="494" Count="0" />

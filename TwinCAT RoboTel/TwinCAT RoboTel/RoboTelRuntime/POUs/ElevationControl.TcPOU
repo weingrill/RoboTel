@@ -1,14 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="ElevationControl" Id="{c0371b19-3d1d-4f20-bd19-ce60539d69cd}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM ElevationControl
 VAR_INPUT
-	up:		BOOL;
-	down:	BOOL;
-	reset:	BOOL;
-	enable: BOOL;
+	up:			BOOL;
+	down:		BOOL;
+	reset:		BOOL;
+	enable: 	BOOL;
 	position:	LREAL;
-	MoveAxis:			BOOL;
+	MoveAxis:	BOOL;
+	// calibrate the focus axis
+	HomeAxis:	BOOL;
 END_VAR
 
 VAR
@@ -20,8 +22,15 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[ElevationAxis(
-	Enable := 			TelescopeControl.power OR PendantControl.Elevation_enable,
+      <ST><![CDATA[Enable := TelescopeControl.power OR PendantControl.Elevation_enable;
+
+IF Enable THEN
+	HydraulicsControl.open_brake := TRUE;
+END_IF
+
+
+ElevationAxis(
+	Enable := 			Enable AND HydraulicsControl.brake_open,
 	Reset := 			reset,
 	MoveAxis :=			MoveAxis,
 	Position := 		position, 
@@ -33,6 +42,22 @@ END_VAR
 	Error => 			error,
 	ErrorID => 			ErrorID,
 	AxisRef :=			GVL_Telescope.ElevationAxisRef);
+
+IF Error THEN
+	HydraulicsControl.close_brake := TRUE;
+END_IF
+
+IF ElevationAxis.MoveDone THEN
+	MoveAxis := FALSE;
+END_IF
+
+IF ElevationAxis.HomeDone THEN
+	HomeAxis := FALSE;
+END_IF
+	
+IF ElevationAxis.ResetDone THEN
+	reset := FALSE;
+END_IF
 					
 ElevationAxisEvent(	Trigger := Error, 
 				Level := ADSLOG_MSGTYPE_ERROR,
@@ -42,9 +67,16 @@ ElevationAxisEvent(	Trigger := Error,
 				]]></ST>
     </Implementation>
     <LineIds Name="ElevationControl">
+      <LineId Id="232" Count="3" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="230" Count="1" />
       <LineId Id="128" Count="0" />
       <LineId Id="184" Count="10" />
-      <LineId Id="135" Count="1" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="226" Count="2" />
+      <LineId Id="214" Count="11" />
+      <LineId Id="136" Count="0" />
       <LineId Id="156" Count="4" />
       <LineId Id="5" Count="0" />
     </LineIds>

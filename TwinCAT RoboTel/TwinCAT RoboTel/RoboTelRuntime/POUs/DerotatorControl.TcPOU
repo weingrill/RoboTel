@@ -30,6 +30,12 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[// TODO: Limit switch for Derotator axis!
+
+(*
+Homing in Endlage über die Probe Unit:
+
+https://infosys.beckhoff.com/index.php?content=../content/1031/ax5000_usermanual/html/ax5000_homing_hardware_end_position.htm&id=12221
+*)
 enable := TelescopeControl.power OR PendantControl.Derotator_enable;
 
 DeRotatorAxis(
@@ -71,6 +77,12 @@ DerotatorEvent(
     </Implementation>
     <LineIds Name="DerotatorControl">
       <LineId Id="25" Count="0" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="130" Count="0" />
       <LineId Id="101" Count="0" />
       <LineId Id="100" Count="0" />
       <LineId Id="10" Count="0" />

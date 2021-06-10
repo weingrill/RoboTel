@@ -28,9 +28,6 @@ VAR
 	manual_hydraulics_start:	BOOL;
 	manual_hydraulics_stop:		BOOL;
 	
-	brake_state:	RS;
-	// manually open the brake
-	open_brake: 	BOOL;
 	Filter_position:	CTUD;
 END_VAR
 ]]></Declaration>
@@ -83,48 +80,48 @@ FilterWheel_enable := FALSE;
 // enable only the selected item and connect lamps and buttons accordingly
 CASE Selection OF
 	1:	// reserved for Cover1 control
-		Cover1_enable := TRUE;
+		Cover1_enable := manual;
 		CoverControl.Cover2_open := up;
 		CoverControl.Cover2_close := down;
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover1_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover1_closed;
 
 	2: // Cover2 control
-		Cover2_enable := TRUE;
+		Cover2_enable := manual;
 		CoverControl.Cover2_open := up;
 		CoverControl.Cover2_close := down;
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover2_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover2_closed;
  	
 	3:  // Cover3 control
-		Cover3_enable := TRUE;
+		Cover3_enable := manual;
 		CoverControl.Cover3_open := up;
 		CoverControl.Cover3_close := down;
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover3_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover3_closed;
 		
 	4:	// Nasmyth / mirror M3 control
+		NasmythControl.enable := manual;
 		GVL_pendant_control.lamp_left := GVL_Telescope.nasmyth_limit_left;
 		GVL_pendant_control.lamp_right := GVL_Telescope.nasmyth_limit_right;
 		
-		NasmythControl.enable := manual;
 		NasmythControl.left := left;
 		NasmythControl.right := right;
 		NasmythControl.reset := reset;
 		
 	5:	// Focus Control
+		Focus_enable := manual;
 		GVL_pendant_control.lamp_up := NOT GVL_Telescope.focus_limit_far;
 		GVL_pendant_control.lamp_down := NOT GVL_Telescope.focus_limit_near;
-		Focus_enable := manual;
 		FocusControl.enable := Focus_enable;
 		FocusControl.outward := up;
 		FocusControl.inward := down;
 		Focuscontrol.reset := reset;
 						
 	6:	// Derotator control
+		Derotator_enable := manual;
 		GVL_pendant_control.lamp_left := TRUE;
 		GVL_pendant_control.lamp_right := TRUE;
-		Derotator_enable := manual;
 		DerotatorControl.enable := Derotator_enable;
 		DerotatorControl.left := left;
 		DerotatorControl.right := right;
@@ -140,8 +137,8 @@ CASE Selection OF
 		
 	8:	// This selection will become RA/Dec Mode with tracking enabled!
 		Azimuth_enable := manual;
-		GVL_pendant_control.lamp_left := Azimuth_enable;
-		GVL_pendant_control.lamp_right := Azimuth_enable;
+		GVL_pendant_control.lamp_left := NOT GVL_Telescope.azimut_limit_switch;
+		GVL_pendant_control.lamp_right := NOT GVL_Telescope.azimut_limit_switch;
 		AzimuthControl.left := left;
 		AzimuthControl.right := right;
 		AzimuthControl.reset := reset;
@@ -155,7 +152,7 @@ CASE Selection OF
 		DomeControl.reset := reset;
 		
 	10:	// FilterWheel control
-		FilterWheel_enable := TRUE;
+		FilterWheel_enable := manual;
 		GVL_pendant_control.lamp_left := FilterWheel_enable;
 		GVL_pendant_control.lamp_right := FilterWheel_enable;
 		FilterWheelControl.left := left;
@@ -169,22 +166,21 @@ CASE Selection OF
 		FilterWheelControl.reset := reset;
 	
 	15:	// Hydraulics control
-		GVL_pendant_control.lamp_up := HydraulicsControl.oil_pressure_OK AND NOT Hydraulicscontrol.brake_open;
+		GVL_pendant_control.lamp_up := HydraulicsControl.oil_pressure_OK AND Hydraulicscontrol.brake_closed;
 		GVL_pendant_control.lamp_down := HydraulicsControl.oil_pressure_OK AND Hydraulicscontrol.brake_open;
 		GVL_pendant_control.lamp_left := HydraulicsControl.pump_running;
 		GVL_pendant_control.lamp_right := HydraulicsControl.suction_running;
 		manual_hydraulics_start := manual AND enable;
 		manual_hydraulics_stop := manual AND reset;
-		brake_state(SET := up,
-					Reset1 := down,
-					Q1 => Hydraulicscontrol.open_brake);
-		
+		IF up THEN 
+			Hydraulicscontrol.open_brake := TRUE;
+			Hydraulicscontrol.close_brake := FALSE;
+		END_IF
+		IF down THEN
+			Hydraulicscontrol.close_brake := TRUE;
+			Hydraulicscontrol.open_brake := FALSE;
+		END_IF
 END_CASE
-
-ElevationControl.enable := Elevation_enable;
-AzimuthControl.enable := Azimuth_enable;
-DomeControl.enable := Dome_enable;
-
 ]]></ST>
     </Implementation>
     <LineIds Name="PendantControl">
@@ -232,23 +228,23 @@ DomeControl.enable := Dome_enable;
       <LineId Id="81" Count="0" />
       <LineId Id="628" Count="0" />
       <LineId Id="80" Count="0" />
+      <LineId Id="770" Count="0" />
       <LineId Id="137" Count="1" />
       <LineId Id="241" Count="0" />
-      <LineId Id="607" Count="0" />
       <LineId Id="602" Count="3" />
       <LineId Id="236" Count="0" />
+      <LineId Id="769" Count="0" />
       <LineId Id="606" Count="0" />
       <LineId Id="237" Count="0" />
-      <LineId Id="126" Count="0" />
       <LineId Id="726" Count="0" />
       <LineId Id="507" Count="0" />
       <LineId Id="506" Count="0" />
       <LineId Id="505" Count="0" />
       <LineId Id="240" Count="0" />
       <LineId Id="238" Count="0" />
+      <LineId Id="768" Count="0" />
       <LineId Id="608" Count="0" />
       <LineId Id="239" Count="0" />
-      <LineId Id="551" Count="0" />
       <LineId Id="727" Count="0" />
       <LineId Id="222" Count="0" />
       <LineId Id="554" Count="1" />
@@ -285,15 +281,12 @@ DomeControl.enable := Dome_enable;
       <LineId Id="234" Count="0" />
       <LineId Id="419" Count="1" />
       <LineId Id="244" Count="1" />
-      <LineId Id="256" Count="1" />
-      <LineId Id="557" Count="0" />
-      <LineId Id="23" Count="0" />
+      <LineId Id="760" Count="1" />
+      <LineId Id="766" Count="0" />
+      <LineId Id="762" Count="2" />
+      <LineId Id="767" Count="0" />
+      <LineId Id="765" Count="0" />
       <LineId Id="13" Count="0" />
-      <LineId Id="508" Count="0" />
-      <LineId Id="335" Count="0" />
-      <LineId Id="373" Count="0" />
-      <LineId Id="381" Count="0" />
-      <LineId Id="466" Count="0" />
       <LineId Id="121" Count="0" />
     </LineIds>
   </POU>

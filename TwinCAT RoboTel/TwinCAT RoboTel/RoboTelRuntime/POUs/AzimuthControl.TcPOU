@@ -11,13 +11,13 @@ VAR_INPUT
 	Enable:		BOOL;
 	// Move azimuth to given position
 	MoveAxis:	BOOL;
+	// Home the axis
+	HomeAxis:	BOOL;
 	// position to move the axis to
 	position: 	LREAL;
 END_VAR
 
 VAR
-	AzimuthUnlock:	RS;
-	AzimuthDelay:	TON;
 	AzimuthAxis:	FB_Axis2;
 	error: 			BOOL;
 	ErrorID:		UDINT;
@@ -26,27 +26,45 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// todo: verify brake logic
-AzimuthUnlock(SET := enable,
-			RESET1 := reset,
-			Q1 => GVL_Telescope.brake_azimuth_eve);
-// wait until the focus is unlocked for n milliseconds
-AzimuthDelay(IN :=AzimuthUnlock.Q1, PT := T#500MS);
+      <ST><![CDATA[(* Azimuth Axis control section
+Power must be on and brake must be open for the axis to operate
+*)
 
+Enable := TelescopeControl.power OR PendantControl.Azimuth_enable;
+
+IF Enable THEN
+	HydraulicsControl.open_brake := TRUE;
+END_IF
 
 AzimuthAxis(	
-	Enable := 			TelescopeControl.power AND Main.power_OK,
+	Enable := 			Enable AND HydraulicsControl.brake_open,
 	Reset := 			reset,
 	MoveAxis :=			MoveAxis,
 	Position := 		position, 
-	Enable_Positive := 	GVL_Telescope.azimut_limit_switch,
-	Enable_Negative := 	GVL_Telescope.azimut_limit_switch,
+	Enable_Positive := 	NOT GVL_Telescope.azimut_limit_switch,
+	Enable_Negative := 	NOT GVL_Telescope.azimut_limit_switch,
 	Jog_Forward :=		left,
 	Jog_Backwards := 	right,
 	ActualPosition => 	act_position,
 	Error => 			error,
 	ErrorID => 			ErrorID,
 	AxisRef :=			GVL_Telescope.AzimuthAxisRef);
+
+IF Error THEN
+	HydraulicsControl.close_brake := TRUE;
+END_IF
+	
+IF AzimuthAxis.MoveDone THEN
+	MoveAxis := FALSE;
+END_IF
+
+IF AzimuthAxis.HomeDone THEN
+	HomeAxis := FALSE;
+END_IF
+	
+IF AzimuthAxis.ResetDone THEN
+	reset := FALSE;
+END_IF
 
 AzimuthAxisEvent(	
 	Trigger := 		Error, 
@@ -57,9 +75,14 @@ AzimuthAxisEvent(
 				]]></ST>
     </Implementation>
     <LineIds Name="AzimuthControl">
+      <LineId Id="172" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="179" Count="1" />
       <LineId Id="128" Count="0" />
-      <LineId Id="116" Count="4" />
-      <LineId Id="114" Count="1" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="152" Count="1" />
+      <LineId Id="115" Count="0" />
       <LineId Id="33" Count="0" />
       <LineId Id="108" Count="0" />
       <LineId Id="39" Count="0" />
@@ -70,7 +93,13 @@ AzimuthAxisEvent(
       <LineId Id="40" Count="0" />
       <LineId Id="85" Count="0" />
       <LineId Id="35" Count="0" />
-      <LineId Id="78" Count="1" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="177" Count="1" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="158" Count="10" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="79" Count="0" />
       <LineId Id="109" Count="0" />
       <LineId Id="80" Count="3" />
       <LineId Id="5" Count="0" />
