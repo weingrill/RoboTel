@@ -3676,6 +3676,11 @@ External Setpoint Generation:
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
+							<Name>GVL_Telescope.Derotator_inputs</Name>
+							<Comment><![CDATA[ digitale inputs der Endlagen]]></Comment>
+							<Type>WORD</Type>
+						</Var>
+						<Var>
 							<Name>FanControl.Fan_axis.MDP5001_511_733_Input</Name>
 							<Type GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Type>
 						</Var>
@@ -4068,6 +4073,11 @@ External Setpoint Generation:
 						<Var>
 							<Name>FanControl.Fan_axis.MDP5001_511_733_Output</Name>
 							<Type GUID="{0D3B3A77-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_O_32199BA1</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.Derotator_ControlDWord</Name>
+							<Comment><![CDATA[ Controlword for homing]]></Comment>
+							<Type>DWORD</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.Inverter_Enable</Name>
@@ -11997,6 +12007,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<Element option="0" SortOder="0" SubIdx="0">
 									<Index>32973</Index>
 									<SubItem>Bit0</SubItem>
+									<Width>121</Width>
 								</Element>
 								<Element option="0" SortOder="0" SubIdx="0">
 									<Index>32973</Index>
@@ -12005,6 +12016,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								</Element>
 								<Element option="0" SortOder="0" SubIdx="0">
 									<Index>384</Index>
+									<Width>149</Width>
 								</Element>
 								<Element option="0" SortOder="0" SubIdx="0">
 									<Index>135</Index>
@@ -12086,10 +12098,12 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<Element option="0" SortOder="0" SubIdx="0">
 									<Index>33271</Index>
 									<SubItem>CmdMovPositive</SubItem>
+									<Width>279</Width>
 								</Element>
 								<Element option="0" SortOder="0" SubIdx="0">
 									<Index>33271</Index>
 									<SubItem>CmdMovNegative</SubItem>
+									<Width>265</Width>
 								</Element>
 								<Element option="0" SortOder="0" SubIdx="0">
 									<Index>32983</Index>
@@ -12102,7 +12116,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<SyncMan>001880002600010001000000800080008000001826010000</SyncMan>
 						<SyncMan>001a80002200010002000000800080008000001a22010000</SyncMan>
 						<SyncMan>00100c002400010003000000000000000000001024010000</SyncMan>
-						<SyncMan>001114002200010004000000000000000000001122010000</SyncMan>
+						<SyncMan>001116002200010004000000000000000000001122010000</SyncMan>
 						<SyncMan>002000002400010005000000000000000000002024010000</SyncMan>
 						<SyncMan>002400002000010006000000000000000000002420010000</SyncMan>
 						<Fmmu>0000000000000000001000020100000001000000000000000000000000000000</Fmmu>
@@ -12162,45 +12176,48 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000a0000002200000000000000000000000000000000000000000000000340650000000000500056656c6f63697479206c6f6f7020696e74656772616c20616374696f6e2074696d6500</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500480000002800000000000000000000000000000000000000000000000340a580000000003c003c0000000000640000006400b80b0000000000000000f4016400f401f40104000500e1009600b80b84030000000000000000000000000000000000000000436f6d6d75746174696f6e206f66667365742063616c6962726174696f6e20706172616d6574657200</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500140000001b000000000000000000000000000000000000000000000003409a8000000000080008000000000000000000466565646261636b2031207265666572656e6365207369676e616c00</MBoxUserCmdData>
-						<MBoxUserCmdData>02000500140000001b00000000000000000000000000000000000000000000000340fb800000000008000800000000000500000050726f62652031206c6f67696320636f6e66696775726174696f6e00</MBoxUserCmdData>
+						<MBoxUserCmdData>02000500140000001b00000000000000000000000000000000000000000000000340fb800000000008000800000001000500000050726f62652031206c6f67696320636f6e66696775726174696f6e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001400000000000000000000000000000000000000000000000340fa8000000000000050726f626520312076616c756520736f7572636500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001700000000000000000000000000000000000000000000000340a90000000000030050726f626520636f6e74726f6c20706172616d6574657200</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c000000230000000000000000000000000000000000000000000000034091810000000012001201506f736974696f6e206c696d69742073776974636820636f6e66696775726174696f6e00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c000000230000000000000000000000000000000000000000000000034091810000000010001001506f736974696f6e206c696d69742073776974636820636f6e66696775726174696f6e00</MBoxUserCmdData>
 						<Pdo Name="AT 1" Index="#x0010" Flags="#x0001" SyncMan="3">
-							<Entry Name="Drive status word" Index="#x0087" Flags="#x00000800">
+							<Entry Name="Drive status word" BitLen="16" Index="#x0087" Flags="#x00000800">
 								<Type>UINT</Type>
 							</Entry>
-							<Entry Name="Position feedback 1 value" Index="#x0033">
+							<Entry Name="Position feedback 1 value" BitLen="32" Index="#x0033">
 								<Type>DINT</Type>
 							</Entry>
-							<Entry Name="Following distance" Index="#x00bd">
+							<Entry Name="Following distance" BitLen="32" Index="#x00bd">
 								<Type>DINT</Type>
+							</Entry>
+							<Entry Name="Digital inputs, state" BitLen="16" Index="#x8321">
+								<Type>INT</Type>
 							</Entry>
 						</Pdo>
 						<Pdo Name="AT 2" Index="#x1010" Flags="#x0001" SyncMan="3">
-							<Entry Name="Drive status word" Index="#x0087" Flags="#x00000800">
+							<Entry Name="Drive status word" BitLen="16" Index="#x0087" Flags="#x00000800">
 								<Type>UINT</Type>
 							</Entry>
-							<Entry Name="Position feedback 1 value" Index="#x0033">
+							<Entry Name="Position feedback 1 value" BitLen="32" Index="#x0033">
 								<Type>DINT</Type>
 							</Entry>
-							<Entry Name="Following distance" Index="#x00bd">
+							<Entry Name="Following distance" BitLen="32" Index="#x00bd">
 								<Type>DINT</Type>
 							</Entry>
 						</Pdo>
 						<Pdo Name="MDT 1" Index="#x0018" InOut="1" Flags="#x0001" SyncMan="2">
-							<Entry Name="Master control word" Index="#x0086" Flags="#x00000800">
+							<Entry Name="Master control word" BitLen="16" Index="#x0086" Flags="#x00000800">
 								<Type>UINT</Type>
 							</Entry>
-							<Entry Name="Position command value" Index="#x002f">
+							<Entry Name="Position command value" BitLen="32" Index="#x002f">
 								<Type>DINT</Type>
 							</Entry>
 						</Pdo>
 						<Pdo Name="MDT 2" Index="#x1018" InOut="1" Flags="#x0001" SyncMan="2">
-							<Entry Name="Master control word" Index="#x0086" Flags="#x00000800">
+							<Entry Name="Master control word" BitLen="16" Index="#x0086" Flags="#x00000800">
 								<Type>UINT</Type>
 							</Entry>
-							<Entry Name="Position command value" Index="#x002f">
+							<Entry Name="Position command value" BitLen="32" Index="#x002f">
 								<Type>DINT</Type>
 							</Entry>
 						</Pdo>
@@ -13284,6 +13301,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TIPC^RoboTelRuntime^RoboTelRuntime Instance">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Derotator (AX5206-0000-0210)">
+				<Link VarA="PlcTask Inputs^GVL_Telescope.Derotator_inputs" VarB="AT 1^Digital inputs, state"/>
+			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Aux IN (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_Main.brake_clearing" VarB="Channel 3^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Main.phase_available" VarB="Channel 1^Input"/>

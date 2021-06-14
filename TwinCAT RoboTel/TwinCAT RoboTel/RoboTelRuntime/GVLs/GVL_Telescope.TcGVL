@@ -56,7 +56,10 @@ VAR_GLOBAL
 	elevation_calibration	AT%I*: BOOL;
 	// calibration signal for azimuth
 	azimuth_calibration	AT%I*: BOOL;
-	
+	// digitale inputs der Endlagen
+	Derotator_inputs	AT%I*: WORD;
+	// Controlword for homing
+	Derotator_ControlDWord	AT%Q*: DWORD;
 	
 	// Zyklisches Interface zwischen NC und Achse
 	AzimuthAxisRef: 	AXIS_REF;

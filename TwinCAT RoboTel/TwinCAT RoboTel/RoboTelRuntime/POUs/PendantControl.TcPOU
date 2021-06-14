@@ -120,12 +120,13 @@ CASE Selection OF
 						
 	6:	// Derotator control
 		Derotator_enable := manual;
-		GVL_pendant_control.lamp_left := TRUE;
-		GVL_pendant_control.lamp_right := TRUE;
+		GVL_pendant_control.lamp_left := NOT GVL_Telescope.Derotator_inputs.1;
+		GVL_pendant_control.lamp_right := NOT GVL_Telescope.Derotator_inputs.0;
 		DerotatorControl.enable := Derotator_enable;
 		DerotatorControl.left := left;
 		DerotatorControl.right := right;
 		DerotatorControl.reset := reset;
+		DerotatorControl.home := up;
 						
 	7:	// Elevation Control
 		Elevation_enable := manual;
@@ -248,6 +249,7 @@ END_CASE
       <LineId Id="727" Count="0" />
       <LineId Id="222" Count="0" />
       <LineId Id="554" Count="1" />
+      <LineId Id="771" Count="0" />
       <LineId Id="465" Count="0" />
       <LineId Id="311" Count="0" />
       <LineId Id="609" Count="0" />
