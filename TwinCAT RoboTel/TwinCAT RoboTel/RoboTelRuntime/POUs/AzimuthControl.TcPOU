@@ -70,8 +70,7 @@ AzimuthAxisEvent(
 	Trigger := 		Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
 	FormatString :=	'Azimuth Axis Error: %s',
-	OnMessage := 	UDINT_TO_STRING(ErrorID),
-	OffMEssage := 	'OK');
+	OnMessage := 	NCError_TO_STRING(ErrorID));
 				]]></ST>
     </Implementation>
     <LineIds Name="AzimuthControl">
@@ -101,7 +100,7 @@ AzimuthAxisEvent(
       <LineId Id="157" Count="0" />
       <LineId Id="79" Count="0" />
       <LineId Id="109" Count="0" />
-      <LineId Id="80" Count="3" />
+      <LineId Id="80" Count="2" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
