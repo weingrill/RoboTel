@@ -129,8 +129,8 @@ ELSE
 END_IF
 
 Axis_Jog(
-	JogForward := 	Jog_Forward AND Ready,
-	JogBackwards := Jog_Backwards AND Ready,
+	JogForward := 	Jog_Forward AND Ready AND Enable_Positive,
+	JogBackwards := Jog_Backwards AND Ready AND Enable_Negative,
 	Mode := 		MC_JOGMODE_STANDARD_FAST,
 	Done => 		JogDone, 
 	Axis := 		AxisRef);

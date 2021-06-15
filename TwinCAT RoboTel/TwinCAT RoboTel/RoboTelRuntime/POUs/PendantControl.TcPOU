@@ -123,17 +123,18 @@ CASE Selection OF
 		GVL_pendant_control.lamp_left := NOT GVL_Telescope.Derotator_inputs.1;
 		GVL_pendant_control.lamp_right := NOT GVL_Telescope.Derotator_inputs.0;
 		DerotatorControl.enable := Derotator_enable;
-		DerotatorControl.left := left;
-		DerotatorControl.right := right;
+		DerotatorControl.left := left AND NOT GVL_Telescope.Derotator_inputs.1;
+		DerotatorControl.right := right AND NOT GVL_Telescope.Derotator_inputs.0;
 		DerotatorControl.reset := reset;
 		DerotatorControl.home := up;
 						
 	7:	// Elevation Control
 		Elevation_enable := manual;
-		GVL_pendant_control.lamp_up := Elevation_enable;
-		GVL_pendant_control.lamp_down := Elevation_enable;
-		ElevationControl.up := up;
-		ElevationControl.down := down;
+		GVL_pendant_control.lamp_up := GVL_Telescope.Elevation_inputs.0;
+		GVL_pendant_control.lamp_down := GVL_Telescope.Elevation_inputs.1;
+		ElevationControl.up := up AND GVL_Telescope.Elevation_inputs.0;
+		ElevationControl.down := down AND GVL_Telescope.Elevation_inputs.1;
+		ElevationControl.home := enable;
 		ElevationControl.reset := reset;
 		
 	8:	// This selection will become RA/Dec Mode with tracking enabled!
@@ -165,6 +166,8 @@ CASE Selection OF
 			FilterWheelControl.filter_position := Filter_position.CV;
 		END_IF
 		FilterWheelControl.reset := reset;
+		
+	14: GVL_Telescope.horn := manual;
 	
 	15:	// Hydraulics control
 		GVL_pendant_control.lamp_up := HydraulicsControl.oil_pressure_OK AND Hydraulicscontrol.brake_closed;
@@ -255,7 +258,9 @@ END_CASE
       <LineId Id="609" Count="0" />
       <LineId Id="336" Count="0" />
       <LineId Id="289" Count="0" />
-      <LineId Id="327" Count="2" />
+      <LineId Id="327" Count="1" />
+      <LineId Id="772" Count="0" />
+      <LineId Id="329" Count="0" />
       <LineId Id="285" Count="0" />
       <LineId Id="299" Count="0" />
       <LineId Id="462" Count="0" />
@@ -277,6 +282,8 @@ END_CASE
       <LineId Id="682" Count="0" />
       <LineId Id="686" Count="1" />
       <LineId Id="460" Count="0" />
+      <LineId Id="803" Count="0" />
+      <LineId Id="802" Count="0" />
       <LineId Id="455" Count="0" />
       <LineId Id="233" Count="0" />
       <LineId Id="612" Count="0" />

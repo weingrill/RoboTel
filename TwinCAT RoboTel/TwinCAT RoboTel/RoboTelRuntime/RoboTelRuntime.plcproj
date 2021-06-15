@@ -193,6 +193,9 @@
     <Compile Include="POUs\Functions\POLY.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\NCError_TO_STRING.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\TEN.TcPOU">
       <SubType>Code</SubType>
     </Compile>

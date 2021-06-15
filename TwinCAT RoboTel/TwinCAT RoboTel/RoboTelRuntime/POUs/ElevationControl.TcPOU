@@ -3,49 +3,95 @@
   <POU Name="ElevationControl" Id="{c0371b19-3d1d-4f20-bd19-ce60539d69cd}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM ElevationControl
 VAR_INPUT
+	// increase the eleveation
 	up:			BOOL;
+	// decrease the elevation
 	down:		BOOL;
+	// reset an error
 	reset:		BOOL;
+	// enable the axis
 	enable: 	BOOL;
+	// issue axis calibration
+	home:		BOOL;
+	// set position of the axis in degrees
 	position:	LREAL;
-	MoveAxis:	BOOL;
-	// calibrate the focus axis
-	HomeAxis:	BOOL;
 END_VAR
 
 VAR
+	// move axis command
+	MoveAxis:	BOOL;
+	// calibrate the focus axis
+	HomeAxis:	BOOL;
 	ElevationAxis:		FB_Axis2;
+	ElevationCalibration: MC_SetPosition;
 	error: 				BOOL;
 	act_position: 		LREAL;
 	ErrorID: UDINT;
 	ElevationAxisEvent: FB_Eventlog;
 END_VAR
+VAR CONSTANT
+	// reference position for homing
+	home_position:			LREAL := 90.0;
+	// current position of the calibration cam. Apply an offset here if necessary
+	calibration_position:	LREAL := 45.0;
+END_VAR
+
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[Enable := TelescopeControl.power OR PendantControl.Elevation_enable;
 
+position := LIMIT(0.0, position, 90.0);
+
 IF Enable THEN
 	HydraulicsControl.open_brake := TRUE;
+	HydraulicsControl.close_brake := FALSE;
 END_IF
+
+IF Error THEN
+	HydraulicsControl.close_brake := TRUE;
+	HydraulicsControl.open_brake := FALSE;
+END_IF
+
+IF home OR (TelescopeControl.power AND NOT ElevationAxis.Calibrated) THEN
+	HomeAxis := TRUE;
+END_IF
+
+IF ElevationAxis.Calibrated OR Error THEN
+	HomeAxis := FALSE;
+END_IF
+	
+IF HomeAxis THEN
+	position := home_position;
+END_IF
+
+// deactivate limit switches on homing
+MC_SetAcceptBlockedDriveSignal(
+	Axis := GVL_Telescope.ElevationAxisRef, 
+	Enable := HomeAxis);
+
+// perform recalibration on encoder reference signal
+ElevationCalibration(
+	Axis := GVL_Telescope.ElevationAxisRef,
+	Execute := GVL_Telescope.Elevation_calibration,
+	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
 
 
 ElevationAxis(
 	Enable := 			Enable AND HydraulicsControl.brake_open,
 	Reset := 			reset,
 	MoveAxis :=			MoveAxis,
+	HomeAxis :=			HomeAxis,
 	Position := 		position, 
-	Enable_Positive :=  TRUE,
-	Enable_Negative := 	TRUE,
+	Enable_Positive :=  GVL_Telescope.Elevation_inputs.0 OR HomeAxis,
+	Enable_Negative := 	GVL_Telescope.Elevation_inputs.1 OR HomeAxis,
 	Jog_Forward :=		up,
 	Jog_Backwards := 	down,
+	bCalibrationCam :=	NOT GVL_Telescope.Elevation_inputs.0 OR NOT GVL_Telescope.Elevation_inputs.1,
 	ActualPosition => 	act_position,
 	Error => 			error,
 	ErrorID => 			ErrorID,
 	AxisRef :=			GVL_Telescope.ElevationAxisRef);
 
-IF Error THEN
-	HydraulicsControl.close_brake := TRUE;
-END_IF
 
 IF ElevationAxis.MoveDone THEN
 	MoveAxis := FALSE;
@@ -62,22 +108,44 @@ END_IF
 ElevationAxisEvent(	Trigger := Error, 
 				Level := ADSLOG_MSGTYPE_ERROR,
 				FormatString := 'Elevation Axis Error: %s',
-				OnMessage := UDINT_TO_STRING(ErrorID),
-				OffMEssage := 'OK');
+				OnMessage := NCError_TO_STRING(ErrorID));
 				]]></ST>
     </Implementation>
     <LineIds Name="ElevationControl">
-      <LineId Id="232" Count="3" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="301" Count="0" />
+      <LineId Id="233" Count="0" />
+      <LineId Id="303" Count="0" />
+      <LineId Id="234" Count="1" />
+      <LineId Id="240" Count="0" />
       <LineId Id="238" Count="0" />
-      <LineId Id="230" Count="1" />
+      <LineId Id="293" Count="3" />
+      <LineId Id="298" Count="0" />
+      <LineId Id="247" Count="5" />
+      <LineId Id="254" Count="5" />
+      <LineId Id="340" Count="0" />
+      <LineId Id="279" Count="0" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="291" Count="1" />
+      <LineId Id="339" Count="0" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="283" Count="0" />
+      <LineId Id="299" Count="0" />
+      <LineId Id="284" Count="1" />
+      <LineId Id="281" Count="0" />
+      <LineId Id="231" Count="0" />
       <LineId Id="128" Count="0" />
-      <LineId Id="184" Count="10" />
+      <LineId Id="184" Count="2" />
+      <LineId Id="277" Count="0" />
+      <LineId Id="187" Count="4" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="192" Count="2" />
       <LineId Id="135" Count="0" />
       <LineId Id="229" Count="0" />
-      <LineId Id="226" Count="2" />
       <LineId Id="214" Count="11" />
       <LineId Id="136" Count="0" />
-      <LineId Id="156" Count="4" />
+      <LineId Id="156" Count="2" />
+      <LineId Id="160" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

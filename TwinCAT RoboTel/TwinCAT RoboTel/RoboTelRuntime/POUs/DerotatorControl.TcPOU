@@ -48,13 +48,16 @@ TcNc-Lib, siehe SPS-Funktion AxisSetAcceptBlockedDriveSignal in der TwinCAT  PLC
 *)
 enable := TelescopeControl.power OR PendantControl.Derotator_enable;
 
+position := LIMIT(0.0, position, 470.0);
+
+
 // WARNING: Homing disables the limit Switches!
 
-AxisSetAcceptBlockedDriveSignal(
-	nDeCtrlDWord := GVL_Telescope.DerotatorAxisRef.PlcToNc.ControlDWord,
-	bEnable := HomeAxis);
+MC_SetAcceptBlockedDriveSignal(
+	Axis := GVL_Telescope.DerotatorAxisRef,
+	Enable := HomeAxis);
 
-IF home OR (TelescopeControl.power AND NOT DerotatorAxis.Calibrated) THEN // TODO: add condition for  TelescopeControl.power
+IF home OR (TelescopeControl.power AND NOT DerotatorAxis.Calibrated) THEN
 	HomeAxis := TRUE;
 END_IF
 
@@ -78,7 +81,7 @@ DeRotatorAxis(
 	Jog_Forward := 		right,
 	Jog_Backwards := 	left,
 	bCalibrationCam :=	GVL_Telescope.Derotator_inputs.0,
-	isModuloAxis :=		TRUE,
+	isModuloAxis :=		FALSE,
 	ActualPosition => 	actual_position,
 	Error => 			Error,
 	ErrorID => 			ErrorID,
@@ -100,7 +103,7 @@ DerotatorEvent(
 	Trigger := 		Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
 	FormatString :=	'Derotator Axis Error: %s',
-	OnMessage := 	DWORD_TO_HEXSTR(ErrorID, 4, FALSE),
+	OnMessage := 	NCError_TO_STRING(ErrorID),
 	OffMEssage := 	'OK',
 	OffLevel := 	ADSLOG_MSGTYPE_HINT);]]></ST>
     </Implementation>
@@ -113,6 +116,9 @@ DerotatorEvent(
       <LineId Id="134" Count="0" />
       <LineId Id="130" Count="0" />
       <LineId Id="101" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="170" Count="0" />
       <LineId Id="146" Count="0" />
       <LineId Id="143" Count="0" />
       <LineId Id="162" Count="0" />
