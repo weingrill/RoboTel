@@ -47,7 +47,7 @@ IF Enable THEN
 	HydraulicsControl.close_brake := FALSE;
 END_IF
 
-IF Error THEN
+IF Error OR NOT Enable THEN
 	HydraulicsControl.close_brake := TRUE;
 	HydraulicsControl.open_brake := FALSE;
 END_IF
