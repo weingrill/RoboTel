@@ -5,11 +5,14 @@ The telescope can be operated manually for commissioning, testing or
 observation. To enable manual operation:
 * Turn the power switch on the main panel to "ON".
 * Press "START" to start the hydraulic system.
+* Turn the brake clearance to "ON".
 * On the pendant control turn the manual key switch to "ON".
 
 The manual operation overrides any remote command.
 
 The selector switch (1-15) enables the individual components on the telescope.
+It is advised to leave the manual switch in "OFF" position, while turning the selector.
+Moving the selector fast in manual operation may cause drive errors.
 If not otherwise noted, these general rules apply for all selections:
 * "ENABLE" enables the drive.
 * "RESET" disables the drive or resets the error.
@@ -43,7 +46,8 @@ If not otherwise noted, these general rules apply for all selections:
 5 Focus
 -------
 
-* "ENABLE" opens the lock.
+The lock is opened as soon as the focus is manually selected.
+* "ENABLE" executes the homing procedure.
 * Buttons "↑" and "↓" move the mirror outwards and inwards.
 * Moving the focus without unlocking will cause in an error.
 * "RESET" locks the focus in position.
@@ -51,13 +55,16 @@ If not otherwise noted, these general rules apply for all selections:
 6 De-rotator
 ------------
 
+* "ENABLE" executes the homing procedure.
 * Buttons "←" and "→" rotate the de-rotator counter-clockwise and clockwise.
-* *WARNING* The limit switches are currently not implemented.
 
 7 Elevation
 -----------
 
+The hydraulic brake is opened, as soon as the drive is enabled to avoid a drive error.
+* "ENABLE" executes the homing procedure.
 * Buttons "↑" and "↓" increase and decrease the elevation.
+* Pressing the buttons "↑" and "↓" simultaneously immediately closes the brake.
 * *WARNING* This behaviour will change in future. It is envisioned to implement
   an alt-az control in this program.
 
@@ -71,11 +78,15 @@ If not otherwise noted, these general rules apply for all selections:
 9 Dome Control
 --------------
 * Buttons "←" and "→" rotate the dome counter-clockwise and clockwise.
+* Buttons "↑" and "↓" open and close the slit and the flap.
 
 10 Filter Wheel
 ---------------
 
+* "ENABLE" executes the homing procedure.
 * Buttons "←" and "→" rotate the filter wheel counter-clockwise and clockwise.
+* If homing has been performed successfully, the buttons "↑" and "↓" increase
+  and decrease the filter number from 0 to 23.
 
 15 Hydraulics
 -------------
