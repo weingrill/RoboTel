@@ -108,10 +108,11 @@ IF close_brake THEN
 	open_brake := FALSE;
 END_IF
 		
-brake_state(SET := brake_open_delay.Q AND open_brake,
+brake_state(SET := brake_open_delay.Q AND open_brake AND MAIN.brake_clearing,
 			RESET1 := GVL_Telescope.azimut_limit_switch 
 					  OR close_brake 
-					  OR NOT oil_pump_state.Q1,
+					  OR NOT oil_pump_state.Q1
+					  OR NOT MAIN.brake_clearing,
 			Q1 => GVL_Telescope.brake_azimuth_eve);
 
 brake_opened_delay(	IN :=brake_state.Q1, 
@@ -119,7 +120,9 @@ brake_opened_delay(	IN :=brake_state.Q1,
 					Q => brake_open);
 
 brake_closed := NOT brake_open;
-
+IF brake_closed THEN
+	close_brake := FALSE;
+END_IF
 
 (* This is the end of the brake control section *)
 
@@ -206,6 +209,7 @@ SuctionLog(Trigger := suction_failure,
       <LineId Id="693" Count="0" />
       <LineId Id="347" Count="1" />
       <LineId Id="455" Count="1" />
+      <LineId Id="694" Count="0" />
       <LineId Id="349" Count="0" />
       <LineId Id="559" Count="0" />
       <LineId Id="558" Count="0" />
@@ -213,6 +217,7 @@ SuctionLog(Trigger := suction_failure,
       <LineId Id="625" Count="0" />
       <LineId Id="554" Count="0" />
       <LineId Id="629" Count="0" />
+      <LineId Id="695" Count="1" />
       <LineId Id="626" Count="0" />
       <LineId Id="555" Count="0" />
       <LineId Id="547" Count="0" />

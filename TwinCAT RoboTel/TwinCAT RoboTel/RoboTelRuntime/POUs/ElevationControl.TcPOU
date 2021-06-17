@@ -42,13 +42,14 @@ END_VAR
 
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[enablestate (SET := TelescopeControl.power OR PendantControl.Elevation_enable,
+      <ST><![CDATA[(*
+enablestate (SET := TelescopeControl.power OR PendantControl.Elevation_enable,
 			RESET1 := Error OR Reset,
 			Q1 => Enable);
-			
+*)
 // limit the position input to a sane value
 position := LIMIT(0.0, position, 90.0);
-
+(*
 IF Enable THEN
 	HydraulicsControl.open_brake := TRUE;
 END_IF
@@ -56,7 +57,7 @@ END_IF
 IF Error OR (up AND down) THEN
 	HydraulicsControl.close_brake := TRUE;
 END_IF
-
+*)
 IF home OR (TelescopeControl.power AND NOT ElevationAxis.Calibrated) THEN
 	HomeAxis := TRUE;
 END_IF
@@ -68,7 +69,10 @@ END_IF
 IF HomeAxis THEN
 	position := homing_position;
 END_IF
-
+// if NOT Enabled and ActVelo>0 then close_brake
+IF NOT enable AND GVL_Telescope.ElevationAxisRef.NcToPlc.ActVelo>1.0 THEN
+	HydraulicsControl.close_brake := TRUE;
+END_IF
 // deactivate limit switches on homing
 MC_SetAcceptBlockedDriveSignal(
 	Axis := GVL_Telescope.ElevationAxisRef, 
@@ -89,10 +93,10 @@ ElevationAxis(
 	HomeAxis :=			HomeAxis,
 	Position := 		position, 
 	Enable_Positive :=  GVL_Telescope.Elevation_inputs.0 OR HomeAxis,
-	Enable_Negative := 	GVL_Telescope.Elevation_inputs.1 OR HomeAxis,
+	Enable_Negative := 	GVL_Telescope.Elevation_inputs.1,
 	Jog_Forward :=		up,
 	Jog_Backwards := 	down,
-	bCalibrationCam :=	NOT GVL_Telescope.Elevation_inputs.0 OR NOT GVL_Telescope.Elevation_inputs.1,
+	bCalibrationCam :=	NOT GVL_Telescope.Elevation_inputs.0,
 	ActualPosition => 	act_position,
 	Error => 			error,
 	ErrorID => 			ErrorID,
@@ -111,7 +115,7 @@ IF ElevationAxis.ResetDone THEN
 	reset := FALSE;
 END_IF
 
-readydelay(IN :=  HydraulicsControl.brake_open, PT := T#3000MS, Q=> ready);
+readydelay(IN :=  HydraulicsControl.brake_open, PT := T#6000MS, Q=> ready);
 			
 ElevationAxisEvent(	Trigger := Error, 
 				Level := ADSLOG_MSGTYPE_ERROR,
@@ -120,6 +124,7 @@ ElevationAxisEvent(	Trigger := Error,
 				]]></ST>
     </Implementation>
     <LineIds Name="ElevationControl">
+      <LineId Id="389" Count="0" />
       <LineId Id="301" Count="0" />
       <LineId Id="377" Count="1" />
       <LineId Id="380" Count="0" />
@@ -133,6 +138,7 @@ ElevationAxisEvent(	Trigger := Error,
       <LineId Id="247" Count="5" />
       <LineId Id="254" Count="5" />
       <LineId Id="340" Count="0" />
+      <LineId Id="390" Count="2" />
       <LineId Id="279" Count="0" />
       <LineId Id="243" Count="0" />
       <LineId Id="291" Count="1" />
