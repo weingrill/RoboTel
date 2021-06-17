@@ -149,8 +149,12 @@ CASE Selection OF
 		Dome_enable := manual;
 		GVL_pendant_control.lamp_left := Dome_enable;
 		GVL_pendant_control.lamp_right := Dome_enable;
+		GVL_pendant_control.lamp_up := DomeControl.DomeClosed;
+		GVL_pendant_control.lamp_down := DomeControl.DomeOpened;
 		DomeControl.left := left;
 		DomeControl.right := right;
+		DomeControl.OpenDome := up;
+		DomeControl.CloseDome := down;
 		DomeControl.reset := reset;
 		
 	10:	// FilterWheel control
@@ -272,7 +276,10 @@ END_CASE
       <LineId Id="377" Count="0" />
       <LineId Id="610" Count="0" />
       <LineId Id="378" Count="1" />
-      <LineId Id="382" Count="2" />
+      <LineId Id="835" Count="1" />
+      <LineId Id="382" Count="1" />
+      <LineId Id="833" Count="1" />
+      <LineId Id="384" Count="0" />
       <LineId Id="464" Count="0" />
       <LineId Id="298" Count="0" />
       <LineId Id="611" Count="0" />

@@ -101,7 +101,7 @@ IF DomeAxis.Calibrated THEN
 ELSE
 	// perform homing only, when in automatic or manual/pendant mode
 	DomeAxis.HomeAxis := TelescopeControl.power;
-	position := 200.0;
+	position := calibration_position;
 END_IF
 
 // velocity = 2°/s or 180° in 81s, 360° in 120s (was 2.22)
