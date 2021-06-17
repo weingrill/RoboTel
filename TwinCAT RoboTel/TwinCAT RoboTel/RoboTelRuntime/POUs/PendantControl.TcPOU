@@ -139,11 +139,11 @@ CASE Selection OF
 		
 	8:	// This selection will become RA/Dec Mode with tracking enabled!
 		Azimuth_enable := manual;
-		GVL_pendant_control.lamp_left := NOT GVL_Telescope.azimut_limit_switch;
-		GVL_pendant_control.lamp_right := NOT GVL_Telescope.azimut_limit_switch;
-		AzimuthControl.left := left;
-		AzimuthControl.right := right;
-		AzimuthControl.reset := reset;
+		GVL_pendant_control.lamp_left := GVL_Telescope.Azimuth_inputs.0; // NOT GVL_Telescope.azimut_limit_switch;
+		GVL_pendant_control.lamp_right := GVL_Telescope.Azimuth_inputs.1; // NOT GVL_Telescope.azimut_limit_switch;
+		AzimuthElevationControl.left := left AND GVL_Telescope.Azimuth_inputs.0;
+		AzimuthElevationControl.right := right AND GVL_Telescope.Azimuth_inputs.1;
+		AzimuthElevationControl.reset := reset;
 		
 	9: 	// Dome control
 		Dome_enable := manual;

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="TelescopeControl" Id="{6a4f2e3a-c9ee-4352-b4f6-4f9d94b2c472}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM TelescopeControl
 VAR_INPUT
@@ -164,7 +164,7 @@ eq2hor2(alpha := ra,
 	az => azimuth_calc,
 	ha => hourangle_calc);
 
-azimuth_current := AzimuthControl.act_position;
+azimuth_current := AzimuthElevationControl.act_position;
 elevation_current := ElevationControl.act_position;
 
 hor2eq(alt := elevation, 
@@ -217,10 +217,10 @@ END_IF
 
 IF TCS_command = E_TCSCommand.park THEN
 	ElevationControl.position := elevation_park;
-	AzimuthControl.position := azimuth_park;
+	AzimuthElevationControl.position := azimuth_park;
 ELSIF TCS_command = E_TCSCommand.gohome THEN
 	ElevationControl.position := elevation_home;
-	AzimuthControl.position := azimuth_home;
+	AzimuthElevationControl.position := azimuth_home;
 END_IF
  
 
@@ -257,7 +257,7 @@ TCSstopEvent(	Trigger := stop,
 				OnMessage := 'commencing',
 				OffMEssage := 'completed',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
-AltitudeEvent(	Trigger := elevation_calc<0.0, 
+AltitudeEvent(	Trigger := power AND elevation_calc<0.0, 
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := '%s',
 				OnMessage := 'Target below horizon',

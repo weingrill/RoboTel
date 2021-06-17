@@ -16,7 +16,9 @@ VAR_INPUT
 	// set position of the axis in degrees
 	position:	LREAL;
 END_VAR
-
+VAR_OUTPUT
+	Ready:		BOOL;
+END_VAR
 VAR
 	// move axis command
 	MoveAxis:	BOOL;
@@ -26,30 +28,33 @@ VAR
 	ElevationCalibration: MC_SetPosition;
 	error: 				BOOL;
 	act_position: 		LREAL;
-	ErrorID: UDINT;
+	ErrorID: 			UDINT;
+	enablestate:		RS;
+	readydelay:			TON;
 	ElevationAxisEvent: FB_Eventlog;
 END_VAR
 VAR CONSTANT
 	// reference position for homing
-	home_position:			LREAL := 90.0;
+	homing_position:		LREAL := 90.0;
 	// current position of the calibration cam. Apply an offset here if necessary
 	calibration_position:	LREAL := 45.0;
 END_VAR
 
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[Enable := TelescopeControl.power OR PendantControl.Elevation_enable;
-
+      <ST><![CDATA[enablestate (SET := TelescopeControl.power OR PendantControl.Elevation_enable,
+			RESET1 := Error OR Reset,
+			Q1 => Enable);
+			
+// limit the position input to a sane value
 position := LIMIT(0.0, position, 90.0);
 
 IF Enable THEN
 	HydraulicsControl.open_brake := TRUE;
-	HydraulicsControl.close_brake := FALSE;
 END_IF
 
 IF Error OR (up AND down) THEN
 	HydraulicsControl.close_brake := TRUE;
-	HydraulicsControl.open_brake := FALSE;
 END_IF
 
 IF home OR (TelescopeControl.power AND NOT ElevationAxis.Calibrated) THEN
@@ -61,7 +66,7 @@ IF ElevationAxis.Calibrated OR Error THEN
 END_IF
 	
 IF HomeAxis THEN
-	position := home_position;
+	position := homing_position;
 END_IF
 
 // deactivate limit switches on homing
@@ -69,15 +74,16 @@ MC_SetAcceptBlockedDriveSignal(
 	Axis := GVL_Telescope.ElevationAxisRef, 
 	Enable := HomeAxis);
 
+(*
 // perform recalibration on encoder reference signal
 ElevationCalibration(
 	Axis := GVL_Telescope.ElevationAxisRef,
 	Execute := GVL_Telescope.Elevation_calibration,
 	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
-
+*)
 
 ElevationAxis(
-	Enable := 			Enable AND HydraulicsControl.brake_open,
+	Enable := 			HydraulicsControl.brake_open,
 	Reset := 			reset,
 	MoveAxis :=			MoveAxis,
 	HomeAxis :=			HomeAxis,
@@ -104,7 +110,9 @@ END_IF
 IF ElevationAxis.ResetDone THEN
 	reset := FALSE;
 END_IF
-					
+
+readydelay(IN :=  HydraulicsControl.brake_open, PT := T#3000MS, Q=> ready);
+			
 ElevationAxisEvent(	Trigger := Error, 
 				Level := ADSLOG_MSGTYPE_ERROR,
 				FormatString := 'Elevation Axis Error: %s',
@@ -112,14 +120,15 @@ ElevationAxisEvent(	Trigger := Error,
 				]]></ST>
     </Implementation>
     <LineIds Name="ElevationControl">
-      <LineId Id="232" Count="0" />
       <LineId Id="301" Count="0" />
+      <LineId Id="377" Count="1" />
+      <LineId Id="380" Count="0" />
+      <LineId Id="379" Count="0" />
       <LineId Id="233" Count="0" />
       <LineId Id="303" Count="0" />
       <LineId Id="234" Count="1" />
-      <LineId Id="240" Count="0" />
       <LineId Id="238" Count="0" />
-      <LineId Id="293" Count="3" />
+      <LineId Id="293" Count="2" />
       <LineId Id="298" Count="0" />
       <LineId Id="247" Count="5" />
       <LineId Id="254" Count="5" />
@@ -127,6 +136,7 @@ ElevationAxisEvent(	Trigger := Error,
       <LineId Id="279" Count="0" />
       <LineId Id="243" Count="0" />
       <LineId Id="291" Count="1" />
+      <LineId Id="381" Count="0" />
       <LineId Id="339" Count="0" />
       <LineId Id="280" Count="0" />
       <LineId Id="283" Count="0" />
@@ -143,6 +153,7 @@ ElevationAxisEvent(	Trigger := Error,
       <LineId Id="135" Count="0" />
       <LineId Id="229" Count="0" />
       <LineId Id="214" Count="11" />
+      <LineId Id="385" Count="1" />
       <LineId Id="136" Count="0" />
       <LineId Id="156" Count="2" />
       <LineId Id="160" Count="0" />

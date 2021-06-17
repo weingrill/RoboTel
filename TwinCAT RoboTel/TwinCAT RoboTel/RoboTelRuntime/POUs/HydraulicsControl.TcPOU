@@ -102,7 +102,12 @@ brake_open_delay(IN := pump_running AND oil_pressure_OK,
 				PT := T#3S);
 //manually or remotly open brake. Close brake on limit switch. Wait n seconds after pump is on
 //hold the brake, if we reach the az-limit	
-// close the brake if the pump is not running			
+// close the brake if the pump is not running	
+
+IF close_brake THEN 
+	open_brake := FALSE;
+END_IF
+		
 brake_state(SET := brake_open_delay.Q AND open_brake,
 			RESET1 := GVL_Telescope.azimut_limit_switch 
 					  OR close_brake 
@@ -110,7 +115,7 @@ brake_state(SET := brake_open_delay.Q AND open_brake,
 			Q1 => GVL_Telescope.brake_azimuth_eve);
 
 brake_opened_delay(	IN :=brake_state.Q1, 
-					PT := T#500MS,
+					PT := T#1000MS,
 					Q => brake_open);
 
 brake_closed := NOT brake_open;
@@ -194,6 +199,11 @@ SuctionLog(Trigger := suction_failure,
       <LineId Id="622" Count="0" />
       <LineId Id="342" Count="4" />
       <LineId Id="416" Count="0" />
+      <LineId Id="691" Count="0" />
+      <LineId Id="689" Count="0" />
+      <LineId Id="692" Count="0" />
+      <LineId Id="690" Count="0" />
+      <LineId Id="693" Count="0" />
       <LineId Id="347" Count="1" />
       <LineId Id="455" Count="1" />
       <LineId Id="349" Count="0" />

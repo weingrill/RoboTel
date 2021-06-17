@@ -75,7 +75,7 @@ HydraulicsControl();	//
 // deactivate noisy fan if we are on manual
 FanControl(enable := NOT PendantControl.manual);	//
 ElevationControl();	//
-AzimuthControl();	//
+AzimuthElevationControl();	//
 DerotatorControl();	//
 FilterWheelControl();	//
 FocusControl();
@@ -86,7 +86,8 @@ power_timer(bStart := key_switch, bStop := power_OK);
 power_watchdog(IN := GVL_Main.softstart_trafo AND NOT power_OK,
 				PT := T#2S,
 				Q => power_failure);
-warn_blink(ENABLE := HydraulicsControl.oil_warning OR HydraulicsControl.oil_hot, Q => warning);
+warn_blink(ENABLE := HydraulicsControl.oil_warning OR HydraulicsControl.oil_hot, 
+	Q => warning);
 error := power_failure OR 
 			HydraulicsControl.pressure_failure OR 
 			(NOT phase_available)
@@ -99,7 +100,7 @@ error := power_failure OR
 			OR Focuscontrol.Error
 			OR NasmythControl.error
 			OR CoverControl.Error
-			OR AzimuthControl.error
+			OR AzimuthElevationControl.error
 			OR DerotatorControl.Error
 			OR GVL_Safety.Error;
 // set control lights					
@@ -156,6 +157,7 @@ PowerEvent(
       <LineId Id="35" Count="0" />
       <LineId Id="37" Count="1" />
       <LineId Id="70" Count="0" />
+      <LineId Id="521" Count="0" />
       <LineId Id="41" Count="0" />
       <LineId Id="71" Count="2" />
       <LineId Id="80" Count="0" />

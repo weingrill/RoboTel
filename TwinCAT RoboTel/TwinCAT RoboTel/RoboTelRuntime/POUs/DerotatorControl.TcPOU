@@ -37,6 +37,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*
+Selection 6
 Homing in Endlage:
 
 https://infosys.beckhoff.com/index.php?content=../content/1031/ax5000_usermanual/html/ax5000_homing_hardware_end_position.htm&id=12221
@@ -71,7 +72,7 @@ IF HomeAxis THEN
 END_IF
 
 DeRotatorAxis(
-	enable := 			enable AND NOT RESET,
+	enable := 			enable,
 	Reset := 			Reset,
 	MoveAxis :=			MoveAxis,
 	HomeAxis :=			HomeAxis,
@@ -109,6 +110,7 @@ DerotatorEvent(
     </Implementation>
     <LineIds Name="DerotatorControl">
       <LineId Id="128" Count="0" />
+      <LineId Id="205" Count="0" />
       <LineId Id="131" Count="0" />
       <LineId Id="133" Count="0" />
       <LineId Id="135" Count="0" />
