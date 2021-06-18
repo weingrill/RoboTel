@@ -8,7 +8,8 @@ Manual Operation
 ----------------
 
 The dome can always be operated by pressing a button on the two-button
-control, directly connected to the azimuth dome control.
+control, directly connected to the azimuth dome control. See :doc:`manual` for
+further instructions.
 
 The second operating mode is by using the pendant control (selection 9).
 * Buttons "←" and "→" rotate the dome counter-clockwise and clockwise.
