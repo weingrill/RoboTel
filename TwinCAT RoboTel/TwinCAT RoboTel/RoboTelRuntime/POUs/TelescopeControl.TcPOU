@@ -32,6 +32,9 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	tauoffset: LREAL;
 	// 	offset TO current tracking point on axis dec, degrees, double 
 	deoffset: LREAL;
+	// initiates hard-reset on all axis
+	reset:		BOOL;
+
 END_VAR
 VAR
 	// manual or automatic operation of the telescope
@@ -62,8 +65,6 @@ VAR
 	eq2hor2:	FB_EQ2HOR2;
 	hor2eq:		FB_HOR2EQ;
 	
-	// initiates hard-reset on all axis
-	reset:		BOOL;
 	// initiates hard-reset on all axis
 	softreset:	BOOL;
 	// triggers power-failure event
@@ -176,6 +177,7 @@ hor2eq(alt := elevation,
 		ra => rightascension_calc,
 		dec => declination_calc);		
 
+(*
 IF power THEN
 	IF NOT Main.brake_clearing THEN
 		powerfailure := TRUE;
@@ -196,8 +198,39 @@ IF power THEN
 	ELSE
 		powerfailure := FALSE;		
 	END_IF
+	// enable hydraulics
+	HydraulicsControl.start := TRUE;
+	// open cover
+	Covercontrol.open := TRUE;
+	// enable elevation
+	ElevationControl.enable := TRUE;
+	// enable azimuth
+	AzimuthElevationControl.enable := TRUE;
+	// enable derotator
+	DerotatorControl.enable := TRUE;
+	// enable filterwheel
+	FilterWheelControl.Enable := TRUE;
+	// enable focus
+	FocusControl.enable := TRUE;
+ELSE
+	// disable azimuth
+	AzimuthElevationControl.enable := FALSE;
+	// disbale elevation (closes brake)
+	ElevationControl.enable := FALSE;
+	// disable focus
+	FocusControl.enable := FALSE;
+	// disable filterwheel
+	FilterWheelControl.Enable := FALSE;
+	// disable derotator
+	DerotatorControl.enable := FALSE;
+	// close cover
+	CoverControl.close := TRUE;
+	// disable hydraulics
+	HydraulicsControl.close_brake := TRUE;
+	HydraulicsControl.stop := TRUE;
 END_IF
-			
+*)
+		
 // set TCS_command according to state variables ordered by precedence
 IF track THEN
 	TCS_command := E_TCSCommand.track;
@@ -287,6 +320,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="2011" Count="0" />
       <LineId Id="3521" Count="4" />
       <LineId Id="3528" Count="1" />
+      <LineId Id="3783" Count="0" />
       <LineId Id="3591" Count="0" />
       <LineId Id="3547" Count="0" />
       <LineId Id="3592" Count="0" />
@@ -304,8 +338,39 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3604" Count="0" />
       <LineId Id="3609" Count="0" />
       <LineId Id="3593" Count="0" />
+      <LineId Id="3768" Count="0" />
+      <LineId Id="3764" Count="0" />
+      <LineId Id="3749" Count="0" />
+      <LineId Id="3769" Count="0" />
+      <LineId Id="3750" Count="0" />
+      <LineId Id="3770" Count="0" />
+      <LineId Id="3751" Count="0" />
+      <LineId Id="3772" Count="0" />
+      <LineId Id="3752" Count="0" />
+      <LineId Id="3773" Count="0" />
+      <LineId Id="3753" Count="0" />
+      <LineId Id="3775" Count="0" />
+      <LineId Id="3754" Count="0" />
+      <LineId Id="3776" Count="0" />
+      <LineId Id="3755" Count="0" />
+      <LineId Id="3757" Count="0" />
+      <LineId Id="3774" Count="0" />
+      <LineId Id="3758" Count="0" />
+      <LineId Id="3771" Count="0" />
+      <LineId Id="3759" Count="0" />
+      <LineId Id="3777" Count="0" />
+      <LineId Id="3760" Count="0" />
+      <LineId Id="3778" Count="0" />
+      <LineId Id="3761" Count="0" />
+      <LineId Id="3779" Count="0" />
+      <LineId Id="3762" Count="0" />
+      <LineId Id="3767" Count="0" />
+      <LineId Id="3763" Count="0" />
+      <LineId Id="3766" Count="0" />
+      <LineId Id="3765" Count="0" />
       <LineId Id="3549" Count="0" />
       <LineId Id="3519" Count="0" />
+      <LineId Id="3784" Count="0" />
       <LineId Id="1499" Count="0" />
       <LineId Id="1501" Count="0" />
       <LineId Id="1527" Count="2" />

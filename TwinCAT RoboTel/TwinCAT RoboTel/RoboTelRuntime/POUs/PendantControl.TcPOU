@@ -25,10 +25,10 @@ VAR
 	down:		BOOL;
 	left:		BOOL;
 	right:		BOOL;
-	manual_hydraulics_start:	BOOL;
-	manual_hydraulics_stop:		BOOL;
 	
 	Filter_position:	CTUD;
+	Elevation_enable_Button: FB_ButtonEnable;
+	TelescopeControl_enable: FB_ButtonEnable;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -134,7 +134,7 @@ CASE Selection OF
 		GVL_pendant_control.lamp_down := GVL_Telescope.Elevation_inputs.1;
 		ElevationControl.up := up AND GVL_Telescope.Elevation_inputs.0;
 		ElevationControl.down := down AND GVL_Telescope.Elevation_inputs.1;
-		ElevationControl.home := enable;
+		Elevation_enable_button(SET := manual AND enable, Q => ElevationControl.enable);
 		ElevationControl.reset := reset;
 		
 	8:	// This selection will become RA/Dec Mode with tracking enabled!
@@ -170,7 +170,11 @@ CASE Selection OF
 			FilterWheelControl.filter_position := Filter_position.CV;
 		END_IF
 		FilterWheelControl.reset := reset;
-		
+	
+	13: // Telescope Control
+		Telescopecontrol_enable(SET := enable, RESET := manual, Q => TelescopeControl.power);
+		TelescopeControl.reset := reset;
+	
 	14: GVL_Telescope.horn := manual;
 	
 	15:	// Hydraulics control
@@ -178,16 +182,10 @@ CASE Selection OF
 		GVL_pendant_control.lamp_down := HydraulicsControl.oil_pressure_OK AND Hydraulicscontrol.brake_open;
 		GVL_pendant_control.lamp_left := HydraulicsControl.pump_running;
 		GVL_pendant_control.lamp_right := HydraulicsControl.suction_running;
-		manual_hydraulics_start := manual AND enable;
-		manual_hydraulics_stop := manual AND reset;
-		IF up THEN 
-			Hydraulicscontrol.open_brake := TRUE;
-			Hydraulicscontrol.close_brake := FALSE;
-		END_IF
-		IF down THEN
-			Hydraulicscontrol.close_brake := TRUE;
-			Hydraulicscontrol.open_brake := FALSE;
-		END_IF
+		Hydraulicscontrol.start := manual AND enable;
+		Hydraulicscontrol.stop := manual AND reset;
+		Hydraulicscontrol.open_brake := manual AND up;
+		Hydraulicscontrol.close_brake := manual AND down;
 END_CASE
 ]]></ST>
     </Implementation>
@@ -263,8 +261,8 @@ END_CASE
       <LineId Id="336" Count="0" />
       <LineId Id="289" Count="0" />
       <LineId Id="327" Count="1" />
+      <LineId Id="838" Count="0" />
       <LineId Id="772" Count="0" />
-      <LineId Id="329" Count="0" />
       <LineId Id="285" Count="0" />
       <LineId Id="299" Count="0" />
       <LineId Id="462" Count="0" />
@@ -290,6 +288,10 @@ END_CASE
       <LineId Id="686" Count="1" />
       <LineId Id="460" Count="0" />
       <LineId Id="803" Count="0" />
+      <LineId Id="841" Count="0" />
+      <LineId Id="846" Count="0" />
+      <LineId Id="843" Count="0" />
+      <LineId Id="842" Count="0" />
       <LineId Id="802" Count="0" />
       <LineId Id="455" Count="0" />
       <LineId Id="233" Count="0" />
@@ -297,11 +299,7 @@ END_CASE
       <LineId Id="234" Count="0" />
       <LineId Id="419" Count="1" />
       <LineId Id="244" Count="1" />
-      <LineId Id="760" Count="1" />
-      <LineId Id="766" Count="0" />
-      <LineId Id="762" Count="2" />
-      <LineId Id="767" Count="0" />
-      <LineId Id="765" Count="0" />
+      <LineId Id="839" Count="1" />
       <LineId Id="13" Count="0" />
       <LineId Id="121" Count="0" />
     </LineIds>

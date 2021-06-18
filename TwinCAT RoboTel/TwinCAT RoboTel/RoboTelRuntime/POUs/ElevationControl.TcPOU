@@ -26,16 +26,19 @@ VAR
 	HomeAxis:	BOOL;
 	ElevationAxis:		FB_Axis2;
 	ElevationCalibration: MC_SetPosition;
+	// drive error condition
 	error: 				BOOL;
+	// actual position of the elevation axis
 	act_position: 		LREAL;
+	// error ID of the elevation axis
 	ErrorID: 			UDINT;
-	enablestate:		RS;
 	readydelay:			TON;
 	ElevationAxisEvent: FB_Eventlog;
+	ElevationVelEvent: FB_Eventlog;
 END_VAR
 VAR CONSTANT
 	// reference position for homing
-	homing_position:		LREAL := 90.0;
+	homing_position:		LREAL := 90.0; // 95.0?
 	// current position of the calibration cam. Apply an offset here if necessary
 	calibration_position:	LREAL := 45.0;
 END_VAR
@@ -49,19 +52,16 @@ enablestate (SET := TelescopeControl.power OR PendantControl.Elevation_enable,
 *)
 // limit the position input to a sane value
 position := LIMIT(0.0, position, 90.0);
-(*
-IF Enable THEN
+
+IF Enable OR TelescopeControl.power THEN
 	HydraulicsControl.open_brake := TRUE;
 END_IF
-
-IF Error OR (up AND down) THEN
-	HydraulicsControl.close_brake := TRUE;
-END_IF
-*)
-IF home OR (TelescopeControl.power AND NOT ElevationAxis.Calibrated) THEN
+// TODO Elevation Axis Homing does not work
+(*
+IF ElevationAxis.Ready AND NOT ElevationAxis.Calibrated THEN
 	HomeAxis := TRUE;
 END_IF
-
+*)
 IF ElevationAxis.Calibrated OR Error THEN
 	HomeAxis := FALSE;
 END_IF
@@ -73,6 +73,7 @@ END_IF
 IF NOT enable AND GVL_Telescope.ElevationAxisRef.NcToPlc.ActVelo>1.0 THEN
 	HydraulicsControl.close_brake := TRUE;
 END_IF
+
 // deactivate limit switches on homing
 MC_SetAcceptBlockedDriveSignal(
 	Axis := GVL_Telescope.ElevationAxisRef, 
@@ -121,7 +122,12 @@ ElevationAxisEvent(	Trigger := Error,
 				Level := ADSLOG_MSGTYPE_ERROR,
 				FormatString := 'Elevation Axis Error: %s',
 				OnMessage := NCError_TO_STRING(ErrorID));
-				]]></ST>
+				
+ElevationAxisEvent(	Trigger := NOT enable AND GVL_Telescope.ElevationAxisRef.NcToPlc.ActVelo>1.0, 
+				Level := ADSLOG_MSGTYPE_ERROR,
+				FormatString := '%s',
+				OnMessage := 'Elevation moving without command!');
+]]></ST>
     </Implementation>
     <LineIds Name="ElevationControl">
       <LineId Id="389" Count="0" />
@@ -133,12 +139,12 @@ ElevationAxisEvent(	Trigger := Error,
       <LineId Id="303" Count="0" />
       <LineId Id="234" Count="1" />
       <LineId Id="238" Count="0" />
-      <LineId Id="293" Count="2" />
-      <LineId Id="298" Count="0" />
+      <LineId Id="404" Count="0" />
       <LineId Id="247" Count="5" />
       <LineId Id="254" Count="5" />
       <LineId Id="340" Count="0" />
       <LineId Id="390" Count="2" />
+      <LineId Id="394" Count="0" />
       <LineId Id="279" Count="0" />
       <LineId Id="243" Count="0" />
       <LineId Id="291" Count="1" />
@@ -164,6 +170,8 @@ ElevationAxisEvent(	Trigger := Error,
       <LineId Id="156" Count="2" />
       <LineId Id="160" Count="0" />
       <LineId Id="5" Count="0" />
+      <LineId Id="396" Count="3" />
+      <LineId Id="395" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

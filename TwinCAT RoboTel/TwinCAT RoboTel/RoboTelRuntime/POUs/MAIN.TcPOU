@@ -27,10 +27,6 @@ VAR
 	brake_clearing:		BOOL := FALSE;
 	// blink error lamp on warning
 	warn_blink: 		FB_BLINK;
-	// TCS remote start;
-	remote_start:	BOOL := FALSE;
-	// TCS remote stop;
-	remote_stop:	BOOL := FALSE;
 	power_watchdog : TON;
 	// main cabinet temperature in degrees
 	cabinet_temperature:	REAL;
@@ -52,17 +48,17 @@ Main control loop
 *)
 power_OK := GVL_main.power_available;
 phase_available := GVL_Main.phase_available;
-start := GVL_Main.start_switch OR PendantControl.manual_hydraulics_start OR remote_start;
-stop := GVL_Main.stop_switch  OR PendantControl.manual_hydraulics_stop OR remote_stop;
+IF GVL_Main.start_switch THEN
+	HydraulicsControl.start := TRUE;
+END_IF
+IF GVL_Main.stop_switch THEN
+	HydraulicsControl.stop := TRUE;
+END_IF
 reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch;		
 key_switch := GVL_Main.key_switch_remote;
 brake_clearing := GVL_Main.brake_clearing;
 cabinet_temperature := INT_TO_REAL(GVL_Main.main_cabinet_temperature) / 100.0;
 
-IF stop OR remote_stop THEN
-	start := FALSE;
-	remote_start := FALSE;
-END_IF
 // telescope is ready when power available and hydraulics ok
 ready := power_OK AND HydraulicsControl.oil_pressure_OK;
 		
@@ -106,7 +102,7 @@ error := power_failure OR
 // set control lights					
 GVL_Main.lamp_ready := ready;
 GVL_Main.lamp_error := error OR warning;
-GVL_Main.lamp_power := power_ok;
+GVL_Main.lamp_power := power_ok AND phase_available;
 SafetyHandling();
 
 PowerEvent(	
@@ -125,15 +121,15 @@ PowerEvent(
       <LineId Id="29" Count="0" />
       <LineId Id="16" Count="0" />
       <LineId Id="61" Count="0" />
-      <LineId Id="157" Count="1" />
+      <LineId Id="522" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="523" Count="0" />
+      <LineId Id="525" Count="2" />
       <LineId Id="166" Count="0" />
       <LineId Id="163" Count="0" />
       <LineId Id="169" Count="0" />
       <LineId Id="236" Count="0" />
       <LineId Id="170" Count="0" />
-      <LineId Id="160" Count="1" />
-      <LineId Id="221" Count="0" />
-      <LineId Id="162" Count="0" />
       <LineId Id="105" Count="0" />
       <LineId Id="23" Count="0" />
       <LineId Id="22" Count="0" />
