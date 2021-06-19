@@ -1,32 +1,63 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="FanControl" Id="{aa14e62d-ea4c-4f88-afe0-bf32efd9c378}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM FanControl
 VAR_INPUT
 	enable: BOOL := TRUE;	
 END_VAR
 VAR
+	// fan axis reference
 	Fan_axis:	MDP5001_511_733_32199BA1;
+	// measured temperature
 	temperature : REAL;
+	// calculated velocity
 	velocity: INT;
+	// error condition
 	error: BOOL;
+	// issue temperature warning
+	TemperatureWarning: FB_EventLog;
 END_VAR
 
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := enable OR temperature >= 40.0;
+      <ST><![CDATA[(* Upper telescope cabinet fan control *)
+
+// enable the fan as soon as main cabinet is ready AND temperature exceeds 25°C
+Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := MAIN.power_OK AND temperature >= 25.0;
+// reset on MAIN reset
 Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Reset := MAIN.reset;
+// calculate the temperatur efrom analog input
 temperature := GVL_Telescope.temperature_cabinet / 100.0;
-velocity := LREAL_TO_INT(F_YREAL(temperature, 25.0, 40.0, 0.0, 32767));
+// set the fan velocity as a function of temperature
+velocity := LREAL_TO_INT(F_YREAL(temperature, 25.0, 40.0, 1000, 32767));
+// apply the calculated velocity
 Fan_axis.MDP5001_511_733_Output.MDP5001_733_Velocity := velocity;
+// return the error condition
 error := Fan_axis.MDP5001_511_733_Input.MDP5001_733_Status_1.Error;
+
+TemperatureWarning(Trigger := temperature >= 40.0,
+				Level := ADSLOG_MSGTYPE_WARN,
+				FormatString := '%s',
+				OnMessage := 'Telescope cabinet temperature exceeds 40 degrees Celsius');
 ]]></ST>
     </Implementation>
     <LineIds Name="FanControl">
-      <LineId Id="10" Count="1" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="57" Count="0" />
       <LineId Id="32" Count="0" />
+      <LineId Id="58" Count="0" />
       <LineId Id="31" Count="0" />
-      <LineId Id="18" Count="1" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="46" Count="3" />
+      <LineId Id="45" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

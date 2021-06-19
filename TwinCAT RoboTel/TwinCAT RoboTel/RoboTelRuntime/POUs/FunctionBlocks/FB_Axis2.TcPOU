@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="FB_Axis2" Id="{a3e55664-127b-4a99-a2ba-301ba26f68b3}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Axis2
 VAR_INPUT
@@ -98,8 +98,7 @@ Axis_Power(
 	Enable_Positive := Enable_Positive,
 	Enable_Negative := Enable_Negative,
 	Override := 100.0,
-	Status => Ready,
-	Active => Active);
+	Status => Ready);
 
 Axis_Reset(
 	Axis := 	AxisRef,
@@ -109,6 +108,7 @@ Axis_Reset(
 IF ResetDone THEN
 	Reset := FALSE;
 END_IF
+
 IF isModuloAxis THEN
 	Axis_Modulo( 
 		Axis := 		AxisRef,
@@ -117,9 +117,7 @@ IF isModuloAxis THEN
 		Velocity :=		Velocity,
 		Direction := 	MC_Shortest_Way,
 		BufferMode := 	MC_BlendingHigh OR MC_BlendingNext, // MC_Buffered ?
-		Done => 		MoveDone,
-		Active => 		Active,
-		CommandAborted => CommandAborted);
+		Done => 		MoveDone);
 ELSE
 	Axis_Move( 
 		Axis := 		AxisRef,
@@ -127,18 +125,14 @@ ELSE
 		Position := 	Position,
 		Velocity := 	Velocity,
 		BufferMode := 	MC_BlendingHigh OR MC_BlendingNext,
-		Done => 		MoveDone,
-		Active => 		Active,
-		CommandAborted => CommandAborted);
+		Done => 		MoveDone);
 END_IF
 
 Axis_Jog(
-	JogForward := 	Jog_Forward AND Ready,
-	JogBackwards := Jog_Backwards AND Ready,
+	JogForward := 	Jog_Forward AND Ready AND Enable_Positive,
+	JogBackwards := Jog_Backwards AND Ready AND Enable_Negative,
 	Mode := 		MC_JOGMODE_STANDARD_FAST,
 	Done => 		JogDone, 
-	Active => 		Active, 
-	CommandAborted => CommandAborted, 
 	Axis := 		AxisRef);
 
 Axis_Home(
@@ -146,9 +140,7 @@ Axis_Home(
 	Execute := 		HomeAxis AND Ready,
 	Position := 	position, //DEFAULT_HOME_POSITION,
 	bCalibrationCam := bCalibrationCam,
-	Done => 		HomeDone,
-	Active => 		Active,
-	CommandAborted => CommandAborted);	
+	Done => 		HomeDone);	
 	
 IF MoveDone OR HomeDone OR JogDone THEN
 	bStop := TRUE;
@@ -238,6 +230,19 @@ Error := 	Axis_Power.Error OR
 			Axis_Jog.Error OR 
 			Axis_Stop.Error;
 
+Active := 	Axis_Power.Active OR 
+			Axis_Modulo.Active OR
+			Axis_Move.Active OR 
+			Axis_Home.Active OR
+			Axis_Jog.Active OR 
+			Axis_Stop.Active;
+
+CommandAborted :=	Axis_Modulo.CommandAborted OR
+					Axis_Move.CommandAborted OR 
+					Axis_Home.CommandAborted OR
+					Axis_Jog.CommandAborted OR 
+					Axis_Stop.CommandAborted;	
+	
 IF NOT Error THEN
 	ErrorID := 0;
 END_IF
@@ -260,34 +265,31 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="27" Count="0" />
       <LineId Id="294" Count="0" />
       <LineId Id="28" Count="4" />
-      <LineId Id="36" Count="2" />
+      <LineId Id="37" Count="1" />
       <LineId Id="286" Count="0" />
       <LineId Id="39" Count="1" />
       <LineId Id="287" Count="0" />
       <LineId Id="44" Count="2" />
+      <LineId Id="1185" Count="0" />
       <LineId Id="391" Count="0" />
       <LineId Id="491" Count="3" />
       <LineId Id="891" Count="0" />
       <LineId Id="523" Count="0" />
-      <LineId Id="495" Count="2" />
-      <LineId Id="501" Count="0" />
+      <LineId Id="495" Count="1" />
       <LineId Id="476" Count="0" />
       <LineId Id="479" Count="3" />
       <LineId Id="892" Count="0" />
-      <LineId Id="483" Count="2" />
-      <LineId Id="489" Count="0" />
+      <LineId Id="483" Count="1" />
       <LineId Id="477" Count="0" />
       <LineId Id="264" Count="0" />
       <LineId Id="266" Count="3" />
-      <LineId Id="275" Count="1" />
-      <LineId Id="278" Count="0" />
+      <LineId Id="275" Count="0" />
       <LineId Id="265" Count="0" />
       <LineId Id="611" Count="0" />
       <LineId Id="303" Count="2" />
       <LineId Id="307" Count="0" />
       <LineId Id="1002" Count="0" />
-      <LineId Id="309" Count="1" />
-      <LineId Id="314" Count="0" />
+      <LineId Id="309" Count="0" />
       <LineId Id="302" Count="0" />
       <LineId Id="898" Count="2" />
       <LineId Id="897" Count="0" />
@@ -336,7 +338,14 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="884" Count="2" />
       <LineId Id="912" Count="0" />
       <LineId Id="887" Count="1" />
+      <LineId Id="1177" Count="0" />
+      <LineId Id="1179" Count="1" />
+      <LineId Id="1182" Count="2" />
       <LineId Id="1089" Count="0" />
+      <LineId Id="1186" Count="0" />
+      <LineId Id="1189" Count="3" />
+      <LineId Id="1178" Count="0" />
+      <LineId Id="1193" Count="0" />
       <LineId Id="792" Count="0" />
       <LineId Id="1091" Count="1" />
       <LineId Id="1090" Count="0" />

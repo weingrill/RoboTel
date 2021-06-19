@@ -70,7 +70,7 @@
     <Compile Include="POUs\ElevationControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\AzimuthControl.TcPOU">
+    <Compile Include="POUs\AzimuthElevationControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Environment.TcPOU">
@@ -193,6 +193,9 @@
     <Compile Include="POUs\Functions\POLY.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\NCError_TO_STRING.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\TEN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -231,6 +234,10 @@
     <PlaceholderReference Include="Tc2_MC2">
       <DefaultResolution>Tc2_MC2, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_MC2</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_NC">
+      <DefaultResolution>Tc2_NC, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_NC</Namespace>
     </PlaceholderReference>
     <PlaceholderReference Include="Tc2_Standard">
       <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>

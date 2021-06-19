@@ -1,12 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="DerotatorControl" Id="{75f3d994-c6e1-4455-a5dc-0a32056448e8}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM DerotatorControl
 VAR_INPUT
+	// enable the derotator
 	enable:		BOOL;
+	// reset an error
 	reset:		BOOL;
+	// decrease derotator angle
 	left:		BOOL;
+	// increase derotator angle
 	right:		BOOL;
+	// perform homing
+	home:		BOOL;
+	// set the absolute position
 	position:	LREAL;
 END_VAR
 VAR_OUTPUT
@@ -15,29 +22,134 @@ VAR_OUTPUT
 	actual_position:	LREAL;
 END_VAR
 VAR
+	// move to given position
+	MoveAxis: 			BOOL;
+	// calibrate the axis
+	HomeAxis:			BOOL;
+
 	DerotatorAxis:	FB_Axis2;
+	DerotatorEvent:	FB_EventLog;
+END_VAR
+VAR CONSTANT
+	// current position of the calibration cam. Apply an offset here if necessary
+	calibration_position:	LREAL := 460.0;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// TODO: Limit switch for Derotator axis!
+      <ST><![CDATA[(*
+Selection 6
+Homing in Endlage:
+
+https://infosys.beckhoff.com/index.php?content=../content/1031/ax5000_usermanual/html/ax5000_homing_hardware_end_position.htm&id=12221
+NC-Interface:
+PlcToNc-Achsinterface, Bit 8 namens AcceptBlockedDriveSignal im nDeCtrlDWord
+
+SPS-Interface:
+TcNc-Lib, siehe SPS-Funktion AxisSetAcceptBlockedDriveSignal in der TwinCAT  PLC Library: NC.
+*)
+enable := TelescopeControl.power OR PendantControl.Derotator_enable;
+
+position := LIMIT(0.0, position, 470.0);
+
+
+// WARNING: Homing disables the limit Switches!
+
+MC_SetAcceptBlockedDriveSignal(
+	Axis := GVL_Telescope.DerotatorAxisRef,
+	Enable := HomeAxis);
+
+IF home OR (TelescopeControl.power AND NOT DerotatorAxis.Calibrated) THEN
+	HomeAxis := TRUE;
+END_IF
+
+IF DerotatorAxis.Calibrated THEN
+	home := FALSE;
+	HomeAxis := FALSE;
+END_IF
+	
+IF HomeAxis THEN
+	position := calibration_position;
+END_IF
+
 DeRotatorAxis(
-	enable := TelescopeControl.power OR PendantControl.Derotator_enable,
-	Enable_Positive := TRUE,
-	Enable_Negative := TRUE,
-	Jog_Forward := right,
-	Jog_Backwards := left,
-	Reset := reset,
-	Error => Error,
-	ErrorID => ErrorID,
-	AxisRef :=	GVL_Telescope.DerotatorAxisRef);]]></ST>
+	enable := 			enable,
+	Reset := 			Reset,
+	MoveAxis :=			MoveAxis,
+	HomeAxis :=			HomeAxis,
+	Position := 		position, 
+	Enable_Positive := 	NOT GVL_Telescope.Derotator_inputs.0 OR HomeAxis,
+	Enable_Negative := 	NOT GVL_Telescope.Derotator_inputs.1,
+	Jog_Forward := 		right,
+	Jog_Backwards := 	left,
+	bCalibrationCam :=	GVL_Telescope.Derotator_inputs.0,
+	isModuloAxis :=		FALSE,
+	ActualPosition => 	actual_position,
+	Error => 			Error,
+	ErrorID => 			ErrorID,
+	AxisRef :=			GVL_Telescope.DerotatorAxisRef);
+	
+IF DeRotatorAxis.MoveDone OR Reset OR Error THEN
+	MoveAxis := FALSE;
+END_IF
+
+IF DeRotatorAxis.HomeDone OR Reset OR Error THEN
+	HomeAxis := FALSE;
+END_IF
+	
+IF DeRotatorAxis.ResetDone THEN
+	reset := FALSE;
+END_IF
+
+DerotatorEvent(	
+	Trigger := 		Error, 
+	Level := 		ADSLOG_MSGTYPE_ERROR,
+	FormatString :=	'Derotator Axis Error: %s',
+	OnMessage := 	NCError_TO_STRING(ErrorID),
+	OffMEssage := 	'OK',
+	OffLevel := 	ADSLOG_MSGTYPE_HINT);]]></ST>
     </Implementation>
     <LineIds Name="DerotatorControl">
-      <LineId Id="25" Count="0" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="205" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="137" Count="3" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="160" Count="1" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="156" Count="1" />
+      <LineId Id="100" Count="0" />
       <LineId Id="10" Count="0" />
       <LineId Id="23" Count="0" />
-      <LineId Id="11" Count="5" />
+      <LineId Id="93" Count="3" />
+      <LineId Id="11" Count="3" />
+      <LineId Id="97" Count="2" />
+      <LineId Id="16" Count="0" />
       <LineId Id="24" Count="0" />
       <LineId Id="9" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="44" Count="17" />
+      <LineId Id="43" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

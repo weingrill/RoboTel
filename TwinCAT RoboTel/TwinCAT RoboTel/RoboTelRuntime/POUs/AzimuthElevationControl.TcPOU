@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+  <POU Name="AzimuthElevationControl" Id="{8e08648a-b748-4448-9dcc-aa13dfcf6a06}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM AzimuthElevationControl
+VAR_INPUT
+	// decrease azimuth
+	left:		BOOL;
+	// increase azimuth
+	right: 		BOOL;
+	// reset the axis
+	Reset: 		BOOL;
+	// enable the axis and its position control loop
+	Enable:		BOOL;
+	// Move azimuth to given position
+	MoveAxis:	BOOL;
+	// Home the axis
+	HomeAxis:	BOOL;
+	// position to move the axis to
+	position: 	LREAL;
+END_VAR
+
+VAR
+	AzimuthAxis:	FB_Axis2;
+	error: 			BOOL;
+	ErrorID:		UDINT;
+	act_position:	LREAL;
+	AzimuthAxisEvent: FB_EventLog;
+END_VAR
+VAR CONSTANT
+	// reference position for homing
+	homing_position:		LREAL := 442.0;
+	// current position of the calibration cam. Apply an offset here if necessary
+	calibration_position:	LREAL := 180.0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* Azimuth Axis control section
+Power must be on and brake must be open for the axis to operate
+*)
+
+(*
+Enable := TelescopeControl.power OR PendantControl.Azimuth_enable;
+
+IF Enable THEN
+	ElevationControl.enable := TRUE;
+	HydraulicsControl.open_brake := TRUE;
+END_IF
+*)
+IF AzimuthAxis.Calibrated OR Error THEN
+	HomeAxis := FALSE;
+END_IF
+	
+IF HomeAxis THEN
+	position := homing_position;
+END_IF
+
+// deactivate limit switches on homing
+MC_SetAcceptBlockedDriveSignal(
+	Axis := GVL_Telescope.AzimuthAxisRef, 
+	Enable := HomeAxis);
+
+AzimuthAxis(	
+	Enable := 			Enable AND HydraulicsControl.brake_open AND ElevationControl.Ready,
+	Reset := 			reset,
+	MoveAxis :=			MoveAxis,
+	HomeAxis := 		HomeAxis,
+	Position := 		position, 
+	Enable_Positive := 	NOT GVL_Telescope.azimut_limit_switch AND (GVL_Telescope.Azimuth_inputs.1 OR HomeAxis),
+	Enable_Negative := 	NOT GVL_Telescope.azimut_limit_switch AND GVL_Telescope.Azimuth_inputs.0,
+	Jog_Forward :=		right,
+	Jog_Backwards := 	left,
+	bCalibrationCam :=	NOT GVL_Telescope.Azimuth_inputs.1,
+	ActualPosition => 	act_position,
+	Error => 			error,
+	ErrorID => 			ErrorID,
+	AxisRef :=			GVL_Telescope.AzimuthAxisRef);
+
+IF Error THEN
+	HydraulicsControl.close_brake := TRUE;
+END_IF
+	
+IF AzimuthAxis.MoveDone THEN
+	MoveAxis := FALSE;
+END_IF
+
+IF AzimuthAxis.HomeDone THEN
+	HomeAxis := FALSE;
+END_IF
+	
+IF AzimuthAxis.ResetDone THEN
+	reset := FALSE;
+END_IF
+
+AzimuthAxisEvent(	
+	Trigger := 		Error, 
+	Level := 		ADSLOG_MSGTYPE_ERROR,
+	FormatString :=	'Azimuth Axis Error: %s',
+	OnMessage := 	NCError_TO_STRING(ErrorID));
+				]]></ST>
+    </Implementation>
+    <LineIds Name="AzimuthElevationControl">
+      <LineId Id="172" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="179" Count="1" />
+      <LineId Id="128" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="152" Count="1" />
+      <LineId Id="243" Count="7" />
+      <LineId Id="238" Count="4" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="104" Count="3" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="177" Count="1" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="158" Count="10" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="80" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

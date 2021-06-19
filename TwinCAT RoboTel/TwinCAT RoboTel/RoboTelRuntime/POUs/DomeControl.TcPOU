@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="DomeControl" Id="{0e02434d-920e-4c0f-81fc-5ff7d5573875}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM DomeControl
 VAR_INPUT
@@ -52,6 +52,7 @@ VAR
 	DomeCalibration: MC_SetPosition;
 	DomeCommEvent:	FB_Eventlog;
 	DomeAxisEvent:	FB_Eventlog;
+	DomeCalibrationEvent: FB_Eventlog;
 END_VAR
 VAR CONSTANT
 	tolerance:				LREAL := 3.0;
@@ -100,11 +101,11 @@ IF DomeAxis.Calibrated THEN
 ELSE
 	// perform homing only, when in automatic or manual/pendant mode
 	DomeAxis.HomeAxis := TelescopeControl.power;
-	position := 200.0;
+	position := calibration_position;
 END_IF
 
 // velocity = 2°/s or 180° in 81s, 360° in 120s (was 2.22)
-
+// TODO: Reset does not propagate to the FB and therefor does not reset the error
 DomeAxis(
 	Enable := 		enable,
 	Reset := 		reset,
@@ -123,7 +124,7 @@ DomeAxis(
 // re-calibrate the dome, if we pass the reference switch
 DomeCalibration(Axis := GVL_Dome.DomeAxisRef,
 	Execute := GVL_Dome.Azimut_home,
-	Position := 200.0); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
+	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
 		
 IF stop_done THEN
 	move_azimuth := FALSE;
@@ -227,7 +228,13 @@ DomeAxisEvent(
 	FormatString :=	'Dome Axis Error: %s',
 	OnMessage := 	DWORD_TO_HEXSTR(ErrorID, 4, FALSE),
 	OffMEssage := 	'OK');
-				]]></ST>
+				
+DomeCalibrationEvent(	
+	Trigger := 		GVL_Dome.Azimut_home, 
+	Level := 		ADSLOG_MSGTYPE_HINT,
+	FormatString :=	'Dome Calibration: %s',
+	OnMessage := 	'OK');
+]]></ST>
     </Implementation>
     <LineIds Name="DomeControl">
       <LineId Id="1008" Count="0" />
@@ -323,6 +330,8 @@ DomeAxisEvent(
       <LineId Id="757" Count="0" />
       <LineId Id="943" Count="5" />
       <LineId Id="942" Count="0" />
+      <LineId Id="1283" Count="4" />
+      <LineId Id="1282" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

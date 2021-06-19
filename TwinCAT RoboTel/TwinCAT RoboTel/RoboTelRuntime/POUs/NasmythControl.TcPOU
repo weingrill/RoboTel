@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="NasmythControl" Id="{44cc95a4-2714-4f68-86b9-267e29c12088}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM NasmythControl
 VAR_INPUT
@@ -22,11 +22,13 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[GVL_Telescope.nasmyth_lock := enable;
+      <ST><![CDATA[//TODO: Safe enable state with RS flip-flop
+
+GVL_Telescope.nasmyth_lock := enable;
 // report Nasmyth unlocked after n milliseconds										
 Nasmyth_delay(
 	IN := enable,
-	PT := T#500MS,
+	PT := T#250MS,
 	Q => Nasmyth_unlocked);
 	
 Nasmyth_control(
@@ -49,6 +51,7 @@ IF  NOT GVL_Telescope.nasmyth_limit_left THEN
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="NasmythControl">
+      <LineId Id="70" Count="1" />
       <LineId Id="33" Count="0" />
       <LineId Id="35" Count="0" />
       <LineId Id="12" Count="0" />

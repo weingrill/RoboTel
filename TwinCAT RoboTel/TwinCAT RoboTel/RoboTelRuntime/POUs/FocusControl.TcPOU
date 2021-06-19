@@ -1,8 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="FocusControl" Id="{d08d0458-4211-4cc5-9e25-2b5c152fb2d4}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM FocusControl
 VAR_INPUT
+	// enable the axis
+	enable: BOOL;
 	// Move M2 closer to M1
 	inward: 	BOOL;
 	// Move M2 away from M1
@@ -23,13 +25,13 @@ VAR_OUTPUT
 END_VAR
 
 VAR
-	// enable / unlock M2
-	enable:		BOOL := FALSE;
 	FocusUnlock:		RS;
 	FocusDelay:			TON;
 	FocusAxis:			FB_Axis2;
 	actual_position:	LREAL;
+	Focus_max:			LREAL;
 	FocusUnlocked:		BOOL;
+	FocusCalibration:	MC_SetPosition;
 	FocusAxisEvent:		FB_EventLog;
 END_VAR
 
@@ -38,20 +40,20 @@ VAR CONSTANT
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[// Focus is locked by default
-GVL_Telescope.focus_lock := FALSE;
+//GVL_Telescope.focus_lock := FALSE;
 
-//enable := TelescopeControl.power OR PendantControl.Focus_enable;
 // unlock the Focus 
-(*
+// TODO: onlock the Focus on movement only
 FocusUnlock(SET := enable,
 			RESET1 := reset OR NOT enable,
 			Q1 => GVL_Telescope.focus_lock);
+
 // wait until the focus is unlocked for n milliseconds
-FocusDelay(IN :=FocusUnlock.Q1, PT := T#2000MS, Q => FocusUnlocked);
-*)
-GVL_Telescope.focus_lock := FocusUnlocked;
+FocusDelay(IN :=FocusUnlock.Q1, PT := T#1000MS, Q => FocusUnlocked);
+
+//GVL_Telescope.focus_lock := FocusUnlocked;
 FocusAxis(	
-	Enable := 			enable, // FocusUnlocked,
+	Enable := 			FocusUnlocked,
 	Reset := 			reset,
 	MoveAxis := 		MoveAxis,
 	HomeAxis :=			HomeAxis,
@@ -79,6 +81,14 @@ IF FocusAxis.ResetDone THEN
 	reset := FALSE;
 END_IF
 
+FocusCalibration(Axis := GVL_Telescope.FocusAxisRef,
+	Execute := GVL_Telescope.focus_limit_near,
+	Position := 0.0);
+
+IF GVL_Telescope.focus_limit_far THEN
+	Focus_max := actual_position;
+END_IF
+
 FocusAxisEvent(	
 	Trigger := 		FocusAxis.Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
@@ -91,10 +101,11 @@ FocusAxisEvent(
     <LineIds Name="FocusControl">
       <LineId Id="115" Count="0" />
       <LineId Id="54" Count="0" />
-      <LineId Id="102" Count="1" />
+      <LineId Id="310" Count="0" />
       <LineId Id="87" Count="0" />
       <LineId Id="236" Count="0" />
       <LineId Id="99" Count="2" />
+      <LineId Id="274" Count="0" />
       <LineId Id="112" Count="0" />
       <LineId Id="110" Count="1" />
       <LineId Id="237" Count="0" />
@@ -111,7 +122,12 @@ FocusAxisEvent(
       <LineId Id="114" Count="0" />
       <LineId Id="98" Count="0" />
       <LineId Id="179" Count="11" />
-      <LineId Id="192" Count="6" />
+      <LineId Id="314" Count="0" />
+      <LineId Id="316" Count="2" />
+      <LineId Id="315" Count="0" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="320" Count="2" />
+      <LineId Id="193" Count="5" />
       <LineId Id="156" Count="1" />
     </LineIds>
   </POU>
