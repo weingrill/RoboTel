@@ -11,8 +11,6 @@ VAR_INPUT
 	reset:		BOOL;
 	// enable the axis
 	enable: 	BOOL;
-	// issue axis calibration
-	home:		BOOL;
 	// set position of the axis in degrees
 	position:	LREAL;
 END_VAR
@@ -32,6 +30,7 @@ VAR
 	act_position: 		LREAL;
 	// error ID of the elevation axis
 	ErrorID: 			UDINT;
+	// delay until commutator angle is measured
 	readydelay:			TON;
 	ElevationAxisEvent: FB_Eventlog;
 	ElevationVelEvent: FB_Eventlog;
@@ -69,7 +68,7 @@ END_IF
 IF HomeAxis THEN
 	position := homing_position;
 END_IF
-// if NOT Enabled and ActVelo>0 then close_brake
+// if NOT Enabled and ActVelo>1 then close_brake
 IF NOT enable AND GVL_Telescope.ElevationAxisRef.NcToPlc.ActVelo>1.0 THEN
 	HydraulicsControl.close_brake := TRUE;
 END_IF
@@ -83,7 +82,7 @@ MC_SetAcceptBlockedDriveSignal(
 // perform recalibration on encoder reference signal
 ElevationCalibration(
 	Axis := GVL_Telescope.ElevationAxisRef,
-	Execute := GVL_Telescope.Elevation_calibration,
+	Execute := GVL_Telescope.Elevation_Probe,
 	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
 *)
 
@@ -123,8 +122,8 @@ ElevationAxisEvent(	Trigger := Error,
 				FormatString := 'Elevation Axis Error: %s',
 				OnMessage := NCError_TO_STRING(ErrorID));
 				
-ElevationAxisEvent(	Trigger := NOT enable AND GVL_Telescope.ElevationAxisRef.NcToPlc.ActVelo>1.0, 
-				Level := ADSLOG_MSGTYPE_ERROR,
+ElevationAxisEvent(	Trigger := NOT enable AND GVL_Telescope.ElevationAxisRef.NcToPlc.ActVelo>2.0, 
+				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := '%s',
 				OnMessage := 'Elevation moving without command!');
 ]]></ST>
@@ -136,7 +135,7 @@ ElevationAxisEvent(	Trigger := NOT enable AND GVL_Telescope.ElevationAxisRef.NcT
       <LineId Id="380" Count="0" />
       <LineId Id="379" Count="0" />
       <LineId Id="233" Count="0" />
-      <LineId Id="303" Count="0" />
+      <LineId Id="451" Count="0" />
       <LineId Id="234" Count="1" />
       <LineId Id="238" Count="0" />
       <LineId Id="404" Count="0" />

@@ -2653,7 +2653,7 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-00200000000D}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..12] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-00200000000D}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..12] OF BIT</Name>
 			<BitSize>13</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -3229,7 +3229,7 @@ External Setpoint Generation:
 					</AxisPara>
 					<Encoder Name="Enc" EncType="8">
 						<EncPara ScaleFactorNumerator="360" ScaleFactorDenominator="1048576" MaxCount="#xffffffff">
-							<Inc RefPosition="45" RefMode="4"/>
+							<Inc RefPosition="45"/>
 						</EncPara>
 						<Vars VarGrpType="1">
 							<Name>Eingänge</Name>
@@ -4301,6 +4301,13 @@ DOUT9 1.0]]></Comment>
 								<Link VarA="PendantControl.Cover3_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" TypeA="UINT" InOutA="1" ParentTypeA="MDP5001_511_733_O_5131DD77" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="ENC Control compact Channel 1^Set counter value" RestoreInfo="ANotFound"/>
 								<Link VarA="PendantControl.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" TypeA="Control_EC698C5D" InOutA="1" ParentTypeA="MDP5001_511_733_O_5131DD77" GuidA="{3EA2E42C-938D-954B-8DBE-9C7A71451C3D}" VarB="DCM Control Channel 1^Control" RestoreInfo="ANotFound"/>
 								<Link VarA="PendantControl.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" TypeA="INT" InOutA="1" ParentTypeA="MDP5001_511_733_O_5131DD77" GuidA="{18071995-0000-0000-0000-000000000006}" VarB="DCM Velocity Channel 1^Velocity" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2021-07-14T12:16:01">
+						<OwnerA Name="InputDst" Prefix="TIPC^RoboTelRuntime^RoboTelRuntime Instance" Type="1">
+							<OwnerB Name="TINC^NC-Task 1 SAF^Axes^Elevation">
+								<Link VarA="GVL_Telescope.Elevation_HomingState" TypeA="UDINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000008}" VarB="Outputs^ToPlc^HomingState" RestoreInfo="ANotFound"/>
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>

@@ -65,7 +65,7 @@ VAR_GLOBAL
 	Elevation_inputs		AT%I*: WORD;
 	// reference signal
 	Elevation_Probe			AT%I*: INT;
-
+	
 	// digital inputs for limit switches
 	Azimuth_inputs			AT%I*: WORD;
 	// reference signal
