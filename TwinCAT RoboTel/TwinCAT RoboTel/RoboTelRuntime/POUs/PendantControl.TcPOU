@@ -135,7 +135,10 @@ CASE Selection OF
 		GVL_pendant_control.lamp_down := GVL_Telescope.Elevation_inputs.1;
 		ElevationControl.up := up AND GVL_Telescope.Elevation_inputs.0;
 		ElevationControl.down := down AND GVL_Telescope.Elevation_inputs.1;
-		Elevation_enable_button(SET := manual AND enable, Q => ElevationControl.enable);
+		Elevation_enable_button(
+			SET := manual AND enable, 
+			RESET := ElevationControl.error OR ElevationControl.warning, 
+			Q => ElevationControl.enable);
 		ElevationControl.reset := reset;
 		
 	8:	// This selection will become RA/Dec Mode with tracking enabled!
@@ -145,7 +148,7 @@ CASE Selection OF
 		AzimuthElevationControl.left := left AND GVL_Telescope.Azimuth_inputs.0;
 		AzimuthElevationControl.right := right AND GVL_Telescope.Azimuth_inputs.1;
 		AzimuthElevationControl.reset := reset;
-		Azimuth_enable_button(SET := manual AND enable, Q => AzimuthElevationControl.enable);
+		Azimuth_enable_button(SET := manual AND enable, RESET := AzimuthElevationControl.error, Q => AzimuthElevationControl.enable);
 		
 	9: 	// Dome control
 		Dome_enable := manual;
@@ -264,6 +267,7 @@ END_CASE
       <LineId Id="289" Count="0" />
       <LineId Id="327" Count="1" />
       <LineId Id="838" Count="0" />
+      <LineId Id="908" Count="2" />
       <LineId Id="772" Count="0" />
       <LineId Id="285" Count="0" />
       <LineId Id="299" Count="0" />

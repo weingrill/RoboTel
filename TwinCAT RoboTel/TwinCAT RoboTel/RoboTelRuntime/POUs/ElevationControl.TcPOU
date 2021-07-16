@@ -13,6 +13,10 @@ VAR_INPUT
 	enable: 	BOOL;
 	// set position of the axis in degrees
 	position:	LREAL;
+		// drive error condition
+	error: 		BOOL;
+	// warning condition
+	warning:	BOOL;
 END_VAR
 VAR_OUTPUT
 	Ready:		BOOL;
@@ -24,8 +28,6 @@ VAR
 	HomeAxis:	BOOL;
 	ElevationAxis:		FB_Axis2;
 	ElevationCalibration: MC_SetPosition;
-	// drive error condition
-	error: 				BOOL;
 	// actual position of the elevation axis
 	act_position: 		LREAL;
 	// error ID of the elevation axis
@@ -44,23 +46,13 @@ END_VAR
 
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(*
-enablestate (SET := TelescopeControl.power OR PendantControl.Elevation_enable,
-			RESET1 := Error OR Reset,
-			Q1 => Enable);
-*)
-// limit the position input to a sane value
+      <ST><![CDATA[// limit the position input to a sane value
 position := LIMIT(0.0, position, 90.0);
 
 IF Enable OR TelescopeControl.power THEN
 	HydraulicsControl.open_brake := TRUE;
 END_IF
-// TODO Elevation Axis Homing does not work
-(*
-IF ElevationAxis.Ready AND NOT ElevationAxis.Calibrated THEN
-	HomeAxis := TRUE;
-END_IF
-*)
+
 IF ElevationAxis.Calibrated OR Error THEN
 	HomeAxis := FALSE;
 END_IF
@@ -68,23 +60,20 @@ END_IF
 IF HomeAxis THEN
 	position := homing_position;
 END_IF
-// if NOT Enabled and ActVelo>1 then close_brake
-IF NOT enable AND GVL_Telescope.ElevationAxisRef.NcToPlc.ActVelo>1.0 THEN
-	HydraulicsControl.close_brake := TRUE;
-END_IF
+
+// if NOT Enabled and ActVelo>1 then issue a warning
+warning := NOT enable AND GVL_Telescope.ElevationAxisRef.NcToPlc.ActVelo>2.0;
 
 // deactivate limit switches on homing
 MC_SetAcceptBlockedDriveSignal(
 	Axis := GVL_Telescope.ElevationAxisRef, 
 	Enable := HomeAxis);
 
-(*
 // perform recalibration on encoder reference signal
 ElevationCalibration(
 	Axis := GVL_Telescope.ElevationAxisRef,
-	Execute := GVL_Telescope.Elevation_Probe,
+	Execute := GVL_Telescope.Elevation_Probe AND NOT HomeAxis,
 	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
-*)
 
 ElevationAxis(
 	Enable := 			HydraulicsControl.brake_open,
@@ -122,38 +111,32 @@ ElevationAxisEvent(	Trigger := Error,
 				FormatString := 'Elevation Axis Error: %s',
 				OnMessage := NCError_TO_STRING(ErrorID));
 				
-ElevationAxisEvent(	Trigger := NOT enable AND GVL_Telescope.ElevationAxisRef.NcToPlc.ActVelo>2.0, 
+ElevationAxisEvent(	Trigger := warning, 
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := '%s',
 				OnMessage := 'Elevation moving without command!');
 ]]></ST>
     </Implementation>
     <LineIds Name="ElevationControl">
-      <LineId Id="389" Count="0" />
-      <LineId Id="301" Count="0" />
-      <LineId Id="377" Count="1" />
-      <LineId Id="380" Count="0" />
       <LineId Id="379" Count="0" />
       <LineId Id="233" Count="0" />
       <LineId Id="451" Count="0" />
       <LineId Id="234" Count="1" />
       <LineId Id="238" Count="0" />
-      <LineId Id="404" Count="0" />
-      <LineId Id="247" Count="5" />
+      <LineId Id="251" Count="1" />
       <LineId Id="254" Count="5" />
+      <LineId Id="497" Count="0" />
       <LineId Id="340" Count="0" />
-      <LineId Id="390" Count="2" />
       <LineId Id="394" Count="0" />
+      <LineId Id="499" Count="0" />
       <LineId Id="279" Count="0" />
       <LineId Id="243" Count="0" />
       <LineId Id="291" Count="1" />
       <LineId Id="381" Count="0" />
-      <LineId Id="339" Count="0" />
       <LineId Id="280" Count="0" />
       <LineId Id="283" Count="0" />
       <LineId Id="299" Count="0" />
       <LineId Id="284" Count="1" />
-      <LineId Id="281" Count="0" />
       <LineId Id="231" Count="0" />
       <LineId Id="128" Count="0" />
       <LineId Id="184" Count="2" />
