@@ -28,6 +28,7 @@ VAR
 	
 	Filter_position:	CTUD;
 	Elevation_enable_Button: FB_ButtonEnable;
+	Azimuth_enable_Button: FB_ButtonEnable;
 	TelescopeControl_enable: FB_ButtonEnable;
 END_VAR
 ]]></Declaration>
@@ -144,6 +145,7 @@ CASE Selection OF
 		AzimuthElevationControl.left := left AND GVL_Telescope.Azimuth_inputs.0;
 		AzimuthElevationControl.right := right AND GVL_Telescope.Azimuth_inputs.1;
 		AzimuthElevationControl.reset := reset;
+		Azimuth_enable_button(SET := manual AND enable, Q => AzimuthElevationControl.enable);
 		
 	9: 	// Dome control
 		Dome_enable := manual;
@@ -270,6 +272,7 @@ END_CASE
       <LineId Id="300" Count="0" />
       <LineId Id="309" Count="0" />
       <LineId Id="371" Count="1" />
+      <LineId Id="877" Count="0" />
       <LineId Id="463" Count="0" />
       <LineId Id="377" Count="0" />
       <LineId Id="610" Count="0" />
