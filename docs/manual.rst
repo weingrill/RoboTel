@@ -65,6 +65,8 @@ The hydraulic brake is opened, as soon as the drive is enabled to avoid a drive 
 * "ENABLE" executes the homing procedure.
 * Buttons "↑" and "↓" increase and decrease the elevation.
 * Pressing the buttons "↑" and "↓" simultaneously immediately closes the brake.
+* *WARNING* Enabling the drive will automatically open the brake for both elevation
+  and azimuth.
 * *WARNING* This behaviour will change in future. It is envisioned to implement
   an alt-az control in this program.
 
@@ -74,6 +76,7 @@ The hydraulic brake is opened, as soon as the drive is enabled to avoid a drive 
 * Buttons "←" and "→" rotate the azimuth counter-clockwise and clockwise.
 * *WARNING* This behaviour will change in future. It is planned to implement a
   equatorial positioning in right-ascension and declination.
+* *WARNING* Enabling the azimuth also enables the elevation, since the break will be opened.
 
 9 Dome Control
 --------------
