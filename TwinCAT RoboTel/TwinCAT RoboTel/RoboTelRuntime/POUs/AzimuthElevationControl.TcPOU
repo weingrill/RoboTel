@@ -28,7 +28,7 @@ VAR
 END_VAR
 VAR CONSTANT
 	// reference position for homing
-	homing_position:		LREAL := 420.79; // was 442 -21.21
+	homing_position:		LREAL := 463.21; // was 442 - -21.21
 	// current position of the calibration cam. Apply an offset here if necessary
 	calibration_position:	LREAL := 180.0;
 END_VAR
@@ -40,12 +40,14 @@ Power must be on and brake must be open for the axis to operate
 
 (*
 Enable := TelescopeControl.power OR PendantControl.Azimuth_enable;
-
+*)
 IF Enable THEN
 	ElevationControl.enable := TRUE;
 	HydraulicsControl.open_brake := TRUE;
 END_IF
-*)
+
+position := LIMIT(0.0, position, 450.0);
+
 IF AzimuthAxis.Calibrated OR Error THEN
 	HomeAxis := FALSE;
 END_IF
@@ -108,7 +110,10 @@ AzimuthAxisEvent(
       <LineId Id="114" Count="0" />
       <LineId Id="229" Count="0" />
       <LineId Id="152" Count="1" />
-      <LineId Id="243" Count="7" />
+      <LineId Id="284" Count="0" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="285" Count="0" />
+      <LineId Id="244" Count="6" />
       <LineId Id="238" Count="4" />
       <LineId Id="115" Count="0" />
       <LineId Id="33" Count="0" />
