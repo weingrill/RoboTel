@@ -23,19 +23,19 @@ VAR_OUTPUT
 END_VAR
 VAR
 	// move axis command
-	MoveAxis:	BOOL;
+	MoveAxis:				BOOL;
 	// calibrate the focus axis
-	HomeAxis:	BOOL;
-	ElevationAxis:		FB_Axis2;
-	ElevationCalibration: MC_SetPosition;
+	HomeAxis:				BOOL;
+	ElevationAxis:			FB_Axis2;
+	ElevationCalibration: 	MC_SetPosition;
 	// actual position of the elevation axis
-	act_position: 		LREAL;
+	act_position: 			LREAL;
 	// error ID of the elevation axis
-	ErrorID: 			UDINT;
+	ErrorID: 				UDINT;
 	// delay until commutator angle is measured
-	readydelay:			TON;
-	ElevationAxisEvent: FB_Eventlog;
-	ElevationVelEvent: FB_Eventlog;
+	readydelay:				TON;
+	ElevationAxisEvent: 	FB_Eventlog;
+	ElevationVelEvent: 		FB_Eventlog;
 END_VAR
 VAR CONSTANT
 	// reference position for homing
@@ -51,7 +51,7 @@ position := LIMIT(0.0, position, 90.0);
 
 IF Enable OR TelescopeControl.power THEN
 	HydraulicsControl.open_brake := TRUE;
-END_IF
+END_IF // else close_brake ?
 
 IF ElevationAxis.Calibrated OR Error THEN
 	HomeAxis := FALSE;
@@ -72,7 +72,7 @@ MC_SetAcceptBlockedDriveSignal(
 // perform recalibration on encoder reference signal
 ElevationCalibration(
 	Axis := GVL_Telescope.ElevationAxisRef,
-	Execute := GVL_Telescope.Elevation_Probe AND NOT HomeAxis,
+	Execute := GVL_Telescope.Elevation_Probe=217 AND NOT HomeAxis,
 	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
 
 ElevationAxis(

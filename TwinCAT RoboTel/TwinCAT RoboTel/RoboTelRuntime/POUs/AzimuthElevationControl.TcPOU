@@ -21,6 +21,7 @@ END_VAR
 
 VAR
 	AzimuthAxis:	FB_Axis2;
+	AzimuthCalibration: 	MC_SetPosition;
 	error: 			BOOL;
 	ErrorID:		UDINT;
 	act_position:	LREAL;
@@ -55,6 +56,12 @@ END_IF
 IF HomeAxis THEN
 	position := homing_position;
 END_IF
+
+
+AzimuthCalibration(
+	Axis := GVL_Telescope.ElevationAxisRef,
+	Execute := GVL_Telescope.Azimuth_Probe=217 AND NOT HomeAxis,
+	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
 
 // deactivate limit switches on homing
 MC_SetAcceptBlockedDriveSignal(
@@ -114,6 +121,7 @@ AzimuthAxisEvent(
       <LineId Id="243" Count="0" />
       <LineId Id="285" Count="0" />
       <LineId Id="244" Count="6" />
+      <LineId Id="286" Count="5" />
       <LineId Id="238" Count="4" />
       <LineId Id="115" Count="0" />
       <LineId Id="33" Count="0" />
