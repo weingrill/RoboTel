@@ -143,6 +143,8 @@ GVL_Dome.Light := Light AND LightTimer.Q;
 DomeControlWord.0 := TRUE;
 IF CloseDome THEN
 	OpenDome := FALSE;
+	DomeControlWord.1 := FALSE; // CloseFlap
+	DomeControlWord.2 := FALSE; // CloseSlit
 ELSIF OpenDome THEN
 	DomeControlWord.1 := TRUE; // OpenFlap
 	DomeControlWord.2 := TRUE; // OpenSlit
@@ -300,6 +302,7 @@ DomeCalibrationEvent(
       <LineId Id="747" Count="0" />
       <LineId Id="1135" Count="0" />
       <LineId Id="1145" Count="0" />
+      <LineId Id="1345" Count="1" />
       <LineId Id="1138" Count="0" />
       <LineId Id="1146" Count="1" />
       <LineId Id="1137" Count="0" />
