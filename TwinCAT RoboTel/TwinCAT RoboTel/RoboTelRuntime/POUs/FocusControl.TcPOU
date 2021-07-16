@@ -37,11 +37,20 @@ END_VAR
 
 VAR CONSTANT
 	Focus_precision:	LREAL := 0.001;
+	// reference position for homing
+	homing_position:		LREAL := 97.96; // 107,50 - 9,54
+
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// Focus is locked by default
+      <ST><![CDATA[(*
+Focus Control Unit
+spindle gear: 5mm
+brake: 86 61103H00 Var. 0005 Index C; 24VDC geglattet 0,25 A P1672/R7
+motor: Faulhaber ; Schönaich ; 3557K024CR; 454  431 ; Made in germany ==> 5300 rpm
+gear: Faulhaber ; MINIMOTOR SA ; swiss made ; 38/1S  43:1 ; 033896  503
+Focus is locked by default
 //GVL_Telescope.focus_lock := FALSE;
-
+*)
 // unlock the Focus 
 // TODO: onlock the Focus on movement only
 FocusUnlock(SET := enable,
@@ -51,6 +60,15 @@ FocusUnlock(SET := enable,
 // wait until the focus is unlocked for n milliseconds
 FocusDelay(IN :=FocusUnlock.Q1, PT := T#1000MS, Q => FocusUnlocked);
 
+IF HomeAxis THEN
+	position := homing_position;
+END_IF
+
+// deactivate limit switches on homing
+MC_SetAcceptBlockedDriveSignal(
+	Axis := GVL_Telescope.FocusAxisRef, 
+	Enable := HomeAxis);
+
 //GVL_Telescope.focus_lock := FocusUnlocked;
 FocusAxis(	
 	Enable := 			FocusUnlocked,
@@ -58,12 +76,12 @@ FocusAxis(
 	MoveAxis := 		MoveAxis,
 	HomeAxis :=			HomeAxis,
 	Position := 		position,
-	Velocity :=			5.0,
-	Enable_Positive := 	NOT GVL_Telescope.focus_limit_far,
+	Velocity :=			1.0,
+	Enable_Positive := 	NOT GVL_Telescope.focus_limit_far OR HomeAxis,
 	Enable_Negative := 	NOT GVL_Telescope.focus_limit_near,
 	Jog_Forward :=		outward,
 	Jog_Backwards := 	inward,
-	bCalibrationCam :=  GVL_Telescope.focus_limit_near,
+	bCalibrationCam :=  GVL_Telescope.focus_limit_far,
 	ActualPosition => 	actual_position,
 	Error =>			error,
 	ErrorID =>			ErrorID,
@@ -81,6 +99,11 @@ IF FocusAxis.ResetDone THEN
 	reset := FALSE;
 END_IF
 
+IF FocusAxis.Calibrated OR Error THEN
+	HomeAxis := FALSE;
+END_IF
+	
+
 FocusCalibration(Axis := GVL_Telescope.FocusAxisRef,
 	Execute := GVL_Telescope.focus_limit_near,
 	Position := 0.0);
@@ -93,12 +116,18 @@ FocusAxisEvent(
 	Trigger := 		FocusAxis.Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
 	FormatString :=	'Focus Axis Error: %s',
-	OnMessage := 	DWORD_TO_HEXSTR(FocusAxis.ErrorID, 4, FALSE),
+	OnMessage := 	NCError_TO_STRING(ErrorID),
 	OffMEssage := 	'OK',
 	OffLevel := 	ADSLOG_MSGTYPE_HINT);
 ]]></ST>
     </Implementation>
     <LineIds Name="FocusControl">
+      <LineId Id="359" Count="0" />
+      <LineId Id="361" Count="0" />
+      <LineId Id="360" Count="0" />
+      <LineId Id="362" Count="0" />
+      <LineId Id="364" Count="0" />
+      <LineId Id="363" Count="0" />
       <LineId Id="115" Count="0" />
       <LineId Id="54" Count="0" />
       <LineId Id="310" Count="0" />
@@ -107,7 +136,11 @@ FocusAxisEvent(
       <LineId Id="99" Count="2" />
       <LineId Id="274" Count="0" />
       <LineId Id="112" Count="0" />
-      <LineId Id="110" Count="1" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="377" Count="0" />
+      <LineId Id="379" Count="6" />
+      <LineId Id="378" Count="0" />
+      <LineId Id="111" Count="0" />
       <LineId Id="237" Count="0" />
       <LineId Id="90" Count="0" />
       <LineId Id="176" Count="0" />
@@ -122,6 +155,8 @@ FocusAxisEvent(
       <LineId Id="114" Count="0" />
       <LineId Id="98" Count="0" />
       <LineId Id="179" Count="11" />
+      <LineId Id="368" Count="0" />
+      <LineId Id="370" Count="3" />
       <LineId Id="314" Count="0" />
       <LineId Id="316" Count="2" />
       <LineId Id="315" Count="0" />

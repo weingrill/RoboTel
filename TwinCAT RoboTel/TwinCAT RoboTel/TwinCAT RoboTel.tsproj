@@ -2758,11 +2758,11 @@ External Setpoint Generation:
 				<Axis Id="1" CreateSymbols="true" AxisType="1">
 					<Name>Focus</Name>
 					<AxisPara>
-						<Dynamic AccelerationMaximum="1000" DecelerationMaximum="1000" Acceleration="2.47294" Deceleration="2.47294" Jerk="2.3521"/>
-						<Velo RefSearch="0.5" RefSync="0.5" SlowManual="0.1" FastManual="1" Maximum="5"/>
+						<Dynamic AccelerationMaximum="100" DecelerationMaximum="100" Acceleration="2.47294" Deceleration="2.47294" Jerk="2.3521"/>
+						<Velo RefSearch="0.1" RefSync="0.1" SlowManual="0.1" FastManual="0.5" Maximum="5"/>
 						<PositionAreaControl Enable="false"/>
 						<TargetPosControl Enable="false"/>
-						<OtherSettings AllowMotionCmdToSlave="true"/>
+						<OtherSettings AllowMotionCmdToSlave="true" PulseDistancePos="1" PulseDistanceNeg="1"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="4">
 						<EncPara ScaleFactorNumerator="0.001" ScaleFactorDenominator="5" MaxCount="#x0000ffff">
@@ -2828,7 +2828,7 @@ External Setpoint Generation:
 					</Encoder>
 					<Drive Name="Drive" DrvType="23">
 						<DrvPara>
-							<Analog VeloReferenz="8000" ScaleFactorActTorque="0.1"/>
+							<Analog VeloReferenz="10.2713178" ScaleFactorActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
@@ -2902,7 +2902,6 @@ External Setpoint Generation:
 					</Drive>
 					<Controller Name="Ctrl" CtrType="1">
 						<CtrPara PriorControlFactor="1">
-							<PosDiffControl Enable="false"/>
 							<Observer BandWidth="20"/>
 						</CtrPara>
 					</Controller>
