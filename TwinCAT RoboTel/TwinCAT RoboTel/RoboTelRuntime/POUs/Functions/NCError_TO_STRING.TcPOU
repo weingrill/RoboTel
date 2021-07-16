@@ -13,6 +13,7 @@ END_VAR
       <ST><![CDATA[NCError_TO_STRING := '';
 
 CASE ErrorID OF
+	16#4253:	NCError_TO_STRING := 'Reference cam became free too soon';
 	16#4260:	NCError_TO_STRING := 'Controller enable';
 	16#42EF:	NCError_TO_STRING := 'Axis is locked for motion commands because a stop command is still active';
 	16#4550: 	NCError_TO_STRING := 'Following error monitoring (position)';
@@ -26,6 +27,7 @@ END_CASE]]></ST>
     <LineIds Name="NCError_TO_STRING">
       <LineId Id="21" Count="1" />
       <LineId Id="7" Count="0" />
+      <LineId Id="33" Count="0" />
       <LineId Id="17" Count="0" />
       <LineId Id="23" Count="0" />
       <LineId Id="13" Count="0" />
