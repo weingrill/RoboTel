@@ -100,6 +100,10 @@ oil_pump_state(SET := start,
 						NOT MAIN.phase_available);
 
 GVL_Hydraulics.oil_pump_enable := oil_pump_state.Q1;
+
+IF NOT pump_running THEN
+	stop := FALSE;
+END_IF
 (* This section controls the hydraulic brake responsible for azimuth and elevation. 
 Especially the elevation is imbalanced if not in the position control loop. 
 The brake must only be opened, if the elevation drive is activated concurrently.
@@ -214,7 +218,12 @@ BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
       <LineId Id="702" Count="3" />
       <LineId Id="333" Count="3" />
       <LineId Id="493" Count="0" />
-      <LineId Id="337" Count="3" />
+      <LineId Id="337" Count="1" />
+      <LineId Id="786" Count="0" />
+      <LineId Id="340" Count="0" />
+      <LineId Id="788" Count="0" />
+      <LineId Id="787" Count="0" />
+      <LineId Id="789" Count="1" />
       <LineId Id="549" Count="0" />
       <LineId Id="551" Count="1" />
       <LineId Id="550" Count="0" />
