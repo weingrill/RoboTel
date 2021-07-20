@@ -85,8 +85,8 @@ power_watchdog(IN := GVL_Main.softstart_trafo AND NOT power_OK,
 warn_blink(ENABLE := HydraulicsControl.oil_warning OR HydraulicsControl.oil_hot, 
 	Q => warning);
 error := power_failure OR 
-			HydraulicsControl.pressure_failure OR 
-			(NOT phase_available)
+			HydraulicsControl.pressure_failure 
+			OR (NOT phase_available)
 			OR GVL_Telescope.azimut_limit_switch
 			//OR PendantControl.error
 			OR FanControl.error
@@ -155,7 +155,9 @@ PowerEvent(
       <LineId Id="70" Count="0" />
       <LineId Id="521" Count="0" />
       <LineId Id="41" Count="0" />
-      <LineId Id="71" Count="2" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="562" Count="0" />
+      <LineId Id="73" Count="0" />
       <LineId Id="80" Count="0" />
       <LineId Id="82" Count="0" />
       <LineId Id="172" Count="0" />
