@@ -13,25 +13,30 @@ VAR_INPUT
 	enable: 	BOOL;
 	// set position of the axis in degrees
 	position:	LREAL;
-		// drive error condition
-	error: 		BOOL;
-	// warning condition
-	warning:	BOOL;
+	// move axis command
+	MoveAxis:	BOOL;
+	// calibrate the focus axis
+	HomeAxis:	BOOL;
+	// enable tracking
+	Tracking:	BOOL;
 END_VAR
 VAR_OUTPUT
-	Ready:		BOOL;
+	// axis is ready to operate
+	Ready:			BOOL;
+	// drive error condition
+	error: 			BOOL;
+	// warning condition
+	warning:		BOOL;
+	// actual position of the elevation axis
+	act_position: 	LREAL;
+	// error ID of the elevation axis
+	ErrorID: 		UDINT;
+	// axis is calibrated
+	Calibrated:		BOOL;
 END_VAR
 VAR
-	// move axis command
-	MoveAxis:				BOOL;
-	// calibrate the focus axis
-	HomeAxis:				BOOL;
 	ElevationAxis:			FB_Axis2;
 	ElevationCalibration: 	MC_SetPosition;
-	// actual position of the elevation axis
-	act_position: 			LREAL;
-	// error ID of the elevation axis
-	ErrorID: 				UDINT;
 	// delay until commutator angle is measured
 	readydelay:				TON;
 	ElevationAxisEvent: 	FB_Eventlog;
@@ -56,7 +61,9 @@ END_IF // else close_brake ?
 IF ElevationAxis.Calibrated OR Error THEN
 	HomeAxis := FALSE;
 END_IF
-	
+
+Calibrated := ElevationAxis.Calibrated;
+
 IF HomeAxis THEN
 	position := homing_position;
 END_IF
@@ -80,6 +87,7 @@ ElevationAxis(
 	Reset := 			reset,
 	MoveAxis :=			MoveAxis,
 	HomeAxis :=			HomeAxis,
+	Tracking :=			Tracking,
 	Position := 		position, 
 	Enable_Positive :=  GVL_Telescope.Elevation_inputs.0 OR HomeAxis,
 	Enable_Negative := 	GVL_Telescope.Elevation_inputs.1,
@@ -90,7 +98,6 @@ ElevationAxis(
 	Error => 			error,
 	ErrorID => 			ErrorID,
 	AxisRef :=			GVL_Telescope.ElevationAxisRef);
-
 
 IF ElevationAxis.MoveDone THEN
 	MoveAxis := FALSE;
@@ -124,7 +131,9 @@ ElevationAxisEvent(	Trigger := warning,
       <LineId Id="234" Count="1" />
       <LineId Id="238" Count="0" />
       <LineId Id="251" Count="1" />
-      <LineId Id="254" Count="5" />
+      <LineId Id="254" Count="1" />
+      <LineId Id="558" Count="1" />
+      <LineId Id="256" Count="3" />
       <LineId Id="497" Count="0" />
       <LineId Id="340" Count="0" />
       <LineId Id="394" Count="0" />
@@ -141,11 +150,11 @@ ElevationAxisEvent(	Trigger := warning,
       <LineId Id="128" Count="0" />
       <LineId Id="184" Count="2" />
       <LineId Id="277" Count="0" />
+      <LineId Id="562" Count="0" />
       <LineId Id="187" Count="4" />
       <LineId Id="300" Count="0" />
       <LineId Id="192" Count="2" />
       <LineId Id="135" Count="0" />
-      <LineId Id="229" Count="0" />
       <LineId Id="214" Count="11" />
       <LineId Id="385" Count="1" />
       <LineId Id="136" Count="0" />
