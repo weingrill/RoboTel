@@ -11,8 +11,6 @@ VAR_INPUT
 	left:		BOOL;
 	// increase derotator angle
 	right:		BOOL;
-	// perform homing
-	home:		BOOL;
 	// set the absolute position
 	position:	LREAL;
 END_VAR
@@ -47,10 +45,10 @@ PlcToNc-Achsinterface, Bit 8 namens AcceptBlockedDriveSignal im nDeCtrlDWord
 SPS-Interface:
 TcNc-Lib, siehe SPS-Funktion AxisSetAcceptBlockedDriveSignal in der TwinCAT  PLC Library: NC.
 *)
-enable := TelescopeControl.power OR PendantControl.Derotator_enable;
+// TODO review enable logic
+enable := PendantControl.Derotator_enable;
 
 position := LIMIT(0.0, position, 470.0);
-
 
 // WARNING: Homing disables the limit Switches!
 
@@ -58,12 +56,11 @@ MC_SetAcceptBlockedDriveSignal(
 	Axis := GVL_Telescope.DerotatorAxisRef,
 	Enable := HomeAxis);
 
-IF home OR (TelescopeControl.power AND NOT DerotatorAxis.Calibrated) THEN
+IF enable AND TelescopeControl.power AND NOT DerotatorAxis.Calibrated THEN
 	HomeAxis := TRUE;
 END_IF
 
 IF DerotatorAxis.Calibrated THEN
-	home := FALSE;
 	HomeAxis := FALSE;
 END_IF
 	
@@ -117,10 +114,10 @@ DerotatorEvent(
       <LineId Id="137" Count="3" />
       <LineId Id="134" Count="0" />
       <LineId Id="130" Count="0" />
+      <LineId Id="239" Count="0" />
       <LineId Id="101" Count="0" />
       <LineId Id="169" Count="0" />
       <LineId Id="171" Count="0" />
-      <LineId Id="170" Count="0" />
       <LineId Id="146" Count="0" />
       <LineId Id="143" Count="0" />
       <LineId Id="162" Count="0" />
@@ -132,9 +129,7 @@ DerotatorEvent(
       <LineId Id="160" Count="1" />
       <LineId Id="164" Count="0" />
       <LineId Id="163" Count="0" />
-      <LineId Id="165" Count="0" />
-      <LineId Id="167" Count="0" />
-      <LineId Id="166" Count="0" />
+      <LineId Id="165" Count="1" />
       <LineId Id="155" Count="0" />
       <LineId Id="142" Count="0" />
       <LineId Id="156" Count="1" />
