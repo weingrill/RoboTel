@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="FB_EQ2HOR2" Id="{7b34f02a-1435-4300-8153-5c49f62d1b5b}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_EQ2HOR2
 VAR_INPUT
@@ -23,7 +23,8 @@ VAR_OUTPUT
 	ha: LREAL;
 END_VAR
 VAR
-	lst: LREAL;
+	lst, 
+	T , theta0, gmst: LREAL;
 	sinalt, sinaz, cosaz, az2: LREAL;
 END_VAR
 VAR CONSTANT
@@ -33,23 +34,46 @@ VAR CONSTANT
 	h2d:	LREAL := 15.0;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[lst := ct2lst(lon, jd);
-ha := MODABS(lst*15.0 - alpha, 360.0);
+      <ST><![CDATA[(* 
+source: http://star-www.st-and.ac.uk/~fv/webnotes/chapter7.htm
+https://squarewidget.com/astronomical-calculations-sidereal-time/
+
+*)
+//lst := ct2lst(lon, jd);
+T := ((JD - 2451545.0) / 36525);
+theta0 := 280.46061837 + 360.98564736629 * (JD - 2451545.0) + (0.000387933 * T * T) - (T * T * T / 38710000.0); // (12.4)
+gmst := MODABS(theta0, 360.0);
+lst := gmst + lon; // LST in degrees
+// ha := MODABS(lst*15.0 - alpha, 360.0);
+ha := MODABS(lst - alpha, 360.0);
 sinalt := (SIN(delta*d2r)*SIN(lat*d2r)) + (COS(delta*d2r)*COS(lat*d2r)*COS(ha*d2r));
 alt := ASIN(sinalt) * r2d;
 
 sinaz := -SIN(ha*d2r)*COS(delta*d2r)/COS(alt*d2r);
-az := ASIN(sinaz) * r2d;
+//az := ASIN(sinaz) * r2d;
+az := MODABS((360 + ASIN(sinaz) * r2d), 360.0);
+
 cosaz := (SIN(delta*d2r) - SIN(lat*d2r)*sinalt)/(COS(lat*d2r)*COS(alt*d2r));
 az2 := ACOS(cosaz) * r2d;]]></ST>
     </Implementation>
     <LineIds Name="FB_EQ2HOR2">
+      <LineId Id="81" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="90" Count="1" />
+      <LineId Id="82" Count="0" />
       <LineId Id="9" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="86" Count="0" />
       <LineId Id="16" Count="0" />
+      <LineId Id="89" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="26" Count="1" />
       <LineId Id="24" Count="0" />
       <LineId Id="28" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="92" Count="0" />
       <LineId Id="23" Count="0" />
       <LineId Id="50" Count="0" />
     </LineIds>
