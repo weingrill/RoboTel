@@ -47,7 +47,8 @@ The current optical filter is selected through `filter_position`.
 The number of filters is hard coded to 24.
 Use `MoveAxis` to position the 
 *)
-enable := TelescopeControl.power OR PendantControl.FilterWheel_enable;
+// TODO review enable logic
+enable := PendantControl.FilterWheel_enable;
 
 // limit filter_position to [0...filters-1]
 filter_position := filter_position MOD filters;
@@ -101,7 +102,7 @@ FilterWheelEvent(
 	Trigger := 		Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
 	FormatString :=	'Filter Wheel Axis Error: %s',
-	OnMessage := 	DWORD_TO_HEXSTR(ErrorID, 4, FALSE),
+	OnMessage := 	NCError_TO_STRING(ErrorID),
 	OffMEssage := 	'OK',
 	OffLevel := 	ADSLOG_MSGTYPE_HINT);]]></ST>
     </Implementation>
@@ -111,6 +112,7 @@ FilterWheelEvent(
       <LineId Id="218" Count="0" />
       <LineId Id="220" Count="0" />
       <LineId Id="217" Count="0" />
+      <LineId Id="294" Count="0" />
       <LineId Id="85" Count="0" />
       <LineId Id="214" Count="2" />
       <LineId Id="224" Count="0" />
