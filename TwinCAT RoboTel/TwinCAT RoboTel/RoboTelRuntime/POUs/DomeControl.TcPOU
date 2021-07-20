@@ -28,22 +28,22 @@ END_VAR
 VAR
 	DomeAxis: FB_Axis2;
 	Azimuth_current: 	LREAL;
-	manual_enable:	BOOL;
-	move_azimuth:	BOOL;
-	stop_done:		BOOL;
+	manual_enable:		BOOL;
+	move_azimuth:		BOOL;
+	stop_done:			BOOL;
 	DomeOpened,
 	DomeClosed:			BOOL;
    	DomeControlWord:	WORD;
 	DeHumidifierDelay : TON;
 	PermanentError:		TON;
-	LightTimer:		TP;
-	bWrite       : BOOL;(* Rising edge at this variable starts command execution *)
-	nState       : BYTE := 0;
-	bBusy        : BOOL;
-	bError       : BOOL;
-	nErrID       : UDINT;
-	arrBool       : ARRAY[0..3] OF BOOL;(* Server data to be written *)
-	i            : INT;
+	LightTimer:			TP;
+	bWrite       : 		BOOL;(* Rising edge at this variable starts command execution *)
+	nState       :		 BYTE := 0;
+	bBusy        : 		BOOL;
+	bError       : 		BOOL;
+	nErrID       : 		UDINT;
+	arrBool      : 		ARRAY[0..3] OF BOOL;(* Server data to be written *)
+	i            : 		INT;
 
 	WriteCycle:	FB_BLINK;
 	
@@ -94,13 +94,13 @@ GVL_Dome.Inverter_DirectionMinus := GVL_Dome.bDirectionPlus;
 IF DomeAxis.Calibrated THEN
 	DomeAxis.HomeAxis := FALSE;
 	// if we are on automatic, tie the dome to the telescope
-	IF TelescopeControl.power THEN
+	IF TelescopeControl.power AND AzimuthElevationControl.calibrated THEN
 		position := TelescopeControl.azimuth_current;
 		move_azimuth := ABS(Azimuth_current - position) > tolerance;
 	END_IF
 ELSE
-	// perform homing only, when in automatic or manual/pendant mode
-	DomeAxis.HomeAxis := TelescopeControl.power;
+	// TODO perform homing only, when in automatic or manual/pendant mode
+	// DomeAxis.HomeAxis := TelescopeControl.power;
 	position := calibration_position;
 END_IF
 
@@ -123,7 +123,7 @@ DomeAxis(
 
 // re-calibrate the dome, if we pass the reference switch
 DomeCalibration(Axis := GVL_Dome.DomeAxisRef,
-	Execute := GVL_Dome.Azimut_home,
+	Execute := GVL_Dome.Azimut_home AND NOT DomeAxis.HomeAxis,
 	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
 		
 IF stop_done THEN
@@ -228,7 +228,7 @@ DomeAxisEvent(
 	Trigger := 		Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
 	FormatString :=	'Dome Axis Error: %s',
-	OnMessage := 	DWORD_TO_HEXSTR(ErrorID, 4, FALSE),
+	OnMessage := 	NCError_TO_STRING(ErrorID),
 	OffMEssage := 	'OK');
 				
 DomeCalibrationEvent(	
