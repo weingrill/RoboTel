@@ -127,7 +127,6 @@ CASE Selection OF
 		DerotatorControl.left := left AND NOT GVL_Telescope.Derotator_inputs.1;
 		DerotatorControl.right := right AND NOT GVL_Telescope.Derotator_inputs.0;
 		DerotatorControl.reset := reset;
-		DerotatorControl.home := up;
 						
 	7:	// Elevation Control
 		Elevation_enable := manual;
@@ -148,7 +147,9 @@ CASE Selection OF
 		AzimuthElevationControl.left := left AND GVL_Telescope.Azimuth_inputs.0;
 		AzimuthElevationControl.right := right AND GVL_Telescope.Azimuth_inputs.1;
 		AzimuthElevationControl.reset := reset;
-		Azimuth_enable_button(SET := manual AND enable, RESET := AzimuthElevationControl.error, Q => AzimuthElevationControl.enable);
+		Azimuth_enable_button(SET := manual AND enable, 
+			RESET := AzimuthElevationControl.error, 
+			Q => AzimuthElevationControl.enable);
 		
 	9: 	// Dome control
 		Dome_enable := manual;
@@ -177,7 +178,7 @@ CASE Selection OF
 		FilterWheelControl.reset := reset;
 	
 	13: // Telescope Control
-		Telescopecontrol_enable(SET := enable, RESET := manual, Q => TelescopeControl.power);
+		Telescopecontrol_enable(SET := enable, RESET := error, Q => TelescopeControl.power);
 		TelescopeControl.reset := reset;
 	
 	14: GVL_Telescope.horn := manual;
@@ -187,10 +188,22 @@ CASE Selection OF
 		GVL_pendant_control.lamp_down := HydraulicsControl.oil_pressure_OK AND Hydraulicscontrol.brake_open;
 		GVL_pendant_control.lamp_left := HydraulicsControl.pump_running;
 		GVL_pendant_control.lamp_right := HydraulicsControl.suction_running;
-		Hydraulicscontrol.start := manual AND enable;
-		Hydraulicscontrol.stop := manual AND reset;
-		Hydraulicscontrol.open_brake := manual AND up;
-		Hydraulicscontrol.close_brake := manual AND down;
+		IF manual THEN
+			IF enable THEN
+				Hydraulicscontrol.start := TRUE;
+			END_IF
+			IF reset THEN
+				Hydraulicscontrol.stop := TRUE;
+			END_IF
+			IF up THEN
+				Hydraulicscontrol.open_brake := TRUE;
+				Hydraulicscontrol.close_brake := FALSE;
+			END_IF
+			IF down THEN
+				Hydraulicscontrol.open_brake := FALSE;
+				Hydraulicscontrol.close_brake := TRUE;
+			END_IF
+		END_IF
 END_CASE
 ]]></ST>
     </Implementation>
@@ -259,7 +272,6 @@ END_CASE
       <LineId Id="727" Count="0" />
       <LineId Id="222" Count="0" />
       <LineId Id="554" Count="1" />
-      <LineId Id="771" Count="0" />
       <LineId Id="465" Count="0" />
       <LineId Id="311" Count="0" />
       <LineId Id="609" Count="0" />
@@ -277,6 +289,7 @@ END_CASE
       <LineId Id="309" Count="0" />
       <LineId Id="371" Count="1" />
       <LineId Id="877" Count="0" />
+      <LineId Id="957" Count="1" />
       <LineId Id="463" Count="0" />
       <LineId Id="377" Count="0" />
       <LineId Id="610" Count="0" />
@@ -305,8 +318,15 @@ END_CASE
       <LineId Id="612" Count="0" />
       <LineId Id="234" Count="0" />
       <LineId Id="419" Count="1" />
-      <LineId Id="244" Count="1" />
-      <LineId Id="839" Count="1" />
+      <LineId Id="941" Count="0" />
+      <LineId Id="944" Count="2" />
+      <LineId Id="942" Count="0" />
+      <LineId Id="947" Count="3" />
+      <LineId Id="955" Count="0" />
+      <LineId Id="951" Count="1" />
+      <LineId Id="956" Count="0" />
+      <LineId Id="953" Count="1" />
+      <LineId Id="943" Count="0" />
       <LineId Id="13" Count="0" />
       <LineId Id="121" Count="0" />
     </LineIds>
