@@ -47,8 +47,6 @@ The current optical filter is selected through `filter_position`.
 The number of filters is hard coded to 24.
 Use `MoveAxis` to position the 
 *)
-// TODO review enable logic
-enable := PendantControl.FilterWheel_enable;
 
 // limit filter_position to [0...filters-1]
 filter_position := filter_position MOD filters;
@@ -112,9 +110,8 @@ FilterWheelEvent(
       <LineId Id="218" Count="0" />
       <LineId Id="220" Count="0" />
       <LineId Id="217" Count="0" />
-      <LineId Id="294" Count="0" />
-      <LineId Id="85" Count="0" />
-      <LineId Id="214" Count="2" />
+      <LineId Id="334" Count="0" />
+      <LineId Id="215" Count="1" />
       <LineId Id="224" Count="0" />
       <LineId Id="222" Count="0" />
       <LineId Id="235" Count="1" />
