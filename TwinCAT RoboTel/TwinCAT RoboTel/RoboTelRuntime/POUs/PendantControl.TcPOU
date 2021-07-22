@@ -4,29 +4,27 @@
     <Declaration><![CDATA[PROGRAM PendantControl
 VAR
 	// program selection of the pendant control
-	Selection:			UINT;
+	Selection:	UINT;
 	// error on the pendant control
-	Error:				BOOL;
-	// cover1
-	Cover1_enable,
-	Cover2_enable,
-	Cover3_enable,
-	Nasmyth_enable,
-	Focus_enable,
-	Elevation_enable,
-	Azimuth_enable,
-	Derotator_enable,
-	Dome_enable,
-	FilterWheel_enable:	BOOL := FALSE;
+	Error:		BOOL;
+	// manual switch
 	manual:		BOOL;
+	//enable button
 	enable:		BOOL;
+	//reset button
 	reset:		BOOL;
+	// up button
 	up:			BOOL;
+	// down button
 	down:		BOOL;
+	// left button
 	left:		BOOL;
+	// right button
 	right:		BOOL;
-	
+	// counter for filter position
 	Filter_position:	CTUD;
+	// time offset
+	time_offset:	CTUD;
 	Elevation_enable_Button: FB_ButtonEnable;
 	Azimuth_enable_Button: FB_ButtonEnable;
 	TelescopeControl_enable: FB_ButtonEnable;
@@ -66,36 +64,24 @@ right := GVL_pendant_control.direction_right;
 // the error lamp is the same as the error lamp of the main panel
 GVL_pendant_control.lamp_error := GVL_Main.lamp_error;
 
-// disable all items by default
-Cover1_enable :=	FALSE;
-Cover2_enable :=	FALSE;
-Cover3_enable :=	FALSE;
-Nasmyth_enable :=	FALSE;
-Focus_enable := 	FALSE;
-Elevation_enable := FALSE;
-Azimuth_enable := 	FALSE;
-Derotator_enable := FALSE;
-Dome_enable := 		FALSE;
-FilterWheel_enable := FALSE;
-
 // enable only the selected item and connect lamps and buttons accordingly
 CASE Selection OF
 	1:	// reserved for Cover1 control
-		Cover1_enable := manual;
-		CoverControl.Cover2_open := up;
-		CoverControl.Cover2_close := down;
+		CoverControl.Cover1_enable := manual;
+		CoverControl.Cover1_open := up;
+		CoverControl.Cover1_close := down;
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover1_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover1_closed;
 
 	2: // Cover2 control
-		Cover2_enable := manual;
+		CoverControl.Cover2_enable := manual;
 		CoverControl.Cover2_open := up;
 		CoverControl.Cover2_close := down;
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover2_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover2_closed;
  	
 	3:  // Cover3 control
-		Cover3_enable := manual;
+		CoverControl.Cover3_enable := manual;
 		CoverControl.Cover3_open := up;
 		CoverControl.Cover3_close := down;
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover3_open;
@@ -111,25 +97,22 @@ CASE Selection OF
 		NasmythControl.reset := reset;
 		
 	5:	// Focus Control
-		Focus_enable := manual;
 		GVL_pendant_control.lamp_up := NOT GVL_Telescope.focus_limit_far;
 		GVL_pendant_control.lamp_down := NOT GVL_Telescope.focus_limit_near;
-		FocusControl.enable := Focus_enable;
+		FocusControl.enable := manual;
 		FocusControl.outward := up;
 		FocusControl.inward := down;
 		Focuscontrol.reset := reset;
 						
 	6:	// Derotator control
-		Derotator_enable := manual;
 		GVL_pendant_control.lamp_left := NOT GVL_Telescope.Derotator_inputs.1;
 		GVL_pendant_control.lamp_right := NOT GVL_Telescope.Derotator_inputs.0;
-		DerotatorControl.enable := Derotator_enable;
+		DerotatorControl.enable := manual;
 		DerotatorControl.left := left AND NOT GVL_Telescope.Derotator_inputs.1;
 		DerotatorControl.right := right AND NOT GVL_Telescope.Derotator_inputs.0;
 		DerotatorControl.reset := reset;
 						
 	7:	// Elevation Control
-		Elevation_enable := manual;
 		GVL_pendant_control.lamp_up := GVL_Telescope.Elevation_inputs.0;
 		GVL_pendant_control.lamp_down := GVL_Telescope.Elevation_inputs.1;
 		ElevationControl.up := up AND GVL_Telescope.Elevation_inputs.0;
@@ -141,7 +124,6 @@ CASE Selection OF
 		ElevationControl.reset := reset;
 		
 	8:	// This selection will become RA/Dec Mode with tracking enabled!
-		Azimuth_enable := manual;
 		GVL_pendant_control.lamp_left := GVL_Telescope.Azimuth_inputs.0; // NOT GVL_Telescope.azimut_limit_switch;
 		GVL_pendant_control.lamp_right := GVL_Telescope.Azimuth_inputs.1; // NOT GVL_Telescope.azimut_limit_switch;
 		AzimuthElevationControl.left := left AND GVL_Telescope.Azimuth_inputs.0;
@@ -152,9 +134,8 @@ CASE Selection OF
 			Q => AzimuthElevationControl.enable);
 		
 	9: 	// Dome control
-		Dome_enable := manual;
-		GVL_pendant_control.lamp_left := Dome_enable;
-		GVL_pendant_control.lamp_right := Dome_enable;
+		GVL_pendant_control.lamp_left := manual;
+		GVL_pendant_control.lamp_right := manual;
 		GVL_pendant_control.lamp_up := DomeControl.DomeClosed;
 		GVL_pendant_control.lamp_down := DomeControl.DomeOpened;
 		DomeControl.left := left;
@@ -164,9 +145,9 @@ CASE Selection OF
 		DomeControl.reset := reset;
 		
 	10:	// FilterWheel control
-		FilterWheel_enable := manual;
-		GVL_pendant_control.lamp_left := FilterWheel_enable;
-		GVL_pendant_control.lamp_right := FilterWheel_enable;
+		FilterWheelControl.Enable := manual;
+		GVL_pendant_control.lamp_left := manual;
+		GVL_pendant_control.lamp_right := manual;
 		FilterWheelControl.left := left;
 		FilterWheelControl.right := right;
 		Filter_position(CU := up, CD := down, RESET := reset, PV := 15);
@@ -178,8 +159,12 @@ CASE Selection OF
 		FilterWheelControl.reset := reset;
 	
 	13: // Telescope Control
-		Telescopecontrol_enable(SET := enable, RESET := error, Q => TelescopeControl.power);
+		GVL_pendant_control.lamp_up := NOT time_offset.QU;
+		GVL_pendant_control.lamp_down := NOT time_offset.QD;
+		Telescopecontrol_enable(SET := enable, RESET := MAIN.error, Q => TelescopeControl.power);
 		TelescopeControl.reset := reset;
+		time_offset(CU := up, CD := down, PV := 24);
+		TelescopeControl.tauoffset := time_offset.CV/ 24.0;
 	
 	14: GVL_Telescope.horn := manual;
 	
@@ -225,29 +210,22 @@ END_CASE
       <LineId Id="624" Count="0" />
       <LineId Id="326" Count="0" />
       <LineId Id="27" Count="0" />
-      <LineId Id="626" Count="0" />
-      <LineId Id="513" Count="0" />
-      <LineId Id="504" Count="0" />
-      <LineId Id="596" Count="2" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="178" Count="0" />
-      <LineId Id="374" Count="0" />
-      <LineId Id="550" Count="0" />
-      <LineId Id="375" Count="0" />
-      <LineId Id="467" Count="0" />
       <LineId Id="627" Count="0" />
       <LineId Id="331" Count="0" />
       <LineId Id="11" Count="1" />
+      <LineId Id="995" Count="0" />
       <LineId Id="634" Count="0" />
-      <LineId Id="639" Count="4" />
+      <LineId Id="640" Count="3" />
       <LineId Id="34" Count="0" />
       <LineId Id="632" Count="0" />
-      <LineId Id="635" Count="1" />
+      <LineId Id="996" Count="0" />
+      <LineId Id="636" Count="0" />
       <LineId Id="106" Count="1" />
       <LineId Id="101" Count="0" />
       <LineId Id="59" Count="0" />
       <LineId Id="633" Count="0" />
-      <LineId Id="637" Count="1" />
+      <LineId Id="997" Count="0" />
+      <LineId Id="638" Count="0" />
       <LineId Id="117" Count="0" />
       <LineId Id="81" Count="0" />
       <LineId Id="628" Count="0" />
@@ -258,7 +236,6 @@ END_CASE
       <LineId Id="602" Count="3" />
       <LineId Id="236" Count="0" />
       <LineId Id="769" Count="0" />
-      <LineId Id="606" Count="0" />
       <LineId Id="237" Count="0" />
       <LineId Id="726" Count="0" />
       <LineId Id="507" Count="0" />
@@ -267,7 +244,6 @@ END_CASE
       <LineId Id="240" Count="0" />
       <LineId Id="238" Count="0" />
       <LineId Id="768" Count="0" />
-      <LineId Id="608" Count="0" />
       <LineId Id="239" Count="0" />
       <LineId Id="727" Count="0" />
       <LineId Id="222" Count="0" />
@@ -275,7 +251,6 @@ END_CASE
       <LineId Id="465" Count="0" />
       <LineId Id="311" Count="0" />
       <LineId Id="609" Count="0" />
-      <LineId Id="336" Count="0" />
       <LineId Id="289" Count="0" />
       <LineId Id="327" Count="1" />
       <LineId Id="838" Count="0" />
@@ -284,7 +259,6 @@ END_CASE
       <LineId Id="285" Count="0" />
       <LineId Id="299" Count="0" />
       <LineId Id="462" Count="0" />
-      <LineId Id="370" Count="0" />
       <LineId Id="300" Count="0" />
       <LineId Id="309" Count="0" />
       <LineId Id="371" Count="1" />
@@ -293,15 +267,16 @@ END_CASE
       <LineId Id="463" Count="0" />
       <LineId Id="377" Count="0" />
       <LineId Id="610" Count="0" />
-      <LineId Id="378" Count="1" />
+      <LineId Id="379" Count="0" />
       <LineId Id="835" Count="1" />
       <LineId Id="382" Count="1" />
       <LineId Id="833" Count="1" />
       <LineId Id="384" Count="0" />
       <LineId Id="464" Count="0" />
       <LineId Id="298" Count="0" />
+      <LineId Id="998" Count="0" />
       <LineId Id="611" Count="0" />
-      <LineId Id="456" Count="3" />
+      <LineId Id="457" Count="2" />
       <LineId Id="680" Count="0" />
       <LineId Id="684" Count="1" />
       <LineId Id="682" Count="0" />
@@ -309,8 +284,10 @@ END_CASE
       <LineId Id="460" Count="0" />
       <LineId Id="803" Count="0" />
       <LineId Id="841" Count="0" />
+      <LineId Id="1029" Count="1" />
       <LineId Id="846" Count="0" />
       <LineId Id="843" Count="0" />
+      <LineId Id="1027" Count="1" />
       <LineId Id="842" Count="0" />
       <LineId Id="802" Count="0" />
       <LineId Id="455" Count="0" />
