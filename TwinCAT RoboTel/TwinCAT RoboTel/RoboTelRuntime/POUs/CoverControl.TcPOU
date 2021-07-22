@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="CoverControl" Id="{c323d474-9f57-40fd-ba67-b4ebd08c9f7c}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM CoverControl
 VAR_INPUT
@@ -11,10 +11,13 @@ VAR_INPUT
 	open:		BOOL;
 	// close the cover in proper order
 	close:		BOOL;
+	Cover1_enable:	BOOL;
 	Cover1_open:	BOOL;
 	Cover1_close:	BOOL;
+	Cover2_enable:	BOOL;
 	Cover2_open:	BOOL;
 	Cover2_close:	BOOL;
+	Cover3_enable:	BOOL;
 	Cover3_open:	BOOL;
 	Cover3_Close:	BOOL;
 END_VAR
@@ -73,20 +76,20 @@ ELSE
 END_IF
 
 Cover1_control(
-	enable := 	enable OR Pendantcontrol.Cover1_enable,
+	enable := 	enable OR Cover1_enable,
 	reset := 	reset,
 	limit_open := 	GVL_Telescope.cover1_open,
 	limit_close := 	GVL_Telescope.cover1_closed,
 	axis_ref := GVL_Telescope.Cover1_axis);
 // Cover 2 can only be moved in manual operation if cover 3 is still closed to protect the lid.
 Cover2_control(
-	enable := enable OR (Pendantcontrol.Cover2_enable AND GVL_Telescope.cover3_closed),
+	enable := enable OR (Cover2_enable AND GVL_Telescope.cover3_closed),
 	reset := reset,
 	limit_open := GVL_Telescope.cover2_open,
 	limit_close := GVL_Telescope.cover2_closed,
 	axis_ref := GVL_Telescope.Cover2_axis);
 Cover3_control(
-	enable := 	enable OR Pendantcontrol.Cover3_enable,
+	enable := 	enable OR Cover3_enable,
 	reset := 	reset,
 	limit_open := GVL_Telescope.cover3_open,
 	limit_close := GVL_Telescope.cover3_closed,
