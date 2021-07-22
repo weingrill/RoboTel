@@ -17,6 +17,7 @@ CASE ErrorID OF
 	16#4253:	NCError_TO_STRING := 'Reference cam became free too soon';
 	16#4260:	NCError_TO_STRING := 'Controller enable';
 	16#42EF:	NCError_TO_STRING := 'Axis is locked for motion commands because a stop command is still active';
+	16#4466:	NCError_TO_STRING := 'Invalid IO data FOR more than n subsequent NC cycles (encoder)';
 	16#4550: 	NCError_TO_STRING := 'Following error monitoring (position)';
 	16#4650:	NCError_TO_STRING := 'Drive hardware not ready to operate';
 	16#4B09:	NCError_TO_STRING := 'Axis is not ready';
@@ -33,6 +34,7 @@ END_CASE]]></ST>
       <LineId Id="17" Count="0" />
       <LineId Id="23" Count="0" />
       <LineId Id="13" Count="0" />
+      <LineId Id="49" Count="0" />
       <LineId Id="20" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="24" Count="0" />
