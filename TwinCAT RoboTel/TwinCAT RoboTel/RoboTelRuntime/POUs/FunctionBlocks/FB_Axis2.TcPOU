@@ -87,6 +87,7 @@ VAR
 	// Direction fot Axis_SetpointFeed
 	Direction:		DINT;
 	Acceleration:	LREAL;
+	EndTracking:	F_TRIG;
 END_VAR
 
 VAR_IN_OUT
@@ -121,28 +122,21 @@ Axis_SetpointEnable(Axis := AxisRef,
 	Position := Position,
 	PositionType := POSITIONTYPE_ABSOLUTE);
 
-IF Tracking THEN
-	// Velocity := LIMIT(0.0, ABS(ActualPosition - Position) / 0.01, 10.0);
-	//Set direction from an external setpoint generator. ( -1 = negative direction, 0 = standstill, 1 = positive direction)
-	(*Direction := 0;
-	IF ActualPosition < Position THEN
-		Direction := 1;
-	ELSE
-		Direction := -1;
-	END_IF
-	IF ABS(ActualPosition - Position) < 0.001 THEN
-		Direction := 0;
-	END_IF*)
-	// Acceleration := LIMIT(0.0, Velocity*Velocity, 100.0);
+IF Position > AbsolutePosition THEN
+	Direction := -1;
+ELSE
+	Direction := 1;
 END_IF
 	
 MC_ExtSetPointGenFeed(
 	Position := Position,
 	Velocity := Velocity,
-	Acceleration := Acceleration,
+	Acceleration := 1.0,
 	Direction := Direction, 
 	Axis := AxisRef);
-	
+
+// stop tracking on falling edge of tracking signal
+EndTracking(CLK := Tracking);
 Axis_SetpointDisable(Axis := AxisRef,
 	Execute := NOT Tracking);
 
@@ -153,7 +147,6 @@ IF isModuloAxis THEN
 		Position := 	Position,
 		Velocity :=		Velocity,
 		Direction := 	MC_Shortest_Way,
-		//BufferMode := 	MC_BlendingHigh OR MC_BlendingNext, // MC_Buffered ?
 		Done => 		MoveDone);
 ELSE
 	Axis_Move( 
@@ -161,7 +154,6 @@ ELSE
 		Execute := 		MoveAxis AND Ready AND Calibrated,
 		Position := 	Position,
 		Velocity := 	Velocity,
-		//BufferMode := 	MC_BlendingHigh OR MC_BlendingNext,
 		Done => 		MoveDone);
 END_IF
 
@@ -214,13 +206,13 @@ Axis_Stop(
 
 Axis_Position(
 	Axis := 	AxisRef,
-	Enable := 	Enable AND Ready,
+	Enable := 	Calibrated,
 	Position => AbsolutePosition);
 
 IF isModuloAxis THEN
-	ActualPosition := AxisRef.NcToPlc.ModuloActPos;
+	ActualPosition := AbsolutePosition; //AxisRef.NcToPlc.ModuloActPos;
 ELSE
-	ActualPosition := AxisRef.NcToPlc.ActPos;
+	ActualPosition := AbsolutePosition; //AxisRef.NcToPlc.ActPos;
 END_IF
 
 IF Axis_Power.Error THEN
@@ -309,21 +301,17 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="44" Count="2" />
       <LineId Id="1279" Count="1" />
       <LineId Id="1283" Count="2" />
+      <LineId Id="1415" Count="0" />
       <LineId Id="1301" Count="0" />
-      <LineId Id="1293" Count="0" />
-      <LineId Id="1303" Count="0" />
-      <LineId Id="1313" Count="0" />
-      <LineId Id="1307" Count="2" />
-      <LineId Id="1311" Count="1" />
-      <LineId Id="1310" Count="0" />
-      <LineId Id="1317" Count="0" />
-      <LineId Id="1315" Count="1" />
-      <LineId Id="1319" Count="0" />
-      <LineId Id="1304" Count="0" />
-      <LineId Id="1302" Count="0" />
+      <LineId Id="1417" Count="0" />
+      <LineId Id="1419" Count="1" />
+      <LineId Id="1418" Count="0" />
+      <LineId Id="1416" Count="0" />
       <LineId Id="1287" Count="0" />
       <LineId Id="1297" Count="3" />
       <LineId Id="1296" Count="0" />
+      <LineId Id="1413" Count="0" />
+      <LineId Id="1411" Count="0" />
       <LineId Id="1294" Count="0" />
       <LineId Id="1288" Count="0" />
       <LineId Id="1291" Count="0" />
@@ -332,11 +320,11 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="491" Count="3" />
       <LineId Id="891" Count="0" />
       <LineId Id="523" Count="0" />
-      <LineId Id="495" Count="1" />
+      <LineId Id="495" Count="0" />
       <LineId Id="476" Count="0" />
       <LineId Id="479" Count="3" />
       <LineId Id="892" Count="0" />
-      <LineId Id="483" Count="1" />
+      <LineId Id="483" Count="0" />
       <LineId Id="477" Count="0" />
       <LineId Id="264" Count="0" />
       <LineId Id="266" Count="3" />
