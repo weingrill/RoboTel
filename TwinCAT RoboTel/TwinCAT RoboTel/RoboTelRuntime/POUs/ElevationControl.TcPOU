@@ -41,6 +41,7 @@ VAR
 	readydelay:				TON;
 	ElevationAxisEvent: 	FB_Eventlog;
 	ElevationVelEvent: 		FB_Eventlog;
+	SimpleLog:				FB_SimpleLog;
 END_VAR
 VAR CONSTANT
 	// reference position for homing
@@ -54,9 +55,9 @@ END_VAR
       <ST><![CDATA[// limit the position input to a sane value
 position := LIMIT(0.0, position, 90.0);
 
-IF Enable OR TelescopeControl.power THEN
+IF Enable THEN
 	HydraulicsControl.open_brake := TRUE;
-END_IF // else close_brake ?
+END_IF
 
 IF ElevationAxis.Calibrated OR Error THEN
 	HomeAxis := FALSE;
@@ -76,14 +77,19 @@ MC_SetAcceptBlockedDriveSignal(
 	Axis := GVL_Telescope.ElevationAxisRef, 
 	Enable := HomeAxis);
 
-// perform recalibration on encoder reference signal
+// perform recalibration on encoder reference signal (positive latch of elevation probe)
+(*
 ElevationCalibration(
 	Axis := GVL_Telescope.ElevationAxisRef,
-	Execute := GVL_Telescope.Elevation_Probe=217 AND NOT HomeAxis,
+	Execute := GVL_Telescope.Elevation_Probe>0 AND NOT HomeAxis,
 	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
-
+*)
+IF GVL_Telescope.Elevation_Probe>0 THEN
+	SimpleLog(Message := 'Elevation re-calibrated');
+END_IF
+	
 ElevationAxis(
-	Enable := 			HydraulicsControl.brake_open,
+	Enable := 			enable AND HydraulicsControl.brake_open,
 	Reset := 			reset,
 	MoveAxis :=			MoveAxis,
 	HomeAxis :=			HomeAxis,
@@ -109,6 +115,12 @@ END_IF
 	
 IF ElevationAxis.ResetDone THEN
 	reset := FALSE;
+END_IF
+
+// FIXME fix position bug
+IF Calibrated AND act_position > 95.0 THEN
+	Error := TRUE;
+	ErrorID := 16#0001;
 END_IF
 
 readydelay(IN :=  HydraulicsControl.brake_open, PT := T#6000MS, Q=> ready);
@@ -143,10 +155,14 @@ ElevationAxisEvent(	Trigger := warning,
       <LineId Id="291" Count="1" />
       <LineId Id="381" Count="0" />
       <LineId Id="280" Count="0" />
+      <LineId Id="619" Count="0" />
       <LineId Id="283" Count="0" />
       <LineId Id="299" Count="0" />
       <LineId Id="284" Count="1" />
+      <LineId Id="614" Count="0" />
       <LineId Id="231" Count="0" />
+      <LineId Id="617" Count="1" />
+      <LineId Id="615" Count="0" />
       <LineId Id="128" Count="0" />
       <LineId Id="184" Count="2" />
       <LineId Id="277" Count="0" />
@@ -156,7 +172,14 @@ ElevationAxisEvent(	Trigger := warning,
       <LineId Id="192" Count="2" />
       <LineId Id="135" Count="0" />
       <LineId Id="214" Count="11" />
-      <LineId Id="385" Count="1" />
+      <LineId Id="613" Count="0" />
+      <LineId Id="611" Count="0" />
+      <LineId Id="385" Count="0" />
+      <LineId Id="620" Count="0" />
+      <LineId Id="622" Count="0" />
+      <LineId Id="621" Count="0" />
+      <LineId Id="612" Count="0" />
+      <LineId Id="386" Count="0" />
       <LineId Id="136" Count="0" />
       <LineId Id="156" Count="2" />
       <LineId Id="160" Count="0" />
