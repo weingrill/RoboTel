@@ -15,9 +15,9 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	// boolean, true: go into park position, ready to stow telescope, unset track/goto
 	park: BOOL;
 	// apparent right ascension, degrees, double
-	ra:	LREAL := 165.92917;	
+	ra:	LREAL := (12.0 + 56.0/60.0 + 1.666/3600.0) *15.0;	
 	// apparent declination, degrees, double
-	de: LREAL := 61.75083;
+	de: LREAL := 38.0 + 35.0/60.0 + 6.154/3600.0;
 	// boolean, TRUE: MOVE telescope TO last ra/de AND start tracking. Set 'goto' TO FALSE, IF TRUE. FALSE: Stop tracking as soon as possible
 	track: BOOL;
 	// apparent hour anlge, degrees, double, south=zero, west>0)

@@ -164,7 +164,7 @@ CASE Selection OF
 		Telescopecontrol_enable(SET := enable, RESET := MAIN.error, Q => TelescopeControl.power);
 		TelescopeControl.reset := reset;
 		time_offset(CU := up, CD := down, PV := 24);
-		TelescopeControl.tauoffset := time_offset.CV/ 24.0;
+		TelescopeControl.tauoffset := WORD_TO_LREAL(time_offset.CV)/24.0;
 	
 	14: GVL_Telescope.horn := manual;
 	

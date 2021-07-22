@@ -10,6 +10,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* source: https://de.wikipedia.org/wiki/Arctan2 *)
+ATAN2 := 0.0;
 
 IF x > 0 THEN
 	ATAN2 := ATAN(y/x);
@@ -26,7 +27,9 @@ ELSIF x = 0 AND y < 0 THEN
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="ATAN2">
-      <LineId Id="3" Count="13" />
+      <LineId Id="3" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="5" Count="11" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>

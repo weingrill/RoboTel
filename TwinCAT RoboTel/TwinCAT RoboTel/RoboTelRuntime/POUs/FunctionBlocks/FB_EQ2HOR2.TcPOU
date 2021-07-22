@@ -25,7 +25,9 @@ END_VAR
 VAR
 	lst, 
 	T , theta0, gmst: LREAL;
-	sinalt, sinaz, cosaz, az2: LREAL;
+	sinalt, sinaz, cosaz, az1, az2, az3, length,
+	// in radians
+	phi_r, tau_r, alpha_r, delta_r: LREAL;
 END_VAR
 VAR CONSTANT
 	d2r:	LREAL := PI/180.0;
@@ -40,21 +42,38 @@ https://squarewidget.com/astronomical-calculations-sidereal-time/
 
 *)
 //lst := ct2lst(lon, jd);
-T := ((JD - 2451545.0) / 36525);
+T := ((JD - 2451545.0) / 36525.0);
 theta0 := 280.46061837 + 360.98564736629 * (JD - 2451545.0) + (0.000387933 * T * T) - (T * T * T / 38710000.0); // (12.4)
 gmst := MODABS(theta0, 360.0);
 lst := gmst + lon; // LST in degrees
 // ha := MODABS(lst*15.0 - alpha, 360.0);
 ha := MODABS(lst - alpha, 360.0);
-sinalt := (SIN(delta*d2r)*SIN(lat*d2r)) + (COS(delta*d2r)*COS(lat*d2r)*COS(ha*d2r));
+
+alpha_r := alpha * d2r;
+delta_r := delta * d2r;
+tau_r := lst*d2r - alpha_r;
+//tau_r := MODABS(lst*d2r - alpha_r, 2.0*PI);
+phi_r := lat*d2r;
+
+//sinalt := (SIN(delta*d2r)*SIN(lat*d2r)) + (COS(delta*d2r)*COS(lat*d2r)*COS(ha*d2r));
+sinalt := SIN(phi_r)*SIN(delta_r) + COS(phi_r)*COS(delta_r)*COS(tau_r);
 alt := ASIN(sinalt) * r2d;
 
-sinaz := -SIN(ha*d2r)*COS(delta*d2r)/COS(alt*d2r);
-//az := ASIN(sinaz) * r2d;
-az := MODABS((360 + ASIN(sinaz) * r2d), 360.0);
+sinaz := -SIN(tau_r)*COS(delta_r)/COS(alt*d2r);
+cosaz := (SIN(delta_r) - SIN(phi_r)*sinalt)
+			/(COS(alt*d2r)*COS(phi_r));
 
-cosaz := (SIN(delta*d2r) - SIN(lat*d2r)*sinalt)/(COS(lat*d2r)*COS(alt*d2r));
-az2 := ACOS(cosaz) * r2d;]]></ST>
+length := sinaz*sinaz + cosaz*cosaz;
+
+az1 := ASIN(sinaz) * r2d;
+
+az2 := ACOS(cosaz) * r2d;
+
+az3 := ATAN2(SIN(phi_r)*COS(tau_r) - COS(phi_r)*TAN(delta_r), SIN(tau_r)) * r2d;
+
+az := MODABS(-az3, 360.0);
+
+]]></ST>
     </Implementation>
     <LineIds Name="FB_EQ2HOR2">
       <LineId Id="81" Count="0" />
@@ -68,14 +87,27 @@ az2 := ACOS(cosaz) * r2d;]]></ST>
       <LineId Id="86" Count="0" />
       <LineId Id="16" Count="0" />
       <LineId Id="89" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="159" Count="1" />
+      <LineId Id="148" Count="1" />
       <LineId Id="18" Count="0" />
+      <LineId Id="150" Count="0" />
       <LineId Id="26" Count="1" />
       <LineId Id="24" Count="0" />
-      <LineId Id="28" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="156" Count="1" />
+      <LineId Id="142" Count="0" />
       <LineId Id="93" Count="0" />
       <LineId Id="92" Count="0" />
-      <LineId Id="23" Count="0" />
       <LineId Id="50" Count="0" />
+      <LineId Id="139" Count="1" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="153" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
