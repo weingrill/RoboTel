@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+  <POU Name="FB_SimpleLog" Id="{a26a3b36-e872-4925-b825-b15d2b0093fa}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_SimpleLog
+VAR_INPUT
+	Message: 		STRING(255) := '';
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	// ADSLOG_MSGTYPE_HINT or ADSLOG_MSGTYPE_WARN or ADSLOG_MSGTYPE_ERROR
+	Level:			UDINT := ADSLOG_MSGTYPE_HINT;
+	FormatString: 	STRING(255) := '%s';
+	LastMessage:		STRING(255) := '';
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF Message <> LastMessage THEN
+	ADSLOGSTR( Level OR ADSLOG_MSGTYPE_LOG, FormatString, Message);
+END_IF
+LastMessage := Message;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_SimpleLog">
+      <LineId Id="40" Count="2" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
