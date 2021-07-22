@@ -56,7 +56,7 @@ Enable := TelescopeControl.power OR PendantControl.Azimuth_enable;
 *)
 IF Enable THEN
 	ElevationControl.enable := TRUE;
-	HydraulicsControl.open_brake := TRUE;
+	// HydraulicsControl.open_brake := TRUE;
 END_IF
 
 // generate the ready signal after enabling the drive
@@ -88,7 +88,7 @@ MC_SetAcceptBlockedDriveSignal(
 	Enable := HomeAxis);
 
 AzimuthAxis(	
-	Enable := 			Enable AND HydraulicsControl.brake_open AND ElevationControl.Ready,
+	Enable := 			enable AND HydraulicsControl.brake_open AND ElevationControl.Ready,
 	Reset := 			reset,
 	MoveAxis :=			MoveAxis,
 	HomeAxis := 		HomeAxis,
