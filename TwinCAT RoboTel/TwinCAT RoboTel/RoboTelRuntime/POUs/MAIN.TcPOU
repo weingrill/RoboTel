@@ -27,13 +27,15 @@ VAR
 	brake_clearing:		BOOL := FALSE;
 	// blink error lamp on warning
 	warn_blink: 		FB_BLINK;
-	power_watchdog : TON;
+	// watchdog for trafo softstarter
+	power_watchdog: 	TON;
 	// main cabinet temperature in degrees
 	cabinet_temperature:	REAL;
 	// measures time between soft start command and power available
 	power_timer:		FB_Timer;
-	PowerEvent:	FB_EventLog;
-	
+	PowerEvent,
+	TemperatureEvent:	FB_EventLog;
+	SimpleLog: 			FB_SimpleLog;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -50,9 +52,11 @@ power_OK := GVL_main.power_available;
 phase_available := GVL_Main.phase_available;
 IF GVL_Main.start_switch THEN
 	HydraulicsControl.start := TRUE;
+	SimpleLog(Message := 'manual Hydraulics start');
 END_IF
 IF GVL_Main.stop_switch THEN
 	HydraulicsControl.stop := TRUE;
+	SimpleLog(Message := 'manual Hydraulics stop');
 END_IF
 reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch;		
 key_switch := GVL_Main.key_switch_remote;
@@ -61,6 +65,9 @@ cabinet_temperature := INT_TO_REAL(GVL_Main.main_cabinet_temperature) / 100.0;
 
 // telescope is ready when power available and hydraulics ok
 ready := power_OK AND HydraulicsControl.oil_pressure_OK;
+IF ready THEN
+	SimpleLog(Message := 'power and Hydraulics ready');
+END_IF
 		
 TelescopeControl();	//
 DomeControl();	//
@@ -110,7 +117,12 @@ PowerEvent(
 	Level := 		ADSLOG_MSGTYPE_ERROR,
 	FormatString :=	'Power:	%s',
 	OnMessage := 	'FAILURE!',
-	OffMEssage := 	'OK');]]></ST>
+	OffMEssage := 	'OK');
+TemperatureEvent(	
+	Trigger := 		cabinet_temperature > 40.0, 
+	Level := 		ADSLOG_MSGTYPE_WARN,
+	FormatString :=	'Cabinet Temperature waring:	%s',
+	OnMessage := 	LREAL_TO_FMTSTR( cabinet_temperature, 1, TRUE),);]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="28" Count="0" />
@@ -123,8 +135,11 @@ PowerEvent(
       <LineId Id="61" Count="0" />
       <LineId Id="522" Count="0" />
       <LineId Id="157" Count="0" />
+      <LineId Id="598" Count="0" />
       <LineId Id="523" Count="0" />
-      <LineId Id="525" Count="2" />
+      <LineId Id="525" Count="1" />
+      <LineId Id="599" Count="0" />
+      <LineId Id="527" Count="0" />
       <LineId Id="166" Count="0" />
       <LineId Id="163" Count="0" />
       <LineId Id="169" Count="0" />
@@ -133,6 +148,8 @@ PowerEvent(
       <LineId Id="105" Count="0" />
       <LineId Id="23" Count="0" />
       <LineId Id="22" Count="0" />
+      <LineId Id="602" Count="1" />
+      <LineId Id="600" Count="0" />
       <LineId Id="2" Count="0" />
       <LineId Id="165" Count="0" />
       <LineId Id="313" Count="0" />
@@ -171,6 +188,7 @@ PowerEvent(
       <LineId Id="78" Count="0" />
       <LineId Id="354" Count="5" />
       <LineId Id="353" Count="0" />
+      <LineId Id="606" Count="4" />
     </LineIds>
   </POU>
 </TcPlcObject>
