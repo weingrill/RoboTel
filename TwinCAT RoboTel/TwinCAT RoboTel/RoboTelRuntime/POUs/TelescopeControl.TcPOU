@@ -15,9 +15,9 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	// boolean, true: go into park position, ready to stow telescope, unset track/goto
 	park: BOOL;
 	// apparent right ascension, degrees, double
-	ra:	LREAL := (12.0 + 56.0/60.0 + 1.666/3600.0) *15.0;	
+	ra:	LREAL := (14.0 + 15.0/60.0 + 39.67207/3600.0) *15.0;	
 	// apparent declination, degrees, double
-	de: LREAL := 38.0 + 35.0/60.0 + 6.154/3600.0;
+	de: LREAL := 19.0 + 10.0/60.0 + 56.6730/3600.0;
 	// boolean, TRUE: MOVE telescope TO last ra/de AND start tracking. Set 'goto' TO FALSE, IF TRUE. FALSE: Stop tracking as soon as possible
 	track: BOOL;
 	// apparent hour anlge, degrees, double, south=zero, west>0)
@@ -57,6 +57,9 @@ VAR
 	rightascension_calc,
 	declination_calc: LREAL;
 	
+	elevation_offset,
+	azimuth_offset,
+	time_offset: LREAL;
 	(* Hour Angle part *)
 	Hourangle_calc: LREAL;
 	
@@ -72,6 +75,7 @@ VAR
 	poweron:		R_TRIG;
 	poweroff:		F_TRIG;
 	poweronwarning:	TP;
+	poweron_reset:	TP;
 	
 	CalibrationEvent,
 	DeclinationCalEvent,
@@ -150,13 +154,23 @@ IF softreset THEN
 	softreset := FALSE;
 END_IF
 
-IF reset THEN
-	ElevationControl.reset := TRUE;
-	AzimuthElevationControl.Reset := TRUE;
-	// TODO more axis to follow
+IF ElevationControl.error THEN
+	ElevationControl.reset := reset;
+ELSIF AzimuthElevationControl.error THEN
+	AzimuthElevationControl.Reset := reset;
+ELSIF FilterWheelControl.Error THEN
+	FilterWheelControl.Reset := reset;
+ELSIF DomeControl.Error THEN
+	DomeControl.Reset := reset;
+ELSIF Focuscontrol.Error THEN
+	FocusControl.reset := reset;
+ELSIF DerotatorControl.Error THEN
+	DerotatorControl.reset := reset;
 END_IF
+CoverControl.reset := reset;
+FanControl.reset := reset;
 
-IF MAIN.error THEN
+IF ElevationControl.error OR AzimuthElevationControl.error THEN
 	power := FALSE;
 END_IF
 
@@ -171,7 +185,7 @@ eq2hor2(alpha := ra,
 	delta := de,
 	lon := longitude,
 	lat := latitude,
-	JD := jd + tauoffset,
+	JD := jd + time_offset,
 	alt => elevation_calc,
 	az => azimuth_calc,
 	ha => hourangle_calc);
@@ -179,8 +193,8 @@ eq2hor2(alpha := ra,
 azimuth_current := AzimuthElevationControl.act_position;
 elevation_current := ElevationControl.act_position;
 
-hor2eq(alt := elevation, 
-		az := azimuth,
+hor2eq(alt := elevation_current, 
+		az := azimuth_current,
 		jd := jd,
 		lat := latitude,
 		lon := longitude,
@@ -190,7 +204,7 @@ hor2eq(alt := elevation,
 
 poweronwarning(IN := power, PT := T#250MS, Q => GVL_Telescope.horn);
 poweroff(CLK := power);
-
+poweron_reset(IN := power AND NOT PendantControl.manual, PT := T#50MS);
 
 IF power THEN
 	IF NOT Main.brake_clearing THEN
@@ -215,18 +229,21 @@ IF power THEN
 	// enable hydraulics
 	HydraulicsControl.start := TRUE;
 	// open cover
-	//Covercontrol.open := TRUE;
-	// enable elevation
-	IF MAIN.ready THEN
+	// COVER MUST BE OPENED FOR A SUCCESSFUL WAKE & SHAKE COMMAND!
+	CoverControl.reset := poweron_reset.Q;
+	Covercontrol.open := TRUE;
+	IF Covercontrol.isopen THEN
+		Covercontrol.open := FALSE;
+	END_IF
+	// enable elevation enable azimuth
+	IF MAIN.ready AND CoverControl.isopen THEN
 		ElevationControl.enable := TRUE;
+		AzimuthElevationControl.enable := TRUE;
 	END_IF
 	IF ElevationControl.Ready AND NOT ElevationControl.Calibrated THEN
 		ElevationControl.HomeAxis := TRUE;
 	END_IF
-	// enable azimuth
-	IF ElevationControl.Ready THEN
-		AzimuthElevationControl.enable := TRUE;
-	END_IF
+	
 	IF AzimuthElevationControl.ready AND NOT AzimuthElevationControl.calibrated THEN
 		AzimuthElevationControl.HomeAxis := TRUE;
 	END_IF
@@ -259,7 +276,11 @@ ELSIF poweroff.Q THEN
 	HydraulicsControl.stop := TRUE;
 	SimpleLog(Message := 'shutdown');
 END_IF
-
+IF NOT power AND NOT PendantControl.manual THEN
+	IF CoverControl.isclosed THEN
+		CoverControl.close := FALSE;
+	END_IF
+END_IF
 		
 // set TCS_command according to state variables ordered by precedence
 IF track THEN
@@ -314,15 +335,15 @@ ELSIF TCS_command = E_TCSCommand.gohome THEN
 	END_IF
 	
 ELSIF TCS_command = E_TCSCommand.track THEN
-	ElevationControl.position := elevation_calc;
+	ElevationControl.position := elevation_calc + elevation_offset;
 	ElevationControl.Tracking := TRUE;
-	AzimuthElevationControl.position := azimuth_calc;
+	AzimuthElevationControl.position := azimuth_calc + azimuth_offset;
 	AzimuthElevationControl.Tracking := TRUE;
 	
 ELSIF TCS_command = E_TCSCommand.goto THEN
-	ElevationControl.position := elevation_calc;
+	ElevationControl.position := elevation_calc + elevation_offset;
 	ElevationControl.MoveAxis := TRUE;
-	AzimuthElevationControl.position := azimuth_calc;
+	AzimuthElevationControl.position := azimuth_calc + azimuth_offset;
 	AzimuthElevationControl.MoveAxis := TRUE;
 
 	IF ElevationControl.ElevationAxis.MoveDone AND AzimuthElevationControl.AzimuthAxis.MoveDone THEN
@@ -385,9 +406,14 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="646" Count="0" />
       <LineId Id="644" Count="1" />
       <LineId Id="4249" Count="2" />
-      <LineId Id="4253" Count="1" />
+      <LineId Id="4301" Count="0" />
+      <LineId Id="4253" Count="0" />
+      <LineId Id="4302" Count="0" />
+      <LineId Id="4312" Count="6" />
       <LineId Id="4252" Count="0" />
-      <LineId Id="4245" Count="3" />
+      <LineId Id="4245" Count="0" />
+      <LineId Id="4329" Count="1" />
+      <LineId Id="4246" Count="2" />
       <LineId Id="1116" Count="0" />
       <LineId Id="647" Count="0" />
       <LineId Id="635" Count="1" />
@@ -426,13 +452,16 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3768" Count="0" />
       <LineId Id="3764" Count="0" />
       <LineId Id="3749" Count="0" />
+      <LineId Id="4319" Count="0" />
+      <LineId Id="4328" Count="0" />
       <LineId Id="3769" Count="0" />
+      <LineId Id="4320" Count="2" />
       <LineId Id="3750" Count="0" />
       <LineId Id="3922" Count="0" />
       <LineId Id="3770" Count="0" />
+      <LineId Id="4300" Count="0" />
       <LineId Id="3923" Count="3" />
-      <LineId Id="3933" Count="0" />
-      <LineId Id="3930" Count="2" />
+      <LineId Id="3932" Count="0" />
       <LineId Id="4088" Count="2" />
       <LineId Id="4244" Count="0" />
       <LineId Id="3752" Count="0" />
@@ -461,6 +490,9 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4096" Count="0" />
       <LineId Id="3549" Count="0" />
       <LineId Id="3519" Count="0" />
+      <LineId Id="4323" Count="0" />
+      <LineId Id="4325" Count="1" />
+      <LineId Id="4324" Count="0" />
       <LineId Id="3784" Count="0" />
       <LineId Id="1499" Count="0" />
       <LineId Id="1501" Count="0" />
