@@ -13,13 +13,20 @@ VAR_INPUT
 	close:		BOOL;
 	Cover1_enable:	BOOL;
 	Cover1_open:	BOOL;
+	Cover1_opened, 
+	Cover1_closed:	BOOL;
 	Cover1_close:	BOOL;
 	Cover2_enable:	BOOL;
 	Cover2_open:	BOOL;
 	Cover2_close:	BOOL;
+	Cover2_opened, 
+	Cover2_closed:	BOOL;
 	Cover3_enable:	BOOL;
 	Cover3_open:	BOOL;
 	Cover3_Close:	BOOL;
+	Cover3_opened, 
+	Cover3_closed:	BOOL;
+
 END_VAR
 VAR_OUTPUT
 	// is TRUE, if all covers are open
@@ -42,6 +49,7 @@ END_VAR
       <ST><![CDATA[(*
 This is the control for the two (three) telescope covers. 
 The correct order for opening is 1->3->2 and for closing 2->3->1.
+GVL Open and close signals are inverted
 *)
 
 // close has precedence over open
@@ -49,12 +57,23 @@ IF close THEN
 	open := FALSE;
 END_IF
 
-open2_delay(IN := open AND NOT GVL_Telescope.cover3_closed,
+Cover1_opened := NOT GVL_Telescope.cover1_open;
+Cover2_opened := NOT GVL_Telescope.cover2_open;
+Cover3_opened := NOT GVL_Telescope.cover3_open;
+Cover1_closed := NOT GVL_Telescope.cover1_closed;
+Cover2_closed := NOT GVL_Telescope.cover2_closed;
+Cover3_closed := NOT GVL_Telescope.cover3_closed;
+
+// wait for cover2 until cover3 has left the closed state
+open2_delay(IN := open AND NOT cover3_closed,
 			PT := T#3S);
-close3_delay(IN := close AND NOT GVL_Telescope.cover2_open,
+// wait for cover3 until cover2 has left the open state
+close3_delay(IN := close AND NOT cover2_open,
 			PT := T#3S);
 		
 IF Pendantcontrol.manual THEN
+	// Covers are enabled individually;
+	enable := FALSE;
 	Cover1_control.open :=	Cover1_open;
 	Cover1_control.close :=	Cover1_close;
 	Cover2_control.open :=	Cover2_open;
@@ -62,6 +81,7 @@ IF Pendantcontrol.manual THEN
 	Cover3_control.open :=	Cover3_open;
 	Cover3_control.close :=	Cover3_close;
 ELSE
+	enable := TRUE;
 	//TODO: verify Cover1 operations
 	Cover1_control.open := open;
 	// open cover 3 first then cover 2 after 3 seconds
@@ -76,49 +96,61 @@ ELSE
 END_IF
 
 Cover1_control(
-	enable := 	enable OR Cover1_enable,
-	reset := 	reset,
+	enable := 		enable OR Cover1_enable,
+	reset := 		reset,
 	limit_open := 	GVL_Telescope.cover1_open,
 	limit_close := 	GVL_Telescope.cover1_closed,
-	axis_ref := GVL_Telescope.Cover1_axis);
+	axis_ref := 	GVL_Telescope.Cover1_axis);
 // Cover 2 can only be moved in manual operation if cover 3 is still closed to protect the lid.
 Cover2_control(
-	enable := enable OR (Cover2_enable AND GVL_Telescope.cover3_closed),
-	reset := reset,
-	limit_open := GVL_Telescope.cover2_open,
-	limit_close := GVL_Telescope.cover2_closed,
-	axis_ref := GVL_Telescope.Cover2_axis);
+	enable := 		enable OR (Cover2_enable AND NOT GVL_Telescope.cover3_closed),
+	reset := 		reset,
+	limit_open := 	GVL_Telescope.cover2_open,
+	limit_close := 	GVL_Telescope.cover2_closed,
+	axis_ref := 	GVL_Telescope.Cover2_axis);
 Cover3_control(
-	enable := 	enable OR Cover3_enable,
-	reset := 	reset,
-	limit_open := GVL_Telescope.cover3_open,
-	limit_close := GVL_Telescope.cover3_closed,
-	axis_ref := GVL_Telescope.Cover3_axis);
+	enable := 		enable OR Cover3_enable,
+	reset := 		reset,
+	limit_open := 	GVL_Telescope.cover3_open,
+	limit_close := 	GVL_Telescope.cover3_closed,
+	axis_ref := 	GVL_Telescope.Cover3_axis);
 
 
-isopen := GVL_Telescope.cover3_open AND GVL_Telescope.cover2_open;
-isclosed := GVL_Telescope.cover2_closed AND GVL_Telescope.cover3_closed;
-Error := Cover1_control.error OR Cover2_control.error OR Cover3_control.error;]]></ST>
+isopen := cover3_opened AND cover2_opened;
+isclosed := cover2_closed AND cover3_closed;
+Error := Cover1_control.error OR Cover2_control.error OR Cover3_control.error OR 
+		//(NOT GVL_Telescope.cover1_open AND NOT GVL_Telescope.cover1_closed) OR // not available on RoboTel
+		(cover2_opened AND cover2_closed) OR
+		(cover3_opened AND cover3_closed);]]></ST>
     </Implementation>
     <LineIds Name="CoverControl">
       <LineId Id="146" Count="0" />
       <LineId Id="149" Count="1" />
+      <LineId Id="261" Count="0" />
       <LineId Id="148" Count="0" />
       <LineId Id="147" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="16" Count="1" />
+      <LineId Id="269" Count="0" />
       <LineId Id="32" Count="0" />
+      <LineId Id="271" Count="1" />
+      <LineId Id="270" Count="0" />
+      <LineId Id="274" Count="2" />
+      <LineId Id="273" Count="0" />
       <LineId Id="31" Count="0" />
       <LineId Id="33" Count="0" />
+      <LineId Id="277" Count="0" />
       <LineId Id="35" Count="1" />
       <LineId Id="34" Count="0" />
       <LineId Id="98" Count="0" />
+      <LineId Id="259" Count="1" />
       <LineId Id="207" Count="1" />
       <LineId Id="205" Count="1" />
       <LineId Id="125" Count="0" />
       <LineId Id="111" Count="0" />
       <LineId Id="126" Count="0" />
+      <LineId Id="255" Count="0" />
       <LineId Id="216" Count="0" />
       <LineId Id="19" Count="0" />
       <LineId Id="215" Count="0" />
@@ -143,6 +175,8 @@ Error := Cover1_control.error OR Cover2_control.error OR Cover3_control.error;]]
       <LineId Id="139" Count="0" />
       <LineId Id="143" Count="0" />
       <LineId Id="37" Count="0" />
+      <LineId Id="257" Count="1" />
+      <LineId Id="256" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
