@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <GVL Name="GVL_Dome" Id="{8410bcc3-97cb-4334-927b-71c02664ab1a}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
@@ -22,18 +22,10 @@ VAR_GLOBAL
 	Azimut_raw				AT%I*:	INT;
 	Azimut_home				AT%I*:	BOOL;
 	
-	WatchDogReset:	BOOL;
-//	OpenShutter  	AT%Q*: 	BOOL;
-//	CloseShutter  	AT%Q*: 	BOOL;
-//	OpenFlap  		AT%Q*: 	BOOL;
-//	CloseFlap  		AT%Q*: 	BOOL;
-	
-//	ShutterOpened:	BOOL;
-//	ShutterClosed:	BOOL;
-//	FlapOpened:		BOOL;
-//	FlapClosed:		BOOL;
-	Stop:			BOOL;
-	DomeAxisRef: AXIS_REF;
+	WatchDogReset:					BOOL;
+	ActVelo					AT%I*:	LREAL;
+	Stop:							BOOL;
+	DomeAxisRef: 					AXIS_REF;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

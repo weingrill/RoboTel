@@ -3380,11 +3380,11 @@ External Setpoint Generation:
 					<AxisPara>
 						<General UnitName="°" UnitFlags="#x00000004"/>
 						<Dynamic AccelerationMaximum="1000" DecelerationMaximum="1000"/>
-						<Velo RefSearch="1" RefSync="1" SlowManual="1" FastManual="3" Fast="100" Maximum="3"/>
+						<Velo RefSearch="15" RefSync="15" SlowManual="25" FastManual="75" Fast="100" Maximum="100"/>
 						<PositionAreaControl Enable="false"/>
 						<TargetPosControl Enable="false"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
-						<Discrete CreepDistancePos="10" CreepDistanceNeg="10" BreakDistancePos="1" BreakDistanceNeg="1" BreakDelayPos="0.1" BreakDelayNeg="0.1" CreepDistanceStop="5"/>
+						<Discrete CreepDistancePos="10" CreepDistanceNeg="10" BreakDelayPos="0.1" BreakDelayNeg="0.1" CreepDistanceStop="5"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="4">
 						<EncPara ScaleFactorNumerator="0.0003641" Inverse="true" MaxCount="#x0000ffff">
@@ -3685,6 +3685,10 @@ External Setpoint Generation:
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>GVL_Dome.ActVelo</Name>
+							<Type>LREAL</Type>
+						</Var>
 						<Var>
 							<Name>FanControl.Fan_axis.MDP5001_511_733_Input</Name>
 							<Type GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Type>
@@ -16278,6 +16282,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^GVL_Telescope.DerotatorAxisRef.PlcToNc" VarB="Inputs^FromPlc"/>
 			</OwnerB>
 			<OwnerB Name="TINC^NC-Task 1 SAF^Axes^DomeAzimuth">
+				<Link VarA="PlcTask Inputs^GVL_Dome.ActVelo" VarB="Outputs^ToPlc^ActVelo"/>
 				<Link VarA="PlcTask Inputs^GVL_Dome.DomeAxisRef.NcToPlc" VarB="Outputs^ToPlc"/>
 				<Link VarA="PlcTask Inputs^GVL_Dome.bBreak" VarB="Drive^Outputs^Out^bBreak"/>
 				<Link VarA="PlcTask Inputs^GVL_Dome.bBreakInv" VarB="Drive^Outputs^Out^bBreakInv"/>

@@ -181,6 +181,9 @@
     <Compile Include="POUs\Functions\F_Decoder.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\F_Dewpoint.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\F_HourangleLimit.TcPOU">
       <SubType>Code</SubType>
     </Compile>
