@@ -15,11 +15,11 @@
   <IsTemplate>false</IsTemplate>
   <Layout>&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;Layout&gt;
-  &lt;Window Guid="24ebefd3-83f3-4b44-a9e1-52208685ef52" LastFocused="132713304358152724" DockedSize="200" PopupSize="0" FloatingLocation="-1, -1" FloatingSize="550, 400" LastOpenDockSituation="Document" LastFixedDockSituation="Document" LastFixedDockLocation="Right" LastFloatingWindowGuid="00000000-0000-0000-0000-000000000000" LastDockContainerCount="0" LastDockContainerIndex="0" DockedWorkingSize="250, 400" DockedWindowGroupGuid="00000000-0000-0000-0000-000000000000" DockedIndexInWindowGroup="0" DockedSplitPath="0" DocumentWorkingSize="250, 400" DocumentWindowGroupGuid="43f19078-cf1a-4942-950d-a1e9caa66469" DocumentIndexInWindowGroup="1" DocumentSplitPath="0" FloatingWorkingSize="250, 400" FloatingWindowGroupGuid="00000000-0000-0000-0000-000000000000" FloatingIndexInWindowGroup="0" FloatingSplitPath="0" /&gt;
-  &lt;Window Guid="d3611262-1200-4bf8-a07f-d88e519d498d" LastFocused="132707294880712769" DockedSize="200" PopupSize="0" FloatingLocation="-1, -1" FloatingSize="550, 400" LastOpenDockSituation="Document" LastFixedDockSituation="Document" LastFixedDockLocation="Right" LastFloatingWindowGuid="00000000-0000-0000-0000-000000000000" LastDockContainerCount="0" LastDockContainerIndex="0" DockedWorkingSize="250, 400" DockedWindowGroupGuid="00000000-0000-0000-0000-000000000000" DockedIndexInWindowGroup="0" DockedSplitPath="0" DocumentWorkingSize="250, 400" DocumentWindowGroupGuid="43f19078-cf1a-4942-950d-a1e9caa66469" DocumentIndexInWindowGroup="0" DocumentSplitPath="0" FloatingWorkingSize="250, 400" FloatingWindowGroupGuid="00000000-0000-0000-0000-000000000000" FloatingIndexInWindowGroup="0" FloatingSplitPath="0" /&gt;
+  &lt;Window Guid="24ebefd3-83f3-4b44-a9e1-52208685ef52" LastFocused="132718669229869537" DockedSize="200" PopupSize="0" FloatingLocation="-1, -1" FloatingSize="550, 400" LastOpenDockSituation="Document" LastFixedDockSituation="Document" LastFixedDockLocation="Right" LastFloatingWindowGuid="00000000-0000-0000-0000-000000000000" LastDockContainerCount="0" LastDockContainerIndex="0" DockedWorkingSize="250, 400" DockedWindowGroupGuid="00000000-0000-0000-0000-000000000000" DockedIndexInWindowGroup="0" DockedSplitPath="0" DocumentWorkingSize="250, 400" DocumentWindowGroupGuid="43f19078-cf1a-4942-950d-a1e9caa66469" DocumentIndexInWindowGroup="1" DocumentSplitPath="0" FloatingWorkingSize="250, 400" FloatingWindowGroupGuid="00000000-0000-0000-0000-000000000000" FloatingIndexInWindowGroup="0" FloatingSplitPath="0" /&gt;
+  &lt;Window Guid="d3611262-1200-4bf8-a07f-d88e519d498d" LastFocused="132718683373600001" DockedSize="200" PopupSize="0" FloatingLocation="-1, -1" FloatingSize="550, 400" LastOpenDockSituation="Document" LastFixedDockSituation="Document" LastFixedDockLocation="Right" LastFloatingWindowGuid="00000000-0000-0000-0000-000000000000" LastDockContainerCount="0" LastDockContainerIndex="0" DockedWorkingSize="250, 400" DockedWindowGroupGuid="00000000-0000-0000-0000-000000000000" DockedIndexInWindowGroup="0" DockedSplitPath="0" DocumentWorkingSize="250, 400" DocumentWindowGroupGuid="43f19078-cf1a-4942-950d-a1e9caa66469" DocumentIndexInWindowGroup="0" DocumentSplitPath="0" FloatingWorkingSize="250, 400" FloatingWindowGroupGuid="00000000-0000-0000-0000-000000000000" FloatingIndexInWindowGroup="0" FloatingSplitPath="0" /&gt;
   &lt;DocumentContainer Dock="5"&gt;
     &lt;SplitLayoutSystem WorkingSize="250, 400" SplitMode="0"&gt;
-      &lt;ControlLayoutSystem WorkingSize="250, 400" Guid="43f19078-cf1a-4942-950d-a1e9caa66469" Collapsed="0" SelectedControl="24ebefd3-83f3-4b44-a9e1-52208685ef52"&gt;
+      &lt;ControlLayoutSystem WorkingSize="250, 400" Guid="43f19078-cf1a-4942-950d-a1e9caa66469" Collapsed="0" SelectedControl="d3611262-1200-4bf8-a07f-d88e519d498d"&gt;
         &lt;Controls&gt;
           &lt;Control Guid="d3611262-1200-4bf8-a07f-d88e519d498d" /&gt;
           &lt;Control Guid="24ebefd3-83f3-4b44-a9e1-52208685ef52" /&gt;
@@ -30,7 +30,7 @@
 &lt;/Layout&gt;</Layout>
   <MainServer>127.0.0.1.1.1</MainServer>
   <Name>Scope Project</Name>
-  <RecordTime>6000000000</RecordTime>
+  <RecordTime>30000000000</RecordTime>
   <SortPriority>100</SortPriority>
   <StopMode>AutoStop</StopMode>
   <SubMember>
@@ -773,7 +773,7 @@
           <Guid>0052e5c4-d2b3-4922-b6fa-e2e084c253e7</Guid>
           <IsFileBased>false</IsFileBased>
           <Name>Overview Chart</Name>
-          <OverviewVisible>false</OverviewVisible>
+          <OverviewVisible>true</OverviewVisible>
           <SortPriority>100</SortPriority>
           <Suffix>.svochart</Suffix>
           <Title>OverviewChart_236</Title>
@@ -799,7 +799,7 @@
               <SortPriority>100</SortPriority>
               <Suffix>.svstyle</Suffix>
               <Title>ChartZoomStyle_238</Title>
-              <YZoom>true</YZoom>
+              <YZoom>false</YZoom>
             </ChartZoomStyle>
             <ChartMenuStyle AssemblyName="TwinCAT.Measurement.Scope.API.Model">
               <ButtonSize>
