@@ -34,6 +34,12 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	deoffset: LREAL;
 	// initiates hard-reset on all axis
 	reset:		BOOL;
+	// absolute offset for elevation
+	elevation_offset:	LREAL := -1.0;
+	// absolute offset for azimuth
+	azimuth_offset : 	LREAL := 24.0;
+	// absolute offset for time
+	time_offset: 		LREAL := 0.0;
 
 END_VAR
 VAR
@@ -57,9 +63,6 @@ VAR
 	rightascension_calc,
 	declination_calc: LREAL;
 	
-	elevation_offset,
-	azimuth_offset,
-	time_offset: LREAL;
 	(* Hour Angle part *)
 	Hourangle_calc: LREAL;
 	
