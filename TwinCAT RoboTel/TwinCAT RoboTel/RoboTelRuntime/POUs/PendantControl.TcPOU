@@ -175,11 +175,12 @@ CASE Selection OF
 			Q => TelescopeControl.power);
 		TelescopeControl.reset := reset;
 		IF manual THEN
-			IF up THEN 
-				Telescopecontrol.time_offset := Telescopecontrol.time_offset + 1.0/(24.0*60.0*60.0); 
-			ELSIF down THEN 
-				Telescopecontrol.time_offset := Telescopecontrol.time_offset - 1.0/(24.0*60.0*60.0); 
-			END_IF;
+			ElevationControl.up := up AND GVL_Telescope.Elevation_inputs.0;
+			ElevationControl.down := down AND GVL_Telescope.Elevation_inputs.1;
+			AzimuthElevationControl.left := left AND GVL_Telescope.Azimuth_inputs.0;
+			AzimuthElevationControl.right := right AND GVL_Telescope.Azimuth_inputs.1;
+			TelescopeControl.ra := TelescopeControl.rightascension_calc;
+			TelescopeControl.de := TelescopeControl.declination_calc;
 		ELSE
 			GVL_pendant_control.lamp_up := ElevationControl.enable;
 			GVL_pendant_control.lamp_down := ElevationControl.enable;
@@ -330,8 +331,9 @@ END_CASE
       <LineId Id="1035" Count="1" />
       <LineId Id="843" Count="0" />
       <LineId Id="1027" Count="0" />
-      <LineId Id="1078" Count="3" />
       <LineId Id="1058" Count="0" />
+      <LineId Id="1089" Count="0" />
+      <LineId Id="1085" Count="3" />
       <LineId Id="1060" Count="0" />
       <LineId Id="1074" Count="3" />
       <LineId Id="1062" Count="0" />
