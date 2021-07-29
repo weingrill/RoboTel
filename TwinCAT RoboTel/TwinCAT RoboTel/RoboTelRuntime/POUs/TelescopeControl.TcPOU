@@ -214,10 +214,6 @@ IF power THEN
 		powerfailure := TRUE;
 		TCSpowerEvent.OnMessage := 'failure: brake clearing not set';
 		power := FALSE;
-	ELSIF PendantControl.manual THEN
-		powerfailure := TRUE;
-		TCSpowerEvent.OnMessage := 'failure: manual override';
-		power := FALSE;
 	ELSIF NOT Main.power_OK THEN
 		powerfailure := TRUE;
 		TCSpowerEvent.OnMessage := 'failure: main power failure';
@@ -441,9 +437,6 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3548" Count="0" />
       <LineId Id="3594" Count="0" />
       <LineId Id="3608" Count="0" />
-      <LineId Id="3595" Count="0" />
-      <LineId Id="3599" Count="1" />
-      <LineId Id="3611" Count="0" />
       <LineId Id="3596" Count="0" />
       <LineId Id="3602" Count="1" />
       <LineId Id="3612" Count="0" />
