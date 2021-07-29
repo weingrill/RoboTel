@@ -12,6 +12,9 @@ VAR_INPUT
 	// command to open the brake
 	close_brake: BOOL;
 END_VAR
+VAR_OUTPUT
+	error: BOOL;
+END_VAR
 VAR
 	// monitors the pressure of the pump is running
 	pressure_watchdog:	TON;
@@ -138,6 +141,7 @@ IF brake_closed THEN
 	close_brake := FALSE;
 END_IF
 
+error := pressure_failure OR suction_failure OR oil_low;
 (* This is the end of the brake control section *)
 
 // measure suction pump cycle
@@ -248,6 +252,7 @@ BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
       <LineId Id="554" Count="0" />
       <LineId Id="629" Count="0" />
       <LineId Id="695" Count="1" />
+      <LineId Id="859" Count="0" />
       <LineId Id="626" Count="0" />
       <LineId Id="555" Count="0" />
       <LineId Id="547" Count="0" />
