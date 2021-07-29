@@ -1,21 +1,26 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
   <POU Name="Environment" Id="{03869fa8-1755-402e-a7ee-189c483e0438}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM Environment
-VAR
+VAR_OUTPUT
 	WindSpeed,
 	WindDirection,
 	Temperature,
 	Humidity,
 	Pressure,
 	TemperatureDome,
-	HumidityDome:	REAL;
+	HumidityDome,
+	DewpointDome:	REAL;
 	
 	Rain:	BOOL;
+	WeatherBad:	BOOL;
+END_VAR
+VAR
 	WindEvent,
 	HumidityEvent,
 	HumidityDomeEvent,
-	PrecipitationEvent: FB_Eventlog;
+	PrecipitationEvent,
+	DewpointEvent: FB_Eventlog;
 	WindAverage,
 	HumidityAverage,
 	HumidityDomeAverage,
@@ -32,21 +37,28 @@ Temperature :=  	F_YREAL(GVL_Environment.rawTemperature, 	0, 32767, -30.0, 70.0)
 Humidity :=			F_YREAL(GVL_Environment.rawHumidity, 		0, 32767,   0.0, 100.0); // %
 Pressure := 		F_YREAL(GVL_Environment.rawPressure,		0, 32767, 800.0, 1060.0); // mBar 600...1060? 800..1060?
 
-HumidityDome :=			F_YREAL(GVL_Environment.rawHumidityDome, 		0, 32767,   0.0, 100.0); // %
-TemperatureDome :=  	F_YREAL(GVL_Environment.rawTemperatureDome, 	0, 32767, -30.0, 70.0); // °C
+HumidityDome :=		F_YREAL(GVL_Environment.rawHumidityDome, 		0, 32767,   0.0, 100.0); // %
+TemperatureDome :=  F_YREAL(GVL_Environment.rawTemperatureDome, 	0, 32767, -30.0, 70.0); // °C
 
+DewpointDome := 	F_Dewpoint(HumidityDome, TemperatureDome);
 
-RainDelay(IN := NOT GVL_Environment.rawRain, PT := T#30S, Q => Rain);
-IF Rain THEN
-	DomeControl.CloseDome := TRUE;
-END_IF
+RainDelay(IN := NOT GVL_Environment.rawRain, PT := T#60S, Q => Rain);
 
-WindAverage(IN := WindSpeed, PT := T#5M, AVG => avg_wind, MAXAVG => max_wind);
+WindAverage(IN := WindSpeed, PT := T#3M, AVG => avg_wind, MAXAVG => max_wind);
 
 HumidityAverage(IN := Humidity, PT := T#2M);
 TemperatureAverage(IN := Temperature, PT := T#5M);
 
 HumidityDomeAverage(IN := HumidityDome, PT := T#2M);
+
+WeatherBad := Rain OR
+				HumidityAverage.AVG >= 80.0 OR
+				HumidityDomeAverage.AVG >= 80.0 OR
+				WindAverage.AVG > 10.0;
+
+IF WeatherBad THEN
+	DomeControl.CloseDome := TRUE;
+END_IF
 
 WindEvent(	Trigger := avg_wind > 10.0, 
 			Level := ADSLOG_MSGTYPE_WARN,
@@ -62,7 +74,8 @@ HumidityEvent(	Trigger :=  HumidityAverage.AVG>= 80.0,
 				OffMessage := 'OK',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
 
-HumidityDomeEvent(	Trigger :=  HumidityDomeAverage.AVG>= 80.0, 
+// azimuth encoder starts to fail at 65% humidity
+HumidityDomeEvent(	Trigger :=  HumidityDomeAverage.AVG>= 65.0, 
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := 'Humidity in Dome: %s',
 				OnMessage := LREAL_TO_FMTSTR( HumidityDomeAverage.AVG, 1, TRUE),
@@ -70,13 +83,20 @@ HumidityDomeEvent(	Trigger :=  HumidityDomeAverage.AVG>= 80.0,
 				OffLevel := ADSLOG_MSGTYPE_HINT);
 
 				
-PrecipitationEvent(	Trigger := Rain, 
+PrecipitationEvent(	Trigger := WeatherBad, 
 					Level := ADSLOG_MSGTYPE_WARN,
-					FormatString := 'Rain: %s',
-					OnMessage := 'BAD',
+					FormatString := 'Weather: %s',
+					OnMessage := 'BAD; closing Dome',
 					OffMessage := 'OK',
 					OffLevel := ADSLOG_MSGTYPE_HINT);
-]]></ST>
+
+DewPointEvent( Trigger := TemperatureDome < DewpointDome,
+				Level := ADSLOG_MSGTYPE_WARN,
+				FormatString := 'Dewpoint in Dome below ambient Temperature: %s',
+				OnMessage := LREAL_TO_FMTSTR( DewpointDome, 1, TRUE),
+				OffMessage := 'OK',
+				OffLevel := ADSLOG_MSGTYPE_HINT);
+	]]></ST>
     </Implementation>
     <LineIds Name="Environment">
       <LineId Id="3" Count="0" />
@@ -85,23 +105,30 @@ PrecipitationEvent(	Trigger := Rain,
       <LineId Id="13" Count="1" />
       <LineId Id="100" Count="0" />
       <LineId Id="507" Count="2" />
+      <LineId Id="567" Count="0" />
       <LineId Id="506" Count="0" />
       <LineId Id="99" Count="0" />
       <LineId Id="68" Count="0" />
-      <LineId Id="483" Count="2" />
       <LineId Id="230" Count="1" />
       <LineId Id="143" Count="0" />
       <LineId Id="293" Count="0" />
       <LineId Id="297" Count="0" />
       <LineId Id="511" Count="1" />
+      <LineId Id="576" Count="8" />
       <LineId Id="400" Count="0" />
       <LineId Id="144" Count="12" />
+      <LineId Id="544" Count="0" />
       <LineId Id="514" Count="0" />
       <LineId Id="516" Count="5" />
       <LineId Id="462" Count="0" />
       <LineId Id="515" Count="0" />
       <LineId Id="158" Count="5" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="571" Count="0" />
+      <LineId Id="575" Count="0" />
+      <LineId Id="572" Count="2" />
       <LineId Id="299" Count="0" />
+      <LineId Id="570" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

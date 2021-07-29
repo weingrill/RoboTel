@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+  <POU Name="F_Dewpoint" Id="{1075508b-0103-445e-af41-8392a971b7cf}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_Dewpoint : REAL
+VAR_INPUT
+	// relative humidity
+	relhum:	REAL;
+	// temperature °C
+	t: REAL;
+END_VAR
+VAR
+	a, b, 
+	// Sättigungsdampfdruck in hPa
+	sdd, 
+	// Dampfdruck in hPa
+	dd, v: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// source https://www.wetterochs.de/wetter/feuchte.html
+IF t < 0.0 THEN
+	a := 7.6; b := 240.7;// für T < 0 über Wasser (Taupunkt)
+ELSE
+	a := 7.5; b := 237.3;
+END_IF
+
+SDD := 6.1078 * EXPT(10, (a*T)/(b+T));
+DD := relhum/100.0 * SDD;
+// R(T,TD) := 100 * SDD(TD) / SDD(T);
+v := LOG(DD/6.1078);
+F_Dewpoint := b*v/(a-v);
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_Dewpoint">
+      <LineId Id="24" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="3" />
+      <LineId Id="12" Count="2" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
