@@ -3,7 +3,14 @@
   <POU Name="FanControl" Id="{aa14e62d-ea4c-4f88-afe0-bf32efd9c378}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM FanControl
 VAR_INPUT
+	// enable the fan controller
 	enable: BOOL := TRUE;	
+	// reset the fan controller
+	reset :	BOOL;
+END_VAR
+VAR_OUTPUT
+	// error condition
+	error: BOOL;	
 END_VAR
 VAR
 	// fan axis reference
@@ -12,8 +19,6 @@ VAR
 	temperature : REAL;
 	// calculated velocity
 	velocity: INT;
-	// error condition
-	error: BOOL;
 	// issue temperature warning
 	TemperatureWarning: FB_EventLog;
 END_VAR
@@ -22,10 +27,12 @@ END_VAR
     <Implementation>
       <ST><![CDATA[(* Upper telescope cabinet fan control *)
 
+// FIXME: fan does not restart after poweron-reset
+
 // enable the fan as soon as main cabinet is ready AND temperature exceeds 25°C
 Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := MAIN.power_OK AND temperature >= 25.0;
 // reset on MAIN reset
-Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Reset := MAIN.reset;
+Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Reset := reset;
 // calculate the temperatur efrom analog input
 temperature := GVL_Telescope.temperature_cabinet / 100.0;
 // set the fan velocity as a function of temperature
@@ -43,6 +50,7 @@ TemperatureWarning(Trigger := temperature >= 40.0,
     </Implementation>
     <LineIds Name="FanControl">
       <LineId Id="52" Count="0" />
+      <LineId Id="87" Count="1" />
       <LineId Id="61" Count="0" />
       <LineId Id="55" Count="0" />
       <LineId Id="10" Count="0" />
