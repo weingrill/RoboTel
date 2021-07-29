@@ -30,6 +30,7 @@ END_VAR
 VAR
 	DomeAxis: FB_Axis2;
 	Azimuth_current: 	LREAL;
+	ActVelo:			LREAL;
 	manual_enable:		BOOL;
 	move_azimuth:		BOOL;
 	stop_done:			BOOL;
@@ -83,7 +84,7 @@ GVL_Dome.Inverter_Velocity := 0;
 enable := GVL_Safety.Run;
 
 IF GVL_Dome.bVeloHigh THEN
-	GVL_Dome.Inverter_Velocity := 32000;
+	GVL_Dome.Inverter_Velocity := 32767;
 	GVL_Dome.Inverter_Enable := TRUE;
 END_IF
 
@@ -99,11 +100,13 @@ END_IF
 
 GVL_Dome.Inverter_DirectionMinus := GVL_Dome.bDirectionPlus;
 
-// if we are calibrated ore encounter an error while calibrating, deactivate homing
+// if we are calibrated or encounter an error while calibrating, deactivate homing
 IF DomeAxis.Calibrated OR Error THEN
 	HomeAxis := FALSE;
 	move_azimuth := FALSE;
 END_IF
+
+ActVelo := GVL_Dome.ActVelo;
 
 // limit position to sane value
 position := MODABS(position, 360.0);
@@ -122,6 +125,8 @@ IF DomeAxis.Calibrated AND TelescopeControl.power AND AzimuthElevationControl.ca
 	position := MODABS(TelescopeControl.azimuth_current, 360.0);
 	move_azimuth := ABS(Azimuth_current - position) > tolerance;
 END_IF
+
+MC_GearIn
 *)
 // if the dome is not calibrated while the power is on, start calibration
 IF NOT DomeAxis.Calibrated AND TelescopeControl.power THEN
@@ -300,6 +305,7 @@ DomeCalibrationEvent(
       <LineId Id="1209" Count="0" />
       <LineId Id="1432" Count="0" />
       <LineId Id="960" Count="0" />
+      <LineId Id="1449" Count="1" />
       <LineId Id="1431" Count="0" />
       <LineId Id="1429" Count="0" />
       <LineId Id="1426" Count="0" />
@@ -316,6 +322,8 @@ DomeCalibrationEvent(
       <LineId Id="1433" Count="0" />
       <LineId Id="1406" Count="2" />
       <LineId Id="1403" Count="0" />
+      <LineId Id="1452" Count="0" />
+      <LineId Id="1451" Count="0" />
       <LineId Id="1427" Count="0" />
       <LineId Id="1410" Count="0" />
       <LineId Id="1409" Count="0" />
