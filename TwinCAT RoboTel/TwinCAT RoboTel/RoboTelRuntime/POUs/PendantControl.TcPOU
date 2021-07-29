@@ -28,6 +28,8 @@ VAR
 	Elevation_enable_Button: FB_ButtonEnable;
 	Azimuth_enable_Button: FB_ButtonEnable;
 	TelescopeControl_enable: FB_ButtonEnable;
+	ResetDelay:	TON;
+	TwinCATRestart: TC_Restart;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -68,6 +70,7 @@ GVL_pendant_control.lamp_error := GVL_Main.lamp_error;
 CASE Selection OF
 	1:	// reserved for Cover1 control
 		CoverControl.Cover1_enable := manual;
+		CoverControl.reset := reset;
 		CoverControl.Cover1_open := up;
 		CoverControl.Cover1_close := down;
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover1_open;
@@ -75,6 +78,7 @@ CASE Selection OF
 
 	2: // Cover2 control
 		CoverControl.Cover2_enable := manual;
+		CoverControl.reset := reset;
 		CoverControl.Cover2_open := up;
 		CoverControl.Cover2_close := down;
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover2_open;
@@ -84,6 +88,7 @@ CASE Selection OF
 		CoverControl.Cover3_enable := manual;
 		CoverControl.Cover3_open := up;
 		CoverControl.Cover3_close := down;
+		CoverControl.reset := reset;
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover3_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover3_closed;
 		
@@ -159,12 +164,16 @@ CASE Selection OF
 		FilterWheelControl.reset := reset;
 	
 	13: // Telescope Control
-		GVL_pendant_control.lamp_up := NOT time_offset.QU;
-		GVL_pendant_control.lamp_down := NOT time_offset.QD;
-		Telescopecontrol_enable(SET := enable, RESET := MAIN.error, Q => TelescopeControl.power);
+		GVL_pendant_control.lamp_up := enable AND NOT time_offset.QU;
+		GVL_pendant_control.lamp_down := enable AND NOT time_offset.QD;
+		Telescopecontrol_enable(SET := enable, 
+			RESET := ElevationControl.error OR AzimuthElevationControl.error, 
+			Q => TelescopeControl.power);
 		TelescopeControl.reset := reset;
-		time_offset(CU := up, CD := down, PV := 24);
+		time_offset(CU := up AND GVL_pendant_control.lamp_up, CD := down AND GVL_pendant_control.lamp_down, PV := 24);
 		TelescopeControl.tauoffset := WORD_TO_LREAL(time_offset.CV)/24.0;
+		ResetDelay(IN := reset, PT := T#10S);
+		TwinCATRestart(NETID := '', RESTART := ResetDelay.Q, TMOUT := T#60S);
 	
 	14: GVL_Telescope.horn := manual;
 	
@@ -214,11 +223,13 @@ END_CASE
       <LineId Id="331" Count="0" />
       <LineId Id="11" Count="1" />
       <LineId Id="995" Count="0" />
+      <LineId Id="1037" Count="0" />
       <LineId Id="634" Count="0" />
       <LineId Id="640" Count="3" />
       <LineId Id="34" Count="0" />
       <LineId Id="632" Count="0" />
       <LineId Id="996" Count="0" />
+      <LineId Id="1038" Count="0" />
       <LineId Id="636" Count="0" />
       <LineId Id="106" Count="1" />
       <LineId Id="101" Count="0" />
@@ -227,6 +238,7 @@ END_CASE
       <LineId Id="997" Count="0" />
       <LineId Id="638" Count="0" />
       <LineId Id="117" Count="0" />
+      <LineId Id="1039" Count="0" />
       <LineId Id="81" Count="0" />
       <LineId Id="628" Count="0" />
       <LineId Id="80" Count="0" />
@@ -286,8 +298,10 @@ END_CASE
       <LineId Id="841" Count="0" />
       <LineId Id="1029" Count="1" />
       <LineId Id="846" Count="0" />
+      <LineId Id="1035" Count="1" />
       <LineId Id="843" Count="0" />
       <LineId Id="1027" Count="1" />
+      <LineId Id="1033" Count="1" />
       <LineId Id="842" Count="0" />
       <LineId Id="802" Count="0" />
       <LineId Id="455" Count="0" />
