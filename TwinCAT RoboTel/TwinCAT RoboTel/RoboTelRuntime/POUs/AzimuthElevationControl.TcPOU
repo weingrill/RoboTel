@@ -78,7 +78,7 @@ END_IF
 
 // perform a recalibration, if we pass the reference mark on the encoder
 AzimuthCalibration(
-	Axis := GVL_Telescope.ElevationAxisRef,
+	Axis := GVL_Telescope.AzimuthAxisRef,
 	Execute := GVL_Telescope.Azimuth_Probe=217 AND NOT HomeAxis,
 	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
 
