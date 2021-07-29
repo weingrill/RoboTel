@@ -23,11 +23,11 @@ VAR
 	right:		BOOL;
 	// counter for filter position
 	Filter_position:	CTUD;
-	// time offset
-	time_offset:	CTUD;
-	Elevation_enable_Button: FB_ButtonEnable;
-	Azimuth_enable_Button: FB_ButtonEnable;
-	TelescopeControl_enable: FB_ButtonEnable;
+	
+	Elevation_enable_Button: 	FB_ButtonEnable;
+	Azimuth_enable_Button: 		FB_ButtonEnable;
+	TelescopeControl_enable: 	FB_ButtonEnable;
+	Hydraulics_enable_Button: 	FB_ButtonEnable;
 	ResetDelay:	TON;
 	TwinCATRestart: TC_Restart;
 END_VAR
@@ -122,10 +122,13 @@ CASE Selection OF
 		GVL_pendant_control.lamp_down := GVL_Telescope.Elevation_inputs.1;
 		ElevationControl.up := up AND GVL_Telescope.Elevation_inputs.0;
 		ElevationControl.down := down AND GVL_Telescope.Elevation_inputs.1;
-		Elevation_enable_button(
-			SET := manual AND enable, 
-			RESET := ElevationControl.error OR ElevationControl.warning, 
-			Q => ElevationControl.enable);
+		IF manual THEN
+			Elevation_enable_button(
+				SET := enable, 
+				RESET := ElevationControl.error OR ElevationControl.warning, 
+				Q => ElevationControl.enable);	
+			GVL_pendant_control.lamp_error := ElevationControl.error;		
+		END_IF
 		ElevationControl.reset := reset;
 		
 	8:	// This selection will become RA/Dec Mode with tracking enabled!
@@ -134,13 +137,16 @@ CASE Selection OF
 		AzimuthElevationControl.left := left AND GVL_Telescope.Azimuth_inputs.0;
 		AzimuthElevationControl.right := right AND GVL_Telescope.Azimuth_inputs.1;
 		AzimuthElevationControl.reset := reset;
-		Azimuth_enable_button(SET := manual AND enable, 
+		IF manual THEN
+			Azimuth_enable_button(SET := enable, 
 			RESET := AzimuthElevationControl.error, 
 			Q => AzimuthElevationControl.enable);
+			GVL_pendant_control.lamp_error := AzimuthElevationControl.error;
+		END_IF
 		
 	9: 	// Dome control
-		GVL_pendant_control.lamp_left := manual;
-		GVL_pendant_control.lamp_right := manual;
+		GVL_pendant_control.lamp_left := DomeControl.enable;
+		GVL_pendant_control.lamp_right := DomeControl.enable;
 		GVL_pendant_control.lamp_up := DomeControl.DomeClosed;
 		GVL_pendant_control.lamp_down := DomeControl.DomeOpened;
 		DomeControl.left := left;
@@ -164,14 +170,32 @@ CASE Selection OF
 		FilterWheelControl.reset := reset;
 	
 	13: // Telescope Control
-		GVL_pendant_control.lamp_up := enable AND NOT time_offset.QU;
-		GVL_pendant_control.lamp_down := enable AND NOT time_offset.QD;
 		Telescopecontrol_enable(SET := enable, 
 			RESET := ElevationControl.error OR AzimuthElevationControl.error, 
 			Q => TelescopeControl.power);
 		TelescopeControl.reset := reset;
-		time_offset(CU := up AND GVL_pendant_control.lamp_up, CD := down AND GVL_pendant_control.lamp_down, PV := 24);
-		TelescopeControl.tauoffset := WORD_TO_LREAL(time_offset.CV)/24.0;
+		IF manual THEN
+			IF up THEN 
+				Telescopecontrol.time_offset := Telescopecontrol.time_offset + 1.0/(24.0*60.0*60.0); 
+			ELSIF down THEN 
+				Telescopecontrol.time_offset := Telescopecontrol.time_offset - 1.0/(24.0*60.0*60.0); 
+			END_IF;
+		ELSE
+			GVL_pendant_control.lamp_up := ElevationControl.enable;
+			GVL_pendant_control.lamp_down := ElevationControl.enable;
+			GVL_pendant_control.lamp_left := AzimuthElevationControl.enable;
+			GVL_pendant_control.lamp_right := AzimuthElevationControl.enable;
+			IF up THEN 
+				Telescopecontrol.elevation_offset := Telescopecontrol.elevation_offset + 1.0/60.0; 
+			ELSIF down THEN 
+				Telescopecontrol.elevation_offset := Telescopecontrol.elevation_offset - 1.0/60.0; 
+			END_IF;
+			IF left THEN 
+				Telescopecontrol.elevation_offset := Telescopecontrol.azimuth_offset - 1.0/60.0; 
+			ELSIF right THEN 
+				Telescopecontrol.elevation_offset := Telescopecontrol.azimuth_offset + 1.0/60.0; 
+			END_IF;
+		END_IF
 		ResetDelay(IN := reset, PT := T#10S);
 		TwinCATRestart(NETID := '', RESTART := ResetDelay.Q, TMOUT := T#60S);
 	
@@ -183,10 +207,11 @@ CASE Selection OF
 		GVL_pendant_control.lamp_left := HydraulicsControl.pump_running;
 		GVL_pendant_control.lamp_right := HydraulicsControl.suction_running;
 		IF manual THEN
-			IF enable THEN
+			Hydraulics_enable_button(SET := enable, 
+			RESET := HydraulicsControl.error OR reset);
+			IF Hydraulics_enable_button.Q THEN
 				Hydraulicscontrol.start := TRUE;
-			END_IF
-			IF reset THEN
+			ELSE
 				Hydraulicscontrol.stop := TRUE;
 			END_IF
 			IF up THEN
@@ -197,6 +222,7 @@ CASE Selection OF
 				Hydraulicscontrol.open_brake := FALSE;
 				Hydraulicscontrol.close_brake := TRUE;
 			END_IF
+			GVL_pendant_control.lamp_error := HydraulicsControl.error;
 		END_IF
 END_CASE
 ]]></ST>
@@ -265,8 +291,10 @@ END_CASE
       <LineId Id="609" Count="0" />
       <LineId Id="289" Count="0" />
       <LineId Id="327" Count="1" />
-      <LineId Id="838" Count="0" />
-      <LineId Id="908" Count="2" />
+      <LineId Id="1040" Count="0" />
+      <LineId Id="1043" Count="3" />
+      <LineId Id="1084" Count="0" />
+      <LineId Id="1042" Count="0" />
       <LineId Id="772" Count="0" />
       <LineId Id="285" Count="0" />
       <LineId Id="299" Count="0" />
@@ -274,8 +302,10 @@ END_CASE
       <LineId Id="300" Count="0" />
       <LineId Id="309" Count="0" />
       <LineId Id="371" Count="1" />
-      <LineId Id="877" Count="0" />
-      <LineId Id="957" Count="1" />
+      <LineId Id="1047" Count="0" />
+      <LineId Id="1050" Count="2" />
+      <LineId Id="1083" Count="0" />
+      <LineId Id="1049" Count="0" />
       <LineId Id="463" Count="0" />
       <LineId Id="377" Count="0" />
       <LineId Id="610" Count="0" />
@@ -296,11 +326,21 @@ END_CASE
       <LineId Id="460" Count="0" />
       <LineId Id="803" Count="0" />
       <LineId Id="841" Count="0" />
-      <LineId Id="1029" Count="1" />
       <LineId Id="846" Count="0" />
       <LineId Id="1035" Count="1" />
       <LineId Id="843" Count="0" />
-      <LineId Id="1027" Count="1" />
+      <LineId Id="1027" Count="0" />
+      <LineId Id="1078" Count="3" />
+      <LineId Id="1058" Count="0" />
+      <LineId Id="1060" Count="0" />
+      <LineId Id="1074" Count="3" />
+      <LineId Id="1062" Count="0" />
+      <LineId Id="1066" Count="3" />
+      <LineId Id="1064" Count="0" />
+      <LineId Id="1070" Count="1" />
+      <LineId Id="1073" Count="0" />
+      <LineId Id="1072" Count="0" />
+      <LineId Id="1059" Count="0" />
       <LineId Id="1033" Count="1" />
       <LineId Id="842" Count="0" />
       <LineId Id="802" Count="0" />
@@ -310,13 +350,13 @@ END_CASE
       <LineId Id="234" Count="0" />
       <LineId Id="419" Count="1" />
       <LineId Id="941" Count="0" />
-      <LineId Id="944" Count="2" />
-      <LineId Id="942" Count="0" />
-      <LineId Id="947" Count="3" />
+      <LineId Id="1055" Count="1" />
+      <LineId Id="944" Count="6" />
       <LineId Id="955" Count="0" />
       <LineId Id="951" Count="1" />
       <LineId Id="956" Count="0" />
       <LineId Id="953" Count="1" />
+      <LineId Id="1082" Count="0" />
       <LineId Id="943" Count="0" />
       <LineId Id="13" Count="0" />
       <LineId Id="121" Count="0" />
