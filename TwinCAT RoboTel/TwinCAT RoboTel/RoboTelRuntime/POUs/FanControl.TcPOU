@@ -30,7 +30,7 @@ END_VAR
 // FIXME: fan does not restart after poweron-reset
 
 // enable the fan as soon as main cabinet is ready AND temperature exceeds 25°C
-Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := MAIN.power_OK AND temperature >= 25.0;
+Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := MAIN.power_OK AND temperature >= 25.0 AND NOT Reset;
 // reset on MAIN reset
 Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Reset := reset;
 // calculate the temperatur efrom analog input
