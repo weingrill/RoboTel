@@ -56,7 +56,7 @@ WeatherBad := Rain OR
 				HumidityDomeAverage.AVG >= 80.0 OR
 				WindAverage.AVG > 10.0;
 
-IF WeatherBad THEN
+IF WeatherBad AND DomeControl.DomeOpened THEN
 	DomeControl.CloseDome := TRUE;
 END_IF
 
