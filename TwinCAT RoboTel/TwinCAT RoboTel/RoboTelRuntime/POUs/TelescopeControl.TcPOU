@@ -208,6 +208,8 @@ hor2eq(alt := elevation_current,
 poweronwarning(IN := power, PT := T#250MS, Q => GVL_Telescope.horn);
 poweroff(CLK := power);
 poweron_reset(IN := power AND NOT PendantControl.manual, PT := T#50MS);
+// reset fan
+FanControl.reset := poweron_reset.Q;
 
 IF power THEN
 	IF NOT Main.brake_clearing THEN
@@ -245,6 +247,11 @@ IF power THEN
 	
 	IF AzimuthElevationControl.ready AND NOT AzimuthElevationControl.calibrated THEN
 		AzimuthElevationControl.HomeAxis := TRUE;
+	END_IF
+
+	// if the dome is not calibrated while the power is on, start calibration
+	IF NOT DomeControl.Calibrated AND AzimuthElevationControl.calibrated THEN
+		DomeControl.HomeAxis := TRUE;
 	END_IF
 
 	// enable derotator
@@ -431,6 +438,8 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4243" Count="0" />
       <LineId Id="4075" Count="1" />
       <LineId Id="4242" Count="0" />
+      <LineId Id="4347" Count="0" />
+      <LineId Id="4346" Count="0" />
       <LineId Id="3591" Count="0" />
       <LineId Id="3547" Count="0" />
       <LineId Id="3592" Count="0" />
@@ -459,6 +468,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3923" Count="3" />
       <LineId Id="3932" Count="0" />
       <LineId Id="4088" Count="2" />
+      <LineId Id="4340" Count="4" />
       <LineId Id="4244" Count="0" />
       <LineId Id="3752" Count="0" />
       <LineId Id="3773" Count="0" />
