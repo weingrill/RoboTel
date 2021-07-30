@@ -39,8 +39,7 @@ VAR
 	ElevationCalibration: 	MC_SetPosition;
 	// delay until commutator angle is measured
 	readydelay:				TON;
-	HomeDelay:				TON := (PT := T#5S);
-	R_TRIG_HomeDelay:		R_TRIG;
+	HomeDelay:				FB_TONTP;
 	ElevationAxisEvent: 	FB_Eventlog;
 	ElevationVelEvent: 		FB_Eventlog;
 	SimpleLog:				FB_SimpleLog;
@@ -71,14 +70,14 @@ IF HomeAxis THEN
 	position := homing_position;
 END_IF
 
-HomeDelay(IN := Calibrated AND ElevationAxis.StandStill);
 
-R_TRIG_HomeDelay(CLK := Calibrated);
-(*
-IF R_TRIG_HomeDelay.Q THEN
+HomeDelay(IN := Calibrated, PT1 := T#5S, PT2 := T#100MS);
+
+IF HomeDelay.Q THEN
 	position := calibration_position;
 	MoveAxis := TRUE;
-END_IF*)
+END_IF
+
 // if NOT Enabled and ActVelo>1 then issue a warning
 warning := NOT enable AND GVL_Telescope.ElevationAxisRef.NcToPlc.ActVelo>2.0;
 
@@ -159,15 +158,15 @@ ElevationAxisEvent(	Trigger := warning,
       <LineId Id="626" Count="0" />
       <LineId Id="257" Count="2" />
       <LineId Id="630" Count="0" />
-      <LineId Id="624" Count="0" />
-      <LineId Id="632" Count="0" />
-      <LineId Id="631" Count="0" />
+      <LineId Id="639" Count="0" />
+      <LineId Id="638" Count="0" />
       <LineId Id="633" Count="0" />
       <LineId Id="497" Count="0" />
       <LineId Id="627" Count="0" />
       <LineId Id="629" Count="0" />
       <LineId Id="628" Count="0" />
-      <LineId Id="340" Count="0" />
+      <LineId Id="637" Count="0" />
+      <LineId Id="636" Count="0" />
       <LineId Id="394" Count="0" />
       <LineId Id="499" Count="0" />
       <LineId Id="279" Count="0" />
