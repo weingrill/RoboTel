@@ -160,6 +160,9 @@
     <Compile Include="POUs\FunctionBlocks\FB_Timer.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FunctionBlocks\FB_TONTP.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\ATAN2.TcPOU">
       <SubType>Code</SubType>
     </Compile>

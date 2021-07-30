@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+  <POU Name="FB_TONTP" Id="{3261e024-b082-405b-8658-f2ae9a529dde}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TONTP
+VAR_INPUT
+	IN :	BOOL;
+	 PT1:	TIME := T#1000MS;
+	 PT2:	TIME := T#1000MS;
+END_VAR
+VAR_OUTPUT
+	Q:	BOOL;
+END_VAR
+VAR
+	ton:	TON;
+	tp:		TP;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ton(IN := IN, PT := PT1);
+tp(IN := ton.Q, PT := PT2, Q => Q);
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_TONTP">
+      <LineId Id="9" Count="0" />
+      <LineId Id="15" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
