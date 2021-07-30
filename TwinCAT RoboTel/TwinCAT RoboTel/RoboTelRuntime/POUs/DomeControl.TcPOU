@@ -26,6 +26,7 @@ VAR_OUTPUT
 	Error:		BOOL;
 	ErrorID:	UDINT;
 	DomeError:	BOOL;
+	Calibrated:	BOOL;
 END_VAR
 VAR
 	DomeAxis: FB_Axis2;
@@ -128,11 +129,8 @@ END_IF
 
 MC_GearIn
 *)
-// if the dome is not calibrated while the power is on, start calibration
-IF NOT DomeAxis.Calibrated AND TelescopeControl.power THEN
-	HomeAxis := TRUE;
-END_IF
 
+Calibrated := DomeAxis.Calibrated;
 // when homing, ensure that the position is the calibration position
 IF HomeAxis THEN
 	position := calibration_position;	
@@ -325,10 +323,7 @@ DomeCalibrationEvent(
       <LineId Id="1452" Count="0" />
       <LineId Id="1451" Count="0" />
       <LineId Id="1427" Count="0" />
-      <LineId Id="1410" Count="0" />
-      <LineId Id="1409" Count="0" />
-      <LineId Id="1222" Count="0" />
-      <LineId Id="957" Count="0" />
+      <LineId Id="1454" Count="0" />
       <LineId Id="1428" Count="0" />
       <LineId Id="1414" Count="1" />
       <LineId Id="1418" Count="0" />
