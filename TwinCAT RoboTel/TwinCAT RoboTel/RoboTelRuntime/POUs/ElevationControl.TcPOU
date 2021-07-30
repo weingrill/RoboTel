@@ -46,7 +46,7 @@ VAR
 END_VAR
 VAR CONSTANT
 	// reference position for homing
-	homing_position:		LREAL := 90.0; // 95.0?
+	homing_position:		LREAL := 91.0; // 95.0?
 	// current position of the calibration cam. Apply an offset here if necessary
 	calibration_position:	LREAL := 45.0;
 END_VAR
