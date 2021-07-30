@@ -66,10 +66,10 @@ Cover3_closed := NOT GVL_Telescope.cover3_closed;
 
 // wait for cover2 until cover3 has left the closed state
 open2_delay(IN := open AND NOT cover3_closed,
-			PT := T#3S);
+			PT := T#300MS);
 // wait for cover3 until cover2 has left the open state
 close3_delay(IN := close AND NOT cover2_open,
-			PT := T#3S);
+			PT := T#1500MS);
 		
 IF Pendantcontrol.manual THEN
 	// Covers are enabled individually;
