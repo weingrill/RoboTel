@@ -28,7 +28,7 @@ VAR
 	sinalt, sinaz, cosaz, az1, az2, az3, length,
 	// in radians
 	phi_r, tau_r, alpha_r, delta_r: LREAL;
-	mode : UINT := 2;
+	quadrant: UINT;
 END_VAR
 VAR CONSTANT
 	d2r:	LREAL := PI/180.0;
@@ -72,11 +72,13 @@ az2 := ACOS(cosaz) * r2d;
 
 az3 := ATAN2(SIN(phi_r)*COS(tau_r) - COS(phi_r)*TAN(delta_r), SIN(tau_r)) * r2d;
 
-IF mode = 1 THEN
-	az := MODABS(-az1, 360.0);
-ELSIF mode = 2 THEN
+IF sinaz >= 0.0 AND cosaz >=0.0 THEN // Q I
+	az := az1;
+ELSIF sinaz < 0.0 AND cosaz >= 0.0 THEN // Q II
 	az := MODABS(-az2, 360.0);
-ELSIF mode = 3 THEN
+ELSIF sinaz < 0.0 AND cosaz < 0.0 THEN // Q III
+	az := MODABS(-az3, 360.0);
+ELSIF sinaz >= 0.0 AND cosaz < 0.0 THEN // Q IV
 	az := MODABS(-az3, 360.0);
 END_IF]]></ST>
     </Implementation>
@@ -113,7 +115,7 @@ END_IF]]></ST>
       <LineId Id="161" Count="0" />
       <LineId Id="130" Count="0" />
       <LineId Id="138" Count="0" />
-      <LineId Id="164" Count="2" />
+      <LineId Id="164" Count="4" />
       <LineId Id="153" Count="0" />
     </LineIds>
   </POU>
