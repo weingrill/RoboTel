@@ -15,9 +15,9 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	// boolean, true: go into park position, ready to stow telescope, unset track/goto
 	park: BOOL;
 	// apparent right ascension, degrees, double
-	ra:	LREAL := (14.0 + 15.0/60.0 + 39.67207/3600.0) *15.0;	
+	ra:	LREAL := (18.0 + 36.0/60.0 + 56.19/3600.0) *15.0;	
 	// apparent declination, degrees, double
-	de: LREAL := 19.0 + 10.0/60.0 + 56.6730/3600.0;
+	de: LREAL := 38.0 + 46.0/60.0 + 56.76/3600.0;
 	// boolean, TRUE: MOVE telescope TO last ra/de AND start tracking. Set 'goto' TO FALSE, IF TRUE. FALSE: Stop tracking as soon as possible
 	track: BOOL;
 	// apparent hour anlge, degrees, double, south=zero, west>0)
@@ -35,9 +35,9 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	// initiates hard-reset on all axis
 	reset:		BOOL;
 	// absolute offset for elevation
-	elevation_offset:	LREAL := -1.0;
+	elevation_offset:	LREAL := 0.0;
 	// absolute offset for azimuth
-	azimuth_offset : 	LREAL := 24.0;
+	azimuth_offset : 	LREAL := 0.0;
 	// absolute offset for time
 	time_offset: 		LREAL := 0.0;
 
