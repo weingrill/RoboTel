@@ -38,10 +38,11 @@ VAR
 	AzimuthAxisEvent: 	FB_EventLog;
 	// delay until commutator angle is measured
 	readydelay:			TON;
+	HomeDelay:				FB_TONTP;
 END_VAR
 VAR CONSTANT
 	// reference position for homing
-	homing_position:		LREAL := 463.21; // was 442 - -21.21
+	homing_position:		LREAL := 439.0; // was 442 - -21.21 = 463.21; 463 + 24 = 439
 	// current position of the calibration cam. Apply an offset here if necessary
 	calibration_position:	LREAL := 180.0;
 END_VAR
@@ -76,6 +77,14 @@ IF HomeAxis THEN
 	position := homing_position;
 END_IF
 
+// move to calibration_position after homing
+HomeDelay(IN := Calibrated, PT1 := T#5S, PT2 := T#100MS);
+
+IF HomeDelay.Q THEN
+	position := calibration_position;
+	MoveAxis := TRUE;
+END_IF
+
 // perform a recalibration, if we pass the reference mark on the encoder
 AzimuthCalibration(
 	Axis := GVL_Telescope.AzimuthAxisRef,
@@ -88,7 +97,7 @@ MC_SetAcceptBlockedDriveSignal(
 	Enable := HomeAxis);
 
 AzimuthAxis(	
-	Enable := 			enable AND HydraulicsControl.brake_open AND ElevationControl.Ready,
+	Enable := 			enable AND HydraulicsControl.brake_open,
 	Reset := 			reset,
 	MoveAxis :=			MoveAxis,
 	HomeAxis := 		HomeAxis,
@@ -147,6 +156,8 @@ AzimuthAxisEvent(
       <LineId Id="285" Count="0" />
       <LineId Id="334" Count="0" />
       <LineId Id="244" Count="6" />
+      <LineId Id="400" Count="0" />
+      <LineId Id="393" Count="6" />
       <LineId Id="347" Count="0" />
       <LineId Id="287" Count="4" />
       <LineId Id="238" Count="4" />
