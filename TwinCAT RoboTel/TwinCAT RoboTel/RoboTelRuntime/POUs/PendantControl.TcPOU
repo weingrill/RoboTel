@@ -200,14 +200,14 @@ CASE Selection OF
 			GVL_pendant_control.lamp_left := AzimuthElevationControl.enable;
 			GVL_pendant_control.lamp_right := AzimuthElevationControl.enable;
 			IF up THEN 
-				Telescopecontrol.elevation_offset := Telescopecontrol.elevation_offset + 1.0/60.0; 
+				Telescopecontrol.elevation_offset := Telescopecontrol.elevation_offset + 10.0/3600.0; 
 			ELSIF down THEN 
-				Telescopecontrol.elevation_offset := Telescopecontrol.elevation_offset - 1.0/60.0; 
+				Telescopecontrol.elevation_offset := Telescopecontrol.elevation_offset - 10.0/3600.0; 
 			END_IF;
 			IF left THEN 
-				Telescopecontrol.elevation_offset := Telescopecontrol.azimuth_offset - 1.0/60.0; 
+				Telescopecontrol.azimuth_offset := Telescopecontrol.azimuth_offset - 10.0/3600.0; 
 			ELSIF right THEN 
-				Telescopecontrol.elevation_offset := Telescopecontrol.azimuth_offset + 1.0/60.0; 
+				Telescopecontrol.azimuth_offset := Telescopecontrol.azimuth_offset + 10.0/3600.0; 
 			END_IF;
 		END_IF
 		ResetDelay(IN := reset, PT := T#10S);
