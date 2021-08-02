@@ -7,6 +7,12 @@
     <RootNamespace>TwinCAT Measurement Project1</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Az cummutation error.svdx">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="YT Scope Project.svdx">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="YT Scope Project.tcscopex">
       <SubType>Content</SubType>
     </Content>
