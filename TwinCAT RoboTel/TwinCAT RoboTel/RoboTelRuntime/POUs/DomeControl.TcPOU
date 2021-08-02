@@ -40,7 +40,7 @@ VAR
    	DomeControlWord:	WORD;
 	DeHumidifierDelay : TON;
 	PermanentError:		TON;
-	HomeDelay:			TON;
+	HomeDelay:			FB_TONTP;
 	F_Azimuth_home:		F_TRIG;
 	R_Azimuth_home:		R_TRIG;
 	// direction invariant azimuth home signal;
@@ -65,7 +65,7 @@ VAR
 END_VAR
 VAR CONSTANT
 	tolerance:				LREAL := 3.0;
-	calibration_position:	LREAL := 200.0;
+	calibration_position:	LREAL := 172.5;
 	home_position:			LREAL := 180.0;
 END_VAR]]></Declaration>
     <Implementation>
@@ -113,7 +113,7 @@ ActVelo := GVL_Dome.ActVelo;
 position := MODABS(position, 360.0);
 
 // if we are calibrated, but azimuth is not, go to home position
-HomeDelay(IN := DomeAxis.Calibrated AND DomeAxis.StandStill AND NOT AzimuthElevationControl.calibrated, PT := T#10S);
+HomeDelay(IN := DomeAxis.Calibrated, PT1 := T#5S, PT2 := T#100MS);
 
 IF HomeDelay.Q THEN
 	position := home_position;
