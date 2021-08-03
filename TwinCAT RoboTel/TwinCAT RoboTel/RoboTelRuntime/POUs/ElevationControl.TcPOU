@@ -42,6 +42,8 @@ VAR
 	HomeDelay:				FB_TONTP;
 	ElevationAxisEvent: 	FB_Eventlog;
 	ElevationVelEvent: 		FB_Eventlog;
+	HighElevationEvent,
+	LowElevationEvent:		FB_Eventlog;
 	SimpleLog:				FB_SimpleLog;
 END_VAR
 VAR CONSTANT
@@ -138,12 +140,22 @@ ElevationAxisEvent(	Trigger := Error,
 				Level := ADSLOG_MSGTYPE_ERROR,
 				FormatString := 'Elevation Axis Error: %s',
 				OnMessage := NCError_TO_STRING(ErrorID));
-(*				
-ElevationAxisEvent(	Trigger := warning, 
+
+HighElevationEvent(	Trigger := Calibrated AND act_position > 80.0, 
+				Level := ADSLOG_MSGTYPE_WARN,
+				FormatString := 'High Elevation: %s',
+				OnMessage := LREAL_TO_FMTSTR(act_position, 2, TRUE));
+
+LowElevationEvent(	Trigger := Calibrated AND act_position < 15.0, 
+				Level := ADSLOG_MSGTYPE_WARN,
+				FormatString := 'Low Elevation: %s',
+				OnMessage := LREAL_TO_FMTSTR(act_position, 2, TRUE));
+				
+ElevationAxisEvent(	Trigger := NOT enable AND HydraulicsControl.brake_open, 
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := '%s',
-				OnMessage := 'Elevation moving without command!'); 
-*)
+				OnMessage := 'Elevation without brake!'); 
+
 ]]></ST>
     </Implementation>
     <LineIds Name="ElevationControl">
@@ -202,6 +214,10 @@ ElevationAxisEvent(	Trigger := warning,
       <LineId Id="136" Count="0" />
       <LineId Id="156" Count="2" />
       <LineId Id="160" Count="0" />
+      <LineId Id="697" Count="0" />
+      <LineId Id="693" Count="3" />
+      <LineId Id="692" Count="0" />
+      <LineId Id="698" Count="3" />
       <LineId Id="5" Count="0" />
       <LineId Id="396" Count="3" />
       <LineId Id="634" Count="0" />
