@@ -18,11 +18,11 @@
   &lt;Window Guid="397161e4-f35b-4173-9eb2-5256a4870c29" LastFocused="132721142821585804" DockedSize="200" PopupSize="0" FloatingLocation="-1, -1" FloatingSize="550, 400" LastOpenDockSituation="Document" LastFixedDockSituation="Document" LastFixedDockLocation="Right" LastFloatingWindowGuid="00000000-0000-0000-0000-000000000000" LastDockContainerCount="0" LastDockContainerIndex="0" DockedWorkingSize="250, 400" DockedWindowGroupGuid="00000000-0000-0000-0000-000000000000" DockedIndexInWindowGroup="0" DockedSplitPath="0" DocumentWorkingSize="250, 400" DocumentWindowGroupGuid="43f19078-cf1a-4942-950d-a1e9caa66469" DocumentIndexInWindowGroup="2" DocumentSplitPath="0" FloatingWorkingSize="250, 400" FloatingWindowGroupGuid="00000000-0000-0000-0000-000000000000" FloatingIndexInWindowGroup="0" FloatingSplitPath="0" /&gt;
   &lt;Window Guid="24ebefd3-83f3-4b44-a9e1-52208685ef52" LastFocused="132721142622193276" DockedSize="200" PopupSize="0" FloatingLocation="-1, -1" FloatingSize="550, 400" LastOpenDockSituation="Document" LastFixedDockSituation="Document" LastFixedDockLocation="Right" LastFloatingWindowGuid="00000000-0000-0000-0000-000000000000" LastDockContainerCount="0" LastDockContainerIndex="0" DockedWorkingSize="250, 400" DockedWindowGroupGuid="00000000-0000-0000-0000-000000000000" DockedIndexInWindowGroup="0" DockedSplitPath="0" DocumentWorkingSize="250, 400" DocumentWindowGroupGuid="43f19078-cf1a-4942-950d-a1e9caa66469" DocumentIndexInWindowGroup="1" DocumentSplitPath="0" FloatingWorkingSize="250, 400" FloatingWindowGroupGuid="00000000-0000-0000-0000-000000000000" FloatingIndexInWindowGroup="0" FloatingSplitPath="0" /&gt;
   &lt;Window Guid="cdf1b196-229e-4a46-ac02-f6f5cc89c10f" LastFocused="132721145701541204" DockedSize="200" PopupSize="0" FloatingLocation="-1, -1" FloatingSize="550, 400" LastOpenDockSituation="Document" LastFixedDockSituation="Document" LastFixedDockLocation="Right" LastFloatingWindowGuid="00000000-0000-0000-0000-000000000000" LastDockContainerCount="0" LastDockContainerIndex="0" DockedWorkingSize="250, 400" DockedWindowGroupGuid="00000000-0000-0000-0000-000000000000" DockedIndexInWindowGroup="0" DockedSplitPath="0" DocumentWorkingSize="250, 400" DocumentWindowGroupGuid="43f19078-cf1a-4942-950d-a1e9caa66469" DocumentIndexInWindowGroup="4" DocumentSplitPath="0" FloatingWorkingSize="250, 400" FloatingWindowGroupGuid="00000000-0000-0000-0000-000000000000" FloatingIndexInWindowGroup="0" FloatingSplitPath="0" /&gt;
-  &lt;Window Guid="d3611262-1200-4bf8-a07f-d88e519d498d" LastFocused="132723824989581671" DockedSize="200" PopupSize="0" FloatingLocation="-1, -1" FloatingSize="550, 400" LastOpenDockSituation="Document" LastFixedDockSituation="Document" LastFixedDockLocation="Right" LastFloatingWindowGuid="00000000-0000-0000-0000-000000000000" LastDockContainerCount="0" LastDockContainerIndex="0" DockedWorkingSize="250, 400" DockedWindowGroupGuid="00000000-0000-0000-0000-000000000000" DockedIndexInWindowGroup="0" DockedSplitPath="0" DocumentWorkingSize="250, 400" DocumentWindowGroupGuid="43f19078-cf1a-4942-950d-a1e9caa66469" DocumentIndexInWindowGroup="0" DocumentSplitPath="0" FloatingWorkingSize="250, 400" FloatingWindowGroupGuid="00000000-0000-0000-0000-000000000000" FloatingIndexInWindowGroup="0" FloatingSplitPath="0" /&gt;
+  &lt;Window Guid="d3611262-1200-4bf8-a07f-d88e519d498d" LastFocused="132724662169003130" DockedSize="200" PopupSize="0" FloatingLocation="-1, -1" FloatingSize="550, 400" LastOpenDockSituation="Document" LastFixedDockSituation="Document" LastFixedDockLocation="Right" LastFloatingWindowGuid="00000000-0000-0000-0000-000000000000" LastDockContainerCount="0" LastDockContainerIndex="0" DockedWorkingSize="250, 400" DockedWindowGroupGuid="00000000-0000-0000-0000-000000000000" DockedIndexInWindowGroup="0" DockedSplitPath="0" DocumentWorkingSize="250, 400" DocumentWindowGroupGuid="43f19078-cf1a-4942-950d-a1e9caa66469" DocumentIndexInWindowGroup="0" DocumentSplitPath="0" FloatingWorkingSize="250, 400" FloatingWindowGroupGuid="00000000-0000-0000-0000-000000000000" FloatingIndexInWindowGroup="0" FloatingSplitPath="0" /&gt;
   &lt;Window Guid="181b95dd-ca28-446c-a122-b9c488529670" LastFocused="132723832510227040" DockedSize="200" PopupSize="0" FloatingLocation="-1, -1" FloatingSize="550, 400" LastOpenDockSituation="Document" LastFixedDockSituation="Document" LastFixedDockLocation="Right" LastFloatingWindowGuid="00000000-0000-0000-0000-000000000000" LastDockContainerCount="0" LastDockContainerIndex="0" DockedWorkingSize="250, 400" DockedWindowGroupGuid="00000000-0000-0000-0000-000000000000" DockedIndexInWindowGroup="0" DockedSplitPath="0" DocumentWorkingSize="250, 400" DocumentWindowGroupGuid="43f19078-cf1a-4942-950d-a1e9caa66469" DocumentIndexInWindowGroup="3" DocumentSplitPath="0" FloatingWorkingSize="250, 400" FloatingWindowGroupGuid="00000000-0000-0000-0000-000000000000" FloatingIndexInWindowGroup="0" FloatingSplitPath="0" /&gt;
   &lt;DocumentContainer Dock="5"&gt;
     &lt;SplitLayoutSystem WorkingSize="250, 400" SplitMode="0"&gt;
-      &lt;ControlLayoutSystem WorkingSize="250, 400" Guid="43f19078-cf1a-4942-950d-a1e9caa66469" Collapsed="0" SelectedControl="181b95dd-ca28-446c-a122-b9c488529670"&gt;
+      &lt;ControlLayoutSystem WorkingSize="250, 400" Guid="43f19078-cf1a-4942-950d-a1e9caa66469" Collapsed="0" SelectedControl="d3611262-1200-4bf8-a07f-d88e519d498d"&gt;
         &lt;Controls&gt;
           &lt;Control Guid="d3611262-1200-4bf8-a07f-d88e519d498d" /&gt;
           &lt;Control Guid="24ebefd3-83f3-4b44-a9e1-52208685ef52" /&gt;
@@ -75,7 +75,7 @@
           <ForceOversampling>false</ForceOversampling>
           <Guid>18631f20-6de4-4286-b1a2-15667afcdb17</Guid>
           <IndexGroup>61488</IndexGroup>
-          <IndexOffset>213</IndexOffset>
+          <IndexOffset>219</IndexOffset>
           <IsFileBased>false</IsFileBased>
           <IsHistorical>false</IsHistorical>
           <Name>Position feedback 1 value</Name>
@@ -156,7 +156,7 @@
           <ForceOversampling>false</ForceOversampling>
           <Guid>be740131-d789-4c71-85ed-336c790231e8</Guid>
           <IndexGroup>61488</IndexGroup>
-          <IndexOffset>217</IndexOffset>
+          <IndexOffset>223</IndexOffset>
           <IsFileBased>false</IsFileBased>
           <IsHistorical>false</IsHistorical>
           <Name>Following distance El</Name>
@@ -237,7 +237,7 @@
           <ForceOversampling>false</ForceOversampling>
           <Guid>4e6c04d7-4344-418b-b2d2-d49c83c53f5a</Guid>
           <IndexGroup>61488</IndexGroup>
-          <IndexOffset>221</IndexOffset>
+          <IndexOffset>227</IndexOffset>
           <IsFileBased>false</IsFileBased>
           <IsHistorical>false</IsHistorical>
           <Name>Torque/force feedback value</Name>
@@ -318,7 +318,7 @@
           <ForceOversampling>false</ForceOversampling>
           <Guid>2dc79bfc-5cc3-42cf-93f7-3bccf0b4cab0</Guid>
           <IndexGroup>61488</IndexGroup>
-          <IndexOffset>225</IndexOffset>
+          <IndexOffset>231</IndexOffset>
           <IsFileBased>false</IsFileBased>
           <IsHistorical>false</IsHistorical>
           <Name>Actual motor current phase U</Name>
@@ -399,7 +399,7 @@
           <ForceOversampling>false</ForceOversampling>
           <Guid>448bb7fe-8c7f-4a8f-892e-24a12c7a985d</Guid>
           <IndexGroup>61488</IndexGroup>
-          <IndexOffset>227</IndexOffset>
+          <IndexOffset>233</IndexOffset>
           <IsFileBased>false</IsFileBased>
           <IsHistorical>false</IsHistorical>
           <Name>Actual motor current phase V</Name>
@@ -480,7 +480,7 @@
           <ForceOversampling>false</ForceOversampling>
           <Guid>39e8bfdd-2195-4de6-961a-721124ba62ad</Guid>
           <IndexGroup>61488</IndexGroup>
-          <IndexOffset>229</IndexOffset>
+          <IndexOffset>235</IndexOffset>
           <IsFileBased>false</IsFileBased>
           <IsHistorical>false</IsHistorical>
           <Name>Actual motor current phase W</Name>
@@ -561,7 +561,7 @@
           <ForceOversampling>false</ForceOversampling>
           <Guid>7f34d6ab-cbd7-45c5-86e9-63cd6f7e1ba0</Guid>
           <IndexGroup>16448</IndexGroup>
-          <IndexOffset>466304</IndexOffset>
+          <IndexOffset>468776</IndexOffset>
           <IsFileBased>false</IsFileBased>
           <IsHistorical>false</IsHistorical>
           <Name>Azimuth_current</Name>
@@ -642,7 +642,7 @@
           <ForceOversampling>false</ForceOversampling>
           <Guid>05882b41-e95a-4037-b84d-5ba6919ba607</Guid>
           <IndexGroup>16448</IndexGroup>
-          <IndexOffset>466312</IndexOffset>
+          <IndexOffset>468784</IndexOffset>
           <IsFileBased>false</IsFileBased>
           <IsHistorical>false</IsHistorical>
           <Name>ActVelo</Name>
@@ -1702,12 +1702,12 @@
               <MarkerType>Circle</MarkerType>
               <Name>Time Marker</Name>
               <Orientation>Vertical</Orientation>
-              <Position>11</Position>
-              <ShowPosition>false</ShowPosition>
+              <Position>34.617212414741516</Position>
+              <ShowPosition>true</ShowPosition>
               <ShowTitle>true</ShowTitle>
               <SortPriority>100</SortPriority>
               <Suffix>.svmk</Suffix>
-              <TimePosition>11000000</TimePosition>
+              <TimePosition>34617212</TimePosition>
               <Title>Time Marker</Title>
               <ValuePrecision>4</ValuePrecision>
               <Visible>true</Visible>
