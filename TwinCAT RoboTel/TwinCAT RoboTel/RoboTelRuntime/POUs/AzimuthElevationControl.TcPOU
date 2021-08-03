@@ -44,7 +44,7 @@ VAR CONSTANT
 	// reference position for homing
 	homing_position:		LREAL := 439.0; // was 442 - -21.21 = 463.21; 463 + 24 = 439
 	// current position of the calibration cam. Apply an offset here if necessary
-	calibration_position:	LREAL := 180.0;
+	calibration_position:	LREAL := 180.0 - 24.0;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -88,7 +88,7 @@ END_IF
 // perform a recalibration, if we pass the reference mark on the encoder
 AzimuthCalibration(
 	Axis := GVL_Telescope.AzimuthAxisRef,
-	Execute := GVL_Telescope.Azimuth_Probe=217 AND NOT HomeAxis,
+	Execute := GVL_Telescope.Azimuth_Probe>0 AND NOT HomeAxis,
 	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
 
 // deactivate limit switches on homing
