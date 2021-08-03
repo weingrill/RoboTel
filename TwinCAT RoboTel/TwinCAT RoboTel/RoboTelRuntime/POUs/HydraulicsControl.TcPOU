@@ -57,6 +57,7 @@ VAR
 	// report brake opend after a short delay
 	brake_opened_delay:	TON;
 	HydraulicsLog,
+	PumpLog,
 	ReserveLog,
 	oil_low_log,
 	FilterLog,
@@ -168,6 +169,13 @@ HydraulicsLog(Trigger := pressure_failure,
 				OnMessage := 'FAILURE',
 				OffMessage := 'OK',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
+PumpLog(Trigger := pump_running,
+				Level := ADSLOG_MSGTYPE_HINT,
+				FormatString := 'Main hydraulics pump: %s',
+				OnMessage := 'START',
+				OffMessage := 'STOP',
+				OffLevel := ADSLOG_MSGTYPE_HINT);
+	
 ReserveLog(Trigger := oil_warning,
 			Level := ADSLOG_MSGTYPE_WARN,
 			FormatString := 'oil reserve: %s',
@@ -259,7 +267,10 @@ BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
       <LineId Id="350" Count="1" />
       <LineId Id="494" Count="0" />
       <LineId Id="352" Count="14" />
-      <LineId Id="369" Count="40" />
+      <LineId Id="369" Count="5" />
+      <LineId Id="930" Count="5" />
+      <LineId Id="929" Count="0" />
+      <LineId Id="375" Count="34" />
       <LineId Id="51" Count="0" />
       <LineId Id="709" Count="2" />
       <LineId Id="714" Count="0" />
