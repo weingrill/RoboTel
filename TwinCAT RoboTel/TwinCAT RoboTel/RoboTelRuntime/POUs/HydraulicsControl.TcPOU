@@ -122,14 +122,14 @@ brake_open_delay(IN := pump_running AND oil_pressure_OK,
 //hold the brake, if we reach the az-limit	
 // close the brake if the pump is not running	
 
-IF close_brake THEN 
+IF close_brake OR NOT pump_running THEN 
 	open_brake := FALSE;
 END_IF
 		
 brake_state(SET := brake_open_delay.Q AND open_brake AND MAIN.brake_clearing,
 			RESET1 := GVL_Telescope.azimut_limit_switch 
 					  OR close_brake 
-					  OR NOT oil_pump_state.Q1
+					  OR NOT pump_running
 					  OR NOT MAIN.brake_clearing,
 			Q1 => GVL_Telescope.brake_azimuth_eve);
 
@@ -153,11 +153,11 @@ suction_pump_timer(IN := MAIN.phase_available AND
 						GVL_Hydraulics.oilpan_maximum,
 					PT := T#28S,
 					Q => GVL_Hydraulics.oil_suction_enable);
+					
 suction_watchdog(IN := GVL_Hydraulics.oil_suction_enable AND NOT suction_running,
 					PT := T#10S,
 					Q => suction_failure);
 					
-
 pressure_watchdog(IN := GVL_Hydraulics.oil_pump_enable AND 
 						NOT oil_pressure_OK,
 					PT := T#15S,
@@ -169,6 +169,7 @@ HydraulicsLog(Trigger := pressure_failure,
 				OnMessage := 'FAILURE',
 				OffMessage := 'OK',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
+
 PumpLog(Trigger := pump_running,
 				Level := ADSLOG_MSGTYPE_HINT,
 				FormatString := 'Main hydraulics pump: %s',
@@ -182,18 +183,21 @@ ReserveLog(Trigger := oil_warning,
 			OnMessage := 'LOW',
 			OffMessage := 'OK',
 			OffLevel := ADSLOG_MSGTYPE_HINT);
+
 oil_low_log(Trigger := oil_low,
 				Level := ADSLOG_MSGTYPE_ERROR,
 				FormatString := 'oil level: %s',
 				OnMessage := 'LOW',
 				OffMessage := 'OK',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
+
 FilterLog(Trigger := oil_filter_dirty,
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := 'Hydraulics Filter is %s',
 				OnMessage := 'dirty',
 				OffMessage := 'clean',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
+
 OverTemperatureLog(Trigger := oil_hot,
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := 'Hydraulics Temperature %s',
@@ -206,21 +210,23 @@ UnderTemperatureLog(Trigger := oil_cold,
 				OnMessage := '< 10C',
 				OffMessage := '> 10C',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
+
 SuctionLog(Trigger := suction_failure,
 				Level := ADSLOG_MSGTYPE_ERROR,
 				FormatString := 'suction pump: %s',
 				OnMessage := 'FAILURE',
 				OffMessage := 'OK',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
+
 BreakClearingWarning(Trigger := NOT Main.brake_clearing AND open_brake,
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := '%s',
 				OnMessage := 'Cannot open brake without brake clearing');
+
 BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := '%s',
 				OnMessage := 'Cannot open brake without running hydraulics');
-
 ]]></ST>
     </Implementation>
     <LineIds Name="HydraulicsControl">
@@ -266,16 +272,29 @@ BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
       <LineId Id="547" Count="0" />
       <LineId Id="350" Count="1" />
       <LineId Id="494" Count="0" />
-      <LineId Id="352" Count="14" />
+      <LineId Id="352" Count="4" />
+      <LineId Id="936" Count="0" />
+      <LineId Id="357" Count="3" />
+      <LineId Id="362" Count="4" />
       <LineId Id="369" Count="5" />
+      <LineId Id="937" Count="0" />
       <LineId Id="930" Count="5" />
       <LineId Id="929" Count="0" />
-      <LineId Id="375" Count="34" />
+      <LineId Id="375" Count="5" />
+      <LineId Id="938" Count="0" />
+      <LineId Id="381" Count="5" />
+      <LineId Id="939" Count="0" />
+      <LineId Id="387" Count="5" />
+      <LineId Id="940" Count="0" />
+      <LineId Id="393" Count="11" />
+      <LineId Id="941" Count="0" />
+      <LineId Id="405" Count="4" />
       <LineId Id="51" Count="0" />
+      <LineId Id="942" Count="0" />
       <LineId Id="709" Count="2" />
       <LineId Id="714" Count="0" />
+      <LineId Id="943" Count="0" />
       <LineId Id="716" Count="3" />
-      <LineId Id="715" Count="0" />
       <LineId Id="708" Count="0" />
     </LineIds>
   </POU>
