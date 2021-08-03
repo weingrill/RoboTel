@@ -58,8 +58,15 @@ END_VAR
       <ST><![CDATA[// limit the position input to a sane value
 position := LIMIT(0.0, position, 90.0);
 
+//if we enable the axis, we have to open the brake first
 IF Enable THEN
 	HydraulicsControl.open_brake := TRUE;
+END_IF
+
+// if an error occurs on te enabled axis we close the brake
+IF Enable AND error THEN
+	Enable := FALSE;
+	HydraulicsControl.close_brake := TRUE;
 END_IF
 
 IF ElevationAxis.Calibrated OR Error THEN
@@ -161,10 +168,16 @@ ElevationAxisEvent(	Trigger := NOT enable AND HydraulicsControl.brake_open,
     <LineIds Name="ElevationControl">
       <LineId Id="379" Count="0" />
       <LineId Id="233" Count="0" />
+      <LineId Id="706" Count="0" />
       <LineId Id="451" Count="0" />
       <LineId Id="234" Count="1" />
       <LineId Id="238" Count="0" />
-      <LineId Id="251" Count="1" />
+      <LineId Id="707" Count="0" />
+      <LineId Id="702" Count="0" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="708" Count="0" />
+      <LineId Id="703" Count="2" />
+      <LineId Id="252" Count="0" />
       <LineId Id="254" Count="1" />
       <LineId Id="558" Count="1" />
       <LineId Id="626" Count="0" />
