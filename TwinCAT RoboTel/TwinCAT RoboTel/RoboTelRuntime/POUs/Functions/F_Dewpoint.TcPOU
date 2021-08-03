@@ -24,7 +24,7 @@ ELSE
 	a := 7.5; b := 237.3;
 END_IF
 
-SDD := 6.1078 * EXPT(10, (a*T)/(b+T));
+SDD := LREAL_TO_REAL(6.1078 * EXPT(10, (a*T)/(b+T)));
 DD := relhum/100.0 * SDD;
 // R(T,TD) := 100 * SDD(TD) / SDD(T);
 v := LOG(DD/6.1078);
