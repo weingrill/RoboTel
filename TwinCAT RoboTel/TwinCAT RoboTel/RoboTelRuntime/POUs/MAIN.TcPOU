@@ -34,6 +34,8 @@ VAR
 	// measures time between soft start command and power available
 	power_timer:		FB_Timer;
 	PowerEvent,
+	PhaseLog,
+	PowerLog,
 	TemperatureEvent:	FB_EventLog;
 	SimpleLog: 			FB_SimpleLog;
 END_VAR
@@ -118,6 +120,20 @@ PowerEvent(
 	FormatString :=	'Power:	%s',
 	OnMessage := 	'FAILURE!',
 	OffMEssage := 	'OK');
+PowerLog(	
+	Trigger := 		power_OK, 
+	Level := 		ADSLOG_MSGTYPE_HINT,
+	FormatString :=	'Power:	%s',
+	OnMessage := 	'OK',
+	OffMEssage := 	'OFF');
+PhaseLog(	
+	Trigger := 		NOT phase_available, 
+	Level := 		ADSLOG_MSGTYPE_ERROR,
+	FormatString :=	'electriacal phases:	%s',
+	OnMessage := 	'ERROR!',
+	OffLevel := 	ADSLOG_MSGTYPE_HINT,
+	OffMEssage := 	'active');
+
 TemperatureEvent(	
 	Trigger := 		cabinet_temperature > 40.0, 
 	Level := 		ADSLOG_MSGTYPE_WARN,
@@ -188,6 +204,10 @@ TemperatureEvent(
       <LineId Id="78" Count="0" />
       <LineId Id="354" Count="5" />
       <LineId Id="353" Count="0" />
+      <LineId Id="650" Count="10" />
+      <LineId Id="662" Count="0" />
+      <LineId Id="661" Count="0" />
+      <LineId Id="649" Count="0" />
       <LineId Id="606" Count="4" />
     </LineIds>
   </POU>
