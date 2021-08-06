@@ -71,6 +71,10 @@ VAR_GLOBAL
 	// reference signal
 	Azimuth_Probe			AT%I*: INT;
 	
+	// dewar pressure 0..10V Pfeiffer 
+	pressure_Dewar			AT%I*: INT;
+	// dewar temperature PT100
+	temperature_Dewar		AT%I*: INT;
 	
 	// Zyklisches Interface zwischen NC und Achse
 	AzimuthAxisRef: 	AXIS_REF;
