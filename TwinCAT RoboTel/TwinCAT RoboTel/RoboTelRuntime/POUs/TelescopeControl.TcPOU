@@ -205,7 +205,7 @@ hor2eq(alt := elevation_current,
 		ra => rightascension_calc,
 		dec => declination_calc);		
 
-poweronwarning(IN := power, PT := T#250MS, Q => GVL_Telescope.horn);
+poweronwarning(IN := power OR (NOT ElevationControl.enable AND HydraulicsControl.brake_open), PT := T#250MS, Q => GVL_Telescope.horn);
 poweroff(CLK := power);
 poweron_reset(IN := power AND NOT PendantControl.manual, PT := T#50MS);
 // reset fan
