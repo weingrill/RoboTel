@@ -41,7 +41,7 @@ VAR
 	readydelay:				TON;
 	HomeDelay:				FB_TONTP;
 	ElevationAxisEvent: 	FB_Eventlog;
-	ElevationVelEvent: 		FB_Eventlog;
+	ElevationBrakeEvent: 		FB_Eventlog;
 	HighElevationEvent,
 	LowElevationEvent:		FB_Eventlog;
 	SimpleLog:				FB_SimpleLog;
@@ -158,7 +158,7 @@ LowElevationEvent(	Trigger := Calibrated AND act_position < 15.0,
 				FormatString := 'Low Elevation: %s',
 				OnMessage := LREAL_TO_FMTSTR(act_position, 2, TRUE));
 				
-ElevationAxisEvent(	Trigger := NOT enable AND HydraulicsControl.brake_open, 
+ElevationBrakeEvent( Trigger := NOT enable AND HydraulicsControl.brake_open, 
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := '%s',
 				OnMessage := 'Elevation without brake!'); 
