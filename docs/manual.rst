@@ -14,8 +14,8 @@ The selector switch (1-15) enables the individual components on the telescope.
 It is advised to leave the manual switch in "OFF" position, while turning the selector.
 Moving the selector fast in manual operation may cause drive errors.
 If not otherwise noted, these general rules apply for all selections:
-* "ENABLE" enables the drive.
-* "RESET" disables the drive or resets the error.
+* "ENABLE" enables the drive. Pressing "ENABLE" a second time disables the drive.
+* "RESET" resets the drive or error.
 * Buttons that can be pressed are illuminated.
 * When a limit switch is reached, the respective button is disabled.
 
@@ -62,17 +62,16 @@ The lock is opened as soon as the focus is manually selected.
 -----------
 
 The hydraulic brake is opened, as soon as the drive is enabled to avoid a drive error.
-* "ENABLE" executes the homing procedure.
+* "ENABLE" enables/disables the drive.
 * Buttons "↑" and "↓" increase and decrease the elevation.
 * Pressing the buttons "↑" and "↓" simultaneously immediately closes the brake.
 * *WARNING* Enabling the drive will automatically open the brake for both elevation
   and azimuth.
-* *WARNING* This behaviour will change in future. It is envisioned to implement
-  an alt-az control in this program.
 
 8 Azimuth
 ---------
 
+* "ENABLE" enables/disables the drive.
 * Buttons "←" and "→" rotate the azimuth counter-clockwise and clockwise.
 * *WARNING* This behaviour will change in future. It is planned to implement a
   equatorial positioning in right-ascension and declination.
@@ -94,8 +93,7 @@ The hydraulic brake is opened, as soon as the drive is enabled to avoid a drive 
 15 Hydraulics
 -------------
 
-* "ENABLE" starts the hydraulic system.
-* "RESET" stops the hydraulic system.
+* "ENABLE" starts/stops the hydraulic system.
 * The button "↑" opens (releases) the brake.
 * The button "↓" closes (locks) the brake.
 * The lamp "←" indicates that the main pump is running.
