@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="CoverControl" Id="{c323d474-9f57-40fd-ba67-b4ebd08c9f7c}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM CoverControl
 VAR_INPUT
@@ -11,21 +11,24 @@ VAR_INPUT
 	open:		BOOL;
 	// close the cover in proper order
 	close:		BOOL;
+	// manually enable Cover1
 	Cover1_enable:	BOOL;
+	// manually open Cover1
 	Cover1_open:	BOOL;
-	Cover1_opened, 
-	Cover1_closed:	BOOL;
+	// manually close Cover1
 	Cover1_close:	BOOL;
+	// manually enable Cover2
 	Cover2_enable:	BOOL;
+	// manually open Cover2
 	Cover2_open:	BOOL;
+	// manually close Cover2
 	Cover2_close:	BOOL;
-	Cover2_opened, 
-	Cover2_closed:	BOOL;
+	// manually enable Cover3
 	Cover3_enable:	BOOL;
+	// manually open Cover3
 	Cover3_open:	BOOL;
+	// manually close Cover1
 	Cover3_Close:	BOOL;
-	Cover3_opened, 
-	Cover3_closed:	BOOL;
 
 END_VAR
 VAR_OUTPUT
@@ -35,14 +38,48 @@ VAR_OUTPUT
 	isclosed:		BOOL;
 	// is TRUE if any cover-driver reports an error
 	Error: 	BOOL;
+	// cover1 is open
+	Cover1_opened, 
+	// cover1 is closed
+	Cover1_closed:	BOOL;
+	// cover2 is open
+	Cover2_opened, 
+	// cover2 is closed
+	Cover2_closed:	BOOL;
+	// cover3 is open
+	Cover3_opened, 
+	// cover3 is closed
+	Cover3_closed:	BOOL;
 END_VAR
 VAR
-	open2_delay	: TON;
-	close3_delay : TON;
-	Cover3_control:		FB_DCAxis_1;
-	Cover2_control:		FB_DCAxis;
-	Cover1_control:		FB_DCAxis;
-	Cover3_state: RS;
+	// delay timer for opening cover2
+	open2_delay: 	TON;
+	// dely timer for closing cover3
+	close3_delay : 	TON;
+	// axis control for cover3
+	Cover3_control:	FB_DCAxis_1;
+	// axis control for cover2
+	Cover2_control:	FB_DCAxis;
+	// axis control for cover1
+	Cover1_control:	FB_DCAxis;
+	
+	//Cover3_state: 	RS;
+	//triggers for timeout event for cover1
+	Cover1_timeout,
+	Cover2_timeout,
+	Cover3_timeout:	TON;
+	//error event for cover1
+	Cover1_Event,
+	Cover2_Event,
+	Cover3_Event:	FB_EventLog;
+	// timeout event for cover1
+	Cover1_Timeout_Event,
+	Cover2_Timeout_Event,
+	Cover3_Timeout_Event:	FB_EventLog;
+	// log if covers are open
+	Covers_opened_event,
+	// log if covers are closed
+	Covers_closed_event:	FB_EventLog;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -81,6 +118,7 @@ IF Pendantcontrol.manual THEN
 	Cover3_control.open :=	Cover3_open;
 	Cover3_control.close :=	Cover3_close;
 ELSE
+	// enable all covers
 	enable := TRUE;
 	//TODO: verify Cover1 operations
 	Cover1_control.open := open;
@@ -95,15 +133,22 @@ ELSE
 	Cover1_control.close :=	GVL_Telescope.cover3_closed;
 END_IF
 
+IF reset THEN
+	enable := FALSE;
+	Cover1_enable := FALSE;
+	Cover2_enable := FALSE;
+	Cover3_enable := FALSE;
+END_IF
+
 Cover1_control(
 	enable := 		enable OR Cover1_enable,
 	reset := 		reset,
 	limit_open := 	GVL_Telescope.cover1_open,
 	limit_close := 	GVL_Telescope.cover1_closed,
 	axis_ref := 	GVL_Telescope.Cover1_axis);
-// Cover 2 can only be moved in manual operation if cover 3 is still closed to protect the lid.
+// Cover 2 can only be moved in manual operation if cover 3 is not closed to protect the lid.
 Cover2_control(
-	enable := 		enable OR (Cover2_enable AND NOT GVL_Telescope.cover3_closed),
+	enable := 		enable OR (Cover2_enable AND NOT cover3_closed),
 	reset := 		reset,
 	limit_open := 	GVL_Telescope.cover2_open,
 	limit_close := 	GVL_Telescope.cover2_closed,
@@ -115,13 +160,66 @@ Cover3_control(
 	limit_close := 	GVL_Telescope.cover3_closed,
 	axis_ref := 	GVL_Telescope.Cover3_axis);
 
-
+// we are open, if all covers are open
 isopen := cover3_opened AND cover2_opened;
+// we are closed, if all covers are closed
 isclosed := cover2_closed AND cover3_closed;
+// we have an error, if we have an axis error or the limit switchas malfunction 
 Error := Cover1_control.error OR Cover2_control.error OR Cover3_control.error OR 
 		//(NOT GVL_Telescope.cover1_open AND NOT GVL_Telescope.cover1_closed) OR // not available on RoboTel
 		(cover2_opened AND cover2_closed) OR
-		(cover3_opened AND cover3_closed);]]></ST>
+		(cover3_opened AND cover3_closed);
+
+// A timeout occurs, when we open the cover, and the opened signal does not activate within n seconds.
+// The same holds for closing the cover.
+Cover1_timeout(IN := (Cover1_open AND NOT Cover1_opened) OR (Cover1_close AND NOT Cover1_closed), PT := T#60S);
+
+Cover2_timeout(IN := (Cover2_open AND NOT Cover2_opened) OR (Cover1_close AND NOT Cover1_closed), PT := T#60S);
+				
+Cover3_timeout(IN := (Cover3_open AND NOT Cover3_opened) OR (Cover1_close AND NOT Cover1_closed), PT := T#60S);
+
+// raise an error, if both opened and closed signals are activated
+Cover1_Event(	Trigger := GVL_Telescope.cover1_open AND GVL_Telescope.cover1_closed,
+				Level := ADSLOG_MSGTYPE_ERROR, 
+				FormatString := '%s',
+				OnMessage := 'Cover1 Limit switch error');
+
+Cover2_Event(Trigger := GVL_Telescope.cover2_open AND GVL_Telescope.cover2_closed,
+				Level := ADSLOG_MSGTYPE_ERROR, 
+				FormatString := '%s',
+				OnMessage := 'Cover2 Limit switch error');
+
+Cover3_Event(Trigger := GVL_Telescope.cover3_open AND GVL_Telescope.cover3_closed,
+				Level := ADSLOG_MSGTYPE_ERROR, 
+				FormatString := '%s',
+				OnMessage := 'Cover3 Limit switch error');
+
+//trigger an event, if we encounter a timeout
+Cover1_Timeout_Event(Trigger := Cover1_timeout.Q,
+				Level := ADSLOG_MSGTYPE_ERROR, 
+				FormatString := '%s',
+				OnMessage := 'Cover1 Timeout');
+
+Cover2_Timeout_Event(Trigger := Cover2_timeout.Q,
+				Level := ADSLOG_MSGTYPE_ERROR, 
+				FormatString := '%s',
+				OnMessage := 'Cover2 Timeout');
+
+Cover3_Timeout_Event(Trigger := Cover3_timeout.Q,
+				Level := ADSLOG_MSGTYPE_ERROR, 
+				FormatString := '%s',
+				OnMessage := 'Cover3 Timeout');
+// Log if we are opened
+Covers_opened_event(Trigger := isopen,
+					Level := ADSLOG_MSGTYPE_LOG,
+					FormatString := '%s',
+					OnMessage := 'All covers open');
+//log if we are closed
+Covers_closed_event(Trigger := isclosed,
+					Level := ADSLOG_MSGTYPE_LOG,
+					FormatString := '%s',
+					OnMessage := 'All covers closed');
+				]]></ST>
     </Implementation>
     <LineIds Name="CoverControl">
       <LineId Id="146" Count="0" />
@@ -150,6 +248,7 @@ Error := Cover1_control.error OR Cover2_control.error OR Cover3_control.error OR
       <LineId Id="125" Count="0" />
       <LineId Id="111" Count="0" />
       <LineId Id="126" Count="0" />
+      <LineId Id="376" Count="0" />
       <LineId Id="255" Count="0" />
       <LineId Id="216" Count="0" />
       <LineId Id="19" Count="0" />
@@ -163,7 +262,11 @@ Error := Cover1_control.error OR Cover2_control.error OR Cover3_control.error OR
       <LineId Id="214" Count="0" />
       <LineId Id="210" Count="0" />
       <LineId Id="127" Count="0" />
+      <LineId Id="438" Count="0" />
       <LineId Id="158" Count="0" />
+      <LineId Id="439" Count="0" />
+      <LineId Id="444" Count="2" />
+      <LineId Id="440" Count="1" />
       <LineId Id="160" Count="0" />
       <LineId Id="163" Count="4" />
       <LineId Id="209" Count="0" />
@@ -173,10 +276,43 @@ Error := Cover1_control.error OR Cover2_control.error OR Cover3_control.error OR
       <LineId Id="159" Count="0" />
       <LineId Id="142" Count="0" />
       <LineId Id="139" Count="0" />
+      <LineId Id="422" Count="0" />
       <LineId Id="143" Count="0" />
+      <LineId Id="423" Count="0" />
       <LineId Id="37" Count="0" />
       <LineId Id="257" Count="1" />
       <LineId Id="256" Count="0" />
+      <LineId Id="373" Count="0" />
+      <LineId Id="353" Count="0" />
+      <LineId Id="374" Count="0" />
+      <LineId Id="354" Count="0" />
+      <LineId Id="351" Count="0" />
+      <LineId Id="350" Count="0" />
+      <LineId Id="359" Count="0" />
+      <LineId Id="357" Count="0" />
+      <LineId Id="356" Count="0" />
+      <LineId Id="334" Count="1" />
+      <LineId Id="377" Count="0" />
+      <LineId Id="381" Count="0" />
+      <LineId Id="380" Count="0" />
+      <LineId Id="340" Count="1" />
+      <LineId Id="382" Count="1" />
+      <LineId Id="344" Count="2" />
+      <LineId Id="384" Count="1" />
+      <LineId Id="349" Count="0" />
+      <LineId Id="375" Count="0" />
+      <LineId Id="364" Count="1" />
+      <LineId Id="386" Count="1" />
+      <LineId Id="366" Count="2" />
+      <LineId Id="388" Count="1" />
+      <LineId Id="369" Count="2" />
+      <LineId Id="390" Count="1" />
+      <LineId Id="372" Count="0" />
+      <LineId Id="426" Count="0" />
+      <LineId Id="339" Count="0" />
+      <LineId Id="427" Count="2" />
+      <LineId Id="431" Count="4" />
+      <LineId Id="430" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
