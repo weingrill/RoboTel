@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="F_Derotatorvelocity" Id="{c1a20f29-795e-4354-b052-2a3ea3d9622c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_Derotatorvelocity : LREAL
+VAR_INPUT
+	// elevation in degrees
+	elevation: 	LREAL;
+	// azimuth in degrees
+	azimuth:	LREAL;
+	// observers latitude in degrees
+	latitude:	LREAL;
+END_VAR
+VAR
+END_VAR
+VAR CONSTANT
+	// Earth's angular rotation frequency in [deg/s]
+	Omega: LREAL := 4.178E-3;
+	d2r:	LREAL := PI/180.0;
+	r2d:	LREAL := 180.0/PI;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* 
+source: https://github.com/cytan299/field_derotator/blob/master/field_derotator_formula/field_derotator_formula.pdf
+https://circuitcellar.com/research-design-hub/projects/field-derotator-for-astrophotography-part-1/
+
+returns the rotational velocity for the de-rotator in degrees per second
+azimuth, latitutde and elevation are converted to radians
+*)
+F_Derotatorvelocity := -Omega * COS(azimuth * d2r) * COS(latitude * d2r) / COS(elevation * d2r);]]></ST>
+    </Implementation>
+    <LineIds Name="F_Derotatorvelocity">
+      <LineId Id="21" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
