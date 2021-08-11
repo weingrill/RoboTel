@@ -58,6 +58,8 @@ The lock is opened as soon as the focus is manually selected.
 * "ENABLE" executes the homing procedure.
 * Buttons "←" and "→" rotate the de-rotator counter-clockwise and clockwise.
 
+See also :ref:`derotator`
+
 7 Elevation
 -----------
 

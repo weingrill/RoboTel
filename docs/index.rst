@@ -17,6 +17,7 @@ RoboTel Firmware documentation!
    filterwheel
    dome
    covers
+   derotator
 
 Introduction
 ------------
