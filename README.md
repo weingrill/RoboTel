@@ -2,27 +2,18 @@
 
 [![Build Status](https://travis-ci.com/weingrill/RoboTel.svg?branch=master)](https://travis-ci.com/weingrill/RoboTel)
 
+This is the telescope firmware for Halfmann telescopes upgraded with Beckhoff hardware.
+Electronic schematics are available upon request.
+
 The online manual can be found here:
 
 https://weingrill.github.io/RoboTel/index.html
 
 # ToDo
-* Glasfasern in Triflexkette einziehen (MW+FT)
-* RoboTel Server mit InfluxDB+Grafana (Dockercontainer?) (AJ)
-* Software (JW+TG)
-* Homing Focus
-* Homing Azimut
-* Homing Elevation
-* Homing FilterWheel
-* Homing Derotator
+* De-rotator algorithm
+* finalise telescope initialisation (focus, de-rotator)
+* MQTT integration
+* implementation of pointing model
+* ADS interface for STELLA TCS
 
-## Optional:
-* Hauptschranklüfter über Relais (WB)
-
-# Programmierhinweise
-* MC_SetAcceptBlockedDriveSignal verfaehrt den Antrieb aus der Endlage
-* MC_ExtSetPointGenFeed -Enable / -Disable fuer externen Sollwertgenerator
-
-# Informations
-## Probe Unit / Homing
-[https://infosys.beckhoff.com/index.php?content=../content/1031/ax5000_usermanual/html/AX5000_Homing_ProbeUnit.htm]
+(c) 2019–2021 Dr.Jörg Weingrill, Leibniz-Institut für Astrophysik Potsdam
