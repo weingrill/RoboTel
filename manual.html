@@ -4,12 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Manual Operation &#8212; RoboTel Telescope Firmware  documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -41,41 +42,44 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="manual-operation">
+  <section id="manual-operation">
 <h1>Manual Operation<a class="headerlink" href="#manual-operation" title="Permalink to this headline">¶</a></h1>
 <p>The telescope can be operated manually for commissioning, testing or
 observation. To enable manual operation:
 * Turn the power switch on the main panel to “ON”.
 * Press “START” to start the hydraulic system.
+* Turn the brake clearance to “ON”.
 * On the pendant control turn the manual key switch to “ON”.</p>
 <p>The manual operation overrides any remote command.</p>
 <p>The selector switch (1-15) enables the individual components on the telescope.
+It is advised to leave the manual switch in “OFF” position, while turning the selector.
+Moving the selector fast in manual operation may cause drive errors.
 If not otherwise noted, these general rules apply for all selections:
-* “ENABLE” enables the drive.
-* “RESET” disables the drive or resets the error.
+* “ENABLE” enables the drive. Pressing “ENABLE” a second time disables the drive.
+* “RESET” resets the drive or error.
 * Buttons that can be pressed are illuminated.
 * When a limit switch is reached, the respective button is disabled.</p>
-<div class="section" id="cover-1">
+<section id="cover-1">
 <h2>1 Cover 1<a class="headerlink" href="#cover-1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Buttons “↑” and “↓” open and close the cover.</p></li>
 <li><p>Cover 1 is not installed on RoboTel.</p></li>
 </ul>
-</div>
-<div class="section" id="cover-2">
+</section>
+<section id="cover-2">
 <h2>2 Cover 2<a class="headerlink" href="#cover-2" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Buttons “↑” and “↓” open and close the cover.</p></li>
 <li><p>Cover 3 must be opened first, for cover 2 to operate.</p></li>
 </ul>
-</div>
-<div class="section" id="cover-3">
+</section>
+<section id="cover-3">
 <h2>3 Cover 3<a class="headerlink" href="#cover-3" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Buttons “↑” and “↓” open and close the cover.</p></li>
 </ul>
-</div>
-<div class="section" id="nasmyth-mirror-m3-control">
+</section>
+<section id="nasmyth-mirror-m3-control">
 <h2>4 Nasmyth / Mirror M3 Control<a class="headerlink" href="#nasmyth-mirror-m3-control" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>“ENABLE” opens the lock.</p></li>
@@ -83,56 +87,64 @@ If not otherwise noted, these general rules apply for all selections:
 <li><p>Moving the mirror without unlocking will cause in an error.</p></li>
 <li><p>“RESET” locks the mirror in position.</p></li>
 </ul>
-</div>
-<div class="section" id="focus">
+</section>
+<section id="focus">
 <h2>5 Focus<a class="headerlink" href="#focus" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>“ENABLE” opens the lock.</p></li>
-<li><p>Buttons “↑” and “↓” move the mirror outwards and inwards.</p></li>
-<li><p>Moving the focus without unlocking will cause in an error.</p></li>
-<li><p>“RESET” locks the focus in position.</p></li>
-</ul>
-</div>
-<div class="section" id="de-rotator">
+<p>The lock is opened as soon as the focus is manually selected.
+* “ENABLE” executes the homing procedure.
+* Buttons “↑” and “↓” move the mirror outwards and inwards.
+* Moving the focus without unlocking will cause in an error.
+* “RESET” locks the focus in position.</p>
+</section>
+<section id="de-rotator">
 <h2>6 De-rotator<a class="headerlink" href="#de-rotator" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
+<li><p>“ENABLE” executes the homing procedure.</p></li>
 <li><p>Buttons “←” and “→” rotate the de-rotator counter-clockwise and clockwise.</p></li>
-<li><p><em>WARNING</em> The limit switches are currently not implemented.</p></li>
 </ul>
-</div>
-<div class="section" id="elevation">
+<p>See also <span class="xref std std-ref">derotator</span></p>
+</section>
+<section id="elevation">
 <h2>7 Elevation<a class="headerlink" href="#elevation" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>Buttons “↑” and “↓” increase and decrease the elevation.</p></li>
-<li><p><em>WARNING</em> This behaviour will change in future. It is envisioned to implement
-an alt-az control in this program.</p></li>
-</ul>
-</div>
-<div class="section" id="azimuth">
+<p>The hydraulic brake is opened, as soon as the drive is enabled to avoid a drive error.
+* “ENABLE” enables/disables the drive.
+* Buttons “↑” and “↓” increase and decrease the elevation.
+* Pressing the buttons “↑” and “↓” simultaneously immediately closes the brake.
+* <em>WARNING</em> Enabling the drive will automatically open the brake for both elevation</p>
+<blockquote>
+<div><p>and azimuth.</p>
+</div></blockquote>
+</section>
+<section id="azimuth">
 <h2>8 Azimuth<a class="headerlink" href="#azimuth" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
+<li><p>“ENABLE” enables/disables the drive.</p></li>
 <li><p>Buttons “←” and “→” rotate the azimuth counter-clockwise and clockwise.</p></li>
 <li><p><em>WARNING</em> This behaviour will change in future. It is planned to implement a
 equatorial positioning in right-ascension and declination.</p></li>
+<li><p><em>WARNING</em> Enabling the azimuth also enables the elevation, since the break will be opened.</p></li>
 </ul>
-</div>
-<div class="section" id="dome-control">
+</section>
+<section id="dome-control">
 <h2>9 Dome Control<a class="headerlink" href="#dome-control" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Buttons “←” and “→” rotate the dome counter-clockwise and clockwise.</p></li>
+<li><p>Buttons “↑” and “↓” open and close the slit and the flap.</p></li>
 </ul>
-</div>
-<div class="section" id="filter-wheel">
+</section>
+<section id="filter-wheel">
 <h2>10 Filter Wheel<a class="headerlink" href="#filter-wheel" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
+<li><p>“ENABLE” executes the homing procedure.</p></li>
 <li><p>Buttons “←” and “→” rotate the filter wheel counter-clockwise and clockwise.</p></li>
+<li><p>If homing has been performed successfully, the buttons “↑” and “↓” increase
+and decrease the filter number from 0 to 23.</p></li>
 </ul>
-</div>
-<div class="section" id="hydraulics">
+</section>
+<section id="hydraulics">
 <h2>15 Hydraulics<a class="headerlink" href="#hydraulics" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><p>“ENABLE” starts the hydraulic system.</p></li>
-<li><p>“RESET” stops the hydraulic system.</p></li>
+<li><p>“ENABLE” starts/stops the hydraulic system.</p></li>
 <li><p>The button “↑” opens (releases) the brake.</p></li>
 <li><p>The button “↓” closes (locks) the brake.</p></li>
 <li><p>The lamp “←” indicates that the main pump is running.</p></li>
@@ -141,8 +153,8 @@ equatorial positioning in right-ascension and declination.</p></li>
 <li><p>The lamp “↓” indicates a closed brake.</p></li>
 </ul>
 <p><em>To immediately stop the hydraulic system press the emergency button.</em></p>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -186,7 +198,7 @@ equatorial positioning in right-ascension and declination.</p></li>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -214,7 +226,7 @@ equatorial positioning in right-ascension and declination.</p></li>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jörg Weingrill.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.1.2.
     </div>
   </body>
 </html>

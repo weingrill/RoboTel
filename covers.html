@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>Safety Instructions &#8212; RoboTel Telescope Firmware  documentation</title>
+    <title>Telescope Covers &#8212; RoboTel Telescope Firmware  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     
@@ -17,8 +17,8 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Telescope Initialisation" href="init.html" />
-    <link rel="prev" title="RoboTel Firmware documentation!" href="index.html" /> 
+    <link rel="next" title="De-rotator" href="derotator.html" />
+    <link rel="prev" title="Dome Operation" href="dome.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,13 +27,13 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="init.html" title="Telescope Initialisation"
+          <a href="derotator.html" title="De-rotator"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="RoboTel Firmware documentation!"
+          <a href="dome.html" title="Dome Operation"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">RoboTel Telescope Firmware  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Safety Instructions</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Telescope Covers</a></li> 
       </ul>
     </div>  
 
@@ -42,31 +42,21 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="safety-instructions">
-<h1>Safety Instructions<a class="headerlink" href="#safety-instructions" title="Permalink to this headline">¶</a></h1>
-<p>RoboTel is designed to mainly operate in robotic or autonomous mode.
-This implies that only the minimum required set of safety precautions have been
-installed on this system.</p>
-<p>The telescope can start at any time when automatic operation is enabled.</p>
-<p>To stop the motion of the telescope or the operation of the hydraulics system
-press the emergency button either on the main panel or on the manual controls.</p>
-<p>Pressing the emergency button deactivates the high power modules within the
-servo drivers. This stops any motion of the azimuth, elevation and de-rotator
-axis immediately. As a consequence the TwinSAFE logic module and the AX5000
-servo drivers go into an error condition.</p>
-<section id="error-acknowledgement">
-<h2>Error Acknowledgement<a class="headerlink" href="#error-acknowledgement" title="Permalink to this headline">¶</a></h2>
-<p>To reset this error condition the TWINSAFE has to be restarted:
-* Turn the power switch on the main panel to “OFF”.
-* Press the RESET button on the main panel.</p>
-<p>The error signal should disappear.</p>
-</section>
-<section id="maintenance">
-<h2>Maintenance<a class="headerlink" href="#maintenance" title="Permalink to this headline">¶</a></h2>
-<p>Press the emergency button when performing maintenance on the telescope. If e.g.
-operating the telescope cover is required, put the telescope in manual operation
-mode, see <a class="reference internal" href="manual.html"><span class="doc">Manual Operation</span></a></p>
-</section>
+  <section id="telescope-covers">
+<h1>Telescope Covers<a class="headerlink" href="#telescope-covers" title="Permalink to this headline">¶</a></h1>
+<p>The covers are opened in automatic mode prior to enabling the elevation drive to
+ensure a balanced load in the calibration phase. After wake and shake the position
+control es enabled and can compensate for the torque, if the covers are still
+closed.</p>
+<p>In automatic operation the covers are opened by setting the <code class="docutils literal notranslate"><span class="pre">open</span></code> flag in
+CoverControl. Setting the <code class="docutils literal notranslate"><span class="pre">close</span></code> flag overrides the open flag and closes the
+cover.
+Since cover 3 is blocking cover 2 for the opening procedure, opening of cover 2
+is delayed as well as closing of cover 3.</p>
+<p>If the limit switches are in an unlogical state, an error is rised. If the covers
+take to long to open or to close, a timeout error is raised.</p>
+<p>Since the drives are lacking any positional feedback, the motors for the covers
+could also be driven by source-sink Beckhoff modules (EL2084).</p>
 </section>
 
 
@@ -76,25 +66,16 @@ mode, see <a class="reference internal" href="manual.html"><span class="doc">Man
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Safety Instructions</a><ul>
-<li><a class="reference internal" href="#error-acknowledgement">Error Acknowledgement</a></li>
-<li><a class="reference internal" href="#maintenance">Maintenance</a></li>
-</ul>
-</li>
-</ul>
-
   <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">RoboTel Firmware documentation!</a></p>
+  <p class="topless"><a href="dome.html"
+                        title="previous chapter">Dome Operation</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="init.html"
-                        title="next chapter">Telescope Initialisation</a></p>
+  <p class="topless"><a href="derotator.html"
+                        title="next chapter">De-rotator</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/safety.rst.txt"
+      <li><a href="_sources/covers.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -119,13 +100,13 @@ mode, see <a class="reference internal" href="manual.html"><span class="doc">Man
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="init.html" title="Telescope Initialisation"
+          <a href="derotator.html" title="De-rotator"
              >next</a> |</li>
         <li class="right" >
-          <a href="index.html" title="RoboTel Firmware documentation!"
+          <a href="dome.html" title="Dome Operation"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">RoboTel Telescope Firmware  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">Safety Instructions</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Telescope Covers</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

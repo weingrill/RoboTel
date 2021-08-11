@@ -4,12 +4,13 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Telescope Initialisation &#8212; RoboTel Telescope Firmware  documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -41,25 +42,27 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="telescope-initialisation">
+  <section id="telescope-initialisation">
 <h1>Telescope Initialisation<a class="headerlink" href="#telescope-initialisation" title="Permalink to this headline">¶</a></h1>
 <p>After powering the telescope for the first time, upgrading the firmware or in
-case of a power loss, the telescope initialises itself.</p>
-<ul class="simple">
+case of a power loss, the telescope initialises itself when setting the power flag
+in automatic mode.</p>
+<ol class="arabic simple">
 <li><p>The main PLC boots the TwinCAT firmware.</p></li>
 <li><p>If the PLC firmware is running, a blue signal is enabled on the PLC.</p></li>
-<li><p>The TwinSAFE is reset within 15 seconds, if now emergency stop is pressed.</p></li>
+<li><p>The TwinSAFE is reset within 15 seconds, if no emergency stop is pressed.</p></li>
 <li><p>The power transformer is activated after one second, if the power switch on
 the main panel is in “ON” position.</p></li>
+<li><p>Available power is indicated by the power lamp.</p></li>
 <li><p>After TwinSAFE is ready the hydraulics system can be activated by pressing the
 “START” button.</p></li>
 <li><p>If “BRAKE CLEAR” is in “ON” position on the main panel, the hydraulic brakes
-are opened.</p></li>
+will be opened.</p></li>
 <li><p>When the hydraulic brakes open, the azimuth axis and the elevation axis will
 perform a self calibration (“wake-and-shake”).</p></li>
-<li><p>When all axis are ready, they move to their home position.</p></li>
-</ul>
-</div>
+<li><p>When all axis are ready, they move to their predefined home position.</p></li>
+</ol>
+</section>
 
 
             <div class="clearer"></div>
@@ -85,7 +88,7 @@ perform a self calibration (“wake-and-shake”).</p></li>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -113,7 +116,7 @@ perform a self calibration (“wake-and-shake”).</p></li>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jörg Weingrill.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.1.2.
     </div>
   </body>
 </html>

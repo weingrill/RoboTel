@@ -4,18 +4,20 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
     <title>Dome Operation &#8212; RoboTel Telescope Firmware  documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Telescope Covers" href="covers.html" />
     <link rel="prev" title="Filter-Wheel" href="filterwheel.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
@@ -24,6 +26,9 @@
         <li class="right" style="margin-right: 10px">
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="covers.html" title="Telescope Covers"
+             accesskey="N">next</a> |</li>
         <li class="right" >
           <a href="filterwheel.html" title="Filter-Wheel"
              accesskey="P">previous</a> |</li>
@@ -37,11 +42,11 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="dome-operation">
+  <section id="dome-operation">
 <h1>Dome Operation<a class="headerlink" href="#dome-operation" title="Permalink to this headline">¶</a></h1>
 <p>The dome is operated by its own PLC but governed by the main PLC.
 Closing or opening the dome requires approximately 70 seconds.</p>
-<div class="section" id="manual-operation">
+<section id="manual-operation">
 <h2>Manual Operation<a class="headerlink" href="#manual-operation" title="Permalink to this headline">¶</a></h2>
 <p>The dome can always be operated by pressing a button on the two-button
 control, directly connected to the azimuth dome control. See <a class="reference internal" href="manual.html"><span class="doc">Manual Operation</span></a> for
@@ -49,8 +54,8 @@ further instructions.</p>
 <p>The second operating mode is by using the pendant control (selection 9).
 * Buttons “←” and “→” rotate the dome counter-clockwise and clockwise.
 * “RESET” resets the dome axis</p>
-</div>
-<div class="section" id="api-description">
+</section>
+<section id="api-description">
 <h2>API description<a class="headerlink" href="#api-description" title="Permalink to this headline">¶</a></h2>
 <p>The dome is enabled automatically as soon as <cite>TelescopeControl.power</cite> is TRUE.
 If the dome has not yet been calibrated, it moves to the calibration position.
@@ -65,8 +70,8 @@ The light is deactivated automatically after 60 minutes.</p></li>
 </ul>
 <p>If the weather conditions are bad, the dome will be closed automatically.
 If the Dome is opened, the dehumidifier is stopped.</p>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -87,6 +92,9 @@ If the Dome is opened, the dehumidifier is stopped.</p>
   <h4>Previous topic</h4>
   <p class="topless"><a href="filterwheel.html"
                         title="previous chapter">Filter-Wheel</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="covers.html"
+                        title="next chapter">Telescope Covers</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -98,7 +106,7 @@ If the Dome is opened, the dehumidifier is stopped.</p>
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
@@ -115,6 +123,9 @@ If the Dome is opened, the dehumidifier is stopped.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
+          <a href="covers.html" title="Telescope Covers"
+             >next</a> |</li>
+        <li class="right" >
           <a href="filterwheel.html" title="Filter-Wheel"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">RoboTel Telescope Firmware  documentation</a> &#187;</li>
@@ -123,7 +134,7 @@ If the Dome is opened, the dehumidifier is stopped.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jörg Weingrill.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.4.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.1.2.
     </div>
   </body>
 </html>
