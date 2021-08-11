@@ -23,3 +23,9 @@ error will be raised.
 
 In case of an error the hydraulics system will be shut down.
 If the oil temperature is below 10℃ or above 50℃, a warning will be issued.
+
+In the original version deployed by Halfmann, the hydraulics system operates
+autonomous. As an upgrade option the pressure sensors (main and filter), the
+temperature sensor could be integrated in the main cabinet.
+
+The temperature sensor for the hydraulics is not connected on RoboTel.
