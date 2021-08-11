@@ -99,6 +99,24 @@ The hydraulic brake is opened, as soon as the drive is enabled to avoid a drive 
 * If homing has been performed successfully, the buttons "↑" and "↓" increase
   and decrease the filter number from 0 to 23.
 
+12 Semi automatic operation II
+------------------------------
+
+* Button "↓" issues a `gohome` command.
+* Button "↑" issues a `park` command.
+* Button "→" issues a `goto` command.
+* "ENABLE" toggles the tracking command.
+* "RESET" issues a `stop` command.
+
+13 Semi automatic operation I
+-----------------------------
+
+* "ENABLE" activates the power signal in the `TelescopeControl`.
+* Buttons "←" and "→" decrease or increase the azimuth offset.
+* Buttons "↑" and "↓" decrease or increase the elevation offset.
+* Switching to "MANUAL" calculates the new right ascension and declination
+  based on the current telescope position.
+
 15 Hydraulics
 -------------
 
