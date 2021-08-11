@@ -24,16 +24,23 @@ If not otherwise noted, these general rules apply for all selections:
 * Buttons "↑" and "↓" open and close the cover.
 * Cover 1 is not installed on RoboTel.
 
+See also :doc:`covers`
+
 2 Cover 2
 ---------
 
 * Buttons "↑" and "↓" open and close the cover.
 * Cover 3 must be opened first, for cover 2 to operate.
 
+See also :doc:`covers`
+
 3 Cover 3
 ---------
 
 * Buttons "↑" and "↓" open and close the cover.
+* Cover 2 has to be closed first.
+
+See also :doc:`covers`
 
 4 Nasmyth / Mirror M3 Control
 -----------------------------
@@ -58,7 +65,7 @@ The lock is opened as soon as the focus is manually selected.
 * "ENABLE" executes the homing procedure.
 * Buttons "←" and "→" rotate the de-rotator counter-clockwise and clockwise.
 
-See also :ref:`derotator`
+See also :doc:`derotator`
 
 7 Elevation
 -----------
