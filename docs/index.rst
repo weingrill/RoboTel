@@ -16,6 +16,7 @@ RoboTel Firmware documentation!
    hydraulics
    filterwheel
    dome
+   covers
 
 Introduction
 ------------
