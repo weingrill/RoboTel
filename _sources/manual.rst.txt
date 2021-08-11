@@ -110,6 +110,6 @@ The hydraulic brake is opened, as soon as the drive is enabled to avoid a drive 
 * The lamp "↑" indicates an open brake.
 * The lamp "↓" indicates a closed brake.
 
-*To immediately stop the hydraulic system press the emergency button.*
+**To immediately stop the hydraulic system press the emergency button.**
 
 See also :doc:`hydraulics`
