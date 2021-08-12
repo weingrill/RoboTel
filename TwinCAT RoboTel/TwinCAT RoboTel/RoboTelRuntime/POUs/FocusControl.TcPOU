@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="FocusControl" Id="{d08d0458-4211-4cc5-9e25-2b5c152fb2d4}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM FocusControl
 VAR_INPUT
@@ -20,8 +20,14 @@ VAR_INPUT
 END_VAR
 
 VAR_OUTPUT
+	// true if absolute calibration
+	Calibrated:	BOOL;
+	// true if error
 	Error: 		BOOL;
+	// ID of NC axis error
 	ErrorID:	UDINT;
+	// ready signal = drive ready + standstill
+	Ready:	BOOL;
 END_VAR
 
 VAR
@@ -36,7 +42,7 @@ VAR
 END_VAR
 
 VAR CONSTANT
-	Focus_precision:	LREAL := 0.001;
+	Focus_precision:	LREAL := 0.002;
 	// reference position for homing
 	homing_position:		LREAL := 97.96; // 107,50 - 9,54
 
@@ -53,9 +59,12 @@ Focus is locked by default
 *)
 // unlock the Focus 
 // TODO: onlock the Focus on movement only
+(*
 FocusUnlock(SET := enable,
 			RESET1 := reset OR NOT enable,
 			Q1 => GVL_Telescope.focus_lock);
+*)
+GVL_Telescope.focus_lock := NOT FocusAxis.StandStill;
 
 // wait until the focus is unlocked for n milliseconds
 FocusDelay(IN :=FocusUnlock.Q1, PT := T#1000MS, Q => FocusUnlocked);
@@ -71,7 +80,7 @@ MC_SetAcceptBlockedDriveSignal(
 
 //GVL_Telescope.focus_lock := FocusUnlocked;
 FocusAxis(	
-	Enable := 			FocusUnlocked,
+	Enable := 			enable,
 	Reset := 			reset,
 	MoveAxis := 		MoveAxis,
 	HomeAxis :=			HomeAxis,
@@ -102,8 +111,10 @@ END_IF
 IF FocusAxis.Calibrated OR Error THEN
 	HomeAxis := FALSE;
 END_IF
-	
 
+Calibrated := FocusAxis.Calibrated;
+	
+// Calibrate on the other end
 FocusCalibration(Axis := GVL_Telescope.FocusAxisRef,
 	Execute := GVL_Telescope.focus_limit_near,
 	Position := 0.0);
@@ -111,6 +122,8 @@ FocusCalibration(Axis := GVL_Telescope.FocusAxisRef,
 IF GVL_Telescope.focus_limit_far THEN
 	Focus_max := actual_position;
 END_IF
+
+Ready := FocusAxis.Ready AND FocusAxis.StandStill;
 
 FocusAxisEvent(	
 	Trigger := 		FocusAxis.Error, 
@@ -133,8 +146,11 @@ FocusAxisEvent(
       <LineId Id="310" Count="0" />
       <LineId Id="87" Count="0" />
       <LineId Id="236" Count="0" />
-      <LineId Id="99" Count="2" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="435" Count="0" />
+      <LineId Id="100" Count="1" />
       <LineId Id="274" Count="0" />
+      <LineId Id="436" Count="1" />
       <LineId Id="112" Count="0" />
       <LineId Id="110" Count="0" />
       <LineId Id="377" Count="0" />
@@ -156,12 +172,16 @@ FocusAxisEvent(
       <LineId Id="98" Count="0" />
       <LineId Id="179" Count="11" />
       <LineId Id="368" Count="0" />
-      <LineId Id="370" Count="3" />
+      <LineId Id="370" Count="2" />
+      <LineId Id="426" Count="1" />
+      <LineId Id="373" Count="0" />
       <LineId Id="314" Count="0" />
       <LineId Id="316" Count="2" />
       <LineId Id="315" Count="0" />
       <LineId Id="192" Count="0" />
-      <LineId Id="320" Count="2" />
+      <LineId Id="320" Count="1" />
+      <LineId Id="433" Count="1" />
+      <LineId Id="322" Count="0" />
       <LineId Id="193" Count="5" />
       <LineId Id="156" Count="1" />
     </LineIds>
