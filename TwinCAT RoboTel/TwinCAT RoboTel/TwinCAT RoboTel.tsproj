@@ -3246,13 +3246,15 @@ External Setpoint Generation:
 					<Name>Focus</Name>
 					<AxisPara>
 						<Dynamic AccelerationMaximum="100" DecelerationMaximum="100" Acceleration="2.47294" Deceleration="2.47294" Jerk="2.3521"/>
-						<Velo RefSearch="0.1" RefSync="0.1" SlowManual="0.1" FastManual="0.5" Maximum="5"/>
+						<Velo RefSearch="0.2" RefSync="0.2" SlowManual="0.1" FastManual="0.5" Maximum="5"/>
 						<PositionAreaControl Enable="false"/>
 						<TargetPosControl Enable="false"/>
 						<OtherSettings AllowMotionCmdToSlave="true" PulseDistancePos="1" PulseDistanceNeg="1"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="4">
 						<EncPara ScaleFactorNumerator="0.001" ScaleFactorDenominator="5" MaxCount="#x0000ffff">
+							<SoftEndMinControl Enable="true"/>
+							<SoftEndMaxControl Range="100"/>
 							<Inc RefSoftSyncMask="#x0000ffff"/>
 						</EncPara>
 						<Vars VarGrpType="1">
@@ -16449,36 +16451,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 					</EtherCAT>
 				</Box>
 				<EtherCAT DcSyncMode="3"/>
-			</Device>
-			<Device Id="3" DevType="112" AmsPort="28675" AmsNetId="5.78.96.50.4.1" RemoteName="Gerät 3 (EtherCAT Automation Protocol)">
-				<Name>Gerät 3 (EtherCAT Automation Protocol)</Name>
-				<AddressInfo>
-					<Pnp>
-						<DeviceDesc>Ethernet (X000)</DeviceDesc>
-						<DeviceName>\DEVICE\{1E562FE4-D46F-426A-AA05-7CEEDDA6503A}</DeviceName>
-						<DeviceData>0001054e6033</DeviceData>
-					</Pnp>
-				</AddressInfo>
-				<Image Id="4" AddrType="1" ImageType="3">
-					<Name>Prozessabbild</Name>
-				</Image>
-				<Ethernet DeviceDesc="Ethernet (X000)"/>
-				<Eap EapDeviceGuid="{F1F4A6C2-F73C-430D-8B22-B1F3BC91E92E}"/>
-			</Device>
-			<Device Id="4" DevType="112" AmsPort="28676" AmsNetId="5.78.96.50.5.1" RemoteName="Gerät 4 (EtherCAT Automation Protocol)">
-				<Name>Gerät 4 (EtherCAT Automation Protocol)</Name>
-				<AddressInfo>
-					<Pnp>
-						<DeviceDesc>Ethernet 2 (X001)</DeviceDesc>
-						<DeviceName>\DEVICE\{2839C740-A714-40AB-B913-59962D64EC94}</DeviceName>
-						<DeviceData>0001054e6032</DeviceData>
-					</Pnp>
-				</AddressInfo>
-				<Image Id="5" AddrType="1" ImageType="3">
-					<Name>Prozessabbild</Name>
-				</Image>
-				<Ethernet DeviceDesc="Ethernet 2 (X001)"/>
-				<Eap EapDeviceGuid="{EDC1A6EB-5D37-4668-AEC8-89C21F834735}"/>
 			</Device>
 		</Io>
 	</Project>
