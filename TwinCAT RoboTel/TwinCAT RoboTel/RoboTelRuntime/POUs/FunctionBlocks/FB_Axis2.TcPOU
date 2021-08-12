@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="FB_Axis2" Id="{a3e55664-127b-4a99-a2ba-301ba26f68b3}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Axis2
 VAR_INPUT
@@ -219,6 +219,10 @@ IF Axis_Power.Error THEN
 	ErrorID := Axis_Power.ErrorID;
 END_IF
 
+IF Axis_SetpointEnable.Error THEN
+	ErrorID := Axis_SetpointEnable.ErrorID;
+END_IF
+
 IF Axis_Reset.Error THEN
 	ErrorID := Axis_Reset.ErrorID;
 END_IF
@@ -243,7 +247,8 @@ IF Axis_Stop.Error THEN
 	ErrorID := Axis_Stop.ErrorID;
 END_IF
 
-Busy := Axis_Power.Busy OR 
+Busy := 	Axis_Power.Busy OR 
+			Axis_SetpointEnable.Busy OR
 			Axis_Reset.Busy OR 
 			Axis_Modulo.Busy OR
 			Axis_Move.Busy OR 
@@ -252,6 +257,7 @@ Busy := Axis_Power.Busy OR
 			Axis_Position.Busy;
 
 Error := 	Axis_Power.Error OR 
+			Axis_SetpointEnable.Error OR
 			Axis_Reset.Error OR 
 			Axis_Modulo.Error OR
 			Axis_Move.Error OR 
@@ -361,6 +367,7 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="772" Count="0" />
       <LineId Id="771" Count="0" />
       <LineId Id="773" Count="1" />
+      <LineId Id="1513" Count="3" />
       <LineId Id="776" Count="0" />
       <LineId Id="775" Count="0" />
       <LineId Id="777" Count="1" />
@@ -375,11 +382,14 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="783" Count="3" />
       <LineId Id="779" Count="3" />
       <LineId Id="903" Count="0" />
-      <LineId Id="905" Count="3" />
+      <LineId Id="905" Count="0" />
+      <LineId Id="1517" Count="0" />
+      <LineId Id="906" Count="2" />
       <LineId Id="911" Count="0" />
       <LineId Id="909" Count="1" />
       <LineId Id="791" Count="0" />
       <LineId Id="608" Count="0" />
+      <LineId Id="1518" Count="0" />
       <LineId Id="884" Count="2" />
       <LineId Id="912" Count="0" />
       <LineId Id="887" Count="1" />
