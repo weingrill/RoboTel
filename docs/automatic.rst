@@ -7,28 +7,32 @@ respective variables listed below. Since the ADS communication cycle is in the
 order of tens of seconds this can be considered a realtime interface.
 
 The following conditions have to be met for remote or robotic operations:
+
 #. The main power switch is turned ON.
 #. The brake clearance is OPEN (ON).
 #. The pendant control has the `MANUAL` set to `OFF`.
 #. The selector on the pendant control is in setting 15, 14 or 11.
 
-
-
 API Description
 ---------------
+
+Since ADS does not implement protected variables, specific input and output
+variables have been defined.
 
 Input Variables
 ^^^^^^^^^^^^^^^
 
 * `power`: activates the the telescope.
   The telescope performs the following actions:
-  #. activate the hydraulic pumps
-  #. opens the covers
+
+  #. activate the hydraulic pumps (:doc:`hydraulics`)
+  #. opens the covers (:doc:`covers`)
   #. enable the elevation and azimuth
-  #. enable the dome, if available
-  #. enable the derotator
-  #. enable the filterwheel
-  #. enable the focuser
+  #. enable the dome, if available (:doc:`dome`)
+  #. enable the de-rotator (:doc:`derotator`)
+  #. enable the filterwheel (:doc:`filterwheel`)
+  #. enable the focuser (:doc:`focus`)
+
   If the `power` command is issued for the first time after a hardreset or
   power-cycle, the calibation cycle for each axis will be performed.
   When disabling the `power` signal the axes will be disabled in reverse order
