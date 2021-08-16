@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Design Issues &#8212; RoboTel Telescope Firmware  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/classic.css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">RoboTel Telescope Firmware  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Design Issues</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="design-issues">
+<h1>Design Issues<a class="headerlink" href="#design-issues" title="Permalink to this headline">¶</a></h1>
+<p>This is a collection of design issues that might affect the operational performance
+of the telescope.</p>
+<ul class="simple">
+<li><p>The azimuth and elevation axis are lacking an absolute encoder. In the current
+situation, the drive has to undergo a ‘wake and shake’ initialisation routine
+to determine to commutator offset. Since the drive is under full load, this
+routine is not suitable for this method. Absolute encoders would overcome this
+procedure by using a fixed commutator offset.</p></li>
+<li><p>The azimuth and elevation brakes are not separated. This requires the position
+controller to be activated on both drives as soon as the brakes are opened.
+Having individual brakes would also offload the brake control directly to the
+servo drivers featuring a brake control output.</p></li>
+<li><p>The emergency stop chain for the pendant control is connected to the main
+panel. Using TwinSAFE would allow for a TwinSAFE EL1904 input in the
+telescope cabinet providing the same safety level and simplifying the wiring.</p></li>
+<li><p>The logic voltages Up and Us are not fused and supplied separately. This would
+allow a better control in case of an emergency stop and provide better
+electrical safety.</p></li>
+<li><p>The covers can be operated by sink-source digital outputs EL2084 instead of
+motor units. Since the covers are lacking a positional feedback, the EL72xx
+units can’t operate in a control loop anyway.</p></li>
+<li><p>Using a motor control unit EL72xx for the fan is superfluous, since it can’t
+reverse the polarity. A regular PWM unit EL2502 would be sufficient.</p></li>
+<li><p>Since M3 does not have a positional feedback, a motor control unit EL72xx
+does not make sense. Either a PWM unit EL2502 or a Push-Pull EL2084 would
+be sufficient.</p></li>
+<li><p>The phase watcher for the main power protecting the hydraulic pumps is
+redundant. The starter relays for the pumps also check the phases. It would
+be better to monitor the mains using a EL3483 and the power consumption using
+EL3433.</p></li>
+</ul>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/issues.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="index.html">RoboTel Telescope Firmware  documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">Design Issues</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Jörg Weingrill.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.1.2.
+    </div>
+  </body>
+</html>

@@ -28,6 +28,13 @@ temperature sensors and digital I/Os.
 
 Please read the :doc:`safety` before operating the telescope.
 
+Design issues
+-------------
+The RoboTel telescope has some design flaws originating from the original design
+by Halfmann. See :doc:`issues` for a detailed analysis and potential upgrades of
+the system.
+
+
 Indices and tables
 ==================
 
