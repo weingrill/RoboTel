@@ -4,7 +4,7 @@ Manual Operation
 The telescope can be operated manually for commissioning, testing or
 observation. To enable manual operation:
 * Turn the power switch on the main panel to "ON".
-* Press "START" to start the hydraulic system.
+* Start the hydraulic system, if necessary.
 * Turn the brake clearance to "ON".
 * On the pendant control turn the manual key switch to "ON".
 
@@ -12,7 +12,7 @@ The manual operation overrides any remote command.
 
 The selector switch (1-15) enables the individual components on the telescope.
 It is advised to leave the manual switch in "OFF" position, while turning the selector.
-Moving the selector fast in manual operation may cause drive errors.
+Turning the selector in manual operation may cause drive errors.
 If not otherwise noted, these general rules apply for all selections:
 * "ENABLE" enables the drive. Pressing "ENABLE" a second time disables the drive.
 * "RESET" resets the drive or error.
@@ -22,7 +22,8 @@ If not otherwise noted, these general rules apply for all selections:
 1 Cover 1
 ---------
 * Buttons "↑" and "↓" open and close the cover.
-* Cover 1 is not installed on RoboTel.
+
+*Cover 1 is not installed on RoboTel.*
 
 See also :doc:`covers`
 
@@ -59,6 +60,8 @@ The lock is opened as soon as the focus is manually selected.
 * Moving the focus without unlocking will cause in an error.
 * "RESET" locks the focus in position.
 
+See also :doc:`focus`
+
 6 De-rotator
 ------------
 
@@ -71,25 +74,30 @@ See also :doc:`derotator`
 -----------
 
 The hydraulic brake is opened, as soon as the drive is enabled to avoid a drive error.
+
 * "ENABLE" enables/disables the drive.
 * Buttons "↑" and "↓" increase and decrease the elevation.
 * Pressing the buttons "↑" and "↓" simultaneously immediately closes the brake.
-* *WARNING* Enabling the drive will automatically open the brake for both elevation
-  and azimuth.
+
+**WARNING** Enabling the drive will automatically open the brake for both elevation
+and azimuth.
 
 8 Azimuth
 ---------
 
 * "ENABLE" enables/disables the drive.
 * Buttons "←" and "→" rotate the azimuth counter-clockwise and clockwise.
-* *WARNING* This behaviour will change in future. It is planned to implement a
-  equatorial positioning in right-ascension and declination.
-* *WARNING* Enabling the azimuth also enables the elevation, since the break will be opened.
+
+**WARNING** Enabling the azimuth also enables the elevation, since the break will be opened.
 
 9 Dome Control
 --------------
 * Buttons "←" and "→" rotate the dome counter-clockwise and clockwise.
 * Buttons "↑" and "↓" open and close the slit and the flap.
+
+*Due to the design there is a latency of up to five seconds until the command
+is executed. This also applies for pressing the emergency stop.*
+**The emergency stop is not directly connected to the dome controls.**
 
 10 Filter Wheel
 ---------------
@@ -98,6 +106,8 @@ The hydraulic brake is opened, as soon as the drive is enabled to avoid a drive 
 * Buttons "←" and "→" rotate the filter wheel counter-clockwise and clockwise.
 * If homing has been performed successfully, the buttons "↑" and "↓" increase
   and decrease the filter number from 0 to 23.
+
+See also :doc:`filterwheel`
 
 12 Semi automatic operation II
 ------------------------------
