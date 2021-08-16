@@ -48,29 +48,36 @@
 interface is the Beckhoff ADS connection to the <cite>TelescopeControl</cite> by setting the
 respective variables listed below. Since the ADS communication cycle is in the
 order of tens of seconds this can be considered a realtime interface.</p>
-<p>The following conditions have to be met for remote or robotic operations:
-#. The main power switch is turned ON.
-#. The brake clearance is OPEN (ON).
-#. The pendant control has the <cite>MANUAL</cite> set to <cite>OFF</cite>.
-#. The selector on the pendant control is in setting 15, 14 or 11.</p>
+<p>The following conditions have to be met for remote or robotic operations:</p>
+<ol class="arabic simple">
+<li><p>The main power switch is turned ON.</p></li>
+<li><p>The brake clearance is OPEN (ON).</p></li>
+<li><p>The pendant control has the <cite>MANUAL</cite> set to <cite>OFF</cite>.</p></li>
+<li><p>The selector on the pendant control is in setting 15, 14 or 11.</p></li>
+</ol>
 <section id="api-description">
 <h2>API Description<a class="headerlink" href="#api-description" title="Permalink to this headline">¶</a></h2>
+<p>Since ADS does not implement protected variables, specific input and output
+variables have been defined.</p>
 <section id="input-variables">
 <h3>Input Variables<a class="headerlink" href="#input-variables" title="Permalink to this headline">¶</a></h3>
-<ul class="simple">
+<ul>
 <li><p><cite>power</cite>: activates the the telescope.
-The telescope performs the following actions:
-#. activate the hydraulic pumps
-#. opens the covers
-#. enable the elevation and azimuth
-#. enable the dome, if available
-#. enable the derotator
-#. enable the filterwheel
-#. enable the focuser
-If the <cite>power</cite> command is issued for the first time after a hardreset or
+The telescope performs the following actions:</p>
+<ol class="arabic simple">
+<li><p>activate the hydraulic pumps (<a class="reference internal" href="hydraulics.html"><span class="doc">Hydraulics System</span></a>)</p></li>
+<li><p>opens the covers (<a class="reference internal" href="covers.html"><span class="doc">Telescope Covers</span></a>)</p></li>
+<li><p>enable the elevation and azimuth</p></li>
+<li><p>enable the dome, if available (<a class="reference internal" href="dome.html"><span class="doc">Dome Operation</span></a>)</p></li>
+<li><p>enable the de-rotator (<a class="reference internal" href="derotator.html"><span class="doc">De-rotator</span></a>)</p></li>
+<li><p>enable the filterwheel (<a class="reference internal" href="filterwheel.html"><span class="doc">Filter-Wheel</span></a>)</p></li>
+<li><p>enable the focuser (<a class="reference internal" href="focus.html"><span class="doc">Focus</span></a>)</p></li>
+</ol>
+<p>If the <cite>power</cite> command is issued for the first time after a hardreset or
 power-cycle, the calibation cycle for each axis will be performed.
 When disabling the <cite>power</cite> signal the axes will be disabled in reverse order
-and the covers will be closed.</p></li>
+and the covers will be closed.</p>
+</li>
 <li><p><cite>gohome</cite>: The telescope moves to the hard-coded home position. Azimuth 180 degrees
 and elevation 45 degrees.</p></li>
 <li><p><cite>park</cite>: the telescope moves to the hard-coded parking position and closes the
