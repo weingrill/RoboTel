@@ -47,13 +47,13 @@
 <p>The telescope can be operated manually for commissioning, testing or
 observation. To enable manual operation:
 * Turn the power switch on the main panel to “ON”.
-* Press “START” to start the hydraulic system.
+* Start the hydraulic system, if necessary.
 * Turn the brake clearance to “ON”.
 * On the pendant control turn the manual key switch to “ON”.</p>
 <p>The manual operation overrides any remote command.</p>
 <p>The selector switch (1-15) enables the individual components on the telescope.
 It is advised to leave the manual switch in “OFF” position, while turning the selector.
-Moving the selector fast in manual operation may cause drive errors.
+Turning the selector in manual operation may cause drive errors.
 If not otherwise noted, these general rules apply for all selections:
 * “ENABLE” enables the drive. Pressing “ENABLE” a second time disables the drive.
 * “RESET” resets the drive or error.
@@ -63,8 +63,8 @@ If not otherwise noted, these general rules apply for all selections:
 <h2>1 Cover 1<a class="headerlink" href="#cover-1" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>Buttons “↑” and “↓” open and close the cover.</p></li>
-<li><p>Cover 1 is not installed on RoboTel.</p></li>
 </ul>
+<p><em>Cover 1 is not installed on RoboTel.</em></p>
 <p>See also <a class="reference internal" href="covers.html"><span class="doc">Telescope Covers</span></a></p>
 </section>
 <section id="cover-2">
@@ -99,6 +99,7 @@ If not otherwise noted, these general rules apply for all selections:
 * Buttons “↑” and “↓” move the mirror outwards and inwards.
 * Moving the focus without unlocking will cause in an error.
 * “RESET” locks the focus in position.</p>
+<p>See also <a class="reference internal" href="focus.html"><span class="doc">Focus</span></a></p>
 </section>
 <section id="de-rotator">
 <h2>6 De-rotator<a class="headerlink" href="#de-rotator" title="Permalink to this headline">¶</a></h2>
@@ -110,24 +111,22 @@ If not otherwise noted, these general rules apply for all selections:
 </section>
 <section id="elevation">
 <h2>7 Elevation<a class="headerlink" href="#elevation" title="Permalink to this headline">¶</a></h2>
-<p>The hydraulic brake is opened, as soon as the drive is enabled to avoid a drive error.
-* “ENABLE” enables/disables the drive.
-* Buttons “↑” and “↓” increase and decrease the elevation.
-* Pressing the buttons “↑” and “↓” simultaneously immediately closes the brake.
-* <em>WARNING</em> Enabling the drive will automatically open the brake for both elevation</p>
-<blockquote>
-<div><p>and azimuth.</p>
-</div></blockquote>
+<p>The hydraulic brake is opened, as soon as the drive is enabled to avoid a drive error.</p>
+<ul class="simple">
+<li><p>“ENABLE” enables/disables the drive.</p></li>
+<li><p>Buttons “↑” and “↓” increase and decrease the elevation.</p></li>
+<li><p>Pressing the buttons “↑” and “↓” simultaneously immediately closes the brake.</p></li>
+</ul>
+<p><strong>WARNING</strong> Enabling the drive will automatically open the brake for both elevation
+and azimuth.</p>
 </section>
 <section id="azimuth">
 <h2>8 Azimuth<a class="headerlink" href="#azimuth" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
 <li><p>“ENABLE” enables/disables the drive.</p></li>
 <li><p>Buttons “←” and “→” rotate the azimuth counter-clockwise and clockwise.</p></li>
-<li><p><em>WARNING</em> This behaviour will change in future. It is planned to implement a
-equatorial positioning in right-ascension and declination.</p></li>
-<li><p><em>WARNING</em> Enabling the azimuth also enables the elevation, since the break will be opened.</p></li>
 </ul>
+<p><strong>WARNING</strong> Enabling the azimuth also enables the elevation, since the break will be opened.</p>
 </section>
 <section id="dome-control">
 <h2>9 Dome Control<a class="headerlink" href="#dome-control" title="Permalink to this headline">¶</a></h2>
@@ -135,6 +134,9 @@ equatorial positioning in right-ascension and declination.</p></li>
 <li><p>Buttons “←” and “→” rotate the dome counter-clockwise and clockwise.</p></li>
 <li><p>Buttons “↑” and “↓” open and close the slit and the flap.</p></li>
 </ul>
+<p><em>Due to the design there is a latency of up to five seconds until the command
+is executed. This also applies for pressing the emergency stop.</em>
+<strong>The emergency stop is not directly connected to the dome controls.</strong></p>
 </section>
 <section id="filter-wheel">
 <h2>10 Filter Wheel<a class="headerlink" href="#filter-wheel" title="Permalink to this headline">¶</a></h2>
@@ -144,6 +146,7 @@ equatorial positioning in right-ascension and declination.</p></li>
 <li><p>If homing has been performed successfully, the buttons “↑” and “↓” increase
 and decrease the filter number from 0 to 23.</p></li>
 </ul>
+<p>See also <a class="reference internal" href="filterwheel.html"><span class="doc">Filter-Wheel</span></a></p>
 </section>
 <section id="semi-automatic-operation-ii">
 <h2>12 Semi automatic operation II<a class="headerlink" href="#semi-automatic-operation-ii" title="Permalink to this headline">¶</a></h2>
