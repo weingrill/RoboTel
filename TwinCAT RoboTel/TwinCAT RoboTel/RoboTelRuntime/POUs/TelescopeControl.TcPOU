@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="TelescopeControl" Id="{6a4f2e3a-c9ee-4352-b4f6-4f9d94b2c472}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM TelescopeControl
 VAR_INPUT
@@ -40,7 +40,12 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	azimuth_offset : 	LREAL := 0.0;
 	// absolute offset for time
 	time_offset: 		LREAL := 0.0;
-
+	// offset for the de-rotator
+	derotator_offset:	LREAL := 0.0;
+	// Nasmyth port 1 or 2
+	Nasmyth_port: USINT;
+	// Focus position in mm
+	focus_position: LREAL := 77.000;
 END_VAR
 VAR
 	// manual or automatic operation of the telescope
@@ -231,6 +236,7 @@ IF power THEN
 	HydraulicsControl.start := TRUE;
 	// open cover
 	// COVER MUST BE OPENED FOR A SUCCESSFUL WAKE & SHAKE COMMAND!
+	CoverControl.enable := TRUE;
 	CoverControl.reset := poweron_reset.Q;
 	Covercontrol.open := TRUE;
 	IF Covercontrol.isopen THEN
@@ -259,7 +265,14 @@ IF power THEN
 	// enable filterwheel
 	//FilterWheelControl.Enable := TRUE;
 	// enable focus
-	//FocusControl.enable := TRUE;
+	FocusControl.enable := TRUE;
+	IF FocusControl.ready AND NOT FocusControl.Calibrated THEN
+		FocusControl.HomeAxis := TRUE;
+	END_IF
+	IF FocusControl.Calibrated AND FocusControl.Ready THEN
+		FocusControl.position := focus_position;
+		FocusControl.MoveAxis := ABS(FocusControl.actual_position - focus_position) < 0.005;
+	END_IF
 ELSIF poweroff.Q THEN
 	gohome := FALSE;
 	park  := FALSE;
@@ -285,6 +298,7 @@ END_IF
 IF NOT power AND NOT PendantControl.manual THEN
 	IF CoverControl.isclosed THEN
 		CoverControl.close := FALSE;
+		CoverControl.enable := FALSE;
 	END_IF
 END_IF
 		
@@ -458,6 +472,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3764" Count="0" />
       <LineId Id="3749" Count="0" />
       <LineId Id="4319" Count="0" />
+      <LineId Id="4492" Count="0" />
       <LineId Id="4328" Count="0" />
       <LineId Id="3769" Count="0" />
       <LineId Id="4320" Count="2" />
@@ -476,6 +491,9 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3775" Count="0" />
       <LineId Id="3754" Count="0" />
       <LineId Id="3776" Count="0" />
+      <LineId Id="4499" Count="4" />
+      <LineId Id="4506" Count="0" />
+      <LineId Id="4504" Count="0" />
       <LineId Id="3755" Count="0" />
       <LineId Id="4261" Count="3" />
       <LineId Id="3757" Count="0" />
@@ -497,7 +515,9 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3549" Count="0" />
       <LineId Id="3519" Count="0" />
       <LineId Id="4323" Count="0" />
-      <LineId Id="4325" Count="1" />
+      <LineId Id="4325" Count="0" />
+      <LineId Id="4493" Count="0" />
+      <LineId Id="4326" Count="0" />
       <LineId Id="4324" Count="0" />
       <LineId Id="3784" Count="0" />
       <LineId Id="1499" Count="0" />
