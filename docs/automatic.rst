@@ -33,8 +33,8 @@ Input Variables
   #. enable the filterwheel (:doc:`filterwheel`)
   #. enable the focuser (:doc:`focus`)
 
-  If the `power` command is issued for the first time after a hardreset or
-  power-cycle, the calibation cycle for each axis will be performed.
+  If the `power` command is issued for the first time after a hard-reset or
+  power-cycle, the calibration cycle for each axis will be performed.
   When disabling the `power` signal the axes will be disabled in reverse order
   and the covers will be closed.
 * `gohome`: The telescope moves to the hard-coded home position. Azimuth 180 degrees
@@ -56,7 +56,7 @@ Input Variables
 * `derotator_offset`: offset for the de-rotator in degrees.
 * `Nasmyth_port`: desired Nasmyth port (1 or 2).
 * `focus_position`: position in millimeters for the focuser.
-* `filter_position`: new position of the filterwheel.
+* `filter_position`: new position of the filter-wheel (0…23).
 
 Output Variables
 ^^^^^^^^^^^^^^^^
