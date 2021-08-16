@@ -13,6 +13,7 @@ RoboTel Firmware documentation!
    safety
    init
    manual
+   automatic
    hydraulics
    filterwheel
    focus

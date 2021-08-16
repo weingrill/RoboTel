@@ -118,6 +118,8 @@ See also :doc:`filterwheel`
 * "ENABLE" toggles the tracking command.
 * "RESET" issues a `stop` command.
 
+See also :doc:`automatic` for a detailed description for each command.
+
 13 Semi automatic operation I
 -----------------------------
 
