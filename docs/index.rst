@@ -15,6 +15,7 @@ RoboTel Firmware documentation!
    manual
    hydraulics
    filterwheel
+   focus
    dome
    covers
    derotator
