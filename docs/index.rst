@@ -21,6 +21,7 @@ RoboTel Firmware documentation
    covers
    derotator
    pointing
+   issues
 
 Introduction
 ------------
