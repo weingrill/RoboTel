@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>De-rotator &#8212; RoboTel Telescope Firmware  documentation</title>
+    <title>Pointing Model &#8212; RoboTel Telescope Firmware  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     
@@ -17,8 +17,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Pointing Model" href="pointing.html" />
-    <link rel="prev" title="Telescope Covers" href="covers.html" /> 
+    <link rel="prev" title="De-rotator" href="derotator.html" /> 
   </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
@@ -27,13 +26,10 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="pointing.html" title="Pointing Model"
-             accesskey="N">next</a> |</li>
-        <li class="right" >
-          <a href="covers.html" title="Telescope Covers"
+          <a href="derotator.html" title="De-rotator"
              accesskey="P">previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">RoboTel Telescope Firmware  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">De-rotator</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Pointing Model</a></li> 
       </ul>
     </div>  
 
@@ -42,10 +38,17 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <section id="de-rotator">
-<h1>De-rotator<a class="headerlink" href="#de-rotator" title="Permalink to this headline">¶</a></h1>
-<p>The de-rotator is initialised in automatic mode on power-up. Lacking an absolute
-encoder, the calibration is performed at the limit switch.</p>
+  <section id="pointing-model">
+<h1>Pointing Model<a class="headerlink" href="#pointing-model" title="Permalink to this headline">¶</a></h1>
+<p>To compensate for alignment errors, a pointing model has been implemented in
+the firmware.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Δaz = c_an∙sin(az)∙tan(h) - c_ae∙cos(az)∙tan(h) - c_npae∙tan(h) + c_ca/cos(h) + c_aoff
+Δh = c_an∙cos(az) - c_ae∙sin(az) + c_flex∙cos(h) + c_hoff
+</pre></div>
+</div>
+<p>where <cite>az</cite> ist the azimuth and <cite>h</cite> is the elevation.</p>
+<p>Source:
+&lt;<a class="reference external" href="http://stella-archive.aip.de/javadoc/scs/stella/util/PointingModel.html">http://stella-archive.aip.de/javadoc/scs/stella/util/PointingModel.html</a>&gt;</p>
 </section>
 
 
@@ -56,15 +59,12 @@ encoder, the calibration is performed at the limit switch.</p>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="covers.html"
-                        title="previous chapter">Telescope Covers</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="pointing.html"
-                        title="next chapter">Pointing Model</a></p>
+  <p class="topless"><a href="derotator.html"
+                        title="previous chapter">De-rotator</a></p>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
-      <li><a href="_sources/derotator.rst.txt"
+      <li><a href="_sources/pointing.rst.txt"
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
@@ -89,13 +89,10 @@ encoder, the calibration is performed at the limit switch.</p>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="pointing.html" title="Pointing Model"
-             >next</a> |</li>
-        <li class="right" >
-          <a href="covers.html" title="Telescope Covers"
+          <a href="derotator.html" title="De-rotator"
              >previous</a> |</li>
         <li class="nav-item nav-item-0"><a href="index.html">RoboTel Telescope Firmware  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">De-rotator</a></li> 
+        <li class="nav-item nav-item-this"><a href="">Pointing Model</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

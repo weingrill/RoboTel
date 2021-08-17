@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>RoboTel Firmware documentation! &#8212; RoboTel Telescope Firmware  documentation</title>
+    <title>RoboTel Firmware documentation &#8212; RoboTel Telescope Firmware  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/classic.css" />
     
@@ -29,7 +29,7 @@
           <a href="safety.html" title="Safety Instructions"
              accesskey="N">next</a> |</li>
         <li class="nav-item nav-item-0"><a href="#">RoboTel Telescope Firmware  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">RoboTel Firmware documentation!</a></li> 
+        <li class="nav-item nav-item-this"><a href="">RoboTel Firmware documentation</a></li> 
       </ul>
     </div>  
 
@@ -39,7 +39,7 @@
           <div class="body" role="main">
             
   <section id="robotel-firmware-documentation">
-<h1>RoboTel Firmware documentation!<a class="headerlink" href="#robotel-firmware-documentation" title="Permalink to this headline">¶</a></h1>
+<h1>RoboTel Firmware documentation<a class="headerlink" href="#robotel-firmware-documentation" title="Permalink to this headline">¶</a></h1>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -87,6 +87,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="covers.html">Telescope Covers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="derotator.html">De-rotator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pointing.html">Pointing Model</a></li>
 </ul>
 </div>
 <section id="introduction">
@@ -95,7 +96,61 @@
 electronic components have been replaced by Beckhoff modules.
 A central Beckhoff PLC controls the servo controllers, DC controllers,
 temperature sensors and digital I/Os.</p>
-<p>Please read the <a class="reference internal" href="safety.html"><span class="doc">Safety Instructions</span></a> before operating the telescope.</p>
+<p><strong>Please read the :doc:`safety` before operating the telescope.</strong></p>
+<p>RoboTel is a robotic telescope, which means that it is either operated remotly
+or autonomous.
+It has limited capabilities to be operated by hand mainly for maintenance, testing
+and commissioning.
+There are several levels of protection to prevent remote operation of the telescope.</p>
+<ol class="arabic simple">
+<li><p>Pressing the emergency stop deactivates all electric circuits and all motors.</p></li>
+<li><p>Deactivating the brake clearance prevents movement of azimuth and elevation.</p></li>
+<li><p>Turning the power switch to off also prevents movement of azimuth and elevation.</p></li>
+<li><p>Switching to manual operation on the pendant control overrides remote operation.</p></li>
+</ol>
+<p><em>Be aware that many settings except for the emergency stop can be enforced by the
+TwinCAT3 IDE in debugging mode.</em></p>
+</section>
+<section id="logical-structure">
+<h2>Logical Structure<a class="headerlink" href="#logical-structure" title="Permalink to this headline">¶</a></h2>
+<p>The telescope electronics have been split up into several components for security,
+safety and design reasons.</p>
+<section id="main-cabinet">
+<h3>Main Cabinet<a class="headerlink" href="#main-cabinet" title="Permalink to this headline">¶</a></h3>
+<p>The main cabinet contains the main PLC and the high voltage components for the
+servo drivers, which are also situated here. Azimuth, elevation and de-rotator
+drives are powered and controlled from here as well as the hydraulic system.
+The yellow modules are responsible for the safety system TwinSAFE.</p>
+<p>The other subsystems like the telescope cabinet and the weather station are connected
+here using EtherCAT over fibre connections.</p>
+<p>The main cabinet features the following controls on the side:</p>
+<ul class="simple">
+<li><p>green button: start the hydraulic pumps</p></li>
+<li><p>red button: stop the hydraulic pumps</p></li>
+<li><p>black button: reset the TwinSAFE system if power key is off otherwise reset an error.</p></li>
+<li><p>white light: indicates if power is ready</p></li>
+<li><p>brake clearance: open (I) or lock (O) the brake for azimuth and elevation.</p></li>
+<li><p>power key: enable high power for the drives.</p></li>
+<li><p>red light: indicates an error.</p></li>
+<li><p>emergency stop button: deactivate all systems</p></li>
+</ul>
+</section>
+<section id="telescope-cabinet">
+<h3>Telescope Cabinet<a class="headerlink" href="#telescope-cabinet" title="Permalink to this headline">¶</a></h3>
+<p>The small cabinet at the telescope contains all DC drivers for the covers, M2(focus)
+and M3 (Nasmyth mirror). It also interfaces all temperature sensors and digital
+inputs for the limit switches.</p>
+<p>An EtherCAT fibre link connects to the dome control.</p>
+</section>
+<section id="dome-control">
+<h3>Dome Control<a class="headerlink" href="#dome-control" title="Permalink to this headline">¶</a></h3>
+<p>The dome azimuth and the dome shutters are controlled from here. See also <a class="reference internal" href="dome.html"><span class="doc">Dome Operation</span></a></p>
+</section>
+<section id="weather-station">
+<h3>Weather Station<a class="headerlink" href="#weather-station" title="Permalink to this headline">¶</a></h3>
+<p>The weather station has analog inputs for the wind, temperature und humidity
+sensors and a digital input for the rain sensor.</p>
+</section>
 </section>
 <section id="design-issues">
 <h2>Design issues<a class="headerlink" href="#design-issues" title="Permalink to this headline">¶</a></h2>
@@ -122,8 +177,15 @@ the system.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">RoboTel Firmware documentation!</a><ul>
+<li><a class="reference internal" href="#">RoboTel Firmware documentation</a><ul>
 <li><a class="reference internal" href="#introduction">Introduction</a></li>
+<li><a class="reference internal" href="#logical-structure">Logical Structure</a><ul>
+<li><a class="reference internal" href="#main-cabinet">Main Cabinet</a></li>
+<li><a class="reference internal" href="#telescope-cabinet">Telescope Cabinet</a></li>
+<li><a class="reference internal" href="#dome-control">Dome Control</a></li>
+<li><a class="reference internal" href="#weather-station">Weather Station</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#design-issues">Design issues</a></li>
 </ul>
 </li>
@@ -164,7 +226,7 @@ the system.</p>
           <a href="safety.html" title="Safety Instructions"
              >next</a> |</li>
         <li class="nav-item nav-item-0"><a href="#">RoboTel Telescope Firmware  documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">RoboTel Firmware documentation!</a></li> 
+        <li class="nav-item nav-item-this"><a href="">RoboTel Firmware documentation</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
