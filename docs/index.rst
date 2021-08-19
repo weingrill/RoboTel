@@ -30,9 +30,9 @@ electronic components have been replaced by Beckhoff modules.
 A central Beckhoff PLC controls the servo controllers, DC controllers,
 temperature sensors and digital I/Os.
 
-**Please read the :doc:`safety` before operating the telescope.**
+**Please read the** :doc:`safety` **before operating the telescope.**
 
-RoboTel is a robotic telescope, which means that it is either operated remotly
+RoboTel is a robotic telescope, which means that it is either operated remotely
 or autonomous.
 It has limited capabilities to be operated by hand mainly for maintenance, testing
 and commissioning.
@@ -100,5 +100,4 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
