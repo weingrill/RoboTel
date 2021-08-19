@@ -17,11 +17,14 @@ servo drivers go into an error condition.
 
 Error Acknowledgement
 ---------------------
-To reset this error condition the TWINSAFE has to be restarted:
-* Turn the power switch on the main panel to "OFF".
-* Press the RESET button on the main panel.
+To reset an error condition the TwinSAFE has to be restarted:
+1. Turn the power switch on the main panel to "OFF".
+2. Press the RESET button on the main panel.
 
-The error signal should disappear.
+The error signal should disappear. If not, please check, if all emergency buttons
+are pulled out for normal operation.
+
+*Be aware that disconnecting the pendant control also triggers an emergency stop!*
 
 Maintenance
 -----------
