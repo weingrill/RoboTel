@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="FanControl" Id="{aa14e62d-ea4c-4f88-afe0-bf32efd9c378}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM FanControl
 VAR_INPUT
@@ -21,6 +21,7 @@ VAR
 	velocity: INT;
 	// issue temperature warning
 	TemperatureWarning: FB_EventLog;
+	MQTTTimer : TON := (PT:=T#5S);
 END_VAR
 
 ]]></Declaration>
@@ -41,6 +42,15 @@ velocity := LREAL_TO_INT(F_YREAL(temperature, 25.0, 40.0, 1000, 32767));
 Fan_axis.MDP5001_511_733_Output.MDP5001_733_Velocity := velocity;
 // return the error condition
 error := Fan_axis.MDP5001_511_733_Input.MDP5001_733_Status_1.Error;
+
+MQTTTimer(IN:=TRUE);
+IF MQTTTimer.Q THEN // publish new payload every second
+	MQTTTimer(IN:=FALSE);
+	MAIN.MQTTPublisher(
+		Topic := 'RoboTel/Electricity', 
+		Message := 'Telescope Cabinet Temperature', 
+		Value := LREAL_TO_FMTSTR(temperature, 2, TRUE));
+END_IF
 
 TemperatureWarning(Trigger := temperature >= 40.0,
 				Level := ADSLOG_MSGTYPE_WARN,
@@ -64,6 +74,10 @@ TemperatureWarning(Trigger := temperature >= 40.0,
       <LineId Id="18" Count="0" />
       <LineId Id="60" Count="0" />
       <LineId Id="19" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="146" Count="5" />
+      <LineId Id="113" Count="0" />
       <LineId Id="46" Count="3" />
       <LineId Id="45" Count="0" />
       <LineId Id="5" Count="0" />

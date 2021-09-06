@@ -11,21 +11,21 @@ VAR
 	(* published message *)
     sTopicPub   : STRING(255) := 'RoboTel';
     sPayloadPub : STRING(255);
+	epos : INT;
 //    i,j : UDINT;
 //    fbTimer : TON := (PT:=T#10MS);
-	bPublished:		BOOL;
+//	bPublished:		BOOL;
 	(* received message *)
     bSubscribed    : BOOL;
-    sTopicSub      : STRING(255) := 'RoboTel/Time';
+    sTopicSub      : STRING(255) := 'RoboTel/Telescope/SET';
     {attribute 'TcEncoding':='UTF-8'}
     sTopicRcv      : STRING(255);
     {attribute 'TcEncoding':='UTF-8'}
     sPayloadRcv    : STRING(255);
+	parameter:		STRING(255);
+	value:			LREAL;
     fbMessageQueue : FB_IotMqttMessageQueue;
     fbMessage      : FB_IotMqttMessage;
-END_VAR
-VAR_OUTPUT
-	newMessage: BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*
@@ -60,24 +60,20 @@ IF fbMqttClient.bConnected THEN
     END_IF
 END_IF
 // receive queued messages
-newMessage := FALSE;
 IF fbMessageQueue.nQueuedMessages > 0 THEN
     IF fbMessageQueue.Dequeue(fbMessage:=fbMessage) THEN
         fbMessage.GetTopic(pTopic:=ADR(sTopicRcv), nTopicSize:=SIZEOF(sTopicRcv) );
         fbMessage.GetPayload(pPayload:=ADR(sPayloadRcv), nPayloadSize:=SIZEOF(sPayloadRcv), bSetNullTermination:=FALSE);
-		IF sTopicRcv = 'RoboTel/Time' THEN
-			sPayloadPub := sPayloadRcv;
-			
-			fbMqttClient.Publish(	
-				sTopic:= sTopicPub, 
-				pPayload:= ADR(sPayloadPub), 
-				nPayloadSize:= LEN2(ADR(sPayloadPub))+0, 
-				eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-				bRetain:= FALSE, 
-				bQueue:= FALSE );
-			
+		IF sTopicRcv = 'RoboTel/Telescope/SET' THEN
+			epos := FIND(sPayloadRcv, ' = ');
+			parameter := LEFT(sPayloadRcv, epos-1);
+			value := STRING_TO_LREAL(DELETE(sPayloadRcv, epos+2, 1));
+			IF parameter = 'Declination' THEN
+				TelescopeControl.de := value;
+			ELSIF parameter = 'RightAscension' THEN
+				TelescopeControl.ra := value;
+			END_IF
 		END_IF
-		newMessage := TRUE;
     END_IF
 END_IF
 ]]></ST>
@@ -98,17 +94,14 @@ END_IF
       <LineId Id="5" Count="0" />
       <LineId Id="47" Count="4" />
       <LineId Id="46" Count="0" />
-      <LineId Id="67" Count="0" />
-      <LineId Id="120" Count="0" />
-      <LineId Id="68" Count="3" />
+      <LineId Id="67" Count="4" />
       <LineId Id="114" Count="0" />
-      <LineId Id="126" Count="1" />
-      <LineId Id="135" Count="0" />
-      <LineId Id="140" Count="0" />
-      <LineId Id="136" Count="3" />
       <LineId Id="133" Count="0" />
-      <LineId Id="124" Count="1" />
-      <LineId Id="121" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="144" Count="2" />
+      <LineId Id="148" Count="1" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="125" Count="0" />
       <LineId Id="72" Count="0" />
       <LineId Id="66" Count="0" />
       <LineId Id="73" Count="0" />

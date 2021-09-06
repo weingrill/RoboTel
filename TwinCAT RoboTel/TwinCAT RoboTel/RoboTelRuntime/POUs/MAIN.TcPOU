@@ -39,6 +39,7 @@ VAR
 	TemperatureEvent:	FB_EventLog;
 	SimpleLog: 			FB_SimpleLog;
 	MQTTPublisher:		FB_MQTTPublisher;
+	MQTTTimer : TON := (PT:=T#5S);
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -116,6 +117,15 @@ GVL_Main.lamp_ready := ready;
 GVL_Main.lamp_error := error OR warning;
 GVL_Main.lamp_power := power_ok AND phase_available;
 SafetyHandling();
+
+MQTTTimer(IN:=TRUE);
+IF MQTTTimer.Q THEN // publish new payload every second
+	MQTTTimer(IN:=FALSE);
+	MQTTPublisher(
+		Topic := 'RoboTel/Electricity', 
+		Message := 'Main Cabinet Temperature', 
+		Value := LREAL_TO_FMTSTR(cabinet_temperature, 2, TRUE));
+END_IF
 
 PowerEvent(	
 	Trigger := 		power_failure, 
@@ -207,6 +217,9 @@ TemperatureEvent(
       <LineId Id="40" Count="0" />
       <LineId Id="44" Count="0" />
       <LineId Id="78" Count="0" />
+      <LineId Id="743" Count="0" />
+      <LineId Id="745" Count="6" />
+      <LineId Id="744" Count="0" />
       <LineId Id="354" Count="5" />
       <LineId Id="353" Count="0" />
       <LineId Id="650" Count="10" />

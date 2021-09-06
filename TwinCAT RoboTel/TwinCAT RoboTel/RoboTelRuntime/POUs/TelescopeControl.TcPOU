@@ -387,6 +387,22 @@ IF MQTTTimer.Q THEN // publish new payload every second
 		Topic := 'RoboTel/Telescope', 
 		Message := 'JulianDay', 
 		Value := TO_STRING(JD));
+	MAIN.MQTTPublisher(
+		Topic := 'RoboTel/Telescope', 
+		Message := 'Azimuth', 
+		Value := TO_STRING(azimuth_current));
+	MAIN.MQTTPublisher(
+		Topic := 'RoboTel/Telescope', 
+		Message := 'Elevation', 
+		Value := TO_STRING(elevation_current));
+	MAIN.MQTTPublisher(
+		Topic := 'RoboTel/Telescope', 
+		Message := 'JulianDay', 
+		Value := TO_STRING(JD));
+	MAIN.MQTTPublisher(
+		Topic := 'RoboTel/Telescope', 
+		Message := 'JulianDay', 
+		Value := TO_STRING(JD));
 END_IF
 
 (* Event function blocks start here. *)
@@ -589,6 +605,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4662" Count="3" />
       <LineId Id="4655" Count="0" />
       <LineId Id="4657" Count="3" />
+      <LineId Id="4670" Count="15" />
       <LineId Id="4656" Count="0" />
       <LineId Id="3530" Count="1" />
       <LineId Id="3583" Count="3" />
