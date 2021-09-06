@@ -86,7 +86,8 @@ DerotatorControl();	//
 FilterWheelControl();	//
 FocusControl();
 Environment();	//
-// MQTTCommunication();
+MQTTCommunication();
+
 
 GVL_Main.softstart_trafo := key_switch AND NOT power_failure;
 power_timer(bStart := key_switch, bStop := power_OK);
@@ -131,7 +132,7 @@ PowerLog(
 PhaseLog(	
 	Trigger := 		NOT phase_available, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
-	FormatString :=	'electriacal phases:	%s',
+	FormatString :=	'electrical phases:	%s',
 	OnMessage := 	'ERROR!',
 	OffLevel := 	ADSLOG_MSGTYPE_HINT,
 	OffMEssage := 	'active');
@@ -183,6 +184,7 @@ TemperatureEvent(
       <LineId Id="398" Count="0" />
       <LineId Id="167" Count="0" />
       <LineId Id="701" Count="0" />
+      <LineId Id="741" Count="0" />
       <LineId Id="237" Count="0" />
       <LineId Id="69" Count="0" />
       <LineId Id="154" Count="0" />

@@ -12,48 +12,51 @@ VAR_OUTPUT
 	bPublished:		BOOL := TRUE;
 END_VAR
 VAR
-	fbMqttClient:	FB_IotMqttClient;
+	//fbMqttClient:	FB_IotMqttClient;
     bSetParameter: 	BOOL := TRUE;
     sPayloadPub: 	STRING(255);
     bConnect:		BOOL := TRUE;
 	bSubscribed:	BOOL;
-    fbMessageQueue:	FB_IotMqttMessageQueue;
+    //fbMessageQueue:	FB_IotMqttMessageQueue;
     //fbMessage      : FB_IotMqttMessage;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[ IF bSetParameter THEN
     bSetParameter               := FALSE;
-    fbMqttClient.sHostName      := 'primitivo.aip.de';
-    fbMqttClient.nHostPort      := 1883;
-    fbMqttClient.sClientId      := 'RoboTelPLC'; 
-    fbMqttClient.sTopicPrefix   := ''; 
+    MQTTCommunication.fbMqttClient.sHostName      := 'primitivo.aip.de';
+    MQTTCommunication.fbMqttClient.nHostPort      := 1883;
+    MQTTCommunication.fbMqttClient.sClientId      := 'RoboTelPLC'; 
+    MQTTCommunication.fbMqttClient.sTopicPrefix   := ''; 
 //  fbMqttClient.nKeepAlive     := 60; 
 //  fbMqttClient.sUserName      := ;
 //  fbMqttClient.sUserPassword  := ; 
 //  fbMqttClient.stWill         := ; 
 //  fbMqttClient.stTLS          := ;
-    fbMqttClient.ipMessageQueue := fbMessageQueue;
+    MQTTCommunication.fbMqttClient.ipMessageQueue := MQTTCommunication.fbMessageQueue;
 END_IF
 
-fbMqttClient.Execute(bConnect);
+MQTTCommunication.fbMqttClient.Execute(bConnect);
 
-IF fbMqttClient.bConnected AND bPublished THEN
+IF MQTTCommunication.fbMqttClient.bConnected AND bPublished THEN
 	sPayloadPub := CONCAT(Message, ' = ');
 	sPayloadPub := CONCAT(sPayloadPub, Value);
-	bPublished := fbMqttClient.Publish(	sTopic:= Topic, 
-							pPayload:= ADR(sPayloadPub), 
-							nPayloadSize:= LEN2(ADR(sPayloadPub))+0, // +1 just adds a \x0
-							eQoS:= TcIotMqttQos.AtMostOnceDelivery, //TcIotMqttQos.AtMostOnceDelivery,  TcIotMqttQos.ExactlyOnceDelivery
-							bRetain:= FALSE, 
-							bQueue:= FALSE );
+	bPublished := MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= Topic, 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub))+0, // +1 just adds a \x0
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery, //TcIotMqttQos.AtMostOnceDelivery,  TcIotMqttQos.ExactlyOnceDelivery
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="FB_MQTTPublisher">
       <LineId Id="17" Count="16" />
       <LineId Id="41" Count="0" />
       <LineId Id="67" Count="0" />
-      <LineId Id="42" Count="3" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="43" Count="2" />
       <LineId Id="68" Count="0" />
       <LineId Id="47" Count="0" />
       <LineId Id="9" Count="0" />

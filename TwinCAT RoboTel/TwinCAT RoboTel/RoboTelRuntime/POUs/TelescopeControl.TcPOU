@@ -102,6 +102,7 @@ VAR
 	TCSstopEvent,
 	AltitudeEvent: FB_Eventlog;
 	SimpleLog:	FB_SimpleLog;
+	MQTTTimer : TON := (PT:=T#1S);
 END_VAR
 VAR_OUTPUT
 	//		TRUE, IF telescope can be operated
@@ -378,6 +379,16 @@ tracking := ElevationControl.Tracking AND AzimuthElevationControl.Tracking;
 stopped :=  ElevationControl.ElevationAxis.StandStill AND AzimuthElevationControl.AzimuthAxis.StandStill;
 homed := ElevationControl.Calibrated AND AzimuthElevationControl.calibrated;
 
+MQTTTimer(IN:=TRUE);
+IF MQTTTimer.Q THEN // publish new payload every second
+	MQTTTimer(IN:=FALSE);
+	
+	MAIN.MQTTPublisher(
+		Topic := 'RoboTel/Telescope', 
+		Message := 'JulianDay', 
+		Value := TO_STRING(JD));
+END_IF
+
 (* Event function blocks start here. *)
 TCSpowerEvent(	Trigger := powerfailure, 
 				Level := ADSLOG_MSGTYPE_ERROR,
@@ -575,6 +586,10 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4256" Count="0" />
       <LineId Id="4255" Count="0" />
       <LineId Id="4257" Count="0" />
+      <LineId Id="4662" Count="3" />
+      <LineId Id="4655" Count="0" />
+      <LineId Id="4657" Count="3" />
+      <LineId Id="4656" Count="0" />
       <LineId Id="3530" Count="1" />
       <LineId Id="3583" Count="3" />
       <LineId Id="3085" Count="0" />

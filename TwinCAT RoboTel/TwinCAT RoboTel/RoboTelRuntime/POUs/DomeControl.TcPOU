@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="DomeControl" Id="{0e02434d-920e-4c0f-81fc-5ff7d5573875}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM DomeControl
 VAR_INPUT
@@ -62,6 +62,7 @@ VAR
 	DomeCommEvent:	FB_Eventlog;
 	DomeAxisEvent:	FB_Eventlog;
 	DomeCalibrationEvent: FB_Eventlog;
+	MQTTTimer : TON := (PT:=T#10S);
 END_VAR
 VAR CONSTANT
 	tolerance:				LREAL := 3.0;
@@ -257,6 +258,14 @@ PermanentError(IN := bError, PT := T#30S);
 
 DomeError := PermanentError.Q OR Error;
 
+MQTTTimer(IN:=Enable AND Calibrated);
+IF MQTTTimer.Q THEN // publish new payload every second
+	MQTTTimer(IN:=FALSE);
+	MAIN.MQTTPublisher(
+		Topic := 'RoboTel/Dome', 
+		Message := 'Azimuth', 
+		Value := LREAL_TO_FMTSTR(Azimuth_current, 1, TRUE));
+END_IF
 
 DomeCommEvent(	Trigger := PermanentError.Q, 
 					Level := ADSLOG_MSGTYPE_ERROR,
@@ -393,6 +402,8 @@ DomeCalibrationEvent(
       <LineId Id="1071" Count="0" />
       <LineId Id="1079" Count="1" />
       <LineId Id="998" Count="1" />
+      <LineId Id="1522" Count="3" />
+      <LineId Id="1550" Count="3" />
       <LineId Id="1077" Count="0" />
       <LineId Id="758" Count="3" />
       <LineId Id="763" Count="0" />
