@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="F_Derotatorposition" Id="{60bb6b84-d38a-49fc-a26b-76a4adc375c0}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_Derotatorposition : LREAL
+VAR_INPUT
+	// azimuth in degrees
+	azimuth:		LREAL;
+	// latitude in degrees
+	latitude: 		LREAL;
+	// declination in degrees
+	declination:	LREAL;
+	// elevation in degrees
+	elevation:		LREAL;
+END_VAR
+VAR
+	parallactic_angle:	LREAL;
+	az, lat, delta, pa:	LREAL;
+END_VAR
+VAR CONSTANT
+	d2r:	LREAL := PI/180.0;
+	r2d:	LREAL := 180.0/PI;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+calculation for the derotator position
+source: GRE-KIS-MAN-0008 GREGOR: Derotator Manual
+returns derotatorposition in degrees
+*)
+// convert azimuth to radians
+az := azimuth * d2r;
+// convert latitude to radians
+lat := latitude * d2r;
+// convert declination to radians
+delta := declination * d2r;
+
+// calculate the parallactic angle
+
+IF COS(delta) < 1E-3 THEN
+	pa := 0.0;
+ELSE
+	pa := ASIN(SIN(az) * COS(lat) / COS(delta));
+END_IF
+
+// convert parallactic angle to degrees
+parallactic_angle := pa * r2d;
+
+F_Derotatorposition := parallactic_angle + azimuth + elevation;]]></ST>
+    </Implementation>
+    <LineIds Name="F_Derotatorposition">
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="21" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
