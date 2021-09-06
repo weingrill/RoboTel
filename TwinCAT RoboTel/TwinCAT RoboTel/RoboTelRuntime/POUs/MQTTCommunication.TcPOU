@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="MQTTCommunication" Id="{7764f620-4215-4717-9686-e3cbacd7309d}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MQTTCommunication
+VAR
+	fbMqttClient    : FB_IotMqttClient;
+    bSetParameter   : BOOL := TRUE;
+    bConnect        : BOOL := TRUE;
+	(* published message *)
+    sTopicPub   : STRING(255) := 'RoboTel';
+    sPayloadPub : STRING(255);
+    i : UDINT;
+    fbTimer : TON := (PT:=T#1000MS);
+	bPublished:		BOOL;
+	(* received message *)
+    bSubscribed    : BOOL;
+    sTopicSub      : STRING(255) := 'RoboTel';
+    {attribute 'TcEncoding':='UTF-8'}
+    sTopicRcv      : STRING(255);
+    {attribute 'TcEncoding':='UTF-8'}
+    sPayloadRcv    : STRING(255);
+    fbMessageQueue : FB_IotMqttMessageQueue;
+    fbMessage      : FB_IotMqttMessage;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+MQTT Communication section
+
+Source:
+https://infosys.beckhoff.com/english.php?content=../content/1033/tf6701_tc3_iot_communication_mqtt/3518541195.html&id=
+
+*)
+
+// set the parameters once
+IF bSetParameter THEN
+    bSetParameter               := FALSE;
+    fbMqttClient.sHostName      := 'primitivo.aip.de';
+    fbMqttClient.nHostPort      := 1883;
+    fbMqttClient.sClientId      := 'RoboTelPLC'; 
+    fbMqttClient.sTopicPrefix   := ''; 
+	fbMqttClient.nKeepAlive     := 60; 
+//  fbMqttClient.sUserName      := ;
+//  fbMqttClient.sUserPassword  := ; 
+//  fbMqttClient.stWill         := ; 
+//  fbMqttClient.stTLS          := ;
+    fbMqttClient.ipMessageQueue := fbMessageQueue;
+END_IF
+
+// connect to the client
+fbMqttClient.Execute(bConnect);
+
+IF fbMqttClient.bConnected THEN
+    IF NOT bSubscribed THEN
+        bSubscribed := fbMqttClient.Subscribe(sTopic:=sTopicSub, eQoS:=TcIotMqttQos.AtMostOnceDelivery);
+    END_IF
+    fbTimer(IN:=TRUE);
+    IF fbTimer.Q THEN // publish new payload every second
+        fbTimer(IN:=FALSE);
+        i := i + 1;
+        sPayloadPub := CONCAT('Counter = ', TO_STRING(i));
+        bPublished := fbMqttClient.Publish(	sTopic:= sTopicPub, 
+                                pPayload:= ADR(sPayloadPub), 
+								nPayloadSize:= LEN2(ADR(sPayloadPub))+1, 
+                                eQoS:= TcIotMqttQos.AtMostOnceDelivery, //TcIotMqttQos.AtMostOnceDelivery
+								bRetain:= FALSE, 
+								bQueue:= FALSE );
+    END_IF
+END_IF
+// receive queued messages
+IF fbMessageQueue.nQueuedMessages > 0 THEN
+    IF fbMessageQueue.Dequeue(fbMessage:=fbMessage) THEN
+        fbMessage.GetTopic(pTopic:=ADR(sTopicRcv), nTopicSize:=SIZEOF(sTopicRcv) );
+        fbMessage.GetPayload(pPayload:=ADR(sPayloadRcv), nPayloadSize:=SIZEOF(sPayloadRcv), bSetNullTermination:=FALSE);
+    END_IF
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="MQTTCommunication">
+      <LineId Id="38" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="24" Count="12" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="47" Count="11" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="62" Count="1" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="67" Count="5" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="73" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="MAIN" Id="{c39aef1e-7c14-41dc-ad83-03bececdc52a}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
@@ -85,6 +85,7 @@ DerotatorControl();	//
 FilterWheelControl();	//
 FocusControl();
 Environment();	//
+MQTTCommunication();
 
 GVL_Main.softstart_trafo := key_switch AND NOT power_failure;
 power_timer(bStart := key_switch, bStop := power_OK);
@@ -180,6 +181,7 @@ TemperatureEvent(
       <LineId Id="350" Count="0" />
       <LineId Id="398" Count="0" />
       <LineId Id="167" Count="0" />
+      <LineId Id="701" Count="0" />
       <LineId Id="237" Count="0" />
       <LineId Id="69" Count="0" />
       <LineId Id="154" Count="0" />
