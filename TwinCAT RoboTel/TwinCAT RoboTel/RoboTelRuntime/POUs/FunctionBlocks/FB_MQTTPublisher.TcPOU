@@ -9,7 +9,7 @@ VAR_INPUT
 	Value:			STRING(255);
 END_VAR
 VAR_OUTPUT
-	bPublished:		BOOL;
+	bPublished:		BOOL := TRUE;
 END_VAR
 VAR
 	fbMqttClient:	FB_IotMqttClient;
@@ -38,12 +38,12 @@ END_IF
 
 fbMqttClient.Execute(bConnect);
 
-IF fbMqttClient.bConnected THEN
+IF fbMqttClient.bConnected AND bPublished THEN
 	sPayloadPub := CONCAT(Message, ' = ');
 	sPayloadPub := CONCAT(sPayloadPub, Value);
 	bPublished := fbMqttClient.Publish(	sTopic:= Topic, 
 							pPayload:= ADR(sPayloadPub), 
-							nPayloadSize:= LEN2(ADR(sPayloadPub))+1, 
+							nPayloadSize:= LEN2(ADR(sPayloadPub))+0, // +1 just adds a \x0
 							eQoS:= TcIotMqttQos.AtMostOnceDelivery, //TcIotMqttQos.AtMostOnceDelivery,  TcIotMqttQos.ExactlyOnceDelivery
 							bRetain:= FALSE, 
 							bQueue:= FALSE );

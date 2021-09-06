@@ -38,6 +38,7 @@ VAR
 	PowerLog,
 	TemperatureEvent:	FB_EventLog;
 	SimpleLog: 			FB_SimpleLog;
+	MQTTPublisher:		FB_MQTTPublisher;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -85,7 +86,7 @@ DerotatorControl();	//
 FilterWheelControl();	//
 FocusControl();
 Environment();	//
-MQTTCommunication();
+// MQTTCommunication();
 
 GVL_Main.softstart_trafo := key_switch AND NOT power_failure;
 power_timer(bStart := key_switch, bStop := power_OK);

@@ -65,12 +65,35 @@ END_IF
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
-	(*
-	FB_MQTTPublisher(
+	MAIN.MQTTPublisher(
 		Topic := 'RoboTel/Environment', 
 		Message := 'Temperature', 
-		Value := TO_STRING(Temperature))
-	*)
+		Value := LREAL_TO_FMTSTR(Temperature, 2, TRUE));
+	MAIN.MQTTPublisher(
+		Topic := 'RoboTel/Environment', 
+		Message := 'Humidity', 
+		Value := LREAL_TO_FMTSTR(Humidity, 1, TRUE));
+	MAIN.MQTTPublisher(
+		Topic := 'RoboTel/Environment', 
+		Message := 'WindSpeed', 
+		Value := LREAL_TO_FMTSTR(WindSpeed, 1, TRUE));
+	MAIN.MQTTPublisher(
+		Topic := 'RoboTel/Environment', 
+		Message := 'WindDirection', 
+		Value := LREAL_TO_FMTSTR(WindDirection, 1, TRUE));
+	MAIN.MQTTPublisher(
+		Topic := 'RoboTel/Environment', 
+		Message := 'Pressure', 
+		Value := LREAL_TO_FMTSTR(Pressure, 1, TRUE));
+	MAIN.MQTTPublisher(
+		Topic := 'RoboTel/Dome', 
+		Message := 'Temperature', 
+		Value := LREAL_TO_FMTSTR(TemperatureDome, 2, TRUE));
+	MAIN.MQTTPublisher(
+		Topic := 'RoboTel/Dome', 
+		Message := 'Humidity', 
+		Value := LREAL_TO_FMTSTR(HumidityDome, 1, TRUE));
+
 END_IF
 
 WindEvent(	Trigger := avg_wind > 10.0, 
@@ -128,12 +151,14 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="297" Count="0" />
       <LineId Id="511" Count="1" />
       <LineId Id="576" Count="8" />
-      <LineId Id="622" Count="5" />
+      <LineId Id="622" Count="3" />
+      <LineId Id="665" Count="0" />
       <LineId Id="629" Count="0" />
       <LineId Id="632" Count="0" />
       <LineId Id="631" Count="0" />
       <LineId Id="633" Count="0" />
-      <LineId Id="630" Count="0" />
+      <LineId Id="666" Count="23" />
+      <LineId Id="664" Count="0" />
       <LineId Id="628" Count="0" />
       <LineId Id="612" Count="0" />
       <LineId Id="144" Count="12" />
