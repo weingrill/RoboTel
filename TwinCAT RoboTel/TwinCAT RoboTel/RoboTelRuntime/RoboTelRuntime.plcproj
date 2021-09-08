@@ -148,6 +148,9 @@
     <Compile Include="POUs\FunctionBlocks\FB_MQTTPublisher.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FunctionBlocks\FB_MQTTTelegraf.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_NUTATE.TcPOU">
       <SubType>Code</SubType>
     </Compile>

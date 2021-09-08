@@ -102,7 +102,7 @@ VAR
 	TCSstopEvent,
 	AltitudeEvent: FB_Eventlog;
 	SimpleLog:	FB_SimpleLog;
-	MQTTTimer : TON := (PT:=T#1S);
+	MQTTTimer : TON := (PT:=T#5S);
 END_VAR
 VAR_OUTPUT
 	//		TRUE, IF telescope can be operated
@@ -176,8 +176,6 @@ ELSIF Focuscontrol.Error THEN
 ELSIF DerotatorControl.Error THEN
 	DerotatorControl.reset := reset;
 END_IF
-CoverControl.reset := reset;
-FanControl.reset := reset;
 
 IF ElevationControl.error OR AzimuthElevationControl.error THEN
 	power := FALSE;
@@ -215,7 +213,8 @@ poweronwarning(IN := power OR (NOT ElevationControl.enable AND HydraulicsControl
 poweroff(CLK := power);
 poweron_reset(IN := power AND NOT PendantControl.manual, PT := T#50MS);
 // reset fan
-FanControl.reset := poweron_reset.Q;
+FanControl.reset := poweron_reset.Q OR reset;
+CoverControl.reset := poweron_reset.Q OR reset;
 
 IF power THEN
 	IF NOT Main.brake_clearing THEN
@@ -385,10 +384,6 @@ IF MQTTTimer.Q THEN // publish new payload every second
 	
 	MAIN.MQTTPublisher(
 		Topic := 'RoboTel/Telescope', 
-		Message := 'JulianDay', 
-		Value := TO_STRING(JD));
-	MAIN.MQTTPublisher(
-		Topic := 'RoboTel/Telescope', 
 		Message := 'Azimuth', 
 		Value := TO_STRING(azimuth_current));
 	MAIN.MQTTPublisher(
@@ -458,8 +453,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4302" Count="0" />
       <LineId Id="4312" Count="6" />
       <LineId Id="4252" Count="0" />
-      <LineId Id="4245" Count="0" />
-      <LineId Id="4329" Count="1" />
+      <LineId Id="4330" Count="0" />
       <LineId Id="4246" Count="2" />
       <LineId Id="1116" Count="0" />
       <LineId Id="647" Count="0" />
@@ -481,6 +475,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4242" Count="0" />
       <LineId Id="4347" Count="0" />
       <LineId Id="4346" Count="0" />
+      <LineId Id="4835" Count="0" />
       <LineId Id="3591" Count="0" />
       <LineId Id="3547" Count="0" />
       <LineId Id="3592" Count="0" />
@@ -604,7 +599,6 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4257" Count="0" />
       <LineId Id="4662" Count="3" />
       <LineId Id="4655" Count="0" />
-      <LineId Id="4657" Count="3" />
       <LineId Id="4670" Count="15" />
       <LineId Id="4656" Count="0" />
       <LineId Id="3530" Count="1" />

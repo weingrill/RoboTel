@@ -39,6 +39,7 @@ VAR
 	TemperatureEvent:	FB_EventLog;
 	SimpleLog: 			FB_SimpleLog;
 	MQTTPublisher:		FB_MQTTPublisher;
+	MQTTTelegraf:		FB_MQTTTelegraf;
 	MQTTTimer : TON := (PT:=T#5S);
 END_VAR
 ]]></Declaration>
@@ -125,6 +126,11 @@ IF MQTTTimer.Q THEN // publish new payload every second
 		Topic := 'RoboTel/Electricity', 
 		Message := 'Main Cabinet Temperature', 
 		Value := LREAL_TO_FMTSTR(cabinet_temperature, 2, TRUE));
+	MQTTTelegraf(
+		Topic := 'RoboTel/Electricity', 
+		Message := 'CabinetTemperature', 
+		Value := LREAL_TO_FMTSTR(cabinet_temperature, 2, TRUE));
+		
 END_IF
 
 PowerEvent(	
@@ -219,6 +225,8 @@ TemperatureEvent(
       <LineId Id="78" Count="0" />
       <LineId Id="743" Count="0" />
       <LineId Id="745" Count="6" />
+      <LineId Id="794" Count="3" />
+      <LineId Id="793" Count="0" />
       <LineId Id="744" Count="0" />
       <LineId Id="354" Count="5" />
       <LineId Id="353" Count="0" />

@@ -14,15 +14,18 @@ VAR_OUTPUT
 END_VAR
 VAR
 	// fan axis reference
-	Fan_axis:	MDP5001_511_733_32199BA1;
+	Fan_axis:		MDP5001_511_733_32199BA1;
 	// measured temperature
-	temperature : REAL;
+	temperature:	REAL;
 	// calculated velocity
-	velocity: INT;
+	velocity:		INT;
+	velocity_percentage:	REAL;
 	// issue temperature warning
 	TemperatureWarning: FB_EventLog;
-	BasicPID: FB_BasicPID;
-	MQTTTimer : TON := (PT:=T#5S);
+	BasicPID:		FB_BasicPID;
+	MQTTTimer:		TON := (PT:=T#5S);
+	PIDreset:		BOOL;
+	softreset:		BOOL;
 END_VAR
 
 ]]></Declaration>
@@ -32,23 +35,25 @@ END_VAR
 // FIXME: fan does not restart after poweron-reset
 
 // enable the fan as soon as main cabinet is ready AND temperature exceeds 25°C
-Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := MAIN.power_OK AND temperature >= 25.0 AND NOT Reset;
+Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := MAIN.power_OK AND NOT Reset;
 // reset on MAIN reset
-Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Reset := reset;
+Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Reset := reset OR softreset;
 // calculate the temperatur efrom analog input
 temperature := GVL_Telescope.temperature_cabinet / 100.0;
 // set the fan velocity as a function of temperature
 //velocity := LREAL_TO_INT(F_YREAL(temperature, 25.0, 40.0, 1000, 32767));
-BasicPID(fSetpointValue := Environment.TemperatureDome + 1.0,
+PIDreset := Environment.TemperatureDome > temperature + 0.5;
+BasicPID(fSetpointValue := Environment.TemperatureDome + 2.0,
 			fActualValue := temperature,
-			bReset := reset,
+			bReset := reset OR PIDreset,
 			fCtrlCycleTime := 0.002,
 			fKp := 100.0,
 			fTn := 1.0,
 			fTv := 1.0,
 			fTd := 1.0
 			);
-velocity := LIMIT(0, LREAL_TO_INT(-1.0*BasicPID.fCtrlOutput), 32767);
+velocity := LREAL_TO_INT(LIMIT(0, -1.0*BasicPID.fCtrlOutput, 32767));
+velocity_percentage := 100.0*INT_TO_REAL(velocity)/32767.0;
 // apply the calculated velocity
 Fan_axis.MDP5001_511_733_Output.MDP5001_733_Velocity := velocity;
 // return the error condition
@@ -81,6 +86,7 @@ TemperatureWarning(Trigger := temperature >= 40.0,
       <LineId Id="32" Count="0" />
       <LineId Id="58" Count="0" />
       <LineId Id="31" Count="0" />
+      <LineId Id="168" Count="0" />
       <LineId Id="154" Count="0" />
       <LineId Id="156" Count="1" />
       <LineId Id="161" Count="0" />
@@ -88,6 +94,7 @@ TemperatureWarning(Trigger := temperature >= 40.0,
       <LineId Id="163" Count="2" />
       <LineId Id="155" Count="0" />
       <LineId Id="153" Count="0" />
+      <LineId Id="196" Count="0" />
       <LineId Id="59" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="60" Count="0" />
