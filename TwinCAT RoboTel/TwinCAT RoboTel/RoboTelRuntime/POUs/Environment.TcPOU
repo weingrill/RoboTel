@@ -28,6 +28,7 @@ VAR
 	RainDelay:	TON;
 	avg_wind, max_wind: REAL;
 	MQTTTimer : TON := (PT:=T#5S);
+	sPayloadPub: STRING(255) := '';
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -65,34 +66,39 @@ END_IF
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
-	MAIN.MQTTPublisher(
-		Topic := 'RoboTel/Environment', 
-		Message := 'Temperature', 
-		Value := LREAL_TO_FMTSTR(Temperature, 2, TRUE));
-	MAIN.MQTTPublisher(
-		Topic := 'RoboTel/Environment', 
-		Message := 'Humidity', 
-		Value := LREAL_TO_FMTSTR(Humidity, 1, TRUE));
-	MAIN.MQTTPublisher(
-		Topic := 'RoboTel/Environment', 
-		Message := 'WindSpeed', 
-		Value := LREAL_TO_FMTSTR(WindSpeed, 1, TRUE));
-	MAIN.MQTTPublisher(
-		Topic := 'RoboTel/Environment', 
-		Message := 'WindDirection', 
-		Value := LREAL_TO_FMTSTR(WindDirection, 1, TRUE));
-	MAIN.MQTTPublisher(
-		Topic := 'RoboTel/Environment', 
-		Message := 'Pressure', 
-		Value := LREAL_TO_FMTSTR(Pressure, 1, TRUE));
-	MAIN.MQTTPublisher(
-		Topic := 'RoboTel/Dome', 
-		Message := 'Temperature', 
-		Value := LREAL_TO_FMTSTR(TemperatureDome, 2, TRUE));
-	MAIN.MQTTPublisher(
-		Topic := 'RoboTel/Dome', 
-		Message := 'Humidity', 
-		Value := LREAL_TO_FMTSTR(HumidityDome, 1, TRUE));
+	sPayloadPub := 'environment,location=roof,host=CX-4E6032 ';
+	sPayloadPub := CONCAT(sPayloadPub, 'Temperature=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(Temperature, 2, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, ',Humidity=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(Humidity, 1, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, ',WindSpeed=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(WindSpeed, 1, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, ',WindDirection=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(WindDirection, 1, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, ',Pressure=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(Pressure, 2, TRUE));
+	
+	MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Telemetry', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
+					
+	sPayloadPub := 'dome,location=dome,host=CX-4E6032 ';
+	sPayloadPub := CONCAT(sPayloadPub, 'Temperature=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(TemperatureDome, 2, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, ',Humidity=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(HumidityDome, 1, TRUE));
+	
+	MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Telemetry', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
 
 END_IF
 
@@ -153,11 +159,15 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="576" Count="8" />
       <LineId Id="622" Count="3" />
       <LineId Id="665" Count="0" />
-      <LineId Id="629" Count="0" />
-      <LineId Id="632" Count="0" />
-      <LineId Id="631" Count="0" />
-      <LineId Id="633" Count="0" />
-      <LineId Id="666" Count="23" />
+      <LineId Id="727" Count="2" />
+      <LineId Id="731" Count="7" />
+      <LineId Id="730" Count="0" />
+      <LineId Id="719" Count="5" />
+      <LineId Id="718" Count="0" />
+      <LineId Id="759" Count="0" />
+      <LineId Id="740" Count="4" />
+      <LineId Id="750" Count="0" />
+      <LineId Id="752" Count="6" />
       <LineId Id="664" Count="0" />
       <LineId Id="628" Count="0" />
       <LineId Id="612" Count="0" />

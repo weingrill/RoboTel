@@ -41,6 +41,7 @@ VAR
 	MQTTPublisher:		FB_MQTTPublisher;
 	MQTTTelegraf:		FB_MQTTTelegraf;
 	MQTTTimer : TON := (PT:=T#5S);
+	sPayloadPub: STRING(255);
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -122,15 +123,22 @@ SafetyHandling();
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
-	MQTTPublisher(
-		Topic := 'RoboTel/Electricity', 
-		Message := 'Main Cabinet Temperature', 
-		Value := LREAL_TO_FMTSTR(cabinet_temperature, 2, TRUE));
-	MQTTTelegraf(
-		Topic := 'RoboTel/Electricity', 
-		Message := 'CabinetTemperature', 
-		Value := LREAL_TO_FMTSTR(cabinet_temperature, 2, TRUE));
-		
+	sPayloadPub := 'electronics,location=base,host=CX-4E6032,module=MAIN ';
+	sPayloadPub := CONCAT(sPayloadPub, 'MainCabinetTemperature=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(cabinet_temperature, 2, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, ',PowerOK=');
+	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(power_ok));
+	sPayloadPub := CONCAT(sPayloadPub, ',PhaseOK=');
+	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(phase_available));
+	
+	MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Telemetry', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
+
 END_IF
 
 PowerEvent(	
@@ -224,8 +232,10 @@ TemperatureEvent(
       <LineId Id="44" Count="0" />
       <LineId Id="78" Count="0" />
       <LineId Id="743" Count="0" />
-      <LineId Id="745" Count="6" />
-      <LineId Id="794" Count="3" />
+      <LineId Id="745" Count="2" />
+      <LineId Id="799" Count="4" />
+      <LineId Id="813" Count="1" />
+      <LineId Id="804" Count="7" />
       <LineId Id="793" Count="0" />
       <LineId Id="744" Count="0" />
       <LineId Id="354" Count="5" />

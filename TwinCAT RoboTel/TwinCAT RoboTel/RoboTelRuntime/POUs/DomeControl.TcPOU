@@ -63,6 +63,8 @@ VAR
 	DomeAxisEvent:	FB_Eventlog;
 	DomeCalibrationEvent: FB_Eventlog;
 	MQTTTimer : TON := (PT:=T#10S);
+	// MQTT String
+	sPayloadPub: STRING(255);
 END_VAR
 VAR CONSTANT
 	tolerance:				LREAL := 3.0;
@@ -261,10 +263,18 @@ DomeError := PermanentError.Q OR Error;
 MQTTTimer(IN:=Enable AND Calibrated);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
-	MAIN.MQTTPublisher(
-		Topic := 'RoboTel/Dome', 
-		Message := 'Azimuth', 
-		Value := LREAL_TO_FMTSTR(Azimuth_current, 1, TRUE));
+		sPayloadPub := 'dome,location=dome,host=CX-4E6032 ';
+	sPayloadPub := CONCAT(sPayloadPub, ',Azimuth=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(Azimuth_current, 1, TRUE));
+	
+	MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Telemetry', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
+
 END_IF
 
 DomeCommEvent(	Trigger := PermanentError.Q, 
@@ -403,7 +413,9 @@ DomeCalibrationEvent(
       <LineId Id="1079" Count="1" />
       <LineId Id="998" Count="1" />
       <LineId Id="1522" Count="3" />
-      <LineId Id="1550" Count="3" />
+      <LineId Id="1622" Count="0" />
+      <LineId Id="1625" Count="9" />
+      <LineId Id="1553" Count="0" />
       <LineId Id="1077" Count="0" />
       <LineId Id="758" Count="3" />
       <LineId Id="763" Count="0" />

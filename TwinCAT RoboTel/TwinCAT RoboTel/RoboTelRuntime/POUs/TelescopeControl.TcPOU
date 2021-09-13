@@ -103,6 +103,8 @@ VAR
 	AltitudeEvent: FB_Eventlog;
 	SimpleLog:	FB_SimpleLog;
 	MQTTTimer : TON := (PT:=T#5S);
+	// MQTT Message
+	sPayloadPub: STRING(255);
 END_VAR
 VAR_OUTPUT
 	//		TRUE, IF telescope can be operated
@@ -381,23 +383,27 @@ homed := ElevationControl.Calibrated AND AzimuthElevationControl.calibrated;
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
+
+	sPayloadPub := 'telescope,location=dome,host=CX-4E6032,module=TelescopeControl ';
+	sPayloadPub := CONCAT(sPayloadPub, 'Azimuth=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(azimuth_current, 3, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, ',Elevation=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(elevation_current, 3, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, ',HourAngle=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(hourangle_calc, 3, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, ',RightAscension=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(rightascension_calc, 3, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, ',Elevation=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(declination_calc, 3, TRUE));
 	
-	MAIN.MQTTPublisher(
-		Topic := 'RoboTel/Telescope', 
-		Message := 'Azimuth', 
-		Value := TO_STRING(azimuth_current));
-	MAIN.MQTTPublisher(
-		Topic := 'RoboTel/Telescope', 
-		Message := 'Elevation', 
-		Value := TO_STRING(elevation_current));
-	MAIN.MQTTPublisher(
-		Topic := 'RoboTel/Telescope', 
-		Message := 'JulianDay', 
-		Value := TO_STRING(JD));
-	MAIN.MQTTPublisher(
-		Topic := 'RoboTel/Telescope', 
-		Message := 'JulianDay', 
-		Value := TO_STRING(JD));
+	MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Telemetry', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
+
 END_IF
 
 (* Event function blocks start here. *)
@@ -598,8 +604,10 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4255" Count="0" />
       <LineId Id="4257" Count="0" />
       <LineId Id="4662" Count="3" />
-      <LineId Id="4655" Count="0" />
-      <LineId Id="4670" Count="15" />
+      <LineId Id="4837" Count="5" />
+      <LineId Id="4853" Count="5" />
+      <LineId Id="4843" Count="7" />
+      <LineId Id="4677" Count="0" />
       <LineId Id="4656" Count="0" />
       <LineId Id="3530" Count="1" />
       <LineId Id="3583" Count="3" />

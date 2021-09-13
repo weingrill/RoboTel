@@ -5,7 +5,9 @@
 VAR_INPUT
 	(* published message *)
     Topic:			STRING(255) := 'RoboTel';
-	Message:		STRING(255);
+	Source:			STRING(255) := 'Environment';
+	Location:		STRING(255) := 'roof';
+	Parameter:		STRING(255);
 	Value:			STRING(255);
 END_VAR
 VAR_OUTPUT
@@ -14,7 +16,7 @@ END_VAR
 VAR
 	//fbMqttClient:	FB_IotMqttClient;
     bSetParameter: 	BOOL := TRUE;
-    sPayloadPub: 	STRING(255);
+    sPayloadPub: 	STRING(255) := '';
     bConnect:		BOOL := TRUE;
 	bSubscribed:	BOOL;
     //fbMessageQueue:	FB_IotMqttMessageQueue;
@@ -39,7 +41,7 @@ END_IF
 MQTTCommunication.fbMqttClient.Execute(bConnect);
 
 IF MQTTCommunication.fbMqttClient.bConnected AND bPublished THEN
-	sPayloadPub := CONCAT('measurement,host=RoboTel ', Message);
+	sPayloadPub := CONCAT('measurement,host=RoboTel ', Parameter);
 	sPayloadPub := CONCAT(sPayloadPub, '=');
 	sPayloadPub := CONCAT(sPayloadPub, Value);
 	

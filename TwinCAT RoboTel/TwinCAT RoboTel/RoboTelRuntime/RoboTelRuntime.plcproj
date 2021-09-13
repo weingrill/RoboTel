@@ -157,6 +157,9 @@
     <Compile Include="POUs\FunctionBlocks\FB_PRECESS.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FunctionBlocks\FB_RFTRIG.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_SimpleLog.TcPOU">
       <SubType>Code</SubType>
     </Compile>
