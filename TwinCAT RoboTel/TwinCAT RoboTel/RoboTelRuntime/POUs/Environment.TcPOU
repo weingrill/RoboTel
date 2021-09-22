@@ -22,9 +22,12 @@ VAR
 	PrecipitationEvent,
 	DewpointEvent: FB_Eventlog;
 	WindAverage,
+	Wind5sAverage,
+	WindDirectionAverage,
 	HumidityAverage,
 	HumidityDomeAverage,
-	TemperatureAverage: FB_TimeAverage;
+	// TemperatureAverage,
+	PressureAverage: FB_TimeAverage;
 	RainDelay:	TON;
 	avg_wind, max_wind: REAL;
 	MQTTTimer : TON := (PT:=T#5S);
@@ -47,9 +50,11 @@ DewpointDome := 	F_Dewpoint(HumidityDome, TemperatureDome);
 RainDelay(IN := NOT GVL_Environment.rawRain, PT := T#45S, Q => Rain);
 
 WindAverage(IN := WindSpeed, PT := T#3M, AVG => avg_wind, MAXAVG => max_wind);
-
+Wind5sAverage(IN := WindSpeed, PT := T#5S);
+WindDirectionAverage(IN := WindDirection, PT := T#5S);
 HumidityAverage(IN := Humidity, PT := T#2M);
-TemperatureAverage(IN := Temperature, PT := T#5M);
+// TemperatureAverage(IN := Temperature, PT := T#5M);
+PressureAverage(IN := Pressure, PT := T#5S);
 
 HumidityDomeAverage(IN := HumidityDome, PT := T#2M);
 
@@ -67,16 +72,12 @@ MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
 	sPayloadPub := 'environment,location=roof,host=CX-4E6032 ';
-	sPayloadPub := CONCAT(sPayloadPub, 'Temperature=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(Temperature, 2, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',Humidity=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(Humidity, 1, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',WindSpeed=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(WindSpeed, 1, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',WindDirection=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(WindDirection, 1, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',Pressure=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(Pressure, 2, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, 'Temperature=', LREAL_TO_FMTSTR(Temperature, 2, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',Humidity=', LREAL_TO_FMTSTR(Humidity, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',WindSpeed=', LREAL_TO_FMTSTR(Wind5sAverage.AVG, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',WindDirection=', LREAL_TO_FMTSTR(WindDirectionAverage.AVG, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',Pressure=', LREAL_TO_FMTSTR(PressureAverage.AVG, 2, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',Rain=', BOOL_TO_STRING(Rain));
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
@@ -87,10 +88,9 @@ IF MQTTTimer.Q THEN // publish new payload every second
 					bQueue:= FALSE );
 					
 	sPayloadPub := 'dome,location=dome,host=CX-4E6032 ';
-	sPayloadPub := CONCAT(sPayloadPub, 'Temperature=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(TemperatureDome, 2, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',Humidity=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(HumidityDome, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, 'Temperature=', LREAL_TO_FMTSTR(TemperatureDome, 2, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',Humidity=', LREAL_TO_FMTSTR(HumidityDome, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',WeatherBad=', BOOL_TO_STRING(WeatherBad));
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
@@ -152,21 +152,29 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="99" Count="0" />
       <LineId Id="68" Count="0" />
       <LineId Id="230" Count="1" />
-      <LineId Id="143" Count="0" />
+      <LineId Id="791" Count="0" />
+      <LineId Id="795" Count="0" />
       <LineId Id="293" Count="0" />
       <LineId Id="297" Count="0" />
+      <LineId Id="792" Count="0" />
       <LineId Id="511" Count="1" />
       <LineId Id="576" Count="8" />
       <LineId Id="622" Count="3" />
       <LineId Id="665" Count="0" />
-      <LineId Id="727" Count="2" />
-      <LineId Id="731" Count="7" />
+      <LineId Id="727" Count="1" />
+      <LineId Id="731" Count="0" />
+      <LineId Id="733" Count="0" />
+      <LineId Id="735" Count="0" />
+      <LineId Id="737" Count="0" />
       <LineId Id="730" Count="0" />
+      <LineId Id="796" Count="0" />
       <LineId Id="719" Count="5" />
       <LineId Id="718" Count="0" />
       <LineId Id="759" Count="0" />
-      <LineId Id="740" Count="4" />
+      <LineId Id="740" Count="1" />
+      <LineId Id="743" Count="0" />
       <LineId Id="750" Count="0" />
+      <LineId Id="797" Count="0" />
       <LineId Id="752" Count="6" />
       <LineId Id="664" Count="0" />
       <LineId Id="628" Count="0" />

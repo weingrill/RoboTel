@@ -65,7 +65,7 @@ IF fbMessageQueue.nQueuedMessages > 0 THEN
         fbMessage.GetTopic(pTopic:=ADR(sTopicRcv), nTopicSize:=SIZEOF(sTopicRcv) );
         fbMessage.GetPayload(pPayload:=ADR(sPayloadRcv), nPayloadSize:=SIZEOF(sPayloadRcv), bSetNullTermination:=FALSE);
 		IF sTopicRcv = 'RoboTel/Telescope/SET' THEN
-			epos := FIND(sPayloadRcv, ' = ');
+			epos := FIND(sPayloadRcv, '=');
 			parameter := LEFT(sPayloadRcv, epos-1);
 			value := STRING_TO_LREAL(DELETE(sPayloadRcv, epos+2, 1));
 			IF parameter = 'Declination' THEN

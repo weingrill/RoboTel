@@ -32,6 +32,13 @@ VAR
 	// main cabinet temperature in degrees
 	cabinet_temperature:	REAL;
 	// measures time between soft start command and power available
+	ups_input_voltage:		REAL;
+	ups_input_current:		REAL;
+	ups_temperature:		REAL;
+	ups_battery_temperature:		REAL;
+	ups_output_voltage:		REAL;
+	ups_output_current:		REAL;
+
 	power_timer:		FB_Timer;
 	PowerEvent,
 	PhaseLog,
@@ -120,16 +127,39 @@ GVL_Main.lamp_error := error OR warning;
 GVL_Main.lamp_power := power_ok AND phase_available;
 SafetyHandling();
 
+ups_input_voltage 		:= GVL_MAIN.ups_input_voltage / 1000.0;
+ups_input_current 		:= GVL_MAIN.ups_input_current / 1000.0;
+ups_output_voltage 		:= GVL_MAIN.ups_output_voltage / 1000.0;
+ups_output_current 		:= GVL_MAIN.ups_output_current / 1000.0;
+ups_temperature 		:= GVL_MAIN.ups_temperature / 10.0;
+ups_battery_temperature := GVL_MAIN.ups_battery_temperature / 10.0;
+
+
+
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
 	sPayloadPub := 'electronics,location=base,host=CX-4E6032,module=MAIN ';
-	sPayloadPub := CONCAT(sPayloadPub, 'MainCabinetTemperature=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(cabinet_temperature, 2, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',PowerOK=');
-	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(power_ok));
-	sPayloadPub := CONCAT(sPayloadPub, ',PhaseOK=');
-	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(phase_available));
+	sPayloadPub := APPEND(sPayloadPub, 'MainCabinetTemperature=', LREAL_TO_FMTSTR(cabinet_temperature, 2, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',PowerOK=', BOOL_TO_STRING(power_ok));
+	sPayloadPub := APPEND(sPayloadPub, ',PhaseOK=', BOOL_TO_STRING(phase_available));
+	
+	MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Telemetry', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
+
+	sPayloadPub := 'electronics,location=base,host=CX-4E6032,module=MAIN ';
+	sPayloadPub := APPEND(sPayloadPub, 'UPSInputVoltage=', LREAL_TO_FMTSTR(ups_input_voltage, 3, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',UPSInputCurrent=', LREAL_TO_FMTSTR(ups_input_current, 3, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',UPSOutputVoltage=', LREAL_TO_FMTSTR(ups_output_voltage, 3, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',UPSOutputCurrent=', LREAL_TO_FMTSTR(ups_output_current, 3, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',UPSTemperature=', LREAL_TO_FMTSTR(ups_temperature, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',UPSBatteryTemperature=', LREAL_TO_FMTSTR(ups_battery_temperature, 1, TRUE));
+	
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
@@ -231,11 +261,18 @@ TemperatureEvent(
       <LineId Id="40" Count="0" />
       <LineId Id="44" Count="0" />
       <LineId Id="78" Count="0" />
+      <LineId Id="866" Count="2" />
+      <LineId Id="871" Count="3" />
+      <LineId Id="864" Count="1" />
       <LineId Id="743" Count="0" />
       <LineId Id="745" Count="2" />
-      <LineId Id="799" Count="4" />
-      <LineId Id="813" Count="1" />
+      <LineId Id="799" Count="1" />
+      <LineId Id="802" Count="0" />
+      <LineId Id="813" Count="0" />
       <LineId Id="804" Count="7" />
+      <LineId Id="875" Count="3" />
+      <LineId Id="888" Count="4" />
+      <LineId Id="880" Count="7" />
       <LineId Id="793" Count="0" />
       <LineId Id="744" Count="0" />
       <LineId Id="354" Count="5" />

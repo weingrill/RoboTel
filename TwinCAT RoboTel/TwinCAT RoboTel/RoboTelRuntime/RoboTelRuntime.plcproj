@@ -244,6 +244,9 @@
     <Compile Include="POUs\SafetyHandling.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\TelescopeAuxiliary.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\TelescopeControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>

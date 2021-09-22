@@ -66,7 +66,9 @@ VAR
 	elevation_current,
 	azimuth_current,
 	rightascension_calc,
-	declination_calc: LREAL;
+	declination_calc:	LREAL;
+	azimuth_torque,
+	elevation_torque: REAL;
 	
 	(* Hour Angle part *)
 	Hourangle_calc: LREAL;
@@ -154,7 +156,9 @@ VAR CONSTANT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// get the system time
+      <ST><![CDATA[TelescopeAuxiliary();
+
+// get the system time
 fbTime();
 jd := DateTime2JD(fbTime.time_RTCEX2);
 lst := CT2LST(longitude, jd);
@@ -380,21 +384,32 @@ tracking := ElevationControl.Tracking AND AzimuthElevationControl.Tracking;
 stopped :=  ElevationControl.ElevationAxis.StandStill AND AzimuthElevationControl.AzimuthAxis.StandStill;
 homed := ElevationControl.Calibrated AND AzimuthElevationControl.calibrated;
 
+azimuth_torque := GVL_Telescope.Azimuth_torque / 10.0;
+elevation_torque := GVL_Telescope.Elevation_torque / 10.0;
+
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
 
 	sPayloadPub := 'telescope,location=dome,host=CX-4E6032,module=TelescopeControl ';
-	sPayloadPub := CONCAT(sPayloadPub, 'Azimuth=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(azimuth_current, 5, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',Elevation=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(elevation_current, 5, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',HourAngle=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(hourangle_calc, 5, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',RightAscension=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(rightascension_calc, 5, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',Declination=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(declination_calc, 5, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, 'Azimuth=', LREAL_TO_FMTSTR(azimuth_current, 5, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',Elevation=', LREAL_TO_FMTSTR(elevation_current, 5, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',HourAngle=', LREAL_TO_FMTSTR(hourangle_calc, 5, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',RightAscension=', LREAL_TO_FMTSTR(rightascension_calc, 5, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',Declination=', LREAL_TO_FMTSTR(declination_calc, 5, TRUE));
+	
+	MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Telemetry', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
+
+	sPayloadPub := 'telescope,location=dome,host=CX-4E6032,module=TelescopeControl ';
+	sPayloadPub := APPEND(sPayloadPub, 'AzimuthTorque=', LREAL_TO_FMTSTR(azimuth_torque, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',ElevationTorque=', LREAL_TO_FMTSTR(elevation_torque, 1, TRUE));
+	
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
@@ -446,6 +461,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
 				]]></ST>
     </Implementation>
     <LineIds Name="TelescopeControl">
+      <LineId Id="5012" Count="1" />
       <LineId Id="58" Count="0" />
       <LineId Id="3290" Count="1" />
       <LineId Id="65" Count="0" />
@@ -603,10 +619,16 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4256" Count="0" />
       <LineId Id="4255" Count="0" />
       <LineId Id="4257" Count="0" />
+      <LineId Id="5167" Count="2" />
       <LineId Id="4662" Count="3" />
-      <LineId Id="4837" Count="5" />
-      <LineId Id="4853" Count="5" />
+      <LineId Id="4837" Count="2" />
+      <LineId Id="4841" Count="0" />
+      <LineId Id="4853" Count="0" />
+      <LineId Id="4855" Count="0" />
+      <LineId Id="4857" Count="0" />
       <LineId Id="4843" Count="7" />
+      <LineId Id="5170" Count="3" />
+      <LineId Id="5176" Count="8" />
       <LineId Id="4677" Count="0" />
       <LineId Id="4656" Count="0" />
       <LineId Id="3530" Count="1" />

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <GVL Name="GVL_Telescope" Id="{a7572ab9-17bf-4e0d-b71f-e76e531b6203}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
@@ -65,11 +65,15 @@ VAR_GLOBAL
 	Elevation_inputs		AT%I*: WORD;
 	// reference signal
 	Elevation_Probe			AT%I*: INT;
+	// torque feedback
+	Elevation_torque		AT%I*: INT;
 	
 	// digital inputs for limit switches
 	Azimuth_inputs			AT%I*: WORD;
 	// reference signal
 	Azimuth_Probe			AT%I*: INT;
+	// torque feedback
+	Azimuth_torque			AT%I*: INT;
 	
 	// dewar pressure 0..10V Pfeiffer 
 	pressure_Dewar			AT%I*: INT;

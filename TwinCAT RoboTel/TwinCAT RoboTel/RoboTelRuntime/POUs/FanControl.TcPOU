@@ -43,8 +43,8 @@ Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Reset := reset OR softrese
 temperature := GVL_Telescope.temperature_cabinet / 100.0;
 // set the fan velocity as a function of temperature
 //velocity := LREAL_TO_INT(F_YREAL(temperature, 25.0, 40.0, 1000, 32767));
-PIDreset := Environment.TemperatureDome > temperature + 0.5;
-BasicPID(fSetpointValue := Environment.TemperatureDome + 2.0,
+PIDreset := (temperature - 2.5 < Environment.TemperatureDome); // OR (temperature < 25.0);
+BasicPID(fSetpointValue := MIN(Environment.TemperatureDome + 2.5, 30.0),
 			fActualValue := temperature,
 			bReset := reset OR PIDreset,
 			fCtrlCycleTime := 0.1,
@@ -63,16 +63,14 @@ MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
 	sPayloadPub := 'electronics,location=dome,host=CX-4E6032,module=TelescopeCabinet ';
-	sPayloadPub := CONCAT(sPayloadPub, 'Temperature=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(Temperature, 2, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',FanVelocity=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(velocity_percentage, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, 'TelescopeCabinetTemperature=', LREAL_TO_FMTSTR(Temperature, 2, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',FanVelocity=', LREAL_TO_FMTSTR(velocity_percentage, 1, TRUE));
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
 					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)), // +1 just adds a \x0
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery, //TcIotMqttQos.AtMostOnceDelivery,  TcIotMqttQos.ExactlyOnceDelivery
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
 					bRetain:= FALSE, 
 					bQueue:= FALSE );
 
@@ -112,7 +110,9 @@ TemperatureWarning(Trigger := temperature >= 40.0,
       <LineId Id="112" Count="0" />
       <LineId Id="114" Count="0" />
       <LineId Id="146" Count="1" />
-      <LineId Id="198" Count="11" />
+      <LineId Id="198" Count="1" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="203" Count="6" />
       <LineId Id="197" Count="0" />
       <LineId Id="151" Count="0" />
       <LineId Id="113" Count="0" />
