@@ -21,6 +21,8 @@ VAR_OUTPUT
 	pressure_failure:	BOOL;
 	// suction was started, but it is not running
 	suction_failure:	BOOL;
+	// main pump is running but suction has a timeout
+	hydraulics_failure:	BOOL;
 	// oil is low
 	oil_low:			BOOL;
 	// oil is high (unused?)
@@ -47,6 +49,8 @@ VAR
 	pressure_watchdog:	TON;
 	// monitors the activation of the suction pump
 	suction_watchdog: TON;
+	// watch the hydraulics and suction pumps
+	hydraulics_watchdog: TON;
 	// the suction pump is activated for at least 28s when maximum is reached
 	suction_pump_timer: TP;
 	// represents the state of the main pump
@@ -105,6 +109,7 @@ oil_pump_state(SET := start,
 				RESET1 := stop OR
 						pressure_failure OR
 						suction_failure OR 
+						hydraulics_failure OR
 						oil_low OR
 						NOT MAIN.phase_available);
 
@@ -167,6 +172,9 @@ pressure_watchdog(IN := GVL_Hydraulics.oil_pump_enable AND
 						NOT oil_pressure_OK,
 					PT := T#15S,
 				  Q => pressure_failure);
+hydraulics_watchdog(IN := pump_running AND NOT suction_running,
+						PT := T#140S,
+						Q => hydraulics_failure);
 
 (*
 oil_low := NOT GVL_Hydraulics.oil_low;
@@ -196,45 +204,34 @@ StatusWord.10 := suction_running;
 IF StatusWord<>LastStatus THEN // publish new payload every second
 	LastStatus := StatusWord;
 	sPayloadPub := 'electronics,location=base,host=CX-4E6032,module=HydraulicsControl ';
-	sPayloadPub := CONCAT(sPayloadPub, 'OilLow=');
-	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(oil_low));
-	sPayloadPub := CONCAT(sPayloadPub, ',OilHigh=');
-	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(oil_high));
-	sPayloadPub := CONCAT(sPayloadPub, ',OilReserve=');
-	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(oil_warning));
-	sPayloadPub := CONCAT(sPayloadPub, ',OilPressureOK=');
-	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(oil_pressure_OK));
-	sPayloadPub := CONCAT(sPayloadPub, ',OilFilterDirty=');
-	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(oil_filter_dirty));
-	sPayloadPub := CONCAT(sPayloadPub, ',OilCold=');
-	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(oil_cold));
-	sPayloadPub := CONCAT(sPayloadPub, ',OilHot=');
-	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(oil_Hot));
+	sPayloadPub := APPEND(sPayloadPub, 'OilLow=',			BOOL_TO_STRING(oil_low));
+	sPayloadPub := APPEND(sPayloadPub, ',OilHigh=',			BOOL_TO_STRING(oil_high));
+	sPayloadPub := APPEND(sPayloadPub, ',OilReserve=',		BOOL_TO_STRING(oil_warning));
+	sPayloadPub := APPEND(sPayloadPub, ',OilPressureOK=', 	BOOL_TO_STRING(oil_pressure_OK));
+	sPayloadPub := APPEND(sPayloadPub, ',OilFilterDirty=',	BOOL_TO_STRING(oil_filter_dirty));
+	sPayloadPub := APPEND(sPayloadPub, ',OilCold=',			BOOL_TO_STRING(oil_cold));
+	sPayloadPub := APPEND(sPayloadPub, ',OilHot=',			BOOL_TO_STRING(oil_Hot));
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
 					pPayload:= ADR(sPayloadPub), 
 					nPayloadSize:= LEN2(ADR(sPayloadPub)),
 					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= FALSE, 
+					bRetain:= TRUE, 
 					bQueue:= FALSE );
 
 	sPayloadPub := 'electronics,location=base,host=CX-4E6032,module=HydraulicsControl ';
-	sPayloadPub := CONCAT(sPayloadPub, 'BrakeOpen=');
-	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(brake_open));
-	sPayloadPub := CONCAT(sPayloadPub, ',BrakeClearing=');
-	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(GVL_Main.brake_clearing));
-	sPayloadPub := CONCAT(sPayloadPub, ',PumpRunning=');
-	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(pump_running));
-	sPayloadPub := CONCAT(sPayloadPub, ',SuctionRunning=');
-	sPayloadPub := CONCAT(sPayloadPub, BOOL_TO_STRING(suction_running));
+	sPayloadPub := APPEND(sPayloadPub, 'BrakeOpen=',		BOOL_TO_STRING(brake_open));
+	sPayloadPub := APPEND(sPayloadPub, ',BrakeClearing=',	BOOL_TO_STRING(GVL_Main.brake_clearing));
+	sPayloadPub := APPEND(sPayloadPub, ',PumpRunning=',		BOOL_TO_STRING(pump_running));
+	sPayloadPub := APPEND(sPayloadPub, ',SuctionRunning=',	BOOL_TO_STRING(suction_running));
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
 					pPayload:= ADR(sPayloadPub), 
 					nPayloadSize:= LEN2(ADR(sPayloadPub)),
 					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= FALSE, 
+					bRetain:= TRUE, 
 					bQueue:= FALSE );
 	
 END_IF
@@ -289,7 +286,7 @@ UnderTemperatureLog(Trigger := oil_cold,
 				OffMessage := '> 10C',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
 
-SuctionLog(Trigger := suction_failure,
+SuctionLog(Trigger := suction_failure OR hydraulics_failure,
 				Level := ADSLOG_MSGTYPE_ERROR,
 				FormatString := 'suction pump: %s',
 				OnMessage := 'FAILURE',
@@ -314,6 +311,7 @@ BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
       <LineId Id="702" Count="3" />
       <LineId Id="333" Count="3" />
       <LineId Id="493" Count="0" />
+      <LineId Id="1217" Count="0" />
       <LineId Id="337" Count="1" />
       <LineId Id="786" Count="0" />
       <LineId Id="340" Count="0" />
@@ -354,6 +352,8 @@ BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
       <LineId Id="936" Count="0" />
       <LineId Id="357" Count="3" />
       <LineId Id="362" Count="3" />
+      <LineId Id="1212" Count="1" />
+      <LineId Id="1215" Count="0" />
       <LineId Id="1045" Count="0" />
       <LineId Id="1013" Count="0" />
       <LineId Id="1049" Count="9" />
@@ -366,11 +366,18 @@ BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
       <LineId Id="1075" Count="0" />
       <LineId Id="1135" Count="0" />
       <LineId Id="1017" Count="0" />
-      <LineId Id="1019" Count="3" />
-      <LineId Id="1059" Count="5" />
-      <LineId Id="1076" Count="5" />
+      <LineId Id="1019" Count="1" />
+      <LineId Id="1219" Count="1" />
+      <LineId Id="1061" Count="0" />
+      <LineId Id="1063" Count="0" />
+      <LineId Id="1076" Count="0" />
+      <LineId Id="1078" Count="0" />
+      <LineId Id="1080" Count="0" />
       <LineId Id="1031" Count="7" />
-      <LineId Id="1082" Count="9" />
+      <LineId Id="1082" Count="2" />
+      <LineId Id="1086" Count="0" />
+      <LineId Id="1088" Count="0" />
+      <LineId Id="1090" Count="0" />
       <LineId Id="1098" Count="7" />
       <LineId Id="1039" Count="1" />
       <LineId Id="1014" Count="1" />

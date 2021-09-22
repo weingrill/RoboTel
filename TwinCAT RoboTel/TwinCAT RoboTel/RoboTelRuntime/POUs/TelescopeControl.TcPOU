@@ -386,15 +386,15 @@ IF MQTTTimer.Q THEN // publish new payload every second
 
 	sPayloadPub := 'telescope,location=dome,host=CX-4E6032,module=TelescopeControl ';
 	sPayloadPub := CONCAT(sPayloadPub, 'Azimuth=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(azimuth_current, 3, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(azimuth_current, 5, TRUE));
 	sPayloadPub := CONCAT(sPayloadPub, ',Elevation=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(elevation_current, 3, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(elevation_current, 5, TRUE));
 	sPayloadPub := CONCAT(sPayloadPub, ',HourAngle=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(hourangle_calc, 3, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(hourangle_calc, 5, TRUE));
 	sPayloadPub := CONCAT(sPayloadPub, ',RightAscension=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(rightascension_calc, 3, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',Elevation=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(declination_calc, 3, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(rightascension_calc, 5, TRUE));
+	sPayloadPub := CONCAT(sPayloadPub, ',Declination=');
+	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(declination_calc, 5, TRUE));
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
