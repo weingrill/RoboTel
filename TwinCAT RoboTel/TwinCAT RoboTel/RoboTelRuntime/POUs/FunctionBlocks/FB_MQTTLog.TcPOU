@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_MQTTLog" Id="{9b4576f2-4101-4b44-8d3e-ce9bf7223fb1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MQTTLog
+VAR_INPUT
+	fbMqttClient    : FB_IotMqttClient;
+	Trigger:		BOOL;
+	// ADSLOG_MSGTYPE_HINT or ADSLOG_MSGTYPE_WARN or ADSLOG_MSGTYPE_ERROR
+	Level:			UDINT := ADSLOG_MSGTYPE_HINT;
+	OnMessage: 		STRING(255) := '';
+	OffMessage:		STRING(255) := '';
+	OffLevel:		UDINT := 0;
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	LogonTrigger:	R_TRIG;
+	LogoffTrigger:	F_TRIG;
+	sPayloadPub:	STRING(255) := '';
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[sPayloadPub := 'log,host=CX-4E6032';
+LogonTrigger(CLK := Trigger);
+LogoffTrigger(CLK := Trigger);
+
+// in case the OffLevel is not set use the default Level Value
+IF OffLevel = 0 THEN
+	OffLevel := Level;
+END_IF
+IF LogonTrigger.Q AND LEN(OnMessage)>1 THEN
+	IF Level=ADSLOG_MSGTYPE_HINT THEN
+		sPayloadPub := CONCAT(sPayloadPub, 'level=INFO ');
+	ELSIF Level=ADSLOG_MSGTYPE_WARN THEN
+		sPayloadPub := CONCAT(sPayloadPub, 'level=WARNING ');
+	ELSE
+	    sPayloadPub := CONCAT(sPayloadPub, 'level=ERROR ');
+	END_IF
+	sPayloadPub := APPEND(sPayloadPub, ' message=', OnMessage);
+	
+	fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Log', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
+END_IF
+
+IF LogoffTrigger.Q AND LEN(OffMessage)>1 THEN
+	IF OffLevel=ADSLOG_MSGTYPE_HINT THEN
+		sPayloadPub := CONCAT(sPayloadPub, 'level=INFO ');
+	ELSIF OffLevel=ADSLOG_MSGTYPE_WARN THEN
+		sPayloadPub := CONCAT(sPayloadPub, 'level=WARNING ');
+	ELSE
+	    sPayloadPub := CONCAT(sPayloadPub, 'level=ERROR ');
+	END_IF
+	
+	sPayloadPub := APPEND(sPayloadPub, ' message=', OffMessage);
+	fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Log', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
+END_IF	
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_MQTTLog">
+      <LineId Id="22" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="37" Count="5" />
+      <LineId Id="69" Count="1" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="51" Count="6" />
+      <LineId Id="44" Count="2" />
+      <LineId Id="78" Count="6" />
+      <LineId Id="67" Count="1" />
+      <LineId Id="58" Count="6" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

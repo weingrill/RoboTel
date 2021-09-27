@@ -277,7 +277,7 @@ IF power THEN
 	END_IF
 	IF FocusControl.Calibrated AND FocusControl.Ready THEN
 		FocusControl.position := focus_position;
-		FocusControl.MoveAxis := ABS(FocusControl.actual_position - focus_position) < 0.005;
+		FocusControl.MoveAxis := ABS(FocusControl.actual_position - focus_position) > 0.005;
 	END_IF
 ELSIF poweroff.Q THEN
 	gohome := FALSE;
