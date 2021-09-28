@@ -87,6 +87,7 @@ VAR
 	poweronwarning:	TP;
 	poweron_reset:	TP;
 	
+	
 	CalibrationEvent,
 	DeclinationCalEvent,
 	DeclinationErrorEvent,
@@ -104,6 +105,7 @@ VAR
 	TCSstopEvent,
 	AltitudeEvent: FB_Eventlog;
 	SimpleLog:	FB_SimpleLog;
+	FocusDelay: TON := (PT:=T#5S);
 	MQTTTimer : TON := (PT:=T#5S);
 	// MQTT Message
 	sPayloadPub: STRING(255);
@@ -216,12 +218,13 @@ hor2eq(alt := elevation_current,
 		dec => declination_calc);		
 
 poweronwarning(IN := power OR (NOT ElevationControl.enable AND HydraulicsControl.brake_open), PT := T#250MS, Q => GVL_Telescope.horn);
+poweron(CLK := power);
 poweroff(CLK := power);
 poweron_reset(IN := power AND NOT PendantControl.manual, PT := T#50MS);
 // reset fan
 FanControl.reset := poweron_reset.Q OR reset;
 CoverControl.reset := poweron_reset.Q OR reset;
-
+	
 IF power THEN
 	IF NOT Main.brake_clearing THEN
 		powerfailure := TRUE;
@@ -275,7 +278,8 @@ IF power THEN
 	IF FocusControl.ready AND NOT FocusControl.Calibrated THEN
 		FocusControl.HomeAxis := TRUE;
 	END_IF
-	IF FocusControl.Calibrated AND FocusControl.Ready THEN
+	FocusDelay(IN := FocusControl.Calibrated AND FocusControl.Ready);
+	IF FocusDelay.Q THEN
 		FocusControl.position := focus_position;
 		FocusControl.MoveAxis := ABS(FocusControl.actual_position - focus_position) > 0.005;
 	END_IF
@@ -301,6 +305,7 @@ ELSIF poweroff.Q THEN
 	HydraulicsControl.stop := TRUE;
 	SimpleLog(Message := 'shutdown');
 END_IF
+
 IF NOT power AND NOT PendantControl.manual THEN
 	IF CoverControl.isclosed THEN
 		CoverControl.close := FALSE;
@@ -493,7 +498,9 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3521" Count="4" />
       <LineId Id="3528" Count="1" />
       <LineId Id="4243" Count="0" />
-      <LineId Id="4075" Count="1" />
+      <LineId Id="4075" Count="0" />
+      <LineId Id="5185" Count="0" />
+      <LineId Id="4076" Count="0" />
       <LineId Id="4242" Count="0" />
       <LineId Id="4347" Count="0" />
       <LineId Id="4346" Count="0" />
@@ -535,7 +542,9 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3775" Count="0" />
       <LineId Id="3754" Count="0" />
       <LineId Id="3776" Count="0" />
-      <LineId Id="4499" Count="4" />
+      <LineId Id="4499" Count="2" />
+      <LineId Id="5193" Count="0" />
+      <LineId Id="4502" Count="1" />
       <LineId Id="4506" Count="0" />
       <LineId Id="4504" Count="0" />
       <LineId Id="3755" Count="0" />
@@ -557,6 +566,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3765" Count="0" />
       <LineId Id="4096" Count="0" />
       <LineId Id="3549" Count="0" />
+      <LineId Id="5191" Count="0" />
       <LineId Id="3519" Count="0" />
       <LineId Id="4323" Count="0" />
       <LineId Id="4325" Count="0" />
