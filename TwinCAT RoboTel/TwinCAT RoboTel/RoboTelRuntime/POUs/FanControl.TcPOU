@@ -43,13 +43,13 @@ Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Reset := reset OR softrese
 temperature := GVL_Telescope.temperature_cabinet / 100.0;
 // set the fan velocity as a function of temperature
 //velocity := LREAL_TO_INT(F_YREAL(temperature, 25.0, 40.0, 1000, 32767));
-PIDreset := (temperature - 2.5 < Environment.TemperatureDome); // OR (temperature < 25.0);
+PIDreset := (temperature + 0.1 < Environment.TemperatureDome); // OR (temperature < 25.0);
 BasicPID(fSetpointValue := MIN(Environment.TemperatureDome + 2.5, 30.0),
 			fActualValue := temperature,
 			bReset := reset OR PIDreset,
 			fCtrlCycleTime := 0.1,
 			fKp := 100.0,
-			fTn := 10.0,
+			fTn := 60.0,
 			fTv := 1.0
 			);
 velocity := LREAL_TO_INT(LIMIT(0, -1.0*BasicPID.fCtrlOutput, 32767));
