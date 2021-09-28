@@ -13,6 +13,7 @@ VAR_OUTPUT
 	DewpointDome:	REAL;
 	
 	Rain:	BOOL;
+	Rain_analog:	REAL;
 	WeatherBad:	BOOL;
 END_VAR
 VAR
@@ -26,8 +27,8 @@ VAR
 	WindDirectionAverage,
 	HumidityAverage,
 	HumidityDomeAverage,
-	// TemperatureAverage,
-	PressureAverage: FB_TimeAverage;
+	PressureAverage,
+	Rain_average: FB_TimeAverage;
 	RainDelay:	TON;
 	avg_wind, max_wind: REAL;
 	MQTTTimer : TON := (PT:=T#5S);
@@ -58,6 +59,8 @@ PressureAverage(IN := Pressure, PT := T#5S);
 
 HumidityDomeAverage(IN := HumidityDome, PT := T#2M);
 
+Rain_average(IN := BOOL_TO_INT(NOT GVL_Environment.rawRain) * 100.0, PT := T#60s, AVG => Rain_analog);
+
 WeatherBad := Rain OR
 				HumidityAverage.AVG >= 80.0 OR
 				HumidityDomeAverage.AVG >= 80.0 OR
@@ -72,8 +75,8 @@ MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
 	sPayloadPub := 'environment,location=roof,host=CX-4E6032 ';
-	sPayloadPub := APPEND(sPayloadPub, 'Temperature=', LREAL_TO_FMTSTR(Temperature, 2, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',Humidity=', LREAL_TO_FMTSTR(Humidity, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, 'OutsideTemperature=', LREAL_TO_FMTSTR(Temperature, 2, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',OutsideHumidity=', LREAL_TO_FMTSTR(Humidity, 1, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',WindSpeed=', LREAL_TO_FMTSTR(Wind5sAverage.AVG, 1, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',WindDirection=', LREAL_TO_FMTSTR(WindDirectionAverage.AVG, 1, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',Pressure=', LREAL_TO_FMTSTR(PressureAverage.AVG, 2, TRUE));
@@ -88,8 +91,8 @@ IF MQTTTimer.Q THEN // publish new payload every second
 					bQueue:= FALSE );
 					
 	sPayloadPub := 'dome,location=dome,host=CX-4E6032 ';
-	sPayloadPub := APPEND(sPayloadPub, 'Temperature=', LREAL_TO_FMTSTR(TemperatureDome, 2, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',Humidity=', LREAL_TO_FMTSTR(HumidityDome, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, 'DomeTemperature=', LREAL_TO_FMTSTR(TemperatureDome, 2, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',DomeHumidity=', LREAL_TO_FMTSTR(HumidityDome, 1, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',WeatherBad=', BOOL_TO_STRING(WeatherBad));
 	
 	MQTTCommunication.fbMqttClient.Publish(	
@@ -158,6 +161,7 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="297" Count="0" />
       <LineId Id="792" Count="0" />
       <LineId Id="511" Count="1" />
+      <LineId Id="800" Count="1" />
       <LineId Id="576" Count="8" />
       <LineId Id="622" Count="3" />
       <LineId Id="665" Count="0" />
