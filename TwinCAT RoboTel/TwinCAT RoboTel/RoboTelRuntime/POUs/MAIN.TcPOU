@@ -194,7 +194,7 @@ PhaseLog(
 TemperatureEvent(	
 	Trigger := 		cabinet_temperature > 40.0, 
 	Level := 		ADSLOG_MSGTYPE_WARN,
-	FormatString :=	'Main Cabinet Temperature waring:	%s',
+	FormatString :=	'Main Cabinet Temperature warning:	%s',
 	OnMessage := 	LREAL_TO_FMTSTR( cabinet_temperature, 1, TRUE),);]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
