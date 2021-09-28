@@ -263,9 +263,9 @@ DomeError := PermanentError.Q OR Error;
 MQTTTimer(IN:=Enable AND Calibrated);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
-		sPayloadPub := 'dome,location=dome,host=CX-4E6032 ';
-	sPayloadPub := CONCAT(sPayloadPub, ',Azimuth=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(Azimuth_current, 1, TRUE));
+	sPayloadPub := 'dome,location=dome,host=CX-4E6032 ';
+	sPayloadPub := APPEND(sPayloadPub, 'DomeAzimuth=', LREAL_TO_FMTSTR(Azimuth_current, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',DomeClosed=', BOOL_TO_STRING(DomeClosed));
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
@@ -414,7 +414,10 @@ DomeCalibrationEvent(
       <LineId Id="998" Count="1" />
       <LineId Id="1522" Count="3" />
       <LineId Id="1622" Count="0" />
-      <LineId Id="1625" Count="9" />
+      <LineId Id="1625" Count="0" />
+      <LineId Id="1627" Count="0" />
+      <LineId Id="1705" Count="0" />
+      <LineId Id="1628" Count="6" />
       <LineId Id="1553" Count="0" />
       <LineId Id="1077" Count="0" />
       <LineId Id="758" Count="3" />
