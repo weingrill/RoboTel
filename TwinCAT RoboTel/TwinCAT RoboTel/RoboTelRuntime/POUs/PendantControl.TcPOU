@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="PendantControl" Id="{4c9494b1-b987-44f6-88ae-faae341979f2}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PendantControl
 VAR
@@ -28,6 +28,7 @@ VAR
 	Azimuth_enable_Button: 		FB_ButtonEnable;
 	TelescopeControl_enable: 	FB_ButtonEnable;
 	Hydraulics_enable_Button: 	FB_ButtonEnable;
+	Tracking_enable:			FB_ButtonEnable;
 	ResetDelay:	TON;
 	TwinCATRestart: TC_Restart;
 	R_Enable:	R_TRIG;
@@ -171,16 +172,20 @@ CASE Selection OF
 		END_IF
 		FilterWheelControl.reset := reset;
 
-	12:	GVL_pendant_control.lamp_up := TelescopeControl.power;
-		GVL_pendant_control.lamp_down := TelescopeControl.power;
-		GVL_pendant_control.lamp_left := TelescopeControl.power;
-		GVL_pendant_control.lamp_right := TelescopeControl.power;
-
-		TelescopeControl.gohome := down;
-		TelescopeControl.park := up;
-		TelescopeControl.goto := right;
-		Telescopecontrol.track := R_Enable.Q AND NOT Telescopecontrol.track;
-		Telescopecontrol.stop := reset;
+	12:	// manual Telescope Control
+		IF manual THEN
+			GVL_pendant_control.lamp_up := TelescopeControl.power;
+			GVL_pendant_control.lamp_down := TelescopeControl.power;
+			GVL_pendant_control.lamp_left := TelescopeControl.power;
+			GVL_pendant_control.lamp_right := TelescopeControl.power;
+	
+			TelescopeControl.gohome := down;
+			TelescopeControl.park := up;
+			TelescopeControl.goto := right;
+			Tracking_enable(SET := enable, RESET := reset, Q=> TelescopeControl.track);
+			TelescopeControl.reset := reset;
+			Telescopecontrol.stop := left;		
+		END_IF
 		
 	13: // Telescope Control
 		Telescopecontrol_enable(SET := enable, 
@@ -340,13 +345,13 @@ END_CASE
       <LineId Id="686" Count="1" />
       <LineId Id="460" Count="0" />
       <LineId Id="1093" Count="0" />
-      <LineId Id="1099" Count="3" />
-      <LineId Id="803" Count="0" />
-      <LineId Id="1098" Count="0" />
-      <LineId Id="1092" Count="0" />
-      <LineId Id="1097" Count="0" />
-      <LineId Id="1094" Count="0" />
-      <LineId Id="1091" Count="0" />
+      <LineId Id="1099" Count="0" />
+      <LineId Id="1137" Count="0" />
+      <LineId Id="1140" Count="7" />
+      <LineId Id="1151" Count="0" />
+      <LineId Id="1148" Count="0" />
+      <LineId Id="1150" Count="0" />
+      <LineId Id="1139" Count="0" />
       <LineId Id="1090" Count="0" />
       <LineId Id="841" Count="0" />
       <LineId Id="846" Count="0" />
