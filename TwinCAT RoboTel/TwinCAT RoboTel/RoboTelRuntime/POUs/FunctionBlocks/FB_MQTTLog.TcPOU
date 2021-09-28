@@ -3,7 +3,6 @@
   <POU Name="FB_MQTTLog" Id="{9b4576f2-4101-4b44-8d3e-ce9bf7223fb1}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_MQTTLog
 VAR_INPUT
-	fbMqttClient    : FB_IotMqttClient;
 	Trigger:		BOOL;
 	// ADSLOG_MSGTYPE_HINT or ADSLOG_MSGTYPE_WARN or ADSLOG_MSGTYPE_ERROR
 	Level:			UDINT := ADSLOG_MSGTYPE_HINT;
@@ -30,15 +29,15 @@ IF OffLevel = 0 THEN
 END_IF
 IF LogonTrigger.Q AND LEN(OnMessage)>1 THEN
 	IF Level=ADSLOG_MSGTYPE_HINT THEN
-		sPayloadPub := CONCAT(sPayloadPub, 'level=INFO ');
+		sPayloadPub := CONCAT(sPayloadPub, ',level=INFO ');
 	ELSIF Level=ADSLOG_MSGTYPE_WARN THEN
-		sPayloadPub := CONCAT(sPayloadPub, 'level=WARNING ');
+		sPayloadPub := CONCAT(sPayloadPub, ',level=WARNING ');
 	ELSE
-	    sPayloadPub := CONCAT(sPayloadPub, 'level=ERROR ');
+	    sPayloadPub := CONCAT(sPayloadPub, ',level=ERROR ');
 	END_IF
-	sPayloadPub := APPEND(sPayloadPub, ' message=', OnMessage);
-	
-	fbMqttClient.Publish(	
+	sPayloadPub := APPEND(sPayloadPub, ' message="', OnMessage);
+	sPayloadPub := CONCAT(sPayloadPub, '"');
+	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Log', 
 					pPayload:= ADR(sPayloadPub), 
 					nPayloadSize:= LEN2(ADR(sPayloadPub)),
@@ -49,15 +48,16 @@ END_IF
 
 IF LogoffTrigger.Q AND LEN(OffMessage)>1 THEN
 	IF OffLevel=ADSLOG_MSGTYPE_HINT THEN
-		sPayloadPub := CONCAT(sPayloadPub, 'level=INFO ');
+		sPayloadPub := CONCAT(sPayloadPub, ',level=INFO ');
 	ELSIF OffLevel=ADSLOG_MSGTYPE_WARN THEN
-		sPayloadPub := CONCAT(sPayloadPub, 'level=WARNING ');
+		sPayloadPub := CONCAT(sPayloadPub, ',level=WARNING ');
 	ELSE
-	    sPayloadPub := CONCAT(sPayloadPub, 'level=ERROR ');
+	    sPayloadPub := CONCAT(sPayloadPub, ',level=ERROR ');
 	END_IF
 	
-	sPayloadPub := APPEND(sPayloadPub, ' message=', OffMessage);
-	fbMqttClient.Publish(	
+	sPayloadPub := APPEND(sPayloadPub, ' message="', OffMessage);
+	sPayloadPub := CONCAT(sPayloadPub, '"');
+	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Log', 
 					pPayload:= ADR(sPayloadPub), 
 					nPayloadSize:= LEN2(ADR(sPayloadPub)),
@@ -83,7 +83,9 @@ END_IF
       <LineId Id="44" Count="2" />
       <LineId Id="78" Count="6" />
       <LineId Id="67" Count="1" />
-      <LineId Id="58" Count="6" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="59" Count="5" />
       <LineId Id="29" Count="0" />
       <LineId Id="9" Count="0" />
     </LineIds>
