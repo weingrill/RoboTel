@@ -215,8 +215,9 @@ CASE Selection OF
 				Telescopecontrol.azimuth_offset := Telescopecontrol.azimuth_offset + 10.0/3600.0; 
 			END_IF;
 		END_IF
-		ResetDelay(IN := reset, PT := T#10S);
-		TwinCATRestart(NETID := '', RESTART := ResetDelay.Q, TMOUT := T#60S);
+		ResetDelay(IN := reset, PT := T#3S);
+		// wait for suction pump to stop
+		TwinCATRestart(NETID := '', RESTART := ResetDelay.Q AND NOT HydraulicsControl.suction_running, TMOUT := T#60S);
 	
 	14: GVL_Telescope.horn := manual;
 	
@@ -370,7 +371,9 @@ END_CASE
       <LineId Id="1073" Count="0" />
       <LineId Id="1072" Count="0" />
       <LineId Id="1059" Count="0" />
-      <LineId Id="1033" Count="1" />
+      <LineId Id="1033" Count="0" />
+      <LineId Id="1184" Count="0" />
+      <LineId Id="1034" Count="0" />
       <LineId Id="842" Count="0" />
       <LineId Id="802" Count="0" />
       <LineId Id="455" Count="0" />
