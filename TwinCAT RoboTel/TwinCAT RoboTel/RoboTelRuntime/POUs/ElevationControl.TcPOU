@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="ElevationControl" Id="{c0371b19-3d1d-4f20-bd19-ce60539d69cd}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM ElevationControl
 VAR_INPUT
@@ -77,8 +77,13 @@ Calibrated := ElevationAxis.Calibrated;
 
 IF HomeAxis THEN
 	position := homing_position;
+	MoveAxis := FALSE;
+	Tracking := FALSE;
 END_IF
 
+IF MoveAxis THEN
+	Tracking := FALSE;
+END_IF
 
 HomeDelay(IN := Calibrated, PT1 := T#5S, PT2 := T#100MS);
 
@@ -105,6 +110,11 @@ ElevationCalibration(
 IF GVL_Telescope.Elevation_Probe>0 THEN
 	SimpleLog(Message := 'Elevation re-calibrated');
 END_IF
+
+IF Tracking AND ABS(position - act_position) > 1.0 THEN
+	MoveAxis := TRUE;
+END_IF
+
 	
 ElevationAxis(
 	Enable := 			enable AND HydraulicsControl.brake_open,
@@ -181,8 +191,12 @@ ElevationBrakeEvent( Trigger := NOT enable AND HydraulicsControl.brake_open,
       <LineId Id="254" Count="1" />
       <LineId Id="558" Count="1" />
       <LineId Id="626" Count="0" />
-      <LineId Id="257" Count="2" />
+      <LineId Id="257" Count="1" />
+      <LineId Id="769" Count="1" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="772" Count="0" />
       <LineId Id="630" Count="0" />
+      <LineId Id="773" Count="1" />
       <LineId Id="639" Count="0" />
       <LineId Id="638" Count="0" />
       <LineId Id="633" Count="0" />
@@ -206,6 +220,9 @@ ElevationBrakeEvent( Trigger := NOT enable AND HydraulicsControl.brake_open,
       <LineId Id="614" Count="0" />
       <LineId Id="231" Count="0" />
       <LineId Id="617" Count="1" />
+      <LineId Id="761" Count="0" />
+      <LineId Id="763" Count="2" />
+      <LineId Id="762" Count="0" />
       <LineId Id="615" Count="0" />
       <LineId Id="128" Count="0" />
       <LineId Id="184" Count="2" />

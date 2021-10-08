@@ -352,7 +352,7 @@ IF TCS_command = E_TCSCommand.park THEN
 	AzimuthElevationControl.position := azimuth_park;
 	ElevationControl.MoveAxis := TRUE;
 	AzimuthElevationControl.MoveAxis := TRUE;
-	IF ElevationControl.ElevationAxis.MoveDone AND AzimuthElevationControl.AzimuthAxis.MoveDone THEN
+	IF ElevationControl.ElevationAxis.StopDone AND AzimuthElevationControl.AzimuthAxis.StopDone THEN
 		park := FALSE;
 	END_IF
 
@@ -361,14 +361,14 @@ ELSIF TCS_command = E_TCSCommand.gohome THEN
 	ElevationControl.MoveAxis := TRUE;
 	AzimuthElevationControl.position := azimuth_home;
 	AzimuthElevationControl.MoveAxis := TRUE;
-	IF ElevationControl.ElevationAxis.MoveDone AND AzimuthElevationControl.AzimuthAxis.MoveDone THEN
+	IF ElevationControl.ElevationAxis.StopDone AND AzimuthElevationControl.AzimuthAxis.StopDone THEN
 		gohome := FALSE;
 	END_IF
 	
 ELSIF TCS_command = E_TCSCommand.track THEN
 	ElevationControl.position := elevation_calc + elevation_offset;
-	ElevationControl.Tracking := TRUE;
 	AzimuthElevationControl.position := azimuth_calc + azimuth_offset;
+	ElevationControl.Tracking := TRUE;
 	AzimuthElevationControl.Tracking := TRUE;
 	
 ELSIF TCS_command = E_TCSCommand.goto THEN
@@ -377,7 +377,7 @@ ELSIF TCS_command = E_TCSCommand.goto THEN
 	AzimuthElevationControl.position := azimuth_calc + azimuth_offset;
 	AzimuthElevationControl.MoveAxis := TRUE;
 
-	IF ElevationControl.ElevationAxis.MoveDone AND AzimuthElevationControl.AzimuthAxis.MoveDone THEN
+	IF ElevationControl.ElevationAxis.StopDone AND AzimuthElevationControl.AzimuthAxis.StopDone THEN
 		ElevationControl.MoveAxis := FALSE;
 		AzimuthElevationControl.MoveAxis := FALSE;
 		goto := FALSE;
@@ -610,10 +610,10 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4080" Count="0" />
       <LineId Id="4232" Count="2" />
       <LineId Id="4239" Count="0" />
-      <LineId Id="3920" Count="1" />
-      <LineId Id="3936" Count="0" />
-      <LineId Id="4082" Count="0" />
-      <LineId Id="4077" Count="0" />
+      <LineId Id="3920" Count="0" />
+      <LineId Id="5364" Count="1" />
+      <LineId Id="5357" Count="0" />
+      <LineId Id="5367" Count="0" />
       <LineId Id="4240" Count="0" />
       <LineId Id="3928" Count="1" />
       <LineId Id="3927" Count="0" />
