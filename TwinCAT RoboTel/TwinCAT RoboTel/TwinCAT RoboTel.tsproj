@@ -3220,7 +3220,9 @@ External Setpoint Generation:
 				<IoIdleTask Priority="6"/>
 			</Settings>
 			<Licenses>
-				<Target BkhfOrder="0ABFD2B0-EAE1-4DC7-AABE-03093B0786B7" CustomOrder="66100685"/>
+				<Target BkhfOrder="0ABFD2B0-EAE1-4DC7-AABE-03093B0786B7" CustomOrder="66100685">
+					<CustomComment><![CDATA[Auftrag 00683557]]></CustomComment>
+				</Target>
 			</Licenses>
 			<Tasks>
 				<Task Id="5" Priority="10" CycleTime="100000" AmsPort="350" AdtTasks="true">
@@ -4182,61 +4184,6 @@ External Setpoint Generation:
 							<Type GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Hydraulics.oil_low</Name>
-							<Comment><![CDATA[ 2.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_high</Name>
-							<Comment><![CDATA[ ?]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_pressure_OK</Name>
-							<Comment><![CDATA[ 2.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_overtemperature</Name>
-							<Comment><![CDATA[ 2.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_undertemperature</Name>
-							<Comment><![CDATA[ 2.5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oilfilter_dirty</Name>
-							<Comment><![CDATA[ 2.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.pump_running</Name>
-							<Comment><![CDATA[ 2.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.suction_running</Name>
-							<Comment><![CDATA[ 2.8]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oilpan_maximum</Name>
-							<Comment><![CDATA[DIN39 4.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_temperature</Name>
-							<Comment><![CDATA[BT2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_reserve</Name>
-							<Comment><![CDATA[DIN40 4.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Dome.Clockwise</Name>
 							<Type>BOOL</Type>
 						</Var>
@@ -4283,17 +4230,17 @@ External Setpoint Generation:
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Environment.rawHumidity</Name>
-							<Comment><![CDATA[ Input 2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Dome.ActVelo</Name>
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
 							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawHumidity</Name>
+							<Comment><![CDATA[ Input 2]]></Comment>
+							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Environment.rawTemperature</Name>
@@ -4339,6 +4286,10 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
+							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
 							<Name>GVL_pendant_control.BCD4</Name>
 							<Comment><![CDATA[DIN19 2.2]]></Comment>
 							<Type>BOOL</Type>
@@ -4347,10 +4298,6 @@ External Setpoint Generation:
 							<Name>GVL_pendant_control.BCD8</Name>
 							<Comment><![CDATA[DIN20 2.3]]></Comment>
 							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
-							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.reset_switch</Name>
@@ -4385,6 +4332,61 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_pendant_control.direction_right</Name>
 							<Comment><![CDATA[DIN27 3.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_low</Name>
+							<Comment><![CDATA[ 2.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_high</Name>
+							<Comment><![CDATA[ ?]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_pressure_OK</Name>
+							<Comment><![CDATA[ 2.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_overtemperature</Name>
+							<Comment><![CDATA[ 2.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_undertemperature</Name>
+							<Comment><![CDATA[ 2.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oilfilter_dirty</Name>
+							<Comment><![CDATA[ 2.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.pump_running</Name>
+							<Comment><![CDATA[ 2.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.suction_running</Name>
+							<Comment><![CDATA[ 2.8]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_temperature</Name>
+							<Comment><![CDATA[BT2]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oilpan_maximum</Name>
+							<Comment><![CDATA[DIN39 4.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_reserve</Name>
+							<Comment><![CDATA[DIN40 4.7]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -4645,16 +4647,6 @@ External Setpoint Generation:
 							<Type GUID="{0D3B3A77-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_O_32199BA1</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Hydraulics.oil_pump_enable</Name>
-							<Comment><![CDATA[DOUT4 0.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Hydraulics.oil_suction_enable</Name>
-							<Comment><![CDATA[DOUT5 0.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Dome.Inverter_Enable</Name>
 							<Type>BOOL</Type>
 						</Var>
@@ -4706,6 +4698,16 @@ DOUT9 1.0]]></Comment>
 						<Var>
 							<Name>GVL_pendant_control.lamp_error</Name>
 							<Comment><![CDATA[DOUT13 1.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_pump_enable</Name>
+							<Comment><![CDATA[DOUT4 0.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_suction_enable</Name>
+							<Comment><![CDATA[DOUT5 0.4]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
