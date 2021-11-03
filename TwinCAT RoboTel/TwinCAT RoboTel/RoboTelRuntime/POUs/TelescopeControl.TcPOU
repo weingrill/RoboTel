@@ -187,6 +187,9 @@ END_IF
 
 IF ElevationControl.error OR AzimuthElevationControl.error THEN
 	power := FALSE;
+	//ElevationControl.enable := FALSE;
+	//AzimuthElevationControl.enable := FALSE;
+	//HydraulicsControl.close_brake := TRUE;
 END_IF
 
 // determine the operation of the telescope based on the switch set
@@ -246,7 +249,7 @@ IF power THEN
 	// open cover
 	// COVER MUST BE OPENED FOR A SUCCESSFUL WAKE & SHAKE COMMAND!
 	CoverControl.enable := TRUE;
-	CoverControl.reset := poweron_reset.Q;
+	//CoverControl.reset := poweron_reset.Q;
 	Covercontrol.open := TRUE;
 	IF Covercontrol.isopen THEN
 		Covercontrol.open := FALSE;
@@ -254,8 +257,12 @@ IF power THEN
 	// enable elevation enable azimuth
 	IF MAIN.ready AND CoverControl.isopen THEN
 		ElevationControl.enable := TRUE;
-		AzimuthElevationControl.enable := TRUE;
+	    // wait until azimuth comes to rest
+		IF GVL_Telescope.AzimuthAxisRef.NcToPlc.ActVelo < 0.1 THEN
+			AzimuthElevationControl.enable := TRUE;
+		END_IF	
 	END_IF
+	
 	IF ElevationControl.Ready AND NOT ElevationControl.Calibrated THEN
 		ElevationControl.HomeAxis := TRUE;
 	END_IF
@@ -430,7 +437,7 @@ END_IF
 TCSpowerEvent(	Trigger := powerfailure, 
 				Level := ADSLOG_MSGTYPE_ERROR,
 				FormatString := 'power %s',
-				OffMEssage := 'OK');
+				OffMessage := 'OK');
 
 TCSgohomeEvent(	Trigger := gohome, 
 				Level := ADSLOG_MSGTYPE_HINT,
@@ -481,7 +488,9 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4312" Count="6" />
       <LineId Id="4252" Count="0" />
       <LineId Id="4330" Count="0" />
-      <LineId Id="4246" Count="2" />
+      <LineId Id="4246" Count="1" />
+      <LineId Id="5527" Count="2" />
+      <LineId Id="4248" Count="0" />
       <LineId Id="1116" Count="0" />
       <LineId Id="647" Count="0" />
       <LineId Id="635" Count="1" />
@@ -530,8 +539,11 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3750" Count="0" />
       <LineId Id="3922" Count="0" />
       <LineId Id="3770" Count="0" />
+      <LineId Id="5531" Count="2" />
       <LineId Id="4300" Count="0" />
-      <LineId Id="3923" Count="3" />
+      <LineId Id="3923" Count="0" />
+      <LineId Id="5525" Count="0" />
+      <LineId Id="3924" Count="2" />
       <LineId Id="3932" Count="0" />
       <LineId Id="4088" Count="2" />
       <LineId Id="4340" Count="4" />
@@ -642,7 +654,8 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4677" Count="0" />
       <LineId Id="4656" Count="0" />
       <LineId Id="3530" Count="1" />
-      <LineId Id="3583" Count="3" />
+      <LineId Id="3583" Count="2" />
+      <LineId Id="5530" Count="0" />
       <LineId Id="3085" Count="0" />
       <LineId Id="931" Count="1" />
       <LineId Id="1179" Count="0" />
