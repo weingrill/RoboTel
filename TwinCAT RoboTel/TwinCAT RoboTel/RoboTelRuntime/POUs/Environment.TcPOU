@@ -48,7 +48,7 @@ TemperatureDome :=  F_YREAL(GVL_Environment.rawTemperatureDome, 	0, 32767, -30.0
 
 DewpointDome := 	F_Dewpoint(HumidityDome, TemperatureDome);
 
-RainDelay(IN := NOT GVL_Environment.rawRain, PT := T#45S, Q => Rain);
+RainDelay(IN := NOT GVL_Environment.rawRain, PT := T#10S, Q => Rain);
 
 WindAverage(IN := WindSpeed, PT := T#3M, AVG => avg_wind, MAXAVG => max_wind);
 Wind5sAverage(IN := WindSpeed, PT := T#5S);
@@ -78,6 +78,7 @@ IF MQTTTimer.Q THEN // publish new payload every second
 	sPayloadPub := APPEND(sPayloadPub, 'OutsideTemperature=', LREAL_TO_FMTSTR(Temperature, 2, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',OutsideHumidity=', LREAL_TO_FMTSTR(Humidity, 1, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',WindSpeed=', LREAL_TO_FMTSTR(Wind5sAverage.AVG, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',WindSpeedMax=', LREAL_TO_FMTSTR(Wind5sAverage.MAXAVG, 1, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',WindDirection=', LREAL_TO_FMTSTR(WindDirectionAverage.AVG, 1, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',Pressure=', LREAL_TO_FMTSTR(PressureAverage.AVG, 2, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',Rain=', BOOL_TO_STRING(Rain));
@@ -168,7 +169,7 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="727" Count="1" />
       <LineId Id="731" Count="0" />
       <LineId Id="733" Count="0" />
-      <LineId Id="735" Count="0" />
+      <LineId Id="835" Count="1" />
       <LineId Id="737" Count="0" />
       <LineId Id="730" Count="0" />
       <LineId Id="796" Count="0" />
