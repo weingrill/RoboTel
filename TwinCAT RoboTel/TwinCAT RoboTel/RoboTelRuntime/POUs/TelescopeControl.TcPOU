@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="TelescopeControl" Id="{6a4f2e3a-c9ee-4352-b4f6-4f9d94b2c472}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM TelescopeControl
+    <Declaration><![CDATA[
+PROGRAM TelescopeControl
 VAR_INPUT
 (*
 TCS interface section
@@ -277,9 +278,18 @@ IF power THEN
 	END_IF
 
 	// enable derotator
-	//DerotatorControl.enable := TRUE;
-	// enable filterwheel
-	//FilterWheelControl.Enable := TRUE;
+	IF ElevationControl.Calibrated THEN
+		DerotatorControl.enable := TRUE;
+		// Derotator Limit Switches broken!
+		// DerotatorControl.HomeAxis := DerotatorControl.Ready AND NOT DerotatorControl.Calibrated;
+	END_IF
+	
+	// enable filterwheel after Derotator Axis to avoid additional torque
+	IF DerotatorControl.Calibrated THEN
+		FilterWheelControl.Enable := TRUE;
+		FilterWheelControl.HomeAxis := NOT FilterWheelControl.Calibrated;
+	END_IF
+	
 	// enable focus
 	FocusControl.enable := TRUE;
 	IF FocusControl.ready AND NOT FocusControl.Calibrated THEN
@@ -549,10 +559,18 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4340" Count="4" />
       <LineId Id="4244" Count="0" />
       <LineId Id="3752" Count="0" />
+      <LineId Id="5690" Count="1" />
+      <LineId Id="5702" Count="0" />
+      <LineId Id="5705" Count="0" />
+      <LineId Id="5692" Count="0" />
       <LineId Id="3773" Count="0" />
-      <LineId Id="3753" Count="0" />
+      <LineId Id="5696" Count="0" />
+      <LineId Id="5694" Count="0" />
       <LineId Id="3775" Count="0" />
+      <LineId Id="5704" Count="0" />
       <LineId Id="3754" Count="0" />
+      <LineId Id="5697" Count="0" />
+      <LineId Id="5695" Count="0" />
       <LineId Id="3776" Count="0" />
       <LineId Id="4499" Count="2" />
       <LineId Id="5193" Count="0" />

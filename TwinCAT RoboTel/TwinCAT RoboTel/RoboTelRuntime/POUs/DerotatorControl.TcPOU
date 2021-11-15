@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="DerotatorControl" Id="{75f3d994-c6e1-4455-a5dc-0a32056448e8}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM DerotatorControl
 VAR_INPUT
@@ -13,24 +13,26 @@ VAR_INPUT
 	right:		BOOL;
 	// set the absolute position
 	position:	LREAL;
-END_VAR
-VAR_OUTPUT
-	Error:		BOOL;
-	ErrorID:	UDINT;
-	actual_position:	LREAL;
-END_VAR
-VAR
 	// move to given position
 	MoveAxis: 			BOOL;
 	// calibrate the axis
 	HomeAxis:			BOOL;
+END_VAR
+VAR_OUTPUT
+	Error:				BOOL;
+	ErrorID:			UDINT;
+	actual_position:	LREAL;
+	Calibrated:			BOOL;
+	Ready:				BOOL;
+END_VAR
+VAR
 
 	DerotatorAxis:	FB_Axis2;
 	DerotatorEvent:	FB_EventLog;
 END_VAR
 VAR CONSTANT
 	// current position of the calibration cam. Apply an offset here if necessary
-	calibration_position:	LREAL := 460.0;
+	calibration_position:	LREAL := 0.0; // calibration in negative direction (was 460.0)
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -54,12 +56,15 @@ MC_SetAcceptBlockedDriveSignal(
 	Axis := GVL_Telescope.DerotatorAxisRef,
 	Enable := HomeAxis);
 
+(* Disable autohoming until limit switches are fixed
 IF enable AND TelescopeControl.power AND NOT DerotatorAxis.Calibrated THEN
 	HomeAxis := TRUE;
 END_IF
+*)
 
 IF DerotatorAxis.Calibrated THEN
 	HomeAxis := FALSE;
+	Calibrated := DerotatorAxis.Calibrated;
 END_IF
 	
 IF HomeAxis THEN
@@ -95,6 +100,8 @@ IF DeRotatorAxis.ResetDone THEN
 	reset := FALSE;
 END_IF
 
+Ready := DeRotatorAxis.Ready;
+
 DerotatorEvent(	
 	Trigger := 		Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
@@ -120,12 +127,16 @@ DerotatorEvent(
       <LineId Id="141" Count="0" />
       <LineId Id="147" Count="0" />
       <LineId Id="145" Count="0" />
+      <LineId Id="275" Count="0" />
       <LineId Id="159" Count="0" />
       <LineId Id="158" Count="0" />
       <LineId Id="160" Count="1" />
+      <LineId Id="276" Count="0" />
       <LineId Id="164" Count="0" />
       <LineId Id="163" Count="0" />
-      <LineId Id="165" Count="1" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="166" Count="0" />
       <LineId Id="155" Count="0" />
       <LineId Id="142" Count="0" />
       <LineId Id="156" Count="1" />
@@ -139,7 +150,9 @@ DerotatorEvent(
       <LineId Id="24" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="42" Count="0" />
-      <LineId Id="44" Count="17" />
+      <LineId Id="44" Count="10" />
+      <LineId Id="240" Count="1" />
+      <LineId Id="55" Count="6" />
       <LineId Id="43" Count="0" />
     </LineIds>
   </POU>
