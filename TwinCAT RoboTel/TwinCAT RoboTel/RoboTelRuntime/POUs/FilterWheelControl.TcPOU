@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="FilterWheelControl" Id="{f0e4f375-0934-4386-a9fa-94537c34c7e1}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM FilterWheelControl
 VAR_INPUT
@@ -15,6 +15,10 @@ VAR_INPUT
 	Ready:				BOOL;
 	// filter position
 	filter_position: 	WORD;
+	// move to given position
+	MoveAxis: 			BOOL;
+	// calibrate the axis
+	HomeAxis:			BOOL;
 END_VAR
 VAR_OUTPUT
 	// is true if an error occurred
@@ -22,12 +26,10 @@ VAR_OUTPUT
 	// number of current axis error
 	ErrorID:			UDINT;
 	act_position:		LREAL;
+	// axis has been calibrated
+	Calibrated :		BOOL;
 END_VAR
 VAR
-	// move to given position
-	MoveAxis: 			BOOL;
-	// calibrate the axis
-	HomeAxis:			BOOL;
 	FilterWheelAxis:	FB_Axis2;
 	// axis position to set to with `MoveAxis`
 	position:			LREAL;
