@@ -4640,6 +4640,11 @@ External Setpoint Generation:
 							<Name>GVL_Main.ups_output_current</Name>
 							<Type>UINT</Type>
 						</Var>
+						<Var>
+							<Name>GVL_Telescope.Derotator_torque</Name>
+							<Comment><![CDATA[ derotator torque feedback]]></Comment>
+							<Type>INT</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
@@ -14210,7 +14215,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<SyncMan>001880002600010001000000800080008000001826010000</SyncMan>
 						<SyncMan>001a80002200010002000000800080008000001a22010000</SyncMan>
 						<SyncMan>00100c002400010003000000000000000000001024010000</SyncMan>
-						<SyncMan>001116002200010004000000000000000000001122010000</SyncMan>
+						<SyncMan>001118002200010004000000000000000000001122010000</SyncMan>
 						<SyncMan>002000002400010005000000000000000000002024010000</SyncMan>
 						<SyncMan>002400002000010006000000000000000000002420010000</SyncMan>
 						<Fmmu>0000000000000000001000020100000001000000000000000000000000000000</Fmmu>
@@ -14285,6 +14290,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<Type>DINT</Type>
 							</Entry>
 							<Entry Name="Digital inputs, state" BitLen="16" Index="#x8321">
+								<Type>INT</Type>
+							</Entry>
+							<Entry Name="Torque/force feedback value" BitLen="16" Index="#x0054">
 								<Type>INT</Type>
 							</Entry>
 						</Pdo>
@@ -16899,6 +16907,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Derotator (AX5206-0000-0210)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Derotator_inputs" VarB="AT 1^Digital inputs, state"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.Derotator_torque" VarB="AT 1^Torque/force feedback value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Elevation (AX5125-0000-0213)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Elevation_Probe" VarB="AT^Probe 1 positive latched"/>

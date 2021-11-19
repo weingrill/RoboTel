@@ -7,26 +7,33 @@ VAR_INPUT
 	sPayload:	STRING(255);
 END_VAR
 VAR_OUTPUT
-	measurement: STRING(255) := '';
-	parameter:	STRING(255) := '';
-	value:		STRING(255) := '';
+	// measurement string (first word)
+	measurement:	STRING(255) := '';
+	// parameter (variable name)
+	parameter:		STRING(255) := '';
+	// value (variable content)
+	value:			STRING(255) := '';
 END_VAR
 VAR
 	space_position:		INT;
 	equial_position:	INT;
 	comma_position:		INT;
-	measurement_tags: STRING(255);
-	parameter_value: STRING(255);
-	bResultSplit: BOOL;
-	spaceSeparator:	STRING(1) := ' ';
-	commaSeparator:	STRING(1) := ',';
-	equialSeparator: STRING(1) := '=';
+	measurement_tags:	STRING(255);
+	parameter_value: 	STRING(255);
+	bResultSplit: 		BOOL;
+	// definition of the space separator
+	spaceSeparator:		STRING(1) := ' ';
+	// definition of the comma separator
+	commaSeparator:		STRING(1) := ',';
+	// definition of the equial sign separator
+	equialSeparator:	STRING(1) := '=';
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* perse message in influx format:
-measurement parameter=value
-measurement,tag1=tag1value parameter=value
+      <ST><![CDATA[(* 
+parse message in influx format:
+	measurement parameter=value
+	measurement,tag1=tag1value parameter=value
 
 Multiple parameter/value pairs are ignored for now.
 tags are not supported.
@@ -40,12 +47,14 @@ bResultSplit := FindAndSplit( pSeparator     := ADR(spaceSeparator), pSrcString 
 IF NOT bResultSplit THEN
 	RETURN;
 END_IF
+// look for tags attached to the measurement
 comma_position := FIND(measurement_tags, commaSeparator);
 IF comma_position = 0 THEN
 	measurement := measurement_tags;
 ELSE
 	measurement := LEFT(measurement_tags, comma_position-1);
 END_IF
+// dissect the parameter=value part
 bResultSplit := FindAndSplit( pSeparator     := ADR(equialSeparator), pSrcString := ADR(parameter_value), 
                               pLeftString    := ADR(parameter), nLeftSize  := SIZEOF(parameter), 
                               pRightString   := ADR(value), nRightSize := SIZEOF(value),
@@ -54,6 +63,7 @@ bResultSplit := FindAndSplit( pSeparator     := ADR(equialSeparator), pSrcString
     </Implementation>
     <LineIds Name="InfluxMessage">
       <LineId Id="30" Count="0" />
+      <LineId Id="94" Count="0" />
       <LineId Id="33" Count="1" />
       <LineId Id="36" Count="0" />
       <LineId Id="35" Count="0" />
@@ -64,10 +74,12 @@ bResultSplit := FindAndSplit( pSeparator     := ADR(equialSeparator), pSrcString
       <LineId Id="40" Count="2" />
       <LineId Id="39" Count="0" />
       <LineId Id="56" Count="2" />
+      <LineId Id="101" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="46" Count="1" />
       <LineId Id="49" Count="1" />
       <LineId Id="48" Count="0" />
+      <LineId Id="102" Count="0" />
       <LineId Id="69" Count="3" />
       <LineId Id="9" Count="0" />
     </LineIds>
