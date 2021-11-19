@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.17">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="FB_SUNPOS" Id="{0dff82b7-3e2e-4cb4-82b3-58dc17eb6623}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_SUNPOS
 VAR_INPUT
@@ -9,9 +9,13 @@ VAR_INPUT
 	RADIAN:	BOOL:= FALSE;
 END_VAR
 VAR_OUTPUT
+	// right ascension
 	RA,
+	// declination of the sun
 	Dec,
+	// longitude
 	longmed,
+	// True Obliquity
 	oblt:	LREAL;
 END_VAR
 VAR
