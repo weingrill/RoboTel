@@ -69,7 +69,8 @@ VAR
 	rightascension_calc,
 	declination_calc:	LREAL;
 	azimuth_torque,
-	elevation_torque: REAL;
+	elevation_torque,
+	derotator_torque: REAL;
 	
 	(* Hour Angle part *)
 	Hourangle_calc: LREAL;
@@ -408,6 +409,7 @@ homed := ElevationControl.Calibrated AND AzimuthElevationControl.calibrated;
 
 azimuth_torque := GVL_Telescope.Azimuth_torque / 10.0;
 elevation_torque := GVL_Telescope.Elevation_torque / 10.0;
+derotator_torque := GVL_Telescope.Derotator_torque / 10.0;
 
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
@@ -660,6 +662,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4255" Count="0" />
       <LineId Id="4257" Count="0" />
       <LineId Id="5167" Count="2" />
+      <LineId Id="5863" Count="0" />
       <LineId Id="4662" Count="3" />
       <LineId Id="4837" Count="2" />
       <LineId Id="4841" Count="0" />
