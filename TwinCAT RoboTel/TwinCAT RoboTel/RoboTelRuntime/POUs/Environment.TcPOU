@@ -82,6 +82,7 @@ IF MQTTTimer.Q THEN // publish new payload every second
 	sPayloadPub := APPEND(sPayloadPub, ',WindDirection=', LREAL_TO_FMTSTR(WindDirectionAverage.AVG, 1, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',Pressure=', LREAL_TO_FMTSTR(PressureAverage.AVG, 2, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',Rain=', BOOL_TO_STRING(Rain));
+	sPayloadPub := APPEND(sPayloadPub, ',RainAnalog=', LREAL_TO_FMTSTR(Rain_analog, 1, TRUE));
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
@@ -172,6 +173,7 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="835" Count="1" />
       <LineId Id="737" Count="0" />
       <LineId Id="730" Count="0" />
+      <LineId Id="870" Count="0" />
       <LineId Id="796" Count="0" />
       <LineId Id="719" Count="5" />
       <LineId Id="718" Count="0" />
