@@ -60,6 +60,8 @@ VAR_GLOBAL
 	Derotator_inputs		AT%I*: WORD;
 	// Controlword for homing
 	Derotator_ControlDWord	AT%Q*: DWORD;
+	// derotator torque feedback
+	Derotator_torque		AT%I*: INT;
 	
 	// digital inputs for limit switches
 	Elevation_inputs		AT%I*: WORD;
