@@ -281,8 +281,8 @@ IF power THEN
 	// enable derotator
 	IF ElevationControl.Calibrated THEN
 		DerotatorControl.enable := TRUE;
-		// Derotator Limit Switches broken!
-		// DerotatorControl.HomeAxis := DerotatorControl.Ready AND NOT DerotatorControl.Calibrated;
+		// Derotator far limit switch is broken!
+		DerotatorControl.HomeAxis := DerotatorControl.Ready AND NOT DerotatorControl.Calibrated;
 	END_IF
 	
 	// enable filterwheel after Derotator Axis to avoid additional torque
