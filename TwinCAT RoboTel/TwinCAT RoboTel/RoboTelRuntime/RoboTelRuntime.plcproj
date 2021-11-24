@@ -133,12 +133,6 @@
     <Compile Include="POUs\FunctionBlocks\FB_HOR2EQ.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_HTMLFile.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_influxdb.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_LightTimer.TcPOU">
       <SubType>Code</SubType>
     </Compile>
