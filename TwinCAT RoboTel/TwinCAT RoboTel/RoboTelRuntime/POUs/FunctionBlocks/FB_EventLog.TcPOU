@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4022.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="FB_EventLog" Id="{3524ed80-3787-4549-a84e-d995fc3a40dc}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_EventLog
 VAR_INPUT
@@ -16,6 +16,8 @@ END_VAR
 VAR
 	LogonTrigger: R_TRIG;
 	LogoffTrigger: F_TRIG; // R_Trig or F_Trig ?!
+	sPayloadPub, PayloadMessage: STRING(255);
+	fbFormat:	FB_FormatString;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -31,7 +33,51 @@ END_IF
 
 IF LogoffTrigger.Q AND LEN(OffMessage)>1 THEN
 	ADSLOGSTR( OffLevel OR ADSLOG_MSGTYPE_LOG, FormatString, OffMessage);
-END_IF]]></ST>
+END_IF
+
+sPayloadPub := 'log,host=CX-4E6032';
+
+IF LogonTrigger.Q AND LEN(OnMessage)>1 THEN
+	IF Level=ADSLOG_MSGTYPE_HINT THEN
+		sPayloadPub := CONCAT(sPayloadPub, ',level=INFO');
+	ELSIF Level=ADSLOG_MSGTYPE_WARN THEN
+		sPayloadPub := CONCAT(sPayloadPub, ',level=WARNING');
+	ELSE
+	    sPayloadPub := CONCAT(sPayloadPub, ',level=ERROR');
+	END_IF
+	fbFormat( sFormat := FormatString, arg1 := F_STRING(OnMessage), sOut => PayloadMessage);
+	sPayloadPub := APPEND(sPayloadPub, ' message="', PayloadMessage);
+	sPayloadPub := CONCAT(sPayloadPub, '"');
+	MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Log', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
+END_IF
+
+IF LogoffTrigger.Q AND LEN(OffMessage)>1 THEN
+	IF OffLevel=ADSLOG_MSGTYPE_HINT THEN
+		sPayloadPub := CONCAT(sPayloadPub, ',level=INFO');
+	ELSIF OffLevel=ADSLOG_MSGTYPE_WARN THEN
+		sPayloadPub := CONCAT(sPayloadPub, ',level=WARNING');
+	ELSE
+	    sPayloadPub := CONCAT(sPayloadPub, ',level=ERROR');
+	END_IF
+	
+	fbFormat( sFormat := FormatString, arg1 := F_STRING(OffMessage), sOut => PayloadMessage);
+	sPayloadPub := APPEND(sPayloadPub, ' message="', PayloadMessage);
+	sPayloadPub := CONCAT(sPayloadPub, '"');
+	MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Log', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
+END_IF	
+]]></ST>
     </Implementation>
     <LineIds Name="FB_EventLog">
       <LineId Id="27" Count="1" />
@@ -39,6 +85,13 @@ END_IF]]></ST>
       <LineId Id="51" Count="2" />
       <LineId Id="29" Count="5" />
       <LineId Id="9" Count="0" />
+      <LineId Id="113" Count="1" />
+      <LineId Id="72" Count="8" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="81" Count="20" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="102" Count="8" />
+      <LineId Id="71" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
