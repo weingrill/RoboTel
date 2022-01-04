@@ -174,22 +174,22 @@ END_IF
 PowerEvent(	
 	Trigger := 		power_failure, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
-	FormatString :=	'Power:	%s',
-	OnMessage := 	'FAILURE!',
-	OffMEssage := 	'OK');
+	FormatString :=	'%s',
+	OnMessage := 	'Servo power FAILURE!',
+	OffMEssage := 	'Servo power OK');
 PowerLog(	
 	Trigger := 		power_OK, 
 	Level := 		ADSLOG_MSGTYPE_HINT,
-	FormatString :=	'Power:	%s',
-	OnMessage := 	'OK',
-	OffMEssage := 	'OFF');
+	FormatString :=	'%s',
+	OnMessage := 	'Power is ON',
+	OffMEssage := 	'Power is OFF');
 PhaseLog(	
 	Trigger := 		NOT phase_available, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
-	FormatString :=	'electrical phases:	%s',
-	OnMessage := 	'ERROR!',
+	FormatString :=	'%s',
+	OnMessage := 	'electrical phases:	ERROR!',
 	OffLevel := 	ADSLOG_MSGTYPE_HINT,
-	OffMEssage := 	'active');
+	OffMEssage := 	'electrical phases:	active');
 
 TemperatureEvent(	
 	Trigger := 		cabinet_temperature > 40.0, 
