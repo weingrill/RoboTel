@@ -213,12 +213,12 @@ Cover3_Timeout_Event(Trigger := Cover3_timeout.Q,
 				OnMessage := 'Cover3 Timeout');
 // Log if we are opened
 Covers_opened_event(Trigger := isopen,
-					Level := ADSLOG_MSGTYPE_LOG,
+					Level := ADSLOG_MSGTYPE_WARN,
 					FormatString := '%s',
 					OnMessage := 'All covers open');
 //log if we are closed
 Covers_closed_event(Trigger := isclosed,
-					Level := ADSLOG_MSGTYPE_LOG,
+					Level := ADSLOG_MSGTYPE_HINT,
 					FormatString := '%s',
 					OnMessage := 'All covers closed');
 				]]></ST>
