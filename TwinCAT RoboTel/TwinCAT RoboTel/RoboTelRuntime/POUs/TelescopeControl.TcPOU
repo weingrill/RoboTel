@@ -54,22 +54,22 @@ VAR
 	// actual command from the TCS
 	TCS_command: 	E_TCSCommand;
 	// current Julian Date calculated from system time
-	jd,
+	jd:	LREAL;
 	// desired elevation of the telescope pointing 
-	elevation,
+	elevation:	LREAL := 15.0;
 	// desired azimut of the telescope pointing 
-	azimuth,
+	azimuth:	LREAL := 320.0;
 	// local siderial time calculated from Julian date
-	lst,
+	lst:	LREAL;
 	// values calulated when ra and dec are set by TCS
-	elevation_calc, 
-	azimuth_calc,
-	elevation_current,
-	azimuth_current,
-	rightascension_calc,
+	elevation_calc:	LREAL; 
+	azimuth_calc:	LREAL;
+	elevation_current:	LREAL;
+	azimuth_current:	LREAL;
+	rightascension_calc:	LREAL;
 	declination_calc:	LREAL;
-	azimuth_torque,
-	elevation_torque,
+	azimuth_torque:	LREAL;
+	elevation_torque:	LREAL;
 	derotator_torque: REAL;
 	
 	(* Hour Angle part *)
@@ -372,6 +372,7 @@ IF TCS_command = E_TCSCommand.park THEN
 	AzimuthElevationControl.MoveAxis := TRUE;
 	IF ElevationControl.ElevationAxis.StopDone AND AzimuthElevationControl.AzimuthAxis.StopDone THEN
 		park := FALSE;
+		power := FALSE;
 	END_IF
 
 ELSIF TCS_command = E_TCSCommand.gohome THEN
@@ -400,6 +401,24 @@ ELSIF TCS_command = E_TCSCommand.goto THEN
 		AzimuthElevationControl.MoveAxis := FALSE;
 		goto := FALSE;
 	END_IF
+
+ELSIF TCS_command = E_TCSCommand.pumping THEN
+	ElevationControl.position := elevation;
+	ElevationControl.MoveAxis := TRUE;
+	AzimuthElevationControl.position := azimuth;
+	AzimuthElevationControl.MoveAxis := TRUE;
+	DerotatorControl.position := 90.0;
+	DerotatorControl.MoveAxis := TRUE;
+	
+	IF ElevationControl.ElevationAxis.StopDone AND 
+		AzimuthElevationControl.AzimuthAxis.StopDone AND 
+		DerotatorControl.DerotatorAxis.StopDone THEN
+		ElevationControl.MoveAxis := FALSE;
+		AzimuthElevationControl.MoveAxis := FALSE;
+		DerotatorControl.MoveAxis := FALSE;
+		pumping := FALSE;
+	END_IF
+	
 END_IF
  
 sliding := ElevationControl.MoveAxis OR AzimuthElevationControl.MoveAxis;
@@ -633,7 +652,9 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3538" Count="0" />
       <LineId Id="4078" Count="0" />
       <LineId Id="4081" Count="0" />
-      <LineId Id="4236" Count="2" />
+      <LineId Id="4236" Count="1" />
+      <LineId Id="6021" Count="0" />
+      <LineId Id="4238" Count="0" />
       <LineId Id="4235" Count="0" />
       <LineId Id="3541" Count="0" />
       <LineId Id="3543" Count="0" />
@@ -655,6 +676,16 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4288" Count="1" />
       <LineId Id="4260" Count="0" />
       <LineId Id="4258" Count="0" />
+      <LineId Id="6023" Count="0" />
+      <LineId Id="6022" Count="0" />
+      <LineId Id="6025" Count="3" />
+      <LineId Id="6035" Count="1" />
+      <LineId Id="6029" Count="1" />
+      <LineId Id="6038" Count="1" />
+      <LineId Id="6031" Count="1" />
+      <LineId Id="6037" Count="0" />
+      <LineId Id="6033" Count="1" />
+      <LineId Id="6024" Count="0" />
       <LineId Id="3535" Count="0" />
       <LineId Id="3540" Count="0" />
       <LineId Id="3539" Count="0" />
