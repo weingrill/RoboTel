@@ -103,7 +103,7 @@ Axis_Status(Enable := TRUE,
 // Enable the axis (power signal or manual enable)
 Axis_Power(
 	Axis := AxisRef,
-	Enable := Enable,
+	Enable := Enable AND NOT Reset,
 	Enable_Positive := Enable_Positive,
 	Enable_Negative := Enable_Negative,
 	Override := 100.0,
