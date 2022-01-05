@@ -269,22 +269,16 @@ oil_low_log(Trigger := oil_low,
 FilterLog(Trigger := oil_filter_dirty,
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := 'Hydraulics Filter is %s',
-				OnMessage := 'dirty',
-				OffMessage := 'clean',
-				OffLevel := ADSLOG_MSGTYPE_HINT);
+				OnMessage := 'dirty.');
 
 OverTemperatureLog(Trigger := oil_hot,
 				Level := ADSLOG_MSGTYPE_WARN,
-				FormatString := 'Hydraulics Temperature %s',
-				OnMessage := '> 50C',
-				OffMessage := '< 50C',
-				OffLevel := ADSLOG_MSGTYPE_HINT);
+				FormatString := 'Hydraulics Temperature is %s',
+				OnMessage := 'high.');
 UnderTemperatureLog(Trigger := oil_cold,
 				Level := ADSLOG_MSGTYPE_WARN,
-				FormatString := 'Hydraulics Temperature %s',
-				OnMessage := '< 10C',
-				OffMessage := '> 10C',
-				OffLevel := ADSLOG_MSGTYPE_HINT);
+				FormatString := 'Hydraulics Temperature is %s',
+				OnMessage := 'low.');
 
 SuctionLog(Trigger := suction_failure OR hydraulics_failure,
 				Level := ADSLOG_MSGTYPE_ERROR,
@@ -296,12 +290,12 @@ SuctionLog(Trigger := suction_failure OR hydraulics_failure,
 BreakClearingWarning(Trigger := NOT Main.brake_clearing AND open_brake,
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := '%s',
-				OnMessage := 'Cannot open brake without brake clearing');
+				OnMessage := 'Cannot open brake without brake clearing.');
 
 BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := '%s',
-				OnMessage := 'Cannot open brake without running hydraulics');
+				OnMessage := 'Cannot open brake without running hydraulics.');
 ]]></ST>
     </Implementation>
     <LineIds Name="HydraulicsControl">
@@ -390,9 +384,12 @@ BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
       <LineId Id="938" Count="0" />
       <LineId Id="381" Count="5" />
       <LineId Id="939" Count="0" />
-      <LineId Id="387" Count="5" />
+      <LineId Id="387" Count="2" />
+      <LineId Id="392" Count="0" />
       <LineId Id="940" Count="0" />
-      <LineId Id="393" Count="11" />
+      <LineId Id="393" Count="2" />
+      <LineId Id="398" Count="3" />
+      <LineId Id="404" Count="0" />
       <LineId Id="941" Count="0" />
       <LineId Id="405" Count="4" />
       <LineId Id="51" Count="0" />

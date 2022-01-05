@@ -211,7 +211,7 @@ Axis_Position(
 	Position => AbsolutePosition);
 
 IF isModuloAxis THEN
-	ActualPosition := AbsolutePosition; //AxisRef.NcToPlc.ModuloActPos;
+	ActualPosition := AxisRef.NcToPlc.ModuloActPos; // required e.g. for Filterwheel
 ELSE
 	ActualPosition := AbsolutePosition; //AxisRef.NcToPlc.ActPos;
 END_IF
