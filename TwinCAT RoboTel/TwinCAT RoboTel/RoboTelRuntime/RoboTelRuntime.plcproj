@@ -172,7 +172,7 @@
     <Compile Include="POUs\FunctionBlocks\FB_TONTP.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FunctionBlocks\InfluxMessage.TcPOU">
+    <Compile Include="POUs\FunctionBlocks\FB_InfluxMessage.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\ATAN2.TcPOU">
