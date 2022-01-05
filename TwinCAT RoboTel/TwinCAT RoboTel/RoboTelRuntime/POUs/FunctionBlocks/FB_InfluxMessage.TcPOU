@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
-  <POU Name="InfluxMessage" Id="{90ca1cc6-8109-4bcf-9f8e-c5cf65cdb4b2}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK InfluxMessage
+  <POU Name="FB_InfluxMessage" Id="{90ca1cc6-8109-4bcf-9f8e-c5cf65cdb4b2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_InfluxMessage
 VAR_INPUT
 	// payload string received
 	sPayload:	STRING(255);
@@ -61,7 +61,7 @@ bResultSplit := FindAndSplit( pSeparator     := ADR(equialSeparator), pSrcString
                               bSearchFromRight := FALSE );
 ]]></ST>
     </Implementation>
-    <LineIds Name="InfluxMessage">
+    <LineIds Name="FB_InfluxMessage">
       <LineId Id="30" Count="0" />
       <LineId Id="94" Count="0" />
       <LineId Id="33" Count="1" />
