@@ -3322,7 +3322,7 @@ External Setpoint Generation:
 					</Encoder>
 					<Drive Name="Drive" DrvType="23">
 						<DrvPara>
-							<Analog VeloReferenz="10.2713178" ScaleFactorActTorque="0.1"/>
+							<Analog VeloReferenz="10.2713178" ScaleFactorActTorque="0.1" FilterTimeActTorque="0.1"/>
 							<TimeComp TaskDelayCycles="1"/>
 						</DrvPara>
 						<Vars VarGrpType="1">
@@ -4027,7 +4027,7 @@ External Setpoint Generation:
 					<AxisPara>
 						<General UnitName="°" UnitFlags="#x00000004"/>
 						<Dynamic Acceleration="155.75" Deceleration="155.75" Jerk="467.25"/>
-						<Velo RefSearch="1.03833333333333" RefSync="1.03833333333333" SlowManual="5.19166666666667" FastManual="31.15" Fast="103.833333333333" Maximum="103.833333333333"/>
+						<Velo RefSearch="1.03833333333333" RefSync="1.03833333333333" SlowManual="5.19166666666667" FastManual="31.15" Fast="103.833333333333" Maximum="103.833"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="19">
@@ -4217,13 +4217,22 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Dome.Azimut_raw</Name>
+							<Comment><![CDATA[ EL5151]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Dome.Azimut_home</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.Azimut_raw</Name>
-							<Comment><![CDATA[ EL5151]]></Comment>
-							<Type>INT</Type>
+							<Name>GVL_Dome.ActVelo</Name>
+							<Type>LREAL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawRain</Name>
+							<Comment><![CDATA[ Digital Input 1]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Environment.rawWindSpeed</Name>
@@ -4236,17 +4245,13 @@ External Setpoint Generation:
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.ActVelo</Name>
-							<Type>LREAL</Type>
+							<Name>GVL_Environment.rawTemperature</Name>
+							<Comment><![CDATA[ Input 3]]></Comment>
+							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
 							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawTemperature</Name>
-							<Comment><![CDATA[ Input 3]]></Comment>
-							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Environment.rawWindDirection</Name>
@@ -4259,15 +4264,6 @@ External Setpoint Generation:
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Environment.rawRain</Name>
-							<Comment><![CDATA[ Digital Input 1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_FilterWheel.bCalibrationCam</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Environment.rawHumidityDome</Name>
 							<Comment><![CDATA[ indoors]]></Comment>
 							<Type>INT</Type>
@@ -4275,6 +4271,14 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Environment.rawTemperatureDome</Name>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
+							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_FilterWheel.bCalibrationCam</Name>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.BCD1</Name>
@@ -4295,10 +4299,6 @@ External Setpoint Generation:
 							<Name>GVL_pendant_control.BCD8</Name>
 							<Comment><![CDATA[DIN20 2.3]]></Comment>
 							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
-							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.reset_switch</Name>
@@ -4376,14 +4376,14 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Hydraulics.oil_temperature</Name>
-							<Comment><![CDATA[BT2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Hydraulics.oilpan_maximum</Name>
 							<Comment><![CDATA[DIN39 4.6]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Hydraulics.oil_temperature</Name>
+							<Comment><![CDATA[BT2]]></Comment>
+							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Hydraulics.oil_reserve</Name>
@@ -4496,11 +4496,6 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.phase_available</Name>
-							<Comment><![CDATA[DIN1 0.0]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Telescope.Derotator_inputs</Name>
 							<Comment><![CDATA[ digitale inputs der Endlagen]]></Comment>
 							<Type>WORD</Type>
@@ -4551,12 +4546,32 @@ External Setpoint Generation:
 							<Type>INT</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Main.phase_available</Name>
+							<Comment><![CDATA[DIN1 0.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Main.power_available</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Main.key_switch</Name>
 							<Comment><![CDATA[DIN2 0.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.key_switch_remote</Name>
+							<Comment><![CDATA[DIN3 0.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.start_switch</Name>
+							<Comment><![CDATA[DIN4 0.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.stop_switch</Name>
+							<Comment><![CDATA[DIN5 0.4]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -4592,34 +4607,19 @@ External Setpoint Generation:
 							<Type GUID="{2D9F1DEF-D0A1-8CE8-8800-12F336222FE8}">MDP5001_511_733_I_BA4AEFF1</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.key_switch_remote</Name>
-							<Comment><![CDATA[DIN3 0.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.start_switch</Name>
-							<Comment><![CDATA[DIN4 0.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.stop_switch</Name>
-							<Comment><![CDATA[DIN5 0.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Main.reset_switch</Name>
 							<Comment><![CDATA[DIN8 0.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.brake_clearing</Name>
+							<Comment><![CDATA[DIN15 1.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Main.main_cabinet_temperature</Name>
 							<Comment><![CDATA[BT1]]></Comment>
 							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.brake_clearing</Name>
-							<Comment><![CDATA[DIN15 1.6]]></Comment>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Main.ups_input_voltage</Name>
@@ -4661,12 +4661,12 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.Light</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Dome.Inverter_Velocity</Name>
 							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Light</Name>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.DeHumidifier</Name>
