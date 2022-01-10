@@ -68,7 +68,9 @@ IF Enable THEN
 		MoveAxis := filter_position <> actual_filter AND FilterWheelAxis.Standstill;
 	ELSE
 		position := calibration_position;
-		HomeAxis := TRUE;
+		IF FilterWheelAxis.Ready THEN
+			HomeAxis := TRUE;
+		END_IF
 	END_IF
 END_IF
 
@@ -80,7 +82,7 @@ FilterWheelAxis(
 	MoveAxis :=			MoveAxis,
 	HomeAxis :=			HomeAxis,
 	Position := 		position, 
-	Velocity :=			30.0,
+	Velocity :=			60.0,
 	Enable_Positive :=  TRUE,
 	Enable_Negative := 	TRUE,
 	Jog_Forward :=		left,
@@ -119,7 +121,7 @@ CalibratedEvent(
 	OnMessage := 	'Filter wheel is calibrated.');
 	
 FilterReadyEvent(
-	Trigger :=		Ready,
+	Trigger :=		(filter_position = actual_filter),
 	Level := 		ADSLOG_MSGTYPE_HINT,
 	FormatString :=	'Filter position %s is ready.',
 	OnMessage := 	WORD_TO_STRING(actual_filter));]]></ST>
@@ -144,6 +146,7 @@ FilterReadyEvent(
       <LineId Id="252" Count="1" />
       <LineId Id="91" Count="0" />
       <LineId Id="179" Count="1" />
+      <LineId Id="443" Count="1" />
       <LineId Id="379" Count="0" />
       <LineId Id="90" Count="0" />
       <LineId Id="376" Count="1" />
