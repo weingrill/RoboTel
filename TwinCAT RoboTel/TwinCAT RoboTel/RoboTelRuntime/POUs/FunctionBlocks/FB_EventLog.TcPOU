@@ -9,7 +9,7 @@ VAR_INPUT
 	FormatString: 	STRING(255) := '%s';
 	OnMessage: 		STRING(255) := '';
 	OffMessage:		STRING(255) := '';
-	OffLevel:		UDINT := 0;
+	OffLevel:		UDINT := ADSLOG_MSGTYPE_HINT;
 END_VAR
 VAR_OUTPUT
 END_VAR
@@ -27,11 +27,11 @@ LogoffTrigger(CLK := Trigger);
 IF OffLevel = 0 THEN
 	OffLevel := Level;
 END_IF
-IF LogonTrigger.Q AND LEN(OnMessage)>1 THEN
+IF LogonTrigger.Q AND LEN(OnMessage)>0 THEN
 	ADSLOGSTR( Level OR ADSLOG_MSGTYPE_LOG, FormatString, OnMessage);
 END_IF
 
-IF LogoffTrigger.Q AND LEN(OffMessage)>1 THEN
+IF LogoffTrigger.Q AND LEN(OffMessage)>0 THEN
 	ADSLOGSTR( OffLevel OR ADSLOG_MSGTYPE_LOG, FormatString, OffMessage);
 END_IF
 

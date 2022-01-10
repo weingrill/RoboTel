@@ -29,11 +29,11 @@ IF OffLevel = 0 THEN
 END_IF
 IF LogonTrigger.Q AND LEN(OnMessage)>1 THEN
 	IF Level=ADSLOG_MSGTYPE_HINT THEN
-		sPayloadPub := CONCAT(sPayloadPub, ',level=INFO ');
+		sPayloadPub := CONCAT(sPayloadPub, ',level=INFO');
 	ELSIF Level=ADSLOG_MSGTYPE_WARN THEN
-		sPayloadPub := CONCAT(sPayloadPub, ',level=WARNING ');
+		sPayloadPub := CONCAT(sPayloadPub, ',level=WARNING');
 	ELSE
-	    sPayloadPub := CONCAT(sPayloadPub, ',level=ERROR ');
+	    sPayloadPub := CONCAT(sPayloadPub, ',level=ERROR');
 	END_IF
 	sPayloadPub := APPEND(sPayloadPub, ' message="', OnMessage);
 	sPayloadPub := CONCAT(sPayloadPub, '"');
@@ -48,11 +48,11 @@ END_IF
 
 IF LogoffTrigger.Q AND LEN(OffMessage)>1 THEN
 	IF OffLevel=ADSLOG_MSGTYPE_HINT THEN
-		sPayloadPub := CONCAT(sPayloadPub, ',level=INFO ');
+		sPayloadPub := CONCAT(sPayloadPub, ',level=INFO');
 	ELSIF OffLevel=ADSLOG_MSGTYPE_WARN THEN
-		sPayloadPub := CONCAT(sPayloadPub, ',level=WARNING ');
+		sPayloadPub := CONCAT(sPayloadPub, ',level=WARNING');
 	ELSE
-	    sPayloadPub := CONCAT(sPayloadPub, ',level=ERROR ');
+	    sPayloadPub := CONCAT(sPayloadPub, ',level=ERROR');
 	END_IF
 	
 	sPayloadPub := APPEND(sPayloadPub, ' message="', OffMessage);
