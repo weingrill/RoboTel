@@ -14,9 +14,11 @@ VAR_INPUT
 	// set the absolute position
 	position:	LREAL;
 	// move to given position
-	MoveAxis: 			BOOL;
+	MoveAxis: 	BOOL;
 	// calibrate the axis
-	HomeAxis:			BOOL;
+	HomeAxis:	BOOL;
+	// tracking flag
+	Tracking:	BOOL;
 END_VAR
 VAR_OUTPUT
 	Error:				BOOL;
@@ -26,7 +28,6 @@ VAR_OUTPUT
 	Ready:				BOOL;
 END_VAR
 VAR
-
 	DerotatorAxis:	FB_Axis2;
 	DerotatorEvent:	FB_EventLog;
 END_VAR
@@ -48,7 +49,7 @@ SPS-Interface:
 TcNc-Lib, siehe SPS-Funktion AxisSetAcceptBlockedDriveSignal in der TwinCAT  PLC Library: NC.
 *)
 
-position := LIMIT(0.0, position, 470.0);
+position := LIMIT(0.0, position, 460.0);
 
 // WARNING: Homing disables the limit Switches!
 
@@ -83,6 +84,7 @@ DeRotatorAxis(
 	Jog_Backwards := 	left,
 	bCalibrationCam :=	GVL_Telescope.Derotator_inputs.1,
 	isModuloAxis :=		FALSE,
+	Tracking :=			Tracking,
 	ActualPosition => 	actual_position,
 	Error => 			Error,
 	ErrorID => 			ErrorID,
@@ -143,9 +145,11 @@ DerotatorEvent(
       <LineId Id="100" Count="0" />
       <LineId Id="10" Count="0" />
       <LineId Id="23" Count="0" />
-      <LineId Id="93" Count="3" />
+      <LineId Id="93" Count="2" />
+      <LineId Id="312" Count="0" />
       <LineId Id="11" Count="3" />
       <LineId Id="97" Count="2" />
+      <LineId Id="313" Count="0" />
       <LineId Id="16" Count="0" />
       <LineId Id="24" Count="0" />
       <LineId Id="9" Count="0" />
