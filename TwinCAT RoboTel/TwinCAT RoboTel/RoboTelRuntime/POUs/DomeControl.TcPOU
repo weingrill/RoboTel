@@ -49,10 +49,15 @@ VAR
 	DomeOpened:			BOOL;
 	// dome is closed
 	DomeClosed:			BOOL;
+	// dome flap (lower section) is open
 	FlapOpen:			BOOL;
+	// dome flap (lower section) is closed
 	FlapClosed:			BOOL;
+	//dome slit is open
 	SlitOpen:			BOOL;
+	// dome slit is closed
 	SlitClosed:			BOOL;
+	// bit to indicate if domestatus is valid
 	DomeValid:			BOOL;
 	// dome control word
    	DomeStatusWord:	WORD;
@@ -83,11 +88,13 @@ VAR
 	ReadCycle:			TON := (PT:=T#1S);
 	
 	fbReadReq: ADSREAD := ( NETID := '5.73.45.158.1.1', PORT := 851, TMOUT := DEFAULT_ADS_TIMEOUT );
-	DomeCalibration: MC_SetPosition;
-	DomeCommEvent:	FB_Eventlog;
-	DomeAxisEvent:	FB_Eventlog;
-	DomeOpenEvent:	FB_Eventlog;
+	DomeCalibration:	MC_SetPosition;
+	DomeCommEvent:		FB_Eventlog;
+	DomeAxisEvent:		FB_Eventlog;
+	DomeOpenedEvent:	FB_Eventlog;
 	DomeClosedEvent:	FB_Eventlog;
+	OpenDomeEvent:		FB_Eventlog;
+	CloseDomeEvent:		FB_Eventlog;
 	DomeCalibrationEvent: FB_Eventlog;
 	MQTTTimer : TON := (PT:=T#10S);
 	// MQTT String
@@ -332,7 +339,7 @@ DomeCalibrationEvent(
 	Level := 		ADSLOG_MSGTYPE_HINT,
 	OnMessage := 	'Dome calibration: OK');
 
-DomeOpenEvent(
+DomeOpenedEvent(
 	Trigger := 		DomeOpened, 
 	Level := 		ADSLOG_MSGTYPE_WARN,
 	OnMessage := 	'Dome is open.');
@@ -341,7 +348,16 @@ DomeClosedEvent(
 	Trigger := 		DomeClosed, 
 	Level := 		ADSLOG_MSGTYPE_HINT,
 	OnMessage := 	'Dome is closed.');
-	]]></ST>
+	
+OpenDomeEvent(
+	Trigger := 		DomeOpened, 
+	Level := 		ADSLOG_MSGTYPE_WARN,
+	OnMessage := 	'Dome is opening.');
+	
+CloseDomeEvent(
+	Trigger := 		DomeClosed, 
+	Level := 		ADSLOG_MSGTYPE_HINT,
+	OnMessage := 	'Dome is closing.');]]></ST>
     </Implementation>
     <LineIds Name="DomeControl">
       <LineId Id="1008" Count="0" />
@@ -494,6 +510,8 @@ DomeClosedEvent(
       <LineId Id="1966" Count="3" />
       <LineId Id="1971" Count="3" />
       <LineId Id="1970" Count="0" />
+      <LineId Id="2080" Count="7" />
+      <LineId Id="2079" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
