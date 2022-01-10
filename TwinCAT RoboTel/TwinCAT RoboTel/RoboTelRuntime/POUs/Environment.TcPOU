@@ -132,10 +132,9 @@ HumidityDomeEvent(	Trigger :=  HumidityDomeAverage.AVG>= 65.0,
 				
 PrecipitationEvent(	Trigger := WeatherBad, 
 					Level := ADSLOG_MSGTYPE_WARN,
-					FormatString := 'Weather: %s',
-					OnMessage := 'BAD; closing Dome',
-					OffMessage := 'OK',
-					OffLevel := ADSLOG_MSGTYPE_HINT);
+					FormatString := 'The weather is %s',
+					OnMessage := 'BAD.',
+					OffMessage := 'OK.');
 
 DewPointEvent( Trigger := TemperatureDome < DewpointDome,
 				Level := ADSLOG_MSGTYPE_WARN,
@@ -192,7 +191,7 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="516" Count="5" />
       <LineId Id="462" Count="0" />
       <LineId Id="515" Count="0" />
-      <LineId Id="158" Count="5" />
+      <LineId Id="158" Count="4" />
       <LineId Id="569" Count="0" />
       <LineId Id="571" Count="0" />
       <LineId Id="575" Count="0" />
