@@ -3420,6 +3420,7 @@ External Setpoint Generation:
 						<General UnitName="°"/>
 						<Dynamic AccelerationMaximum="1500" DecelerationMaximum="1500" Acceleration="10.6875" Deceleration="10.6875" Jerk="16.0312"/>
 						<Velo RefSearch="2" RefSync="2" SlowManual="1" FastManual="3" Fast="14.25" Maximum="14.25"/>
+						<PositionAreaControl Enable="false"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="8">
@@ -3545,6 +3546,7 @@ External Setpoint Generation:
 					</Drive>
 					<Controller Name="Ctrl" CtrType="1">
 						<CtrPara PriorControlFactor="1">
+							<PosDiffControl Range="1"/>
 							<Observer BandWidth="20"/>
 						</CtrPara>
 					</Controller>
@@ -4026,7 +4028,7 @@ External Setpoint Generation:
 					<Name>Filterrad</Name>
 					<AxisPara>
 						<General UnitName="°" UnitFlags="#x00000004"/>
-						<Dynamic Acceleration="155.75" Deceleration="155.75" Jerk="467.25"/>
+						<Dynamic Acceleration="155.749978166623" Deceleration="155.749978166623" Jerk="467.249868999747"/>
 						<Velo RefSearch="1.03833333333333" RefSync="1.03833333333333" SlowManual="5.19166666666667" FastManual="31.15" Fast="103.833333333333" Maximum="103.833"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 					</AxisPara>
@@ -4186,30 +4188,37 @@ External Setpoint Generation:
 						</Var>
 						<Var>
 							<Name>GVL_Dome.Clockwise</Name>
+							<Comment><![CDATA[ clockwise rotation of the dome azimuth	]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.CounterClockwise</Name>
+							<Comment><![CDATA[ counterclockwise rotation of the dome azimuth	]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.bDirectionMinus</Name>
+							<Comment><![CDATA[ PLC NC command direction +]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.bDirectionPlus</Name>
+							<Comment><![CDATA[ PLC NC command direction -]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.bVeloLow</Name>
+							<Comment><![CDATA[ PLC NC command velocity low]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.bVeloHigh</Name>
+							<Comment><![CDATA[ PLC NC command velocity high]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.bBreak</Name>
+							<Comment><![CDATA[ PLC NC command break]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -4223,6 +4232,7 @@ External Setpoint Generation:
 						</Var>
 						<Var>
 							<Name>GVL_Dome.Azimut_home</Name>
+							<Comment><![CDATA[ Azimuth home signal]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -4654,10 +4664,12 @@ External Setpoint Generation:
 						</Var>
 						<Var>
 							<Name>GVL_Dome.Inverter_Enable</Name>
+							<Comment><![CDATA[ enable the azimuth inverter]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.Inverter_DirectionMinus</Name>
+							<Comment><![CDATA[ negative direction of the azimuth inverter]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -4666,10 +4678,12 @@ External Setpoint Generation:
 						</Var>
 						<Var>
 							<Name>GVL_Dome.Light</Name>
+							<Comment><![CDATA[ light relais]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.DeHumidifier</Name>
+							<Comment><![CDATA[ dehumidifier MOSFET]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -5225,7 +5239,7 @@ DOUT9 1.0]]></Comment>
 					</Box>
 					<Box Id="4" BoxType="9099">
 						<Name>Hydraulik IN (EL1008)</Name>
-						<Comment><![CDATA[Ölstatus?]]></Comment>
+						<Comment><![CDATA[Ölstatus]]></Comment>
 						<ImageId>7</ImageId>
 						<EtherCAT SlaveType="1" PdiType="#x0104" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x03f03052" RevisionNo="#x00120000" RepeatSupport="true" PortPhys="51" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL1008 8K. Dig. Eingang 24V, 3ms" Desc="EL1008" PortABoxInfo="#x01000003">
 							<SyncMan>001001000000010004000000000000000100001000010000</SyncMan>

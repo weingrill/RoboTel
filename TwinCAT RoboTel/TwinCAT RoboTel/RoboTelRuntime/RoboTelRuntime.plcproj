@@ -211,6 +211,9 @@
     <Compile Include="POUs\Functions\F_YREAL.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\ImageRotation.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\LREAL_TO_FMTESTR.TcPOU">
       <SubType>Code</SubType>
     </Compile>
