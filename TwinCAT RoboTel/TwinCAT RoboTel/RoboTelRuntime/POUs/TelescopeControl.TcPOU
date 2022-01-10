@@ -69,9 +69,7 @@ VAR
 	azimuth_current:	LREAL;
 	rightascension_calc:	LREAL;
 	declination_calc:	LREAL;
-	azimuth_torque:	LREAL;
-	elevation_torque:	LREAL;
-	derotator_torque: REAL;
+	
 	
 	(* Hour Angle part *)
 	Hourangle_calc: LREAL;
@@ -434,9 +432,6 @@ tracking := ElevationControl.Tracking AND AzimuthElevationControl.Tracking;
 stopped :=  ElevationControl.ElevationAxis.StandStill AND AzimuthElevationControl.AzimuthAxis.StandStill;
 homed := ElevationControl.Calibrated AND AzimuthElevationControl.calibrated;
 
-azimuth_torque := GVL_Telescope.Azimuth_torque / 10.0;
-elevation_torque := GVL_Telescope.Elevation_torque / 10.0;
-derotator_torque := GVL_Telescope.Derotator_torque / 10.0;
 
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
@@ -456,7 +451,7 @@ IF MQTTTimer.Q THEN // publish new payload every second
 					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
 					bRetain:= FALSE, 
 					bQueue:= FALSE );
-
+(*
 	sPayloadPub := 'telescope,location=dome,host=CX-4E6032,module=TelescopeControl ';
 	sPayloadPub := APPEND(sPayloadPub, 'AzimuthTorque=', LREAL_TO_FMTSTR(azimuth_torque, 1, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',ElevationTorque=', LREAL_TO_FMTSTR(elevation_torque, 1, TRUE));
@@ -469,7 +464,7 @@ IF MQTTTimer.Q THEN // publish new payload every second
 					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
 					bRetain:= FALSE, 
 					bQueue:= FALSE );
-
+*)
 END_IF
 
 (* Event function blocks start here. *)
@@ -707,8 +702,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4256" Count="0" />
       <LineId Id="4255" Count="0" />
       <LineId Id="4257" Count="0" />
-      <LineId Id="5167" Count="2" />
-      <LineId Id="5863" Count="0" />
+      <LineId Id="5167" Count="0" />
       <LineId Id="4662" Count="3" />
       <LineId Id="4837" Count="2" />
       <LineId Id="4841" Count="0" />

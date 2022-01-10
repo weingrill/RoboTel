@@ -30,6 +30,8 @@ END_VAR
 VAR
 	DerotatorAxis:	FB_Axis2;
 	DerotatorEvent:	FB_EventLog;
+	TorqueWarning:	FB_EventLog;
+	derotator_torque: REAL;
 END_VAR
 VAR CONSTANT
 	// current position of the calibration cam. Apply an offset here if necessary
@@ -78,8 +80,8 @@ DeRotatorAxis(
 	MoveAxis :=			MoveAxis,
 	HomeAxis :=			HomeAxis,
 	Position := 		position, 
-	Enable_Positive := 	NOT GVL_Telescope.Derotator_inputs.0,
-	Enable_Negative := 	NOT GVL_Telescope.Derotator_inputs.1 OR HomeAxis,
+	Enable_Positive := 	NOT GVL_Telescope.Derotator_inputs.0 OR HomeAxis,
+	Enable_Negative := 	NOT GVL_Telescope.Derotator_inputs.1,
 	Jog_Forward := 		right,
 	Jog_Backwards := 	left,
 	bCalibrationCam :=	GVL_Telescope.Derotator_inputs.1,
@@ -104,13 +106,22 @@ END_IF
 
 Ready := DeRotatorAxis.Ready;
 
+derotator_torque := GVL_Telescope.Derotator_torque / 10.0;
+
 DerotatorEvent(	
 	Trigger := 		Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
 	FormatString :=	'Derotator Axis Error: %s',
 	OnMessage := 	NCError_TO_STRING(ErrorID),
 	OffMEssage := 	'OK',
-	OffLevel := 	ADSLOG_MSGTYPE_HINT);]]></ST>
+	OffLevel := 	ADSLOG_MSGTYPE_HINT);
+	
+TorqueWarning(	
+	Trigger := 		derotator_torque > 12.0, 
+	Level := 		ADSLOG_MSGTYPE_WARN,
+	FormatString :=	'%s',
+	OnMessage := 	'Derotator torque is high.');
+]]></ST>
     </Implementation>
     <LineIds Name="DerotatorControl">
       <LineId Id="128" Count="0" />
@@ -156,8 +167,14 @@ DerotatorEvent(
       <LineId Id="42" Count="0" />
       <LineId Id="44" Count="10" />
       <LineId Id="240" Count="1" />
+      <LineId Id="314" Count="0" />
+      <LineId Id="316" Count="0" />
       <LineId Id="55" Count="6" />
       <LineId Id="43" Count="0" />
+      <LineId Id="319" Count="0" />
+      <LineId Id="321" Count="3" />
+      <LineId Id="327" Count="0" />
+      <LineId Id="320" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
