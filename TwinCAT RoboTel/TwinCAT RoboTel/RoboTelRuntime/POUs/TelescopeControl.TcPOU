@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="TelescopeControl" Id="{6a4f2e3a-c9ee-4352-b4f6-4f9d94b2c472}" SpecialFunc="None">
-    <Declaration><![CDATA[
-PROGRAM TelescopeControl
+    <Declaration><![CDATA[PROGRAM TelescopeControl
 VAR_INPUT
 (*
 TCS interface section
@@ -42,7 +41,7 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	// absolute offset for time
 	time_offset: 		LREAL := 0.0;
 	// offset for the de-rotator
-	derotator_offset:	LREAL := 0.0;
+	derotator_offset:	LREAL := 180.0;
 	// Nasmyth port 1 or 2
 	Nasmyth_port: USINT;
 	// Focus position in mm
@@ -59,6 +58,8 @@ VAR
 	elevation:	LREAL := 15.0;
 	// desired azimut of the telescope pointing 
 	azimuth:	LREAL := 320.0;
+	// image derotation
+	derotation_calc:	LREAL;
 	// local siderial time calculated from Julian date
 	lst:	LREAL;
 	// values calulated when ra and dec are set by TCS
@@ -222,6 +223,9 @@ hor2eq(alt := elevation_current,
 		ra => rightascension_calc,
 		dec => declination_calc);		
 
+// TODO check sign; offset is applied later
+derotation_calc := ImageRotation(azimuth_current, elevation_current, declination_calc, latitude);
+		
 poweronwarning(IN := power OR (NOT ElevationControl.enable AND HydraulicsControl.brake_open), PT := T#250MS, Q => GVL_Telescope.horn);
 poweron(CLK := power);
 poweroff(CLK := power);
@@ -363,6 +367,7 @@ END_IF
 IF NOT track THEN
 	ElevationControl.Tracking := FALSE;
 	AzimuthElevationControl.Tracking := FALSE;
+	DerotatorControl.Tracking := FALSE;
 END_IF
 
 IF TCS_command = E_TCSCommand.park THEN
@@ -387,15 +392,18 @@ ELSIF TCS_command = E_TCSCommand.gohome THEN
 ELSIF TCS_command = E_TCSCommand.track THEN
 	ElevationControl.position := elevation_calc + elevation_offset;
 	AzimuthElevationControl.position := azimuth_calc + azimuth_offset;
+	DerotatorControl.position := derotation_calc + derotator_offset;
 	ElevationControl.Tracking := TRUE;
 	AzimuthElevationControl.Tracking := TRUE;
+	DerotatorControl.Tracking := TRUE;
 	
 ELSIF TCS_command = E_TCSCommand.goto THEN
 	ElevationControl.position := elevation_calc + elevation_offset;
 	ElevationControl.MoveAxis := TRUE;
 	AzimuthElevationControl.position := azimuth_calc + azimuth_offset;
 	AzimuthElevationControl.MoveAxis := TRUE;
-
+	DerotatorControl.position := derotation_calc + derotator_offset;
+	DerotatorControl.MoveAxis := TRUE;
 	IF ElevationControl.ElevationAxis.StopDone AND AzimuthElevationControl.AzimuthAxis.StopDone THEN
 		ElevationControl.MoveAxis := FALSE;
 		AzimuthElevationControl.MoveAxis := FALSE;
@@ -537,7 +545,10 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="2011" Count="0" />
       <LineId Id="3521" Count="4" />
       <LineId Id="3528" Count="1" />
+      <LineId Id="6202" Count="0" />
+      <LineId Id="6200" Count="0" />
       <LineId Id="4243" Count="0" />
+      <LineId Id="6201" Count="0" />
       <LineId Id="4075" Count="0" />
       <LineId Id="5185" Count="0" />
       <LineId Id="4076" Count="0" />
@@ -646,6 +657,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4294" Count="0" />
       <LineId Id="3532" Count="0" />
       <LineId Id="4297" Count="1" />
+      <LineId Id="6205" Count="0" />
       <LineId Id="4296" Count="0" />
       <LineId Id="4299" Count="0" />
       <LineId Id="3533" Count="1" />
@@ -665,12 +677,15 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4239" Count="0" />
       <LineId Id="3920" Count="0" />
       <LineId Id="5364" Count="1" />
+      <LineId Id="6203" Count="0" />
       <LineId Id="5357" Count="0" />
       <LineId Id="5367" Count="0" />
+      <LineId Id="6197" Count="0" />
       <LineId Id="4240" Count="0" />
       <LineId Id="3928" Count="1" />
       <LineId Id="3927" Count="0" />
       <LineId Id="4083" Count="1" />
+      <LineId Id="6204" Count="0" />
       <LineId Id="4278" Count="0" />
       <LineId Id="4259" Count="0" />
       <LineId Id="4288" Count="1" />
