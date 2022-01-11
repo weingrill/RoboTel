@@ -14,6 +14,5 @@ https://weingrill.github.io/RoboTel/index.html
 * finalise telescope initialisation (focus, de-rotator)
 * MQTT integration
 * implementation of pointing model
-* ADS interface for STELLA TCS
 
-(c) 2019–2021 Dr.Jörg Weingrill, Leibniz-Institut für Astrophysik Potsdam
+(c) 2019–2022 Dr.Jörg Weingrill, Leibniz-Institut für Astrophysik Potsdam
