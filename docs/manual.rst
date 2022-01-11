@@ -78,6 +78,7 @@ The hydraulic brake is opened, as soon as the drive is enabled to avoid a drive 
 * "ENABLE" enables/disables the drive.
 * Buttons "↑" and "↓" increase and decrease the elevation.
 * Pressing the buttons "↑" and "↓" simultaneously immediately closes the brake.
+* Open the covers to ensure a balanced telescope, when activating the elevation manually.
 
 **WARNING** Enabling the drive will automatically open the brake for both elevation
 and azimuth.
@@ -97,6 +98,7 @@ and azimuth.
 
 *Due to the design there is a latency of up to five seconds until the command
 is executed. This also applies for pressing the emergency stop.*
+
 **The emergency stop is not directly connected to the dome controls.**
 
 10 Filter Wheel
@@ -128,6 +130,12 @@ See also :doc:`automatic` for a detailed description for each command.
 * Buttons "↑" and "↓" decrease or increase the elevation offset.
 * Switching to "MANUAL" calculates the new right ascension and declination
   based on the current telescope position.
+
+14 unused
+---------
+
+Use this setting for automatic operation.
+Enabling the manual operation mode will sound the horn as a warning.
 
 15 Hydraulics
 -------------
