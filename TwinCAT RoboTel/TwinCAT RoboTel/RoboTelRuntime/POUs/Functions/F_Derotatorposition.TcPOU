@@ -35,7 +35,7 @@ delta := declination * d2r;
 
 // calculate the parallactic angle
 
-IF COS(delta) < 1E-3 THEN
+IF ABS(COS(delta)) < 1E-3 THEN
 	pa := 0.0;
 ELSE
 	pa := ASIN(SIN(az) * COS(lat) / COS(delta));
