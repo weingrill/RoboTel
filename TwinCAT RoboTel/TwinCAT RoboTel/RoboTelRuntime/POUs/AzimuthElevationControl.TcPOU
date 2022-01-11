@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="AzimuthElevationControl" Id="{8e08648a-b748-4448-9dcc-aa13dfcf6a06}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM AzimuthElevationControl
 VAR_INPUT
@@ -38,7 +38,9 @@ VAR
 	AzimuthAxisEvent: 	FB_EventLog;
 	// delay until commutator angle is measured
 	readydelay:			TON;
-	HomeDelay:				FB_TONTP;
+	HomeDelay:			FB_TONTP;
+	azimuth_torque: 	REAL;
+	TorqueWarning:		FB_EventLog;
 END_VAR
 VAR CONSTANT
 	// reference position for homing
@@ -129,11 +131,20 @@ IF AzimuthAxis.ResetDone THEN
 	reset := FALSE;
 END_IF
 
+azimuth_torque := GVL_Telescope.Azimuth_torque / 10.0;
+
+
 AzimuthAxisEvent(	
 	Trigger := 		Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
 	FormatString :=	'Azimuth Axis Error: %s',
 	OnMessage := 	NCError_TO_STRING(ErrorID));
+	
+TorqueWarning(	
+	Trigger := 		azimuth_torque > 12.0, 
+	Level := 		ADSLOG_MSGTYPE_WARN,
+	FormatString :=	'%s',
+	OnMessage := 	'Azimuth torque is high.');
 				]]></ST>
     </Implementation>
     <LineIds Name="AzimuthElevationControl">
@@ -180,10 +191,15 @@ AzimuthAxisEvent(
       <LineId Id="177" Count="1" />
       <LineId Id="176" Count="0" />
       <LineId Id="158" Count="10" />
+      <LineId Id="446" Count="0" />
+      <LineId Id="448" Count="0" />
+      <LineId Id="447" Count="0" />
       <LineId Id="157" Count="0" />
       <LineId Id="79" Count="0" />
       <LineId Id="109" Count="0" />
       <LineId Id="80" Count="2" />
+      <LineId Id="456" Count="0" />
+      <LineId Id="451" Count="4" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

@@ -22,10 +22,8 @@ VAR
 	velocity_percentage:	REAL;
 	// issue temperature warning
 	TemperatureWarning: FB_EventLog;
-	BasicPID:		FB_BasicPID;
 	MQTTTimer:		TON := (PT:=T#5S);
 	sPayloadPub: STRING(255) := '';
-	PIDreset:		BOOL;
 	softreset:		BOOL;
 END_VAR
 
@@ -33,26 +31,16 @@ END_VAR
     <Implementation>
       <ST><![CDATA[(* Upper telescope cabinet fan control *)
 
-// FIXME: fan does not restart after poweron-reset
-
-// enable the fan as soon as main cabinet is ready AND temperature exceeds 25°C
-Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := MAIN.power_OK AND NOT Reset;
+// enable the fan as soon as main cabinet is ready AND temperature exceeds ambient temperature
+Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := MAIN.power_OK AND NOT Reset AND (temperature > Environment.TemperatureDome);
 // reset on MAIN reset
 Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Reset := reset OR softreset;
-// calculate the temperatur efrom analog input
+// calculate the temperatur from analog input
 temperature := GVL_Telescope.temperature_cabinet / 100.0;
-// set the fan velocity as a function of temperature
-//velocity := LREAL_TO_INT(F_YREAL(temperature, 25.0, 40.0, 1000, 32767));
-PIDreset := Environment.TemperatureDome > temperature + 0.5;
-BasicPID(fSetpointValue := Environment.TemperatureDome + 2.0,
-			fActualValue := temperature,
-			bReset := reset OR PIDreset,
-			fCtrlCycleTime := 0.1,
-			fKp := 100.0,
-			fTn := 10.0,
-			fTv := 1.0
-			);
-velocity := LREAL_TO_INT(LIMIT(0, -1.0*BasicPID.fCtrlOutput, 32767));
+
+// set the fan velocity as a function of temperature difference
+velocity := LREAL_TO_INT(F_YREAL(temperature - Environment.TemperatureDome , 2.5, 5.0, 0, 32767));
+
 velocity_percentage := 100.0*INT_TO_REAL(velocity)/32767.0;
 // apply the calculated velocity
 Fan_axis.MDP5001_511_733_Output.MDP5001_733_Velocity := velocity;
@@ -63,16 +51,14 @@ MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
 	sPayloadPub := 'electronics,location=dome,host=CX-4E6032,module=TelescopeCabinet ';
-	sPayloadPub := CONCAT(sPayloadPub, 'Temperature=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(Temperature, 2, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',FanVelocity=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(velocity_percentage, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, 'TelescopeCabinetTemperature=', LREAL_TO_FMTSTR(Temperature, 2, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',FanVelocity=', LREAL_TO_FMTSTR(velocity_percentage, 1, TRUE));
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
 					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)), // +1 just adds a \x0
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery, //TcIotMqttQos.AtMostOnceDelivery,  TcIotMqttQos.ExactlyOnceDelivery
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
 					bRetain:= FALSE, 
 					bQueue:= FALSE );
 
@@ -86,24 +72,17 @@ TemperatureWarning(Trigger := temperature >= 40.0,
     </Implementation>
     <LineIds Name="FanControl">
       <LineId Id="52" Count="0" />
-      <LineId Id="87" Count="1" />
-      <LineId Id="61" Count="0" />
+      <LineId Id="87" Count="0" />
       <LineId Id="55" Count="0" />
       <LineId Id="10" Count="0" />
       <LineId Id="56" Count="0" />
       <LineId Id="11" Count="0" />
       <LineId Id="57" Count="0" />
       <LineId Id="32" Count="0" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="168" Count="0" />
-      <LineId Id="154" Count="0" />
-      <LineId Id="156" Count="1" />
-      <LineId Id="161" Count="0" />
-      <LineId Id="158" Count="0" />
-      <LineId Id="163" Count="1" />
-      <LineId Id="155" Count="0" />
-      <LineId Id="153" Count="0" />
+      <LineId Id="239" Count="0" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="244" Count="0" />
+      <LineId Id="238" Count="0" />
       <LineId Id="196" Count="0" />
       <LineId Id="59" Count="0" />
       <LineId Id="18" Count="0" />
@@ -112,7 +91,9 @@ TemperatureWarning(Trigger := temperature >= 40.0,
       <LineId Id="112" Count="0" />
       <LineId Id="114" Count="0" />
       <LineId Id="146" Count="1" />
-      <LineId Id="198" Count="11" />
+      <LineId Id="198" Count="1" />
+      <LineId Id="201" Count="0" />
+      <LineId Id="203" Count="6" />
       <LineId Id="197" Count="0" />
       <LineId Id="151" Count="0" />
       <LineId Id="113" Count="0" />

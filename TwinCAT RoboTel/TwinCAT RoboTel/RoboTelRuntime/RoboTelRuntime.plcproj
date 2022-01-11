@@ -133,16 +133,13 @@
     <Compile Include="POUs\FunctionBlocks\FB_HOR2EQ.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_HTMLFile.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_influxdb.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_LightTimer.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_Mittelwert.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FunctionBlocks\FB_MQTTLog.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_MQTTPublisher.TcPOU">
@@ -173,6 +170,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_TONTP.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\FunctionBlocks\FB_InfluxMessage.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\ATAN2.TcPOU">
@@ -211,6 +211,9 @@
     <Compile Include="POUs\Functions\F_YREAL.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\ImageRotation.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\LREAL_TO_FMTESTR.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -242,6 +245,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\SafetyHandling.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\TelescopeAuxiliary.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\TelescopeControl.TcPOU">

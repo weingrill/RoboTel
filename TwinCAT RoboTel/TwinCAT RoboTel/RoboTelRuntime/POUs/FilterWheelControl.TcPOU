@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="FilterWheelControl" Id="{f0e4f375-0934-4386-a9fa-94537c34c7e1}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM FilterWheelControl
 VAR_INPUT
@@ -15,6 +15,10 @@ VAR_INPUT
 	Ready:				BOOL;
 	// filter position
 	filter_position: 	WORD;
+	// move to given position
+	MoveAxis: 			BOOL;
+	// calibrate the axis
+	HomeAxis:			BOOL;
 END_VAR
 VAR_OUTPUT
 	// is true if an error occurred
@@ -22,18 +26,18 @@ VAR_OUTPUT
 	// number of current axis error
 	ErrorID:			UDINT;
 	act_position:		LREAL;
+	// axis has been calibrated
+	Calibrated :		BOOL;
 END_VAR
 VAR
-	// move to given position
-	MoveAxis: 			BOOL;
-	// calibrate the axis
-	HomeAxis:			BOOL;
 	FilterWheelAxis:	FB_Axis2;
 	// axis position to set to with `MoveAxis`
 	position:			LREAL;
 	// current filter determined from the axis position
 	actual_filter:		WORD;
 	FilterWheelEvent:	FB_EventLog;
+	CalibratedEvent:	FB_EventLog;
+	FilterReadyEvent:	FB_Eventlog;
 END_VAR
 VAR CONSTANT
 	// total number of filters in the filter wheel
@@ -45,27 +49,32 @@ END_VAR]]></Declaration>
       <ST><![CDATA[(* This program controls the filter wheel. 
 The current optical filter is selected through `filter_position`.
 The number of filters is hard coded to 24.
-Use `MoveAxis` to position the 
+
 *)
 
-// limit filter_position to [0...filters-1]
+// limit desired filter_position to [0...filters-1]
 filter_position := filter_position MOD filters;
 // calculate the actual filter position
-actual_filter := LREAL_TO_WORD(act_position * filters / 360.0);
+actual_filter := LREAL_TO_WORD((360.0 - act_position) * filters / 360.0) MOD filters;
 
-Ready := (filter_position = actual_filter) AND FilterWheelAxis.StandStill;
+Ready := (filter_position = actual_filter) AND FilterWheelAxis.Standstill;
 
-IF FilterWheelAxis.Calibrated THEN
-	HomeAxis := FALSE;
-	// if we are on automatic mode then position the filterwheel
-	IF TelescopeControl.power OR PendantControl.enable THEN
-		position := 360.0 * WORD_TO_LREAL(filter_position) / WORD_TO_LREAL(filters);
-		MoveAxis := filter_position <> actual_filter;
+// TODO: Enable only on filter change
+IF Enable THEN
+	IF FilterWheelAxis.Calibrated THEN
+		HomeAxis := FALSE;
+		// if we are on automatic mode then position the filterwheel
+		position := MODABS(360.0 - 360.0 * WORD_TO_LREAL(filter_position) / WORD_TO_LREAL(filters), 360.0);
+		MoveAxis := filter_position <> actual_filter AND FilterWheelAxis.Standstill;
+	ELSE
+		position := calibration_position;
+		IF FilterWheelAxis.Ready THEN
+			HomeAxis := TRUE;
+		END_IF
 	END_IF
-ELSE
-	position := calibration_position;
-	HomeAxis := TRUE;
 END_IF
+
+Calibrated := FilterWheelAxis.Calibrated;
 
 FilterWheelAxis(
 	Enable := 			Enable,
@@ -73,6 +82,7 @@ FilterWheelAxis(
 	MoveAxis :=			MoveAxis,
 	HomeAxis :=			HomeAxis,
 	Position := 		position, 
+	Velocity :=			60.0,
 	Enable_Positive :=  TRUE,
 	Enable_Negative := 	TRUE,
 	Jog_Forward :=		left,
@@ -102,7 +112,19 @@ FilterWheelEvent(
 	FormatString :=	'Filter Wheel Axis Error: %s',
 	OnMessage := 	NCError_TO_STRING(ErrorID),
 	OffMEssage := 	'OK',
-	OffLevel := 	ADSLOG_MSGTYPE_HINT);]]></ST>
+	OffLevel := 	ADSLOG_MSGTYPE_HINT);
+	
+CalibratedEvent(
+	Trigger :=		Calibrated,
+	Level := 		ADSLOG_MSGTYPE_HINT,
+	FormatString :=	'%s',
+	OnMessage := 	'Filter wheel is calibrated.');
+	
+FilterReadyEvent(
+	Trigger :=		(filter_position = actual_filter),
+	Level := 		ADSLOG_MSGTYPE_HINT,
+	FormatString :=	'Filter position %s is ready.',
+	OnMessage := 	WORD_TO_STRING(actual_filter));]]></ST>
     </Implementation>
     <LineIds Name="FilterWheelControl">
       <LineId Id="184" Count="0" />
@@ -115,21 +137,27 @@ FilterWheelEvent(
       <LineId Id="224" Count="0" />
       <LineId Id="222" Count="0" />
       <LineId Id="235" Count="1" />
-      <LineId Id="87" Count="1" />
+      <LineId Id="390" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="378" Count="0" />
+      <LineId Id="88" Count="0" />
       <LineId Id="177" Count="0" />
       <LineId Id="254" Count="0" />
-      <LineId Id="249" Count="0" />
       <LineId Id="252" Count="1" />
-      <LineId Id="251" Count="0" />
       <LineId Id="91" Count="0" />
       <LineId Id="179" Count="1" />
+      <LineId Id="443" Count="1" />
+      <LineId Id="379" Count="0" />
       <LineId Id="90" Count="0" />
+      <LineId Id="376" Count="1" />
       <LineId Id="181" Count="0" />
       <LineId Id="45" Count="0" />
       <LineId Id="58" Count="0" />
       <LineId Id="46" Count="1" />
       <LineId Id="99" Count="0" />
-      <LineId Id="48" Count="4" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="389" Count="0" />
+      <LineId Id="49" Count="3" />
       <LineId Id="96" Count="1" />
       <LineId Id="53" Count="2" />
       <LineId Id="28" Count="0" />
@@ -145,6 +173,10 @@ FilterWheelEvent(
       <LineId Id="123" Count="4" />
       <LineId Id="5" Count="0" />
       <LineId Id="147" Count="0" />
+      <LineId Id="381" Count="2" />
+      <LineId Id="385" Count="2" />
+      <LineId Id="393" Count="0" />
+      <LineId Id="395" Count="4" />
     </LineIds>
   </POU>
 </TcPlcObject>

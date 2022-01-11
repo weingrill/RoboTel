@@ -1,42 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
-  <POU Name="FB_EventLog" Id="{3524ed80-3787-4549-a84e-d995fc3a40dc}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_EventLog
+  <POU Name="FB_MQTTLog" Id="{9b4576f2-4101-4b44-8d3e-ce9bf7223fb1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MQTTLog
 VAR_INPUT
 	Trigger:		BOOL;
 	// ADSLOG_MSGTYPE_HINT or ADSLOG_MSGTYPE_WARN or ADSLOG_MSGTYPE_ERROR
 	Level:			UDINT := ADSLOG_MSGTYPE_HINT;
-	FormatString: 	STRING(255) := '%s';
 	OnMessage: 		STRING(255) := '';
 	OffMessage:		STRING(255) := '';
-	OffLevel:		UDINT := ADSLOG_MSGTYPE_HINT;
+	OffLevel:		UDINT := 0;
 END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	LogonTrigger: R_TRIG;
-	LogoffTrigger: F_TRIG; // R_Trig or F_Trig ?!
-	sPayloadPub, PayloadMessage: STRING(255);
-	fbFormat:	FB_FormatString;
+	LogonTrigger:	R_TRIG;
+	LogoffTrigger:	F_TRIG;
+	sPayloadPub:	STRING(255) := '';
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[LogonTrigger(CLK := Trigger);
+      <ST><![CDATA[sPayloadPub := 'log,host=CX-4E6032';
+LogonTrigger(CLK := Trigger);
 LogoffTrigger(CLK := Trigger);
+
 // in case the OffLevel is not set use the default Level Value
 IF OffLevel = 0 THEN
 	OffLevel := Level;
 END_IF
-IF LogonTrigger.Q AND LEN(OnMessage)>0 THEN
-	ADSLOGSTR( Level OR ADSLOG_MSGTYPE_LOG, FormatString, OnMessage);
-END_IF
-
-IF LogoffTrigger.Q AND LEN(OffMessage)>0 THEN
-	ADSLOGSTR( OffLevel OR ADSLOG_MSGTYPE_LOG, FormatString, OffMessage);
-END_IF
-
-sPayloadPub := 'log,host=CX-4E6032';
-
 IF LogonTrigger.Q AND LEN(OnMessage)>1 THEN
 	IF Level=ADSLOG_MSGTYPE_HINT THEN
 		sPayloadPub := CONCAT(sPayloadPub, ',level=INFO');
@@ -45,8 +35,7 @@ IF LogonTrigger.Q AND LEN(OnMessage)>1 THEN
 	ELSE
 	    sPayloadPub := CONCAT(sPayloadPub, ',level=ERROR');
 	END_IF
-	fbFormat( sFormat := FormatString, arg1 := F_STRING(OnMessage), sOut => PayloadMessage);
-	sPayloadPub := APPEND(sPayloadPub, ' message="', PayloadMessage);
+	sPayloadPub := APPEND(sPayloadPub, ' message="', OnMessage);
 	sPayloadPub := CONCAT(sPayloadPub, '"');
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Log', 
@@ -66,8 +55,7 @@ IF LogoffTrigger.Q AND LEN(OffMessage)>1 THEN
 	    sPayloadPub := CONCAT(sPayloadPub, ',level=ERROR');
 	END_IF
 	
-	fbFormat( sFormat := FormatString, arg1 := F_STRING(OffMessage), sOut => PayloadMessage);
-	sPayloadPub := APPEND(sPayloadPub, ' message="', PayloadMessage);
+	sPayloadPub := APPEND(sPayloadPub, ' message="', OffMessage);
 	sPayloadPub := CONCAT(sPayloadPub, '"');
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Log', 
@@ -79,19 +67,27 @@ IF LogoffTrigger.Q AND LEN(OffMessage)>1 THEN
 END_IF	
 ]]></ST>
     </Implementation>
-    <LineIds Name="FB_EventLog">
-      <LineId Id="27" Count="1" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="51" Count="2" />
-      <LineId Id="29" Count="5" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="113" Count="1" />
-      <LineId Id="72" Count="8" />
-      <LineId Id="115" Count="0" />
-      <LineId Id="81" Count="20" />
-      <LineId Id="117" Count="0" />
-      <LineId Id="102" Count="8" />
+    <LineIds Name="FB_MQTTLog">
+      <LineId Id="22" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="37" Count="5" />
+      <LineId Id="69" Count="1" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="75" Count="0" />
       <LineId Id="71" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="51" Count="6" />
+      <LineId Id="44" Count="2" />
+      <LineId Id="78" Count="6" />
+      <LineId Id="67" Count="1" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="59" Count="5" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="9" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -178,49 +178,49 @@ Cover3_timeout(IN := NOT (Cover3_opened XOR Cover3_closed), PT := T#20S);
 Covers_Error_event(	Trigger := Error, 
 					Level := ADSLOG_MSGTYPE_ERROR, 
 					FormatString := '%s', 
-					OnMessage := 'Cover Drive Error');
+					OnMessage := 'Cover drive error');
 
 // raise an error, if both opened and closed signals are activated
 Cover1_Event(	Trigger := GVL_Telescope.cover1_open AND GVL_Telescope.cover1_closed,
 				Level := ADSLOG_MSGTYPE_ERROR, 
 				FormatString := '%s',
-				OnMessage := 'Cover1 Limit switch error');
+				OnMessage := 'Cover1: limit switch error');
 
 Cover2_Event(Trigger := cover2_opened AND cover2_closed,
 				Level := ADSLOG_MSGTYPE_ERROR, 
 				FormatString := '%s',
-				OnMessage := 'Cover2 Limit switch error');
+				OnMessage := 'Cover2: limit switch error');
 
 Cover3_Event(Trigger := cover3_opened AND cover3_closed,
 				Level := ADSLOG_MSGTYPE_ERROR, 
 				FormatString := '%s',
-				OnMessage := 'Cover3 Limit switch error');
+				OnMessage := 'Cover3: limit switch error');
 
 //trigger an event, if we encounter a timeout
 Cover1_Timeout_Event(Trigger := Cover1_timeout.Q,
 				Level := ADSLOG_MSGTYPE_ERROR, 
 				FormatString := '%s',
-				OnMessage := 'Cover1 Timeout');
+				OnMessage := 'Cover1: Timeout');
 
 Cover2_Timeout_Event(Trigger := Cover2_timeout.Q,
 				Level := ADSLOG_MSGTYPE_ERROR, 
 				FormatString := '%s',
-				OnMessage := 'Cover2 Timeout');
+				OnMessage := 'Cover2: Timeout');
 
 Cover3_Timeout_Event(Trigger := Cover3_timeout.Q,
 				Level := ADSLOG_MSGTYPE_ERROR, 
 				FormatString := '%s',
-				OnMessage := 'Cover3 Timeout');
+				OnMessage := 'Cover3: Timeout');
 // Log if we are opened
 Covers_opened_event(Trigger := isopen,
-					Level := ADSLOG_MSGTYPE_LOG,
+					Level := ADSLOG_MSGTYPE_WARN,
 					FormatString := '%s',
-					OnMessage := 'All covers open');
+					OnMessage := 'All covers are open');
 //log if we are closed
 Covers_closed_event(Trigger := isclosed,
-					Level := ADSLOG_MSGTYPE_LOG,
+					Level := ADSLOG_MSGTYPE_HINT,
 					FormatString := '%s',
-					OnMessage := 'All covers closed');
+					OnMessage := 'All covers are closed');
 				]]></ST>
     </Implementation>
     <LineIds Name="CoverControl">

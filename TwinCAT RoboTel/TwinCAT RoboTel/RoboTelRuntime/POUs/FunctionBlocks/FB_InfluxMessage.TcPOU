@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_InfluxMessage" Id="{90ca1cc6-8109-4bcf-9f8e-c5cf65cdb4b2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_InfluxMessage
+VAR_INPUT
+	// payload string received
+	sPayload:	STRING(255);
+END_VAR
+VAR_OUTPUT
+	// measurement string (first word)
+	measurement:	STRING(255) := '';
+	// parameter (variable name)
+	parameter:		STRING(255) := '';
+	// value (variable content)
+	value:			STRING(255) := '';
+END_VAR
+VAR
+	space_position:		INT;
+	equial_position:	INT;
+	comma_position:		INT;
+	measurement_tags:	STRING(255);
+	parameter_value: 	STRING(255);
+	bResultSplit: 		BOOL;
+	// definition of the space separator
+	spaceSeparator:		STRING(1) := ' ';
+	// definition of the comma separator
+	commaSeparator:		STRING(1) := ',';
+	// definition of the equial sign separator
+	equialSeparator:	STRING(1) := '=';
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* 
+parse message in influx format:
+	measurement parameter=value
+	measurement,tag1=tag1value parameter=value
+
+Multiple parameter/value pairs are ignored for now.
+tags are not supported.
+*)
+
+//separate measurement from parameter, value
+bResultSplit := FindAndSplit( pSeparator     := ADR(spaceSeparator), pSrcString := ADR(sPayload), 
+                              pLeftString    := ADR(measurement_tags), nLeftSize  := SIZEOF(measurement_tags), 
+                              pRightString   := ADR(parameter_value), nRightSize := SIZEOF(parameter_value),
+                              bSearchFromRight := FALSE );
+IF NOT bResultSplit THEN
+	RETURN;
+END_IF
+// look for tags attached to the measurement
+comma_position := FIND(measurement_tags, commaSeparator);
+IF comma_position = 0 THEN
+	measurement := measurement_tags;
+ELSE
+	measurement := LEFT(measurement_tags, comma_position-1);
+END_IF
+// dissect the parameter=value part
+bResultSplit := FindAndSplit( pSeparator     := ADR(equialSeparator), pSrcString := ADR(parameter_value), 
+                              pLeftString    := ADR(parameter), nLeftSize  := SIZEOF(parameter), 
+                              pRightString   := ADR(value), nRightSize := SIZEOF(value),
+                              bSearchFromRight := FALSE );
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_InfluxMessage">
+      <LineId Id="30" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="40" Count="2" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="56" Count="2" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="46" Count="1" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="69" Count="3" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

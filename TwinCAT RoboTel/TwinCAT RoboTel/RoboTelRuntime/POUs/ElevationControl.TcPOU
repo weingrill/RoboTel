@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="ElevationControl" Id="{c0371b19-3d1d-4f20-bd19-ce60539d69cd}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM ElevationControl
 VAR_INPUT
@@ -41,10 +41,12 @@ VAR
 	readydelay:				TON;
 	HomeDelay:				FB_TONTP;
 	ElevationAxisEvent: 	FB_Eventlog;
-	ElevationBrakeEvent: 		FB_Eventlog;
-	HighElevationEvent,
+	ElevationBrakeEvent: 	FB_Eventlog;
+	HighElevationEvent: 	FB_Eventlog;
 	LowElevationEvent:		FB_Eventlog;
-	SimpleLog:				FB_SimpleLog;
+	TorqueWarning:			FB_EventLog;
+	ElevationRecalEvent:	FB_Eventlog;
+	elevation_torque: REAL;
 END_VAR
 VAR CONSTANT
 	// reference position for homing
@@ -77,8 +79,13 @@ Calibrated := ElevationAxis.Calibrated;
 
 IF HomeAxis THEN
 	position := homing_position;
+	MoveAxis := FALSE;
+	Tracking := FALSE;
 END_IF
 
+IF MoveAxis THEN
+	Tracking := FALSE;
+END_IF
 
 HomeDelay(IN := Calibrated, PT1 := T#5S, PT2 := T#100MS);
 
@@ -102,9 +109,11 @@ ElevationCalibration(
 	Execute := GVL_Telescope.Elevation_Probe>0 AND NOT HomeAxis,
 	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
 
-IF GVL_Telescope.Elevation_Probe>0 THEN
-	SimpleLog(Message := 'Elevation re-calibrated');
+
+IF Tracking AND ABS(position - act_position) > 1.0 THEN
+	MoveAxis := TRUE;
 END_IF
+
 	
 ElevationAxis(
 	Enable := 			enable AND HydraulicsControl.brake_open,
@@ -142,7 +151,10 @@ IF Calibrated AND act_position > 95.0 THEN
 END_IF
 
 readydelay(IN :=  HydraulicsControl.brake_open, PT := T#6000MS, Q=> ready);
-			
+	
+elevation_torque := GVL_Telescope.Elevation_torque / 10.0;
+
+		
 ElevationAxisEvent(	Trigger := Error, 
 				Level := ADSLOG_MSGTYPE_ERROR,
 				FormatString := 'Elevation Axis Error: %s',
@@ -161,9 +173,18 @@ LowElevationEvent(	Trigger := Calibrated AND act_position < 15.0,
 ElevationBrakeEvent( Trigger := NOT enable AND HydraulicsControl.brake_open, 
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := '%s',
-				OnMessage := 'Elevation without brake!'); 
+				OnMessage := 'Brake was opened without elevation axis enabled!'); 
 
-]]></ST>
+ElevationReCalEvent(Trigger := GVL_Telescope.Elevation_Probe>0, 
+				Level := ADSLOG_MSGTYPE_HINT,
+				FormatString := '%s',
+				OnMessage := 'Elevation was recalibrated on encoder reference.');
+				
+TorqueWarning(	
+	Trigger := 		elevation_torque > 12.0, 
+	Level := 		ADSLOG_MSGTYPE_WARN,
+	FormatString :=	'%s',
+	OnMessage := 	'Elevation torque is high.');]]></ST>
     </Implementation>
     <LineIds Name="ElevationControl">
       <LineId Id="379" Count="0" />
@@ -181,8 +202,12 @@ ElevationBrakeEvent( Trigger := NOT enable AND HydraulicsControl.brake_open,
       <LineId Id="254" Count="1" />
       <LineId Id="558" Count="1" />
       <LineId Id="626" Count="0" />
-      <LineId Id="257" Count="2" />
+      <LineId Id="257" Count="1" />
+      <LineId Id="769" Count="1" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="772" Count="0" />
       <LineId Id="630" Count="0" />
+      <LineId Id="773" Count="1" />
       <LineId Id="639" Count="0" />
       <LineId Id="638" Count="0" />
       <LineId Id="633" Count="0" />
@@ -204,8 +229,9 @@ ElevationBrakeEvent( Trigger := NOT enable AND HydraulicsControl.brake_open,
       <LineId Id="299" Count="0" />
       <LineId Id="284" Count="1" />
       <LineId Id="614" Count="0" />
-      <LineId Id="231" Count="0" />
-      <LineId Id="617" Count="1" />
+      <LineId Id="761" Count="0" />
+      <LineId Id="763" Count="2" />
+      <LineId Id="762" Count="0" />
       <LineId Id="615" Count="0" />
       <LineId Id="128" Count="0" />
       <LineId Id="184" Count="2" />
@@ -225,6 +251,9 @@ ElevationBrakeEvent( Trigger := NOT enable AND HydraulicsControl.brake_open,
       <LineId Id="612" Count="0" />
       <LineId Id="386" Count="0" />
       <LineId Id="136" Count="0" />
+      <LineId Id="829" Count="0" />
+      <LineId Id="828" Count="0" />
+      <LineId Id="827" Count="0" />
       <LineId Id="156" Count="2" />
       <LineId Id="160" Count="0" />
       <LineId Id="697" Count="0" />
@@ -233,8 +262,11 @@ ElevationBrakeEvent( Trigger := NOT enable AND HydraulicsControl.brake_open,
       <LineId Id="698" Count="3" />
       <LineId Id="5" Count="0" />
       <LineId Id="396" Count="3" />
-      <LineId Id="634" Count="0" />
+      <LineId Id="837" Count="3" />
       <LineId Id="395" Count="0" />
+      <LineId Id="841" Count="0" />
+      <LineId Id="843" Count="3" />
+      <LineId Id="842" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

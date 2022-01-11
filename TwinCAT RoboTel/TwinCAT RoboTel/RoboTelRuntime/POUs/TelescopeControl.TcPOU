@@ -41,7 +41,7 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	// absolute offset for time
 	time_offset: 		LREAL := 0.0;
 	// offset for the de-rotator
-	derotator_offset:	LREAL := 0.0;
+	derotator_offset:	LREAL := 180.0;
 	// Nasmyth port 1 or 2
 	Nasmyth_port: USINT;
 	// Focus position in mm
@@ -53,20 +53,23 @@ VAR
 	// actual command from the TCS
 	TCS_command: 	E_TCSCommand;
 	// current Julian Date calculated from system time
-	jd,
+	jd:	LREAL;
 	// desired elevation of the telescope pointing 
-	elevation,
+	elevation:	LREAL := 15.0;
 	// desired azimut of the telescope pointing 
-	azimuth,
+	azimuth:	LREAL := 320.0;
+	// image derotation
+	derotation_calc:	LREAL;
 	// local siderial time calculated from Julian date
-	lst,
+	lst:	LREAL;
 	// values calulated when ra and dec are set by TCS
-	elevation_calc, 
-	azimuth_calc,
-	elevation_current,
-	azimuth_current,
-	rightascension_calc,
-	declination_calc: LREAL;
+	elevation_calc:	LREAL; 
+	azimuth_calc:	LREAL;
+	elevation_current:	LREAL;
+	azimuth_current:	LREAL;
+	rightascension_calc:	LREAL;
+	declination_calc:	LREAL;
+	
 	
 	(* Hour Angle part *)
 	Hourangle_calc: LREAL;
@@ -85,6 +88,7 @@ VAR
 	poweronwarning:	TP;
 	poweron_reset:	TP;
 	
+	
 	CalibrationEvent,
 	DeclinationCalEvent,
 	DeclinationErrorEvent,
@@ -102,6 +106,7 @@ VAR
 	TCSstopEvent,
 	AltitudeEvent: FB_Eventlog;
 	SimpleLog:	FB_SimpleLog;
+	FocusDelay: TON := (PT:=T#5S);
 	MQTTTimer : TON := (PT:=T#5S);
 	// MQTT Message
 	sPayloadPub: STRING(255);
@@ -154,7 +159,9 @@ VAR CONSTANT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// get the system time
+      <ST><![CDATA[TelescopeAuxiliary();
+
+// get the system time
 fbTime();
 jd := DateTime2JD(fbTime.time_RTCEX2);
 lst := CT2LST(longitude, jd);
@@ -181,6 +188,9 @@ END_IF
 
 IF ElevationControl.error OR AzimuthElevationControl.error THEN
 	power := FALSE;
+	//ElevationControl.enable := FALSE;
+	//AzimuthElevationControl.enable := FALSE;
+	//HydraulicsControl.close_brake := TRUE;
 END_IF
 
 // determine the operation of the telescope based on the switch set
@@ -211,13 +221,17 @@ hor2eq(alt := elevation_current,
 		ra => rightascension_calc,
 		dec => declination_calc);		
 
+// TODO check sign; offset is applied later
+derotation_calc := ImageRotation(azimuth_current, elevation_current, declination_calc, latitude);
+		
 poweronwarning(IN := power OR (NOT ElevationControl.enable AND HydraulicsControl.brake_open), PT := T#250MS, Q => GVL_Telescope.horn);
+poweron(CLK := power);
 poweroff(CLK := power);
 poweron_reset(IN := power AND NOT PendantControl.manual, PT := T#50MS);
 // reset fan
 FanControl.reset := poweron_reset.Q OR reset;
 CoverControl.reset := poweron_reset.Q OR reset;
-
+	
 IF power THEN
 	IF NOT Main.brake_clearing THEN
 		powerfailure := TRUE;
@@ -239,7 +253,7 @@ IF power THEN
 	// open cover
 	// COVER MUST BE OPENED FOR A SUCCESSFUL WAKE & SHAKE COMMAND!
 	CoverControl.enable := TRUE;
-	CoverControl.reset := poweron_reset.Q;
+	//CoverControl.reset := poweron_reset.Q;
 	Covercontrol.open := TRUE;
 	IF Covercontrol.isopen THEN
 		Covercontrol.open := FALSE;
@@ -247,8 +261,12 @@ IF power THEN
 	// enable elevation enable azimuth
 	IF MAIN.ready AND CoverControl.isopen THEN
 		ElevationControl.enable := TRUE;
-		AzimuthElevationControl.enable := TRUE;
+	    // wait until azimuth comes to rest
+		IF GVL_Telescope.AzimuthAxisRef.NcToPlc.ActVelo < 0.1 THEN
+			AzimuthElevationControl.enable := TRUE;
+		END_IF	
 	END_IF
+	
 	IF ElevationControl.Ready AND NOT ElevationControl.Calibrated THEN
 		ElevationControl.HomeAxis := TRUE;
 	END_IF
@@ -263,17 +281,27 @@ IF power THEN
 	END_IF
 
 	// enable derotator
-	//DerotatorControl.enable := TRUE;
-	// enable filterwheel
-	//FilterWheelControl.Enable := TRUE;
+	IF ElevationControl.Calibrated THEN
+		DerotatorControl.enable := TRUE;
+		// Derotator far limit switch is broken!
+		DerotatorControl.HomeAxis := DerotatorControl.Ready AND NOT DerotatorControl.Calibrated;
+	END_IF
+	
+	// enable filterwheel after Derotator Axis to avoid additional torque
+	IF DerotatorControl.Calibrated THEN
+		FilterWheelControl.Enable := TRUE;
+		FilterWheelControl.HomeAxis := NOT FilterWheelControl.Calibrated;
+	END_IF
+	
 	// enable focus
 	FocusControl.enable := TRUE;
 	IF FocusControl.ready AND NOT FocusControl.Calibrated THEN
 		FocusControl.HomeAxis := TRUE;
 	END_IF
-	IF FocusControl.Calibrated AND FocusControl.Ready THEN
+	FocusDelay(IN := FocusControl.Calibrated AND FocusControl.Ready);
+	IF FocusDelay.Q THEN
 		FocusControl.position := focus_position;
-		FocusControl.MoveAxis := ABS(FocusControl.actual_position - focus_position) < 0.005;
+		FocusControl.MoveAxis := ABS(FocusControl.actual_position - focus_position) > 0.005;
 	END_IF
 ELSIF poweroff.Q THEN
 	gohome := FALSE;
@@ -297,6 +325,7 @@ ELSIF poweroff.Q THEN
 	HydraulicsControl.stop := TRUE;
 	SimpleLog(Message := 'shutdown');
 END_IF
+
 IF NOT power AND NOT PendantControl.manual THEN
 	IF CoverControl.isclosed THEN
 		CoverControl.close := FALSE;
@@ -336,6 +365,7 @@ END_IF
 IF NOT track THEN
 	ElevationControl.Tracking := FALSE;
 	AzimuthElevationControl.Tracking := FALSE;
+	DerotatorControl.Tracking := FALSE;
 END_IF
 
 IF TCS_command = E_TCSCommand.park THEN
@@ -343,8 +373,9 @@ IF TCS_command = E_TCSCommand.park THEN
 	AzimuthElevationControl.position := azimuth_park;
 	ElevationControl.MoveAxis := TRUE;
 	AzimuthElevationControl.MoveAxis := TRUE;
-	IF ElevationControl.ElevationAxis.MoveDone AND AzimuthElevationControl.AzimuthAxis.MoveDone THEN
+	IF ElevationControl.ElevationAxis.StopDone AND AzimuthElevationControl.AzimuthAxis.StopDone THEN
 		park := FALSE;
+		power := FALSE;
 	END_IF
 
 ELSIF TCS_command = E_TCSCommand.gohome THEN
@@ -352,27 +383,48 @@ ELSIF TCS_command = E_TCSCommand.gohome THEN
 	ElevationControl.MoveAxis := TRUE;
 	AzimuthElevationControl.position := azimuth_home;
 	AzimuthElevationControl.MoveAxis := TRUE;
-	IF ElevationControl.ElevationAxis.MoveDone AND AzimuthElevationControl.AzimuthAxis.MoveDone THEN
+	IF ElevationControl.ElevationAxis.StopDone AND AzimuthElevationControl.AzimuthAxis.StopDone THEN
 		gohome := FALSE;
 	END_IF
 	
 ELSIF TCS_command = E_TCSCommand.track THEN
 	ElevationControl.position := elevation_calc + elevation_offset;
-	ElevationControl.Tracking := TRUE;
 	AzimuthElevationControl.position := azimuth_calc + azimuth_offset;
+	DerotatorControl.position := derotation_calc + derotator_offset;
+	ElevationControl.Tracking := TRUE;
 	AzimuthElevationControl.Tracking := TRUE;
+	DerotatorControl.Tracking := TRUE;
 	
 ELSIF TCS_command = E_TCSCommand.goto THEN
 	ElevationControl.position := elevation_calc + elevation_offset;
 	ElevationControl.MoveAxis := TRUE;
 	AzimuthElevationControl.position := azimuth_calc + azimuth_offset;
 	AzimuthElevationControl.MoveAxis := TRUE;
-
-	IF ElevationControl.ElevationAxis.MoveDone AND AzimuthElevationControl.AzimuthAxis.MoveDone THEN
+	DerotatorControl.position := derotation_calc + derotator_offset;
+	DerotatorControl.MoveAxis := TRUE;
+	IF ElevationControl.ElevationAxis.StopDone AND AzimuthElevationControl.AzimuthAxis.StopDone THEN
 		ElevationControl.MoveAxis := FALSE;
 		AzimuthElevationControl.MoveAxis := FALSE;
 		goto := FALSE;
 	END_IF
+
+ELSIF TCS_command = E_TCSCommand.pumping THEN
+	ElevationControl.position := elevation;
+	ElevationControl.MoveAxis := TRUE;
+	AzimuthElevationControl.position := azimuth;
+	AzimuthElevationControl.MoveAxis := TRUE;
+	DerotatorControl.position := 90.0;
+	DerotatorControl.MoveAxis := TRUE;
+	
+	IF ElevationControl.ElevationAxis.StopDone AND 
+		AzimuthElevationControl.AzimuthAxis.StopDone AND 
+		DerotatorControl.DerotatorAxis.StopDone THEN
+		ElevationControl.MoveAxis := FALSE;
+		AzimuthElevationControl.MoveAxis := FALSE;
+		DerotatorControl.MoveAxis := FALSE;
+		pumping := FALSE;
+	END_IF
+	
 END_IF
  
 sliding := ElevationControl.MoveAxis OR AzimuthElevationControl.MoveAxis;
@@ -380,21 +432,17 @@ tracking := ElevationControl.Tracking AND AzimuthElevationControl.Tracking;
 stopped :=  ElevationControl.ElevationAxis.StandStill AND AzimuthElevationControl.AzimuthAxis.StandStill;
 homed := ElevationControl.Calibrated AND AzimuthElevationControl.calibrated;
 
+
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
 
 	sPayloadPub := 'telescope,location=dome,host=CX-4E6032,module=TelescopeControl ';
-	sPayloadPub := CONCAT(sPayloadPub, 'Azimuth=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(azimuth_current, 5, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',Elevation=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(elevation_current, 5, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',HourAngle=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(hourangle_calc, 5, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',RightAscension=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(rightascension_calc, 5, TRUE));
-	sPayloadPub := CONCAT(sPayloadPub, ',Declination=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(declination_calc, 5, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, 'Azimuth=', LREAL_TO_FMTSTR(azimuth_current, 5, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',Elevation=', LREAL_TO_FMTSTR(elevation_current, 5, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',HourAngle=', LREAL_TO_FMTSTR(hourangle_calc, 5, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',RightAscension=', LREAL_TO_FMTSTR(rightascension_calc, 5, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',Declination=', LREAL_TO_FMTSTR(declination_calc, 5, TRUE));
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
@@ -403,14 +451,27 @@ IF MQTTTimer.Q THEN // publish new payload every second
 					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
 					bRetain:= FALSE, 
 					bQueue:= FALSE );
-
+(*
+	sPayloadPub := 'telescope,location=dome,host=CX-4E6032,module=TelescopeControl ';
+	sPayloadPub := APPEND(sPayloadPub, 'AzimuthTorque=', LREAL_TO_FMTSTR(azimuth_torque, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',ElevationTorque=', LREAL_TO_FMTSTR(elevation_torque, 1, TRUE));
+	
+	
+	MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Telemetry', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
+*)
 END_IF
 
 (* Event function blocks start here. *)
 TCSpowerEvent(	Trigger := powerfailure, 
 				Level := ADSLOG_MSGTYPE_ERROR,
 				FormatString := 'power %s',
-				OffMEssage := 'OK');
+				OffMessage := 'OK');
 
 TCSgohomeEvent(	Trigger := gohome, 
 				Level := ADSLOG_MSGTYPE_HINT,
@@ -446,6 +507,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
 				]]></ST>
     </Implementation>
     <LineIds Name="TelescopeControl">
+      <LineId Id="5012" Count="1" />
       <LineId Id="58" Count="0" />
       <LineId Id="3290" Count="1" />
       <LineId Id="65" Count="0" />
@@ -460,7 +522,9 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4312" Count="6" />
       <LineId Id="4252" Count="0" />
       <LineId Id="4330" Count="0" />
-      <LineId Id="4246" Count="2" />
+      <LineId Id="4246" Count="1" />
+      <LineId Id="5527" Count="2" />
+      <LineId Id="4248" Count="0" />
       <LineId Id="1116" Count="0" />
       <LineId Id="647" Count="0" />
       <LineId Id="635" Count="1" />
@@ -476,8 +540,13 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="2011" Count="0" />
       <LineId Id="3521" Count="4" />
       <LineId Id="3528" Count="1" />
+      <LineId Id="6202" Count="0" />
+      <LineId Id="6200" Count="0" />
       <LineId Id="4243" Count="0" />
-      <LineId Id="4075" Count="1" />
+      <LineId Id="6201" Count="0" />
+      <LineId Id="4075" Count="0" />
+      <LineId Id="5185" Count="0" />
+      <LineId Id="4076" Count="0" />
       <LineId Id="4242" Count="0" />
       <LineId Id="4347" Count="0" />
       <LineId Id="4346" Count="0" />
@@ -507,19 +576,32 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3750" Count="0" />
       <LineId Id="3922" Count="0" />
       <LineId Id="3770" Count="0" />
+      <LineId Id="5531" Count="2" />
       <LineId Id="4300" Count="0" />
-      <LineId Id="3923" Count="3" />
+      <LineId Id="3923" Count="0" />
+      <LineId Id="5525" Count="0" />
+      <LineId Id="3924" Count="2" />
       <LineId Id="3932" Count="0" />
       <LineId Id="4088" Count="2" />
       <LineId Id="4340" Count="4" />
       <LineId Id="4244" Count="0" />
       <LineId Id="3752" Count="0" />
+      <LineId Id="5690" Count="1" />
+      <LineId Id="5702" Count="0" />
+      <LineId Id="5705" Count="0" />
+      <LineId Id="5692" Count="0" />
       <LineId Id="3773" Count="0" />
-      <LineId Id="3753" Count="0" />
+      <LineId Id="5696" Count="0" />
+      <LineId Id="5694" Count="0" />
       <LineId Id="3775" Count="0" />
+      <LineId Id="5704" Count="0" />
       <LineId Id="3754" Count="0" />
+      <LineId Id="5697" Count="0" />
+      <LineId Id="5695" Count="0" />
       <LineId Id="3776" Count="0" />
-      <LineId Id="4499" Count="4" />
+      <LineId Id="4499" Count="2" />
+      <LineId Id="5193" Count="0" />
+      <LineId Id="4502" Count="1" />
       <LineId Id="4506" Count="0" />
       <LineId Id="4504" Count="0" />
       <LineId Id="3755" Count="0" />
@@ -541,6 +623,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3765" Count="0" />
       <LineId Id="4096" Count="0" />
       <LineId Id="3549" Count="0" />
+      <LineId Id="5191" Count="0" />
       <LineId Id="3519" Count="0" />
       <LineId Id="4323" Count="0" />
       <LineId Id="4325" Count="0" />
@@ -569,13 +652,16 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4294" Count="0" />
       <LineId Id="3532" Count="0" />
       <LineId Id="4297" Count="1" />
+      <LineId Id="6205" Count="0" />
       <LineId Id="4296" Count="0" />
       <LineId Id="4299" Count="0" />
       <LineId Id="3533" Count="1" />
       <LineId Id="3538" Count="0" />
       <LineId Id="4078" Count="0" />
       <LineId Id="4081" Count="0" />
-      <LineId Id="4236" Count="2" />
+      <LineId Id="4236" Count="1" />
+      <LineId Id="6021" Count="0" />
+      <LineId Id="4238" Count="0" />
       <LineId Id="4235" Count="0" />
       <LineId Id="3541" Count="0" />
       <LineId Id="3543" Count="0" />
@@ -584,33 +670,53 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4080" Count="0" />
       <LineId Id="4232" Count="2" />
       <LineId Id="4239" Count="0" />
-      <LineId Id="3920" Count="1" />
-      <LineId Id="3936" Count="0" />
-      <LineId Id="4082" Count="0" />
-      <LineId Id="4077" Count="0" />
+      <LineId Id="3920" Count="0" />
+      <LineId Id="5364" Count="1" />
+      <LineId Id="6203" Count="0" />
+      <LineId Id="5357" Count="0" />
+      <LineId Id="5367" Count="0" />
+      <LineId Id="6197" Count="0" />
       <LineId Id="4240" Count="0" />
       <LineId Id="3928" Count="1" />
       <LineId Id="3927" Count="0" />
       <LineId Id="4083" Count="1" />
+      <LineId Id="6204" Count="0" />
       <LineId Id="4278" Count="0" />
       <LineId Id="4259" Count="0" />
       <LineId Id="4288" Count="1" />
       <LineId Id="4260" Count="0" />
       <LineId Id="4258" Count="0" />
+      <LineId Id="6023" Count="0" />
+      <LineId Id="6022" Count="0" />
+      <LineId Id="6025" Count="3" />
+      <LineId Id="6035" Count="1" />
+      <LineId Id="6029" Count="1" />
+      <LineId Id="6038" Count="1" />
+      <LineId Id="6031" Count="1" />
+      <LineId Id="6037" Count="0" />
+      <LineId Id="6033" Count="1" />
+      <LineId Id="6024" Count="0" />
       <LineId Id="3535" Count="0" />
       <LineId Id="3540" Count="0" />
       <LineId Id="3539" Count="0" />
       <LineId Id="4256" Count="0" />
       <LineId Id="4255" Count="0" />
       <LineId Id="4257" Count="0" />
+      <LineId Id="5167" Count="0" />
       <LineId Id="4662" Count="3" />
-      <LineId Id="4837" Count="5" />
-      <LineId Id="4853" Count="5" />
+      <LineId Id="4837" Count="2" />
+      <LineId Id="4841" Count="0" />
+      <LineId Id="4853" Count="0" />
+      <LineId Id="4855" Count="0" />
+      <LineId Id="4857" Count="0" />
       <LineId Id="4843" Count="7" />
+      <LineId Id="5170" Count="3" />
+      <LineId Id="5176" Count="8" />
       <LineId Id="4677" Count="0" />
       <LineId Id="4656" Count="0" />
       <LineId Id="3530" Count="1" />
-      <LineId Id="3583" Count="3" />
+      <LineId Id="3583" Count="2" />
+      <LineId Id="5530" Count="0" />
       <LineId Id="3085" Count="0" />
       <LineId Id="931" Count="1" />
       <LineId Id="1179" Count="0" />

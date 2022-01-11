@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <GVL Name="GVL_Main" Id="{4c62cafc-6725-448b-aa29-7cf19ff00316}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 //TODO update to current RoboTel IOs
@@ -33,6 +33,13 @@ VAR_GLOBAL
 	//DOUT7 0.6
 	softstart_trafo		AT%Q*:BOOL;
 
+	
+	ups_input_voltage		AT%I*: UINT;
+	ups_input_current		AT%I*: UINT;
+	ups_temperature			AT%I*: UINT;
+	ups_battery_temperature AT%I*: UINT;
+	ups_output_voltage		AT%I*: UINT;
+	ups_output_current		AT%I*: UINT;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

@@ -23,44 +23,78 @@ VAR_INPUT
 	HomeAxis:	BOOL;
 END_VAR
 VAR_OUTPUT
+	// error condition on the azimuth drive
 	Error:		BOOL;
+	// NC axis error of the dome drive
 	ErrorID:	UDINT;
+	// error in the dome communication or drive
 	DomeError:	BOOL;
+	// dome is calibrated
 	Calibrated:	BOOL;
 END_VAR
 VAR
+	// dome axis function block
 	DomeAxis: FB_Axis2;
+	// current measured dome azimuth
 	Azimuth_current: 	LREAL;
+	// dome velocity
 	ActVelo:			LREAL;
+	//
 	manual_enable:		BOOL;
+	// command to move the azimuth to position
 	move_azimuth:		BOOL;
+	// dome is halted
 	stop_done:			BOOL;
-	DomeOpened,
+	// dome slit and flap are open
+	DomeOpened:			BOOL;
+	// dome is closed
 	DomeClosed:			BOOL;
-   	DomeControlWord:	WORD;
-	DeHumidifierDelay : TON;
-	PermanentError:		TON;
+	// dome flap (lower section) is open
+	FlapOpen:			BOOL;
+	// dome flap (lower section) is closed
+	FlapClosed:			BOOL;
+	//dome slit is open
+	SlitOpen:			BOOL;
+	// dome slit is closed
+	SlitClosed:			BOOL;
+	// bit to indicate if domestatus is valid
+	DomeValid:			BOOL;
+	// dome control word
+   	DomeStatusWord:	WORD;
+	// last status Word
+	LastStatus:			WORD;
+	// start delay for the dehumidifier to prevent overcurrent
+	DeHumidifierDelay:	TON;
+	// permanent communication error
+	PermanentError:		TON := (IN:=FALSE, PT:=T#30S);
 	HomeDelay:			FB_TONTP;
 	F_Azimuth_home:		F_TRIG;
 	R_Azimuth_home:		R_TRIG;
 	// direction invariant azimuth home signal;
 	Azimuth_home:		BOOL;
+	// time delay for dome light
 	LightTimer:			TP;
-	bWrite       : 		BOOL;(* Rising edge at this variable starts command execution *)
-	nState       :		 BYTE := 0;
-	bBusy        : 		BOOL;
-	bError       : 		BOOL;
-	nErrID       : 		UDINT;
-	arrBool      : 		ARRAY[0..3] OF BOOL;(* Server data to be written *)
-	i            : 		INT;
-
-	WriteCycle:	FB_BLINK;
+	// next state
+	nState:				BYTE := 0;
+	// ADS communiaction busy
+	bBusy: 				BOOL;
+	// ADS communication error
+	bError: 			BOOL;
+	// ADS communication error id
+	nErrID: 			UDINT;
+	arrBool: 			ARRAY[0..3] OF BOOL;(* Server data to be written *)
+	i: 					INT;
+	// cycle timer for the ADS write cycle
+	ReadCycle:			TON := (PT:=T#1S);
 	
-	fbWriteReq: ADSWRITE := ( NETID := '5.73.45.158.1.1', PORT := 851, TMOUT := DEFAULT_ADS_TIMEOUT );
 	fbReadReq: ADSREAD := ( NETID := '5.73.45.158.1.1', PORT := 851, TMOUT := DEFAULT_ADS_TIMEOUT );
-	DomeCalibration: MC_SetPosition;
-	DomeCommEvent:	FB_Eventlog;
-	DomeAxisEvent:	FB_Eventlog;
+	DomeCalibration:	MC_SetPosition;
+	DomeCommEvent:		FB_Eventlog;
+	DomeAxisEvent:		FB_Eventlog;
+	DomeOpenedEvent:	FB_Eventlog;
+	DomeClosedEvent:	FB_Eventlog;
+	OpenDomeEvent:		FB_Eventlog;
+	CloseDomeEvent:		FB_Eventlog;
 	DomeCalibrationEvent: FB_Eventlog;
 	MQTTTimer : TON := (PT:=T#10S);
 	// MQTT String
@@ -174,99 +208,84 @@ END_IF
 
 // delay startup of the dehumidifiert to prevent power-spike
 // turn off dehumidifier if dome is open
-DeHumidifierDelay(IN := NOT OpenDome, PT := T#10S, Q => GVL_Dome.DeHumidifier);
+DeHumidifierDelay(IN := NOT OpenDome, PT := T#5S, Q => GVL_Dome.DeHumidifier);
 
 // Light is switched off after 60 minutes or if Light signal is low
 LightTimer(IN := Light, PT := T#60M);
 GVL_Dome.Light := Light AND LightTimer.Q;
 
 (* The remote section for moving parts of the dome starts here. *)
-
-DomeControlWord.0 := TRUE;
+GVL_Dome.DomeControlWord.0 := TRUE;
 IF CloseDome THEN
 	OpenDome := FALSE;
-	DomeControlWord.1 := FALSE; // CloseFlap
-	DomeControlWord.2 := FALSE; // CloseSlit
+	GVL_Dome.DomeControlWord.1 := FALSE; // CloseFlap
+	GVL_Dome.DomeControlWord.2 := FALSE; // CloseSlit
 ELSIF OpenDome THEN
-	DomeControlWord.1 := TRUE; // OpenFlap
-	DomeControlWord.2 := TRUE; // OpenSlit
+	GVL_Dome.DomeControlWord.1 := TRUE; // OpenFlap
+	GVL_Dome.DomeControlWord.2 := TRUE; // OpenSlit
 END_IF
 
-WriteCycle(ENABLE := TRUE, ON_TIME := T#5S, OFF_TIME := T#5S, Q => bWrite);
-
-CASE nState OF
-   0:
-      IF bWrite THEN
-         bWrite := FALSE;
-         
-         bBusy := TRUE;
-         bError := FALSE;
-         nErrID := 0;
-         
-         fbWriteReq( WRITE := FALSE );
-         fbWriteReq( IDXGRP := 16#4020, IDXOFFS := 0, 
-                  LEN := SIZEOF( DomeControlWord ), SRCADDR := ADR( DomeControlWord ), 
-                  WRITE := TRUE );
-         nState := 1;            
-      END_IF
-      
-   1:  // remain in this state until bBusy is FALSE
-      fbWriteReq( WRITE := FALSE, BUSY=>bBusy, ERR=>bError, ERRID=>nErrID );
-      IF NOT bBusy THEN
-         IF NOT bError THEN
-			nState := 2;	// Success: continue with read cycle
-         ELSE
-			nState := 100;(* Error *)
-         END_IF
-      END_IF
-	2:
-         bBusy := TRUE;
-         bError := FALSE;
-         nErrID := 0;
-         
-         fbReadReq( READ := FALSE );
-         fbReadReq( IDXGRP := 16#4020, IDXOFFS := 0, 
-                  LEN := SIZEOF( DomeControlWord ), DESTADDR := ADR( DomeControlWord ), 
-                  READ := TRUE );
-         nState := 3;            
-	3:
-		fbReadReq( READ := FALSE, BUSY=>bBusy, ERR=>bError, ERRID=>nErrID );
-		IF NOT bBusy THEN
-			IF NOT bError THEN
-				DomeOpened := DomeControlWord.3;
-				DomeClosed := DomeControlWord.4;
-				nState := 0;// Success: wait for write cycle
-			ELSE
-				DomeControlWord.0 := FALSE;
-				nState := 100; // error
-			END_IF
-		END_IF
-		
-
-	100: // error handling: we try again
-		nState := 0;
-   
-END_CASE
+ReadCycle(IN := TRUE);
+IF ReadCycle.Q THEN
+	// read if the ADS command is busy
+	fbReadReq(	READ := FALSE,
+				BUSY => bBusy,
+				ERR =>	bError,
+				ERRID => nErrID);
+	IF NOT bBusy THEN
+		// read the variable
+		fbReadReq(  IDXGRP := 16#4020, 
+					IDXOFFS := 0, 
+					LEN := SIZEOF(DomeStatusWord), 
+					DESTADDR := ADR(DomeStatusWord),
+					READ := TRUE,
+					BUSY => bBusy,
+					ERR =>	bError,
+					ERRID => nErrID);
+		// restart the read cycle
+		ReadCycle(IN := FALSE);
+	ELSE
+		// reset the read command
+		fbReadReq(READ := FALSE);
+	END_IF
+	IF NOT bError THEN
+		DomeValid  := DomeStatusWord.0;
+		DomeOpened := DomeStatusWord.1;
+		DomeClosed := DomeStatusWord.2;
+		FlapOpen   := DomeStatusWord.3;
+		FlapClosed := DomeStatusWord.4;
+		SlitOpen   := DomeStatusWord.5;
+		SlitClosed := DomeStatusWord.6;
+	ELSE
+		// reset the status word
+		DomeStatusWord := 0;
+	END_IF
+END_IF
 
 CASE NErrID OF
-	29: DomeCommEvent.OnMessage := 'ERR_AMSSYNC_TIMEOUT';
-
-	1861: DomeCommEvent.OnMessage := 'ADSERR_CLIENT_SYNCTIMEOUT';
+			6: DomeCommEvent.OnMessage := 'ERR_TARGETPORTNOTFOUND';
+			29: DomeCommEvent.OnMessage := 'ERR_AMSSYNC_TIMEOUT';
+			1861: DomeCommEvent.OnMessage := 'ADSERR_CLIENT_SYNCTIMEOUT';
 ELSE
-	DomeCommEvent.OnMessage := UDINT_TO_STRING(nErrID);
+			DomeCommEvent.OnMessage := UDINT_TO_STRING(nErrID);
 END_CASE
 
-PermanentError(IN := bError, PT := T#30S);
-
+PermanentError(IN := NOT DomeValid);
+		
 DomeError := PermanentError.Q OR Error;
 
-MQTTTimer(IN:=Enable AND Calibrated);
+IF DomeOpened THEN
+	OpenDome := FALSE;
+ELSIF DomeClosed THEN
+	CloseDome := FALSE;
+END_IF
+
+MQTTTimer(IN:=Enable);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
-		sPayloadPub := 'dome,location=dome,host=CX-4E6032 ';
-	sPayloadPub := CONCAT(sPayloadPub, ',Azimuth=');
-	sPayloadPub := CONCAT(sPayloadPub, LREAL_TO_FMTSTR(Azimuth_current, 1, TRUE));
-	
+	sPayloadPub := 'dome,location=dome,host=CX-4E6032 ';
+	sPayloadPub := APPEND(sPayloadPub, 'DomeAzimuth=', LREAL_TO_FMTSTR(Azimuth_current, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',Calibrated=', BOOL_TO_STRING(Calibrated));	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
 					pPayload:= ADR(sPayloadPub), 
@@ -274,27 +293,71 @@ IF MQTTTimer.Q THEN // publish new payload every second
 					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
 					bRetain:= FALSE, 
 					bQueue:= FALSE );
+END_IF
+
+IF DomeStatusWord <> LastStatus THEN
+	LastStatus := DomeStatusWord;
+	sPayloadPub := 'dome,location=dome,host=CX-4E6032 ';
+	sPayloadPub := APPEND(sPayloadPub, 'DomeClosed=', BOOL_TO_STRING(DomeClosed));
+	sPayloadPub := APPEND(sPayloadPub, 'DomeOpened=', BOOL_TO_STRING(DomeOpened));
+	IF FlapOpen THEN
+		sPayloadPub := APPEND(sPayloadPub, ',FlapOpen=', BOOL_TO_STRING(FlapOpen));	
+	END_IF
+	IF FlapClosed THEN
+		sPayloadPub := APPEND(sPayloadPub, ',FlapClosed=', BOOL_TO_STRING(FlapClosed));	
+	END_IF
+	IF SlitOpen THEN
+		sPayloadPub := APPEND(sPayloadPub, ',SlitOpen=', BOOL_TO_STRING(SlitOpen));	
+	END_IF
+	IF SlitClosed THEN
+		sPayloadPub := APPEND(sPayloadPub, ',SlitClosed=', BOOL_TO_STRING(SlitClosed));	
+	END_IF
+	MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Telemetry', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= TRUE, 
+					bQueue:= FALSE );
 
 END_IF
 
 DomeCommEvent(	Trigger := PermanentError.Q, 
 					Level := ADSLOG_MSGTYPE_ERROR,
-					FormatString := 'Dome Communication Error: %s',
+					FormatString := 'Dome communication error: %s',
 					OffMessage := 'OK',
 					OffLevel := ADSLOG_MSGTYPE_HINT);
 DomeAxisEvent(	
 	Trigger := 		Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
-	FormatString :=	'Dome Axis Error: %s',
+	FormatString :=	'Dome axis Error: %s',
 	OnMessage := 	NCError_TO_STRING(ErrorID),
 	OffMEssage := 	'OK');
 				
 DomeCalibrationEvent(	
 	Trigger := 		GVL_Dome.Azimut_home, 
 	Level := 		ADSLOG_MSGTYPE_HINT,
-	FormatString :=	'Dome Calibration: %s',
-	OnMessage := 	'OK');
-]]></ST>
+	OnMessage := 	'Dome calibration: OK');
+
+DomeOpenedEvent(
+	Trigger := 		DomeOpened, 
+	Level := 		ADSLOG_MSGTYPE_WARN,
+	OnMessage := 	'Dome is open.');
+	
+DomeClosedEvent(
+	Trigger := 		DomeClosed, 
+	Level := 		ADSLOG_MSGTYPE_HINT,
+	OnMessage := 	'Dome is closed.');
+	
+OpenDomeEvent(
+	Trigger := 		DomeOpened, 
+	Level := 		ADSLOG_MSGTYPE_WARN,
+	OnMessage := 	'Dome is opening.');
+	
+CloseDomeEvent(
+	Trigger := 		DomeClosed, 
+	Level := 		ADSLOG_MSGTYPE_HINT,
+	OnMessage := 	'Dome is closing.');]]></ST>
     </Implementation>
     <LineIds Name="DomeControl">
       <LineId Id="1008" Count="0" />
@@ -383,7 +446,6 @@ DomeCalibrationEvent(
       <LineId Id="830" Count="0" />
       <LineId Id="775" Count="0" />
       <LineId Id="931" Count="1" />
-      <LineId Id="776" Count="0" />
       <LineId Id="747" Count="0" />
       <LineId Id="1135" Count="0" />
       <LineId Id="1145" Count="0" />
@@ -393,28 +455,48 @@ DomeCalibrationEvent(
       <LineId Id="1137" Count="0" />
       <LineId Id="756" Count="0" />
       <LineId Id="755" Count="0" />
-      <LineId Id="716" Count="20" />
-      <LineId Id="789" Count="0" />
-      <LineId Id="738" Count="0" />
-      <LineId Id="790" Count="0" />
-      <LineId Id="740" Count="1" />
-      <LineId Id="962" Count="0" />
-      <LineId Id="964" Count="13" />
-      <LineId Id="996" Count="0" />
-      <LineId Id="978" Count="5" />
-      <LineId Id="963" Count="0" />
-      <LineId Id="742" Count="3" />
+      <LineId Id="2001" Count="0" />
+      <LineId Id="2067" Count="0" />
+      <LineId Id="2049" Count="2" />
+      <LineId Id="2004" Count="0" />
+      <LineId Id="2013" Count="0" />
+      <LineId Id="2068" Count="0" />
+      <LineId Id="2041" Count="7" />
+      <LineId Id="2069" Count="0" />
+      <LineId Id="2014" Count="1" />
+      <LineId Id="2070" Count="0" />
+      <LineId Id="2016" Count="0" />
+      <LineId Id="2021" Count="0" />
+      <LineId Id="2052" Count="7" />
+      <LineId Id="2063" Count="0" />
+      <LineId Id="2065" Count="1" />
+      <LineId Id="2062" Count="0" />
+      <LineId Id="2022" Count="1" />
+      <LineId Id="2035" Count="5" />
+      <LineId Id="716" Count="0" />
       <LineId Id="349" Count="0" />
-      <LineId Id="1068" Count="1" />
-      <LineId Id="1074" Count="1" />
-      <LineId Id="1070" Count="0" />
-      <LineId Id="1072" Count="1" />
-      <LineId Id="1071" Count="0" />
-      <LineId Id="1079" Count="1" />
-      <LineId Id="998" Count="1" />
-      <LineId Id="1522" Count="3" />
+      <LineId Id="1998" Count="0" />
+      <LineId Id="1068" Count="0" />
+      <LineId Id="999" Count="0" />
+      <LineId Id="1935" Count="2" />
+      <LineId Id="1939" Count="2" />
+      <LineId Id="1522" Count="2" />
+      <LineId Id="1982" Count="1" />
+      <LineId Id="1986" Count="0" />
+      <LineId Id="1979" Count="0" />
+      <LineId Id="1989" Count="5" />
+      <LineId Id="1988" Count="0" />
+      <LineId Id="1978" Count="0" />
+      <LineId Id="1980" Count="1" />
+      <LineId Id="1984" Count="0" />
       <LineId Id="1622" Count="0" />
-      <LineId Id="1625" Count="9" />
+      <LineId Id="1625" Count="0" />
+      <LineId Id="1995" Count="0" />
+      <LineId Id="1705" Count="0" />
+      <LineId Id="1942" Count="1" />
+      <LineId Id="1945" Count="2" />
+      <LineId Id="1952" Count="5" />
+      <LineId Id="1628" Count="6" />
       <LineId Id="1553" Count="0" />
       <LineId Id="1077" Count="0" />
       <LineId Id="758" Count="3" />
@@ -422,8 +504,14 @@ DomeCalibrationEvent(
       <LineId Id="757" Count="0" />
       <LineId Id="943" Count="5" />
       <LineId Id="942" Count="0" />
-      <LineId Id="1283" Count="4" />
+      <LineId Id="1283" Count="3" />
+      <LineId Id="1964" Count="0" />
       <LineId Id="1282" Count="0" />
+      <LineId Id="1966" Count="3" />
+      <LineId Id="1971" Count="3" />
+      <LineId Id="1970" Count="0" />
+      <LineId Id="2080" Count="7" />
+      <LineId Id="2079" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

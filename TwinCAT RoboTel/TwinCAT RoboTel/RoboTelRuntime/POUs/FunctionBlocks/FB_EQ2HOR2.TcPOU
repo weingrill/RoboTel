@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="FB_EQ2HOR2" Id="{7b34f02a-1435-4300-8153-5c49f62d1b5b}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_EQ2HOR2
 VAR_INPUT
@@ -25,7 +25,8 @@ END_VAR
 VAR
 	lst, 
 	T , theta0, gmst: LREAL;
-	sinalt, sinaz, cosaz, az1, az2, az3, length,
+	// helper variables
+	sinalt, sinaz, cosaz, cosalt, az1, az2, az3, length,
 	// in radians
 	phi_r, tau_r, alpha_r, delta_r: LREAL;
 	quadrant: UINT;
@@ -59,10 +60,20 @@ phi_r := lat*d2r;
 //sinalt := (SIN(delta*d2r)*SIN(lat*d2r)) + (COS(delta*d2r)*COS(lat*d2r)*COS(ha*d2r));
 sinalt := SIN(phi_r)*SIN(delta_r) + COS(phi_r)*COS(delta_r)*COS(tau_r);
 alt := ASIN(sinalt) * r2d;
+cosalt := COS(alt*d2r);
 
-sinaz := -SIN(tau_r)*COS(delta_r)/COS(alt*d2r);
-cosaz := (SIN(delta_r) - SIN(phi_r)*sinalt)
-			/(COS(alt*d2r)*COS(phi_r));
+IF ABS(cosalt) > 0.0 THEN
+	sinaz := -SIN(tau_r)*COS(delta_r)/cosalt;
+ELSE
+	sinaz := 0.0;
+END_IF
+
+IF ABS(cosalt*COS(phi_r)) > 0.0 THEN
+	cosaz := (SIN(delta_r) - SIN(phi_r)*sinalt)
+			/(cosalt*COS(phi_r));
+ELSE
+	cosaz := 0.0;
+END_IF
 
 length := sinaz*sinaz + cosaz*cosaz;
 
@@ -101,10 +112,19 @@ END_IF]]></ST>
       <LineId Id="148" Count="1" />
       <LineId Id="18" Count="0" />
       <LineId Id="150" Count="0" />
-      <LineId Id="26" Count="1" />
-      <LineId Id="24" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="203" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="207" Count="0" />
+      <LineId Id="205" Count="0" />
+      <LineId Id="209" Count="0" />
+      <LineId Id="208" Count="0" />
       <LineId Id="143" Count="0" />
       <LineId Id="158" Count="0" />
+      <LineId Id="210" Count="2" />
       <LineId Id="156" Count="1" />
       <LineId Id="142" Count="0" />
       <LineId Id="93" Count="0" />

@@ -1,31 +1,46 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <GVL Name="GVL_Dome" Id="{8410bcc3-97cb-4334-927b-71c02664ab1a}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
-	
+	// clockwise rotation of the dome azimuth	
 	Clockwise				AT%I*:	BOOL;
+	// counterclockwise rotation of the dome azimuth	
 	CounterClockwise		AT%I*:	BOOL;
+	// PLC NC command direction +
 	bDirectionMinus 		AT%I*:	BOOL;
+	// PLC NC command direction -
 	bDirectionPlus 			AT%I*:	BOOL;
+	// PLC NC command velocity low
 	bVeloLow 				AT%I*:	BOOL;
+	// PLC NC command velocity high
 	bVeloHigh 				AT%I*:	BOOL;
+	// PLC NC command break
 	bBreak 					AT%I*:	BOOL;
 	bBreakInv 				AT%I*:	BOOL;
 	
+	// enable the azimuth inverter
 	Inverter_Enable 		AT%Q*:	BOOL;
+	// negative direction of the azimuth inverter
 	Inverter_DirectionMinus AT%Q*: BOOL;
 	Inverter_Velocity 		AT%Q*: UINT;
+	// light relais
 	Light					AT%Q*: 	BOOL;
+	// dehumidifier MOSFET
 	DeHumidifier			AT%Q*: 	BOOL;
 	// EL5151
 	Azimut_raw				AT%I*:	INT;
+	// Azimuth home signal
 	Azimut_home				AT%I*:	BOOL;
 	
 	WatchDogReset:					BOOL;
 	ActVelo					AT%I*:	LREAL;
+	// stop signal
 	Stop:							BOOL;
+	// Dome Axis Reference for the azimuth
 	DomeAxisRef: 					AXIS_REF;
+	// ControlWord to be read by the dome PLC
+	DomeControlWord			AT%MW0:	WORD;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

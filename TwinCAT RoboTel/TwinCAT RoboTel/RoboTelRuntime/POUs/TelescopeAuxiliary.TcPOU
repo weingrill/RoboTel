@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="TelescopeAuxiliary" Id="{974ce34a-6026-4bc5-b92d-99da70a09948}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM TelescopeAuxiliary
+VAR
+	MQTTTimer : TON := (PT:=T#5S);
+	// MQTT Message
+	sPayloadPub1,
+	sPayloadPub2:		STRING(255);
+	published1,
+	published2: BOOL;
+	pressure_voltage:	REAL;
+END_VAR
+VAR_OUTPUT
+	// BT9 mirror
+	temperature_mirror2:	REAL;
+	// BT10
+	temperature_mirror1:	REAL;
+	// BT11
+	temperature_mirror3:	REAL;
+	// BT12
+	temperature_tube:		REAL;
+	// BT13
+	temperature_bearing1:	REAL;
+	// BT14
+	temperature_bearing2:	REAL;
+
+	// dewar pressure 0..10V Pfeiffer 
+	pressure_Dewar:	REAL;
+	// dewar temperature PT100
+	temperature_Dewar:	REAL;
+	
+
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[temperature_mirror2 := GVL_Telescope.temperature_mirror2 / 100.0;
+temperature_mirror1 := GVL_Telescope.temperature_mirror1 / 100.0;
+temperature_mirror3 := GVL_Telescope.temperature_mirror3 / 100.0;
+temperature_tube 	:= GVL_Telescope.temperature_tube / 100.0;
+temperature_bearing1 := GVL_Telescope.temperature_bearing1 / 100.0;
+temperature_bearing2 := GVL_Telescope.temperature_bearing2 / 100.0;
+
+pressure_voltage := F_YREAL(GVL_Telescope.temperature_Dewar, 0, 32767, 0.0, 10.0);
+pressure_Dewar := LREAL_TO_REAL(EXPT(10.0, (1.5*pressure_voltage - 12.0)));
+
+
+temperature_Dewar := GVL_Telescope.temperature_Dewar / 100.0;
+
+MQTTTimer(IN:=TRUE);
+IF MQTTTimer.Q THEN // publish new payload every second
+
+	sPayloadPub1 := 'telescope,location=dome,host=CX-4E6032,module=TelescopeAuxiliary ';
+	sPayloadPub1 := APPEND(sPayloadPub1, 'Mirror2Temperature=',	LREAL_TO_FMTSTR(temperature_mirror2, 2, TRUE));
+	sPayloadPub1 := APPEND(sPayloadPub1, ',Mirror1Temperature=',	LREAL_TO_FMTSTR(temperature_mirror1, 2, TRUE));
+	IF GVL_Telescope.temperature_mirror3>0 AND GVL_Telescope.temperature_mirror3<32767 THEN
+		sPayloadPub1 := APPEND(sPayloadPub1, ',Mirror3Temperature=',	LREAL_TO_FMTSTR(temperature_mirror3, 2, TRUE));
+	END_IF
+	IF GVL_Telescope.temperature_tube>0 AND GVL_Telescope.temperature_tube<32767 THEN
+		sPayloadPub1 := APPEND(sPayloadPub1, ',TubeTemperature=', 	LREAL_TO_FMTSTR(temperature_tube, 2, TRUE));
+	END_IF
+	IF GVL_Telescope.temperature_bearing1>0 AND GVL_Telescope.temperature_bearing1<32767 THEN
+		sPayloadPub1 := APPEND(sPayloadPub1, ',Bearing1Temperature=', LREAL_TO_FMTSTR(temperature_bearing1, 2, TRUE));
+	END_IF
+	IF GVL_Telescope.temperature_bearing2>0 AND GVL_Telescope.temperature_bearing2<32767 THEN
+		sPayloadPub1 := APPEND(sPayloadPub1, ',Bearing2Temperature=', LREAL_TO_FMTSTR(temperature_bearing2, 2, TRUE));
+	END_IF
+	
+	published1 := MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Telemetry', 
+					pPayload:= ADR(sPayloadPub1), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub1)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
+
+	sPayloadPub2 := 'instrument,location=dome,host=CX-4E6032,module=TelescopeAuxiliary ';
+	sPayloadPub2 := APPEND(sPayloadPub2, 'DewarTemperature=',	LREAL_TO_FMTSTR(temperature_Dewar, 2, TRUE));
+	sPayloadPub2 := APPEND(sPayloadPub2, ',DewarPressure=',	LREAL_TO_FMTSTR(pressure_Dewar, 2, TRUE));
+	sPayloadPub2 := APPEND(sPayloadPub2, ',DewarPressureVoltage=',	LREAL_TO_FMTSTR(pressure_voltage, 3, TRUE));
+
+	published2 := MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Telemetry', 
+					pPayload:= ADR(sPayloadPub2), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub2)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
+	MQTTTimer(IN:=NOT (published1 OR published2));
+
+END_IF
+	]]></ST>
+    </Implementation>
+    <LineIds Name="TelescopeAuxiliary">
+      <LineId Id="6" Count="0" />
+      <LineId Id="36" Count="1" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="84" Count="1" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="47" Count="4" />
+      <LineId Id="53" Count="3" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="89" Count="1" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="91" Count="1" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="94" Count="1" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="60" Count="7" />
+      <LineId Id="98" Count="3" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="102" Count="6" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="68" Count="1" />
+      <LineId Id="41" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

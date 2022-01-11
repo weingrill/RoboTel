@@ -11,10 +11,7 @@ VAR
 	(* published message *)
     sTopicPub   : STRING(255) := 'RoboTel';
     sPayloadPub : STRING(255);
-	epos : INT;
-//    i,j : UDINT;
-//    fbTimer : TON := (PT:=T#10MS);
-//	bPublished:		BOOL;
+//	epos : INT;
 	(* received message *)
     bSubscribed    : BOOL;
     sTopicSub      : STRING(255) := 'RoboTel/Telescope/SET';
@@ -22,10 +19,10 @@ VAR
     sTopicRcv      : STRING(255);
     {attribute 'TcEncoding':='UTF-8'}
     sPayloadRcv    : STRING(255);
-	parameter:		STRING(255);
-	value:			LREAL;
-    fbMessageQueue : FB_IotMqttMessageQueue;
+	measurement, parameter, value:		STRING(255);
+	fbMessageQueue : FB_IotMqttMessageQueue;
     fbMessage      : FB_IotMqttMessage;
+	influxmessage	: FB_Influxmessage;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*
@@ -52,30 +49,45 @@ IF bSetParameter THEN
 END_IF
 
 // connect to the client
-fbMqttClient.Execute(bConnect);
-
+IF NOT fbMqttClient.bConnected THEN
+	fbMqttClient.Execute(bConnect);
+END_IF
+	
 IF fbMqttClient.bConnected THEN
     IF NOT bSubscribed THEN
         bSubscribed := fbMqttClient.Subscribe(sTopic:=sTopicSub, eQoS:=TcIotMqttQos.AtMostOnceDelivery);
     END_IF
 END_IF
+
 // receive queued messages
 IF fbMessageQueue.nQueuedMessages > 0 THEN
     IF fbMessageQueue.Dequeue(fbMessage:=fbMessage) THEN
         fbMessage.GetTopic(pTopic:=ADR(sTopicRcv), nTopicSize:=SIZEOF(sTopicRcv) );
         fbMessage.GetPayload(pPayload:=ADR(sPayloadRcv), nPayloadSize:=SIZEOF(sPayloadRcv), bSetNullTermination:=FALSE);
-		IF sTopicRcv = 'RoboTel/Telescope/SET' THEN
-			epos := FIND(sPayloadRcv, ' = ');
-			parameter := LEFT(sPayloadRcv, epos-1);
-			value := STRING_TO_LREAL(DELETE(sPayloadRcv, epos+2, 1));
-			IF parameter = 'Declination' THEN
-				TelescopeControl.de := value;
-			ELSIF parameter = 'RightAscension' THEN
-				TelescopeControl.ra := value;
-			END_IF
-		END_IF
-    END_IF
+		IF sTopicRcv = sTopicSub THEN
+			influxMessage(  sPayload := sPayloadRcv, 
+							measurement => measurement, 
+							parameter => parameter, 
+							value => value);
+			IF measurement = 'command' THEN
+				IF parameter = 'power' THEN
+					TelescopeControl.power := STRING_TO_BOOL(value);
+				ELSIF parameter = 'park' THEN
+					TelescopeControl.park := STRING_TO_BOOL(value);
+				ELSIF parameter = 'gohome' THEN
+					TelescopeControl.gohome := STRING_TO_BOOL(value);
+				ELSIF parameter = 'track' THEN
+					TelescopeControl.track := STRING_TO_BOOL(value);
+				ELSIF parameter = 'goto' THEN
+					TelescopeControl.goto := STRING_TO_BOOL(value);
+				ELSIF parameter = 'reset' THEN
+					TelescopeControl.reset := STRING_TO_BOOL(value);
+				END_IF
+			END_IF // measurement
+		END_IF // Topic
+    END_IF // Dequeue
 END_IF
+
 ]]></ST>
     </Implementation>
     <LineIds Name="MQTTCommunication">
@@ -91,18 +103,16 @@ END_IF
       <LineId Id="24" Count="12" />
       <LineId Id="74" Count="0" />
       <LineId Id="37" Count="0" />
+      <LineId Id="203" Count="0" />
       <LineId Id="5" Count="0" />
+      <LineId Id="204" Count="0" />
       <LineId Id="47" Count="4" />
       <LineId Id="46" Count="0" />
-      <LineId Id="67" Count="4" />
-      <LineId Id="114" Count="0" />
-      <LineId Id="133" Count="0" />
-      <LineId Id="124" Count="0" />
-      <LineId Id="144" Count="2" />
-      <LineId Id="148" Count="1" />
-      <LineId Id="147" Count="0" />
-      <LineId Id="125" Count="0" />
-      <LineId Id="72" Count="0" />
+      <LineId Id="205" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="175" Count="19" />
+      <LineId Id="201" Count="1" />
+      <LineId Id="195" Count="4" />
       <LineId Id="66" Count="0" />
       <LineId Id="73" Count="0" />
     </LineIds>

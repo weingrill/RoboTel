@@ -86,8 +86,9 @@ VAR
 	StopAllowed:	BOOL;
 	// Direction fot Axis_SetpointFeed
 	Direction:		DINT;
-	Acceleration:	LREAL;
+	Acceleration:	LREAL := 1.0;
 	EndTracking:	F_TRIG;
+	
 END_VAR
 
 VAR_IN_OUT
@@ -102,7 +103,7 @@ Axis_Status(Enable := TRUE,
 // Enable the axis (power signal or manual enable)
 Axis_Power(
 	Axis := AxisRef,
-	Enable := Enable,
+	Enable := Enable AND NOT Reset,
 	Enable_Positive := Enable_Positive,
 	Enable_Negative := Enable_Negative,
 	Override := 100.0,
@@ -118,8 +119,8 @@ IF ResetDone THEN
 END_IF
 
 Axis_SetpointEnable(Axis := AxisRef,
-	Execute := Tracking,
-	Position := Position,
+	Execute :=		Tracking AND Ready AND Calibrated AND NOT bStop,
+	Position :=		Position,	// final destination
 	PositionType := POSITIONTYPE_ABSOLUTE);
 
 IF Position > AbsolutePosition THEN
@@ -129,11 +130,11 @@ ELSE
 END_IF
 	
 MC_ExtSetPointGenFeed(
-	Position := Position,
-	Velocity := Velocity,
-	Acceleration := 1.0,
-	Direction := Direction, 
-	Axis := AxisRef);
+	Position :=		0.95*ActualPosition + 0.05*Position,
+	Velocity :=		Velocity,
+	Acceleration :=	Acceleration,
+	Direction :=	Direction, 
+	Axis :=			AxisRef);
 
 // stop tracking on falling edge of tracking signal
 EndTracking(CLK := Tracking);
@@ -210,7 +211,7 @@ Axis_Position(
 	Position => AbsolutePosition);
 
 IF isModuloAxis THEN
-	ActualPosition := AbsolutePosition; //AxisRef.NcToPlc.ModuloActPos;
+	ActualPosition := AxisRef.NcToPlc.ModuloActPos; // required e.g. for Filterwheel
 ELSE
 	ActualPosition := AbsolutePosition; //AxisRef.NcToPlc.ActPos;
 END_IF

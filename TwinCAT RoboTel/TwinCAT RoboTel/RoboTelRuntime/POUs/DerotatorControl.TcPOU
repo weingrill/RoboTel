@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="DerotatorControl" Id="{75f3d994-c6e1-4455-a5dc-0a32056448e8}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM DerotatorControl
 VAR_INPUT
@@ -13,24 +13,29 @@ VAR_INPUT
 	right:		BOOL;
 	// set the absolute position
 	position:	LREAL;
+	// move to given position
+	MoveAxis: 	BOOL;
+	// calibrate the axis
+	HomeAxis:	BOOL;
+	// tracking flag
+	Tracking:	BOOL;
 END_VAR
 VAR_OUTPUT
-	Error:		BOOL;
-	ErrorID:	UDINT;
+	Error:				BOOL;
+	ErrorID:			UDINT;
 	actual_position:	LREAL;
+	Calibrated:			BOOL;
+	Ready:				BOOL;
 END_VAR
 VAR
-	// move to given position
-	MoveAxis: 			BOOL;
-	// calibrate the axis
-	HomeAxis:			BOOL;
-
 	DerotatorAxis:	FB_Axis2;
 	DerotatorEvent:	FB_EventLog;
+	TorqueWarning:	FB_EventLog;
+	derotator_torque: REAL;
 END_VAR
 VAR CONSTANT
 	// current position of the calibration cam. Apply an offset here if necessary
-	calibration_position:	LREAL := 460.0;
+	calibration_position:	LREAL := 0.0; // calibration in negative direction (was 460.0)
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -46,7 +51,7 @@ SPS-Interface:
 TcNc-Lib, siehe SPS-Funktion AxisSetAcceptBlockedDriveSignal in der TwinCAT  PLC Library: NC.
 *)
 
-position := LIMIT(0.0, position, 470.0);
+position := LIMIT(0.0, position, 460.0);
 
 // WARNING: Homing disables the limit Switches!
 
@@ -54,12 +59,15 @@ MC_SetAcceptBlockedDriveSignal(
 	Axis := GVL_Telescope.DerotatorAxisRef,
 	Enable := HomeAxis);
 
+(* Disable autohoming until limit switches are fixed
 IF enable AND TelescopeControl.power AND NOT DerotatorAxis.Calibrated THEN
 	HomeAxis := TRUE;
 END_IF
+*)
 
 IF DerotatorAxis.Calibrated THEN
 	HomeAxis := FALSE;
+	Calibrated := DerotatorAxis.Calibrated;
 END_IF
 	
 IF HomeAxis THEN
@@ -76,8 +84,9 @@ DeRotatorAxis(
 	Enable_Negative := 	NOT GVL_Telescope.Derotator_inputs.1,
 	Jog_Forward := 		right,
 	Jog_Backwards := 	left,
-	bCalibrationCam :=	GVL_Telescope.Derotator_inputs.0,
+	bCalibrationCam :=	GVL_Telescope.Derotator_inputs.1,
 	isModuloAxis :=		FALSE,
+	Tracking :=			Tracking,
 	ActualPosition => 	actual_position,
 	Error => 			Error,
 	ErrorID => 			ErrorID,
@@ -95,13 +104,24 @@ IF DeRotatorAxis.ResetDone THEN
 	reset := FALSE;
 END_IF
 
+Ready := DeRotatorAxis.Ready;
+
+derotator_torque := GVL_Telescope.Derotator_torque / 10.0;
+
 DerotatorEvent(	
 	Trigger := 		Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
 	FormatString :=	'Derotator Axis Error: %s',
 	OnMessage := 	NCError_TO_STRING(ErrorID),
 	OffMEssage := 	'OK',
-	OffLevel := 	ADSLOG_MSGTYPE_HINT);]]></ST>
+	OffLevel := 	ADSLOG_MSGTYPE_HINT);
+	
+TorqueWarning(	
+	Trigger := 		derotator_torque > 12.0, 
+	Level := 		ADSLOG_MSGTYPE_WARN,
+	FormatString :=	'%s',
+	OnMessage := 	'Derotator torque is high.');
+]]></ST>
     </Implementation>
     <LineIds Name="DerotatorControl">
       <LineId Id="128" Count="0" />
@@ -120,27 +140,41 @@ DerotatorEvent(
       <LineId Id="141" Count="0" />
       <LineId Id="147" Count="0" />
       <LineId Id="145" Count="0" />
+      <LineId Id="275" Count="0" />
       <LineId Id="159" Count="0" />
       <LineId Id="158" Count="0" />
       <LineId Id="160" Count="1" />
+      <LineId Id="276" Count="0" />
       <LineId Id="164" Count="0" />
       <LineId Id="163" Count="0" />
-      <LineId Id="165" Count="1" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="166" Count="0" />
       <LineId Id="155" Count="0" />
       <LineId Id="142" Count="0" />
       <LineId Id="156" Count="1" />
       <LineId Id="100" Count="0" />
       <LineId Id="10" Count="0" />
       <LineId Id="23" Count="0" />
-      <LineId Id="93" Count="3" />
+      <LineId Id="93" Count="2" />
+      <LineId Id="312" Count="0" />
       <LineId Id="11" Count="3" />
       <LineId Id="97" Count="2" />
+      <LineId Id="313" Count="0" />
       <LineId Id="16" Count="0" />
       <LineId Id="24" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="42" Count="0" />
-      <LineId Id="44" Count="17" />
+      <LineId Id="44" Count="10" />
+      <LineId Id="240" Count="1" />
+      <LineId Id="314" Count="0" />
+      <LineId Id="316" Count="0" />
+      <LineId Id="55" Count="6" />
       <LineId Id="43" Count="0" />
+      <LineId Id="319" Count="0" />
+      <LineId Id="321" Count="3" />
+      <LineId Id="327" Count="0" />
+      <LineId Id="320" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,11 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="CO_REFRACT_FORWARD" Id="{9e2a6c66-b60a-451a-a6f4-0d24b94a8b52}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION CO_REFRACT_FORWARD : LREAL
 VAR_INPUT
+	// The observed (apparent) altitude, in DEGREES.
 	a: LREAL;
+	// Pressure [in millibars]. Default is 1010 millibars.
 	P: LREAL := 1010.0;
-	T: LREAL := 283.0;
+	// Ground Temp [in Celsius].  Default is 0 Celsius.
+	T: LREAL := 0.0;
 END_VAR
 VAR
 	Ref, tpcor: LREAL;
@@ -15,32 +18,28 @@ VAR CONSTANT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* INPUTS
-    a = The observed (apparent) altitude, in DEGREES.
-        May be scalar or vector.
+      <ST><![CDATA[a := LIMIT(0.0, a, 90.0);
+P := LIMIT(600.0, P, 1200.0);
+T := LIMIT(-40.0, T, 40.0);
 
- INPUT KEYWORDS
-    P:  Pressure [in millibars]. Default is 1010 millibars. [scalar or vector]
-    T:  Ground Temp [in Celsius].  Default is 0 Celsius. [scalar or vector]
-*)
-
-(* you have observed the altitude a, and would like to know what the "apparent" 
- altitude is (the one behind the atmosphere). *)
-//w = where(a LT 15.)
-Ref := 0.0166667 / TAN((a + 7.31/(a+4.4))*d2r);
-
-//R = 1.02/tan((a + 10.3/(a+5.11))*d2r)/60. 
-// this formula goes the other direction!
-
-IF a < 15.0 THEN 
+IF a >= 15.0 THEN
+	Ref := 1.0 / TAN((a + 7.31/(a+4.4))*d2r);
+ELSE
 	Ref := 3.569*(0.1594 + 0.0196*a + 0.00002*EXPT(a, 2))/(1.0+0.505*a + 0.0845*EXPT(a, 2));
 END_IF
-tpcor := P/1010.0 * 283/T;
+tpcor := P * 283.15 / (1010.0 * (273.15 + T));
 CO_REFRACT_FORWARD := tpcor * Ref;
 ]]></ST>
     </Implementation>
     <LineIds Name="CO_REFRACT_FORWARD">
-      <LineId Id="3" Count="21" />
+      <LineId Id="40" Count="1" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="22" Count="2" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
