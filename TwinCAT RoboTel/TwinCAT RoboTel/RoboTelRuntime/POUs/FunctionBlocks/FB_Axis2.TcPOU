@@ -84,6 +84,7 @@ VAR
 	Axis_SetpointDisable:	MC_ExtSetPointGenDisable;
 	bStop: 			BOOL;
 	StopAllowed:	BOOL;
+	wasEnabled:		BOOL;
 	// Direction fot Axis_SetpointFeed
 	Direction:		DINT;
 	Acceleration:	LREAL := 1.0;
@@ -100,10 +101,16 @@ END_VAR]]></Declaration>
 Axis_Status(Enable := TRUE,
 			Axis := AxisRef);
 
+// deactivate the Enable signal on Reset			
+IF Reset THEN
+	wasEnabled := Enable;
+	Enable := FALSE;
+END_IF
+			
 // Enable the axis (power signal or manual enable)
 Axis_Power(
 	Axis := AxisRef,
-	Enable := Enable AND NOT Reset,
+	Enable := Enable,
 	Enable_Positive := Enable_Positive,
 	Enable_Negative := Enable_Negative,
 	Override := 100.0,
@@ -113,9 +120,11 @@ Axis_Reset(
 	Axis := 	AxisRef,
 	Execute := 	Reset,
 	Done => 	ResetDone);
-	
+
+// reenable the Enable signal if Reset was Done	
 IF ResetDone THEN
 	Reset := FALSE;
+	Enable := wasEnabled;
 END_IF
 
 Axis_SetpointEnable(Axis := AxisRef,
@@ -296,7 +305,12 @@ Homing :=	Axis_Status.Homing;]]></ST>
     <LineIds Name="FB_Axis2">
       <LineId Id="292" Count="0" />
       <LineId Id="200" Count="1" />
+      <LineId Id="1619" Count="0" />
+      <LineId Id="1614" Count="0" />
       <LineId Id="293" Count="0" />
+      <LineId Id="1618" Count="0" />
+      <LineId Id="1616" Count="1" />
+      <LineId Id="1615" Count="0" />
       <LineId Id="198" Count="0" />
       <LineId Id="27" Count="0" />
       <LineId Id="294" Count="0" />
@@ -304,8 +318,11 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="37" Count="1" />
       <LineId Id="286" Count="0" />
       <LineId Id="39" Count="1" />
+      <LineId Id="1620" Count="0" />
       <LineId Id="287" Count="0" />
-      <LineId Id="44" Count="2" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="1613" Count="0" />
+      <LineId Id="46" Count="0" />
       <LineId Id="1279" Count="1" />
       <LineId Id="1283" Count="2" />
       <LineId Id="1415" Count="0" />

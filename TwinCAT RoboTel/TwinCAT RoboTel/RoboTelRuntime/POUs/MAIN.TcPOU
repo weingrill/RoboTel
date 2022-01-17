@@ -47,8 +47,11 @@ VAR
 	SimpleLog: 			FB_SimpleLog;
 	MQTTPublisher:		FB_MQTTPublisher;
 	MQTTTelegraf:		FB_MQTTTelegraf;
-	MQTTTimer : TON := (PT:=T#5S);
-	sPayloadPub: STRING(255);
+	MQTTTimer : 		TON := (PT:=T#5S);
+	sPayloadPub: 		STRING(255);
+	GetHostName:		FB_GetHostName;
+	HostName: 			STRING(255);
+	bExecute:			BOOL := TRUE;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -61,6 +64,8 @@ Main control loop
 * start switch activates Hydraulics and Trafo
 * 
 *)
+GetHostName(bExecute := bExecute, sHostName => HostName);
+bExecute := FALSE;
 power_OK := GVL_main.power_available;
 phase_available := GVL_Main.phase_available;
 IF GVL_Main.start_switch THEN
@@ -204,6 +209,7 @@ TemperatureEvent(
       <LineId Id="63" Count="0" />
       <LineId Id="65" Count="0" />
       <LineId Id="29" Count="0" />
+      <LineId Id="944" Count="1" />
       <LineId Id="16" Count="0" />
       <LineId Id="61" Count="0" />
       <LineId Id="522" Count="0" />
