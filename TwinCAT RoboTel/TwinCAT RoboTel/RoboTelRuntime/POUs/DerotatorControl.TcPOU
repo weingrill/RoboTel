@@ -35,7 +35,7 @@ VAR
 END_VAR
 VAR CONSTANT
 	// current position of the calibration cam. Apply an offset here if necessary
-	calibration_position:	LREAL := 0.0; // calibration in negative direction (was 460.0)
+	calibration_position:	LREAL := 460.0; // calibration in negative direction (was 460.0)
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -51,7 +51,7 @@ SPS-Interface:
 TcNc-Lib, siehe SPS-Funktion AxisSetAcceptBlockedDriveSignal in der TwinCAT  PLC Library: NC.
 *)
 
-position := LIMIT(0.0, position, 460.0);
+position := LIMIT(-1.0, position, 461.0);
 
 // WARNING: Homing disables the limit Switches!
 
