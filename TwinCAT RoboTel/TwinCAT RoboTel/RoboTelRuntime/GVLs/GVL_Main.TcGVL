@@ -40,6 +40,8 @@ VAR_GLOBAL
 	ups_battery_temperature AT%I*: UINT;
 	ups_output_voltage		AT%I*: UINT;
 	ups_output_current		AT%I*: UINT;
+	
+	isRoboTel:		BOOL;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
