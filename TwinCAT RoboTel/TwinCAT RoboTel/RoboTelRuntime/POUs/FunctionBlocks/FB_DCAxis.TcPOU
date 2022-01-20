@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="FB_DCAxis" Id="{806daa9e-d8f7-460b-a5e1-6dcf9a5d40c4}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_DCAxis
 VAR_INPUT
@@ -45,12 +45,17 @@ axis_ref.MDP5001_511_733_Output.MDP5001_733_Control_1.Reset := reset;
 axis_ref.MDP5001_511_733_Output.MDP5001_733_Control_1.Threshold_active := Threshold_active;
 
 error := 	axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Error OR
-			axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Sync_error;
+			axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Sync_error OR
+			(limit_open AND limit_close);
+			
 warning := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Warning;
+
 Ready_to_enable := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Ready_to_enable;
 Ready := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Ready;
+
 Moving_negative := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Moving_negative;
 Moving_positive := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Moving_positive;
+
 Digital_input1 := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Digital_input_1;
 Digital_input2 := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Digital_input_2;
 ]]></ST>
@@ -62,11 +67,17 @@ Digital_input2 := axis_ref.MDP5001_511_733_Input.MDP5001_733_Status_1.Digital_in
       <LineId Id="79" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="80" Count="0" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="108" Count="0" />
       <LineId Id="43" Count="0" />
+      <LineId Id="109" Count="0" />
       <LineId Id="65" Count="0" />
       <LineId Id="67" Count="0" />
+      <LineId Id="110" Count="0" />
       <LineId Id="69" Count="0" />
-      <LineId Id="72" Count="1" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="73" Count="0" />
       <LineId Id="77" Count="0" />
       <LineId Id="76" Count="0" />
     </LineIds>
