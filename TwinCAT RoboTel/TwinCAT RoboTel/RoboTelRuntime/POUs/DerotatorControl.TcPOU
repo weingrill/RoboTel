@@ -35,7 +35,7 @@ VAR
 END_VAR
 VAR CONSTANT
 	// current position of the calibration cam. Apply an offset here if necessary
-	calibration_position:	LREAL := 460.0; // calibration in negative direction (was 460.0)
+	calibration_position:	LREAL := 438.4623; // calibration in positive direction (was 460.0)
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -84,7 +84,7 @@ DeRotatorAxis(
 	Enable_Negative := 	NOT GVL_Telescope.Derotator_inputs.1,
 	Jog_Forward := 		right,
 	Jog_Backwards := 	left,
-	bCalibrationCam :=	GVL_Telescope.Derotator_inputs.1,
+	bCalibrationCam :=	GVL_Telescope.Derotator_inputs.0,
 	isModuloAxis :=		FALSE,
 	Tracking :=			Tracking,
 	ActualPosition => 	actual_position,
@@ -117,7 +117,7 @@ DerotatorEvent(
 	OffLevel := 	ADSLOG_MSGTYPE_HINT);
 	
 TorqueWarning(	
-	Trigger := 		derotator_torque > 12.0, 
+	Trigger := 		ABS(derotator_torque) > 16.0, 
 	Level := 		ADSLOG_MSGTYPE_WARN,
 	FormatString :=	'%s',
 	OnMessage := 	'Derotator torque is high.');
