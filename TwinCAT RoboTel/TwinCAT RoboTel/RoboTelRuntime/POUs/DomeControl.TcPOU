@@ -89,6 +89,9 @@ VAR
 	
 	fbReadReq: ADSREAD := ( NETID := '5.73.45.158.1.1', PORT := 851, TMOUT := DEFAULT_ADS_TIMEOUT );
 	DomeCalibration:	MC_SetPosition;
+	SyncDome:			BOOL;
+	DomeGearIn:			MC_GearIn;
+	DomeGearOut:		MC_GearOut;
 	DomeCommEvent:		FB_Eventlog;
 	DomeAxisEvent:		FB_Eventlog;
 	DomeOpenedEvent:	FB_Eventlog;
@@ -157,6 +160,7 @@ IF HomeDelay.Q THEN
 	move_azimuth := TRUE;
 END_IF
 
+// SyncDome := DomeAxis.Calibrated AND TelescopeControl.power AND AzimuthElevationControl.calibrated;
 // if we are on automatic, tie the dome to the telescope
 (*
 IF DomeAxis.Calibrated AND TelescopeControl.power AND AzimuthElevationControl.calibrated THEN
@@ -166,6 +170,14 @@ END_IF
 
 MC_GearIn
 *)
+DomeGearIn( Master := GVL_Telescope.AzimuthAxisRef,
+			Slave := GVL_Dome.DomeAxisRef,
+			RatioNumerator := 1.0,
+			RatioDenominator:= 1,
+			Execute := SyncDome);
+			
+DomeGearOut(Slave := GVL_Dome.DomeAxisRef,
+			Execute := NOT SyncDome);
 
 Calibrated := DomeAxis.Calibrated;
 // when homing, ensure that the position is the calibration position
@@ -337,7 +349,7 @@ DomeAxisEvent(
 DomeCalibrationEvent(	
 	Trigger := 		GVL_Dome.Azimut_home, 
 	Level := 		ADSLOG_MSGTYPE_HINT,
-	OnMessage := 	'Dome calibration: OK');
+	OnMessage := 	'Dome is (re-)calibrated.');
 
 DomeOpenedEvent(
 	Trigger := 		DomeOpened, 
@@ -397,6 +409,7 @@ CloseDomeEvent(
       <LineId Id="1420" Count="0" />
       <LineId Id="1423" Count="0" />
       <LineId Id="1421" Count="0" />
+      <LineId Id="2199" Count="0" />
       <LineId Id="1424" Count="0" />
       <LineId Id="1405" Count="0" />
       <LineId Id="1433" Count="0" />
@@ -405,6 +418,8 @@ CloseDomeEvent(
       <LineId Id="1452" Count="0" />
       <LineId Id="1451" Count="0" />
       <LineId Id="1427" Count="0" />
+      <LineId Id="2193" Count="4" />
+      <LineId Id="2200" Count="2" />
       <LineId Id="1454" Count="0" />
       <LineId Id="1428" Count="0" />
       <LineId Id="1414" Count="1" />
