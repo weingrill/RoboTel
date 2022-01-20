@@ -39,6 +39,7 @@ VAR
 	FocusUnlocked:		BOOL;
 	FocusCalibration:	MC_SetPosition;
 	FocusAxisEvent:		FB_EventLog;
+	CalibrationEvent:	FB_EventLog;
 END_VAR
 
 VAR CONSTANT
@@ -132,7 +133,12 @@ FocusAxisEvent(
 	OnMessage := 	NCError_TO_STRING(ErrorID),
 	OffMEssage := 	'OK',
 	OffLevel := 	ADSLOG_MSGTYPE_HINT);
-]]></ST>
+
+CalibrationEvent(
+	Trigger :=	Calibrated,
+	Level :=	ADSLOG_MSGTYPE_HINT,
+	OnMessage := 'Focus is calibrated.'
+	);]]></ST>
     </Implementation>
     <LineIds Name="FocusControl">
       <LineId Id="359" Count="0" />
@@ -183,7 +189,11 @@ FocusAxisEvent(
       <LineId Id="433" Count="1" />
       <LineId Id="322" Count="0" />
       <LineId Id="193" Count="5" />
-      <LineId Id="156" Count="1" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="484" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="486" Count="2" />
+      <LineId Id="485" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
