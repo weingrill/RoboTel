@@ -161,11 +161,11 @@ Cover3_control(
 	axis_ref := 	GVL_Telescope.Cover3_axis);
 
 // we are open, if all covers are open
-isopen := cover3_opened AND cover2_opened;
+isopen := cover3_opened AND cover2_opened AND (cover1_opened OR GVL_Main.isRoboTel);
 // we are closed, if all covers are closed
-isclosed := cover2_closed AND cover3_closed;
+isclosed := cover2_closed AND cover3_closed AND (cover1_closed OR GVL_Main.isRoboTel);
 // error indicates an axis error on any axis
-Error := Cover1_control.error OR Cover2_control.error OR Cover3_control.error;
+Error := (Cover1_control.error AND NOT GVL_Main.isRoboTel) OR Cover2_control.error OR Cover3_control.error;
 
 // A timeout occurs, when we open the cover, and the opened signal does not activate within n seconds.
 // The same holds for closing the cover. This should not take longer then 10 seconds
@@ -181,7 +181,8 @@ Covers_Error_event(	Trigger := Error,
 					OnMessage := 'Cover drive error');
 
 // raise an error, if both opened and closed signals are activated
-Cover1_Event(	Trigger := GVL_Telescope.cover1_open AND GVL_Telescope.cover1_closed,
+// handle RoboTel differently
+Cover1_Event(	Trigger := cover1_open AND cover1_closed AND NOT GVL_Main.isRoboTel,
 				Level := ADSLOG_MSGTYPE_ERROR, 
 				FormatString := '%s',
 				OnMessage := 'Cover1: limit switch error');
@@ -197,7 +198,9 @@ Cover3_Event(Trigger := cover3_opened AND cover3_closed,
 				OnMessage := 'Cover3: limit switch error');
 
 //trigger an event, if we encounter a timeout
-Cover1_Timeout_Event(Trigger := Cover1_timeout.Q,
+// handle RoboTel differently
+
+Cover1_Timeout_Event(Trigger := Cover1_timeout.Q AND NOT GVL_Main.isRoboTel,
 				Level := ADSLOG_MSGTYPE_ERROR, 
 				FormatString := '%s',
 				OnMessage := 'Cover1: Timeout');
@@ -290,7 +293,9 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="357" Count="0" />
       <LineId Id="448" Count="4" />
       <LineId Id="356" Count="0" />
-      <LineId Id="334" Count="1" />
+      <LineId Id="334" Count="0" />
+      <LineId Id="535" Count="0" />
+      <LineId Id="335" Count="0" />
       <LineId Id="377" Count="0" />
       <LineId Id="381" Count="0" />
       <LineId Id="380" Count="0" />
@@ -300,7 +305,10 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="384" Count="1" />
       <LineId Id="349" Count="0" />
       <LineId Id="375" Count="0" />
-      <LineId Id="364" Count="1" />
+      <LineId Id="364" Count="0" />
+      <LineId Id="537" Count="0" />
+      <LineId Id="536" Count="0" />
+      <LineId Id="365" Count="0" />
       <LineId Id="386" Count="1" />
       <LineId Id="366" Count="2" />
       <LineId Id="388" Count="1" />
