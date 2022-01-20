@@ -64,7 +64,8 @@ Rain_average(IN := BOOL_TO_INT(NOT GVL_Environment.rawRain) * 100.0, PT := T#60s
 WeatherBad := Rain OR
 				HumidityAverage.AVG >= 80.0 OR
 				HumidityDomeAverage.AVG >= 80.0 OR
-				WindAverage.AVG > 10.0;
+				WindAverage.AVG > 8.0 OR
+				max_wind > 10.0;
 
 IF WeatherBad AND DomeControl.DomeOpened THEN
 	DomeControl.CloseDome := TRUE;
@@ -163,7 +164,9 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="792" Count="0" />
       <LineId Id="511" Count="1" />
       <LineId Id="800" Count="1" />
-      <LineId Id="576" Count="8" />
+      <LineId Id="576" Count="4" />
+      <LineId Id="904" Count="0" />
+      <LineId Id="581" Count="3" />
       <LineId Id="622" Count="3" />
       <LineId Id="665" Count="0" />
       <LineId Id="727" Count="1" />
