@@ -136,9 +136,6 @@
     <Compile Include="POUs\FunctionBlocks\FB_LightTimer.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_Mittelwert.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_MQTTLog.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -155,9 +152,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_RFTRIG.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_SimpleLog.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_SUNPOS.TcPOU">
