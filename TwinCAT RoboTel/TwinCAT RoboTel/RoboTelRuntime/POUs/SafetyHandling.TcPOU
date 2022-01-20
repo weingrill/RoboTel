@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="SafetyHandling" Id="{6d4a788c-2168-4769-93de-c67314036861}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM SafetyHandling
 VAR
@@ -7,6 +7,10 @@ VAR
 	safety_state 	: RS;
 	start_delay 	: TON;
 	ErrAck_Pulse	: TP;
+	SafetyLog		: FB_EventLog;
+END_VAR
+VAR_OUTPUT
+	Error			: BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -26,6 +30,13 @@ ErrAck_Pulse(IN := GVL_Main.phase_available AND start_delay.Q, PT := T#200MS);
 GVL_Safety.ErrAck := (NOT GVL_Main.key_switch_remote AND GVL_Main.stop_switch)
 					OR (NOT GVL_pendant_control.key_switch AND GVL_pendant_control.reset_switch)
 					OR ErrAck_Pulse.Q;
+Error := GVL_Safety.Error;
+
+SafetyLog(Trigger := Error,
+				Level := ADSLOG_MSGTYPE_ERROR,
+				OnMessage := 'Safety Error! Emergency stop enganged!',
+				OffMessage := 'Safety is OK.',
+				OffLevel := ADSLOG_MSGTYPE_HINT);
 ]]></ST>
     </Implementation>
     <LineIds Name="SafetyHandling">
@@ -45,6 +56,11 @@ GVL_Safety.ErrAck := (NOT GVL_Main.key_switch_remote AND GVL_Main.stop_switch)
       <LineId Id="23" Count="0" />
       <LineId Id="35" Count="0" />
       <LineId Id="5" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="87" Count="2" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="47" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
