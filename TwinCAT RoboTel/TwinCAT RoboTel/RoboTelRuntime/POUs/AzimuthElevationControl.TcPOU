@@ -41,6 +41,7 @@ VAR
 	HomeDelay:			FB_TONTP;
 	azimuth_torque: 	REAL;
 	TorqueWarning:		FB_EventLog;
+	CalibrationEvent:	FB_Eventlog;
 END_VAR
 VAR CONSTANT
 	// reference position for homing
@@ -141,10 +142,16 @@ AzimuthAxisEvent(
 	OnMessage := 	NCError_TO_STRING(ErrorID));
 	
 TorqueWarning(	
-	Trigger := 		azimuth_torque > 12.0, 
+	Trigger := 		ABS(azimuth_torque) > 50.0, 
 	Level := 		ADSLOG_MSGTYPE_WARN,
 	FormatString :=	'%s',
 	OnMessage := 	'Azimuth torque is high.');
+	
+CalibrationEvent(
+	Trigger := 		Calibrated, 
+	Level := 		ADSLOG_MSGTYPE_HINT,
+	FormatString :=	'%s',
+	OnMessage := 	'Azimuth axis is calibrated.');
 				]]></ST>
     </Implementation>
     <LineIds Name="AzimuthElevationControl">
@@ -200,6 +207,9 @@ TorqueWarning(
       <LineId Id="80" Count="2" />
       <LineId Id="456" Count="0" />
       <LineId Id="451" Count="4" />
+      <LineId Id="505" Count="1" />
+      <LineId Id="508" Count="2" />
+      <LineId Id="507" Count="0" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
