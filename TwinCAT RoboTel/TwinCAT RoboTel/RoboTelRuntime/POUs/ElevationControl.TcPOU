@@ -46,6 +46,7 @@ VAR
 	LowElevationEvent:		FB_Eventlog;
 	TorqueWarning:			FB_EventLog;
 	ElevationRecalEvent:	FB_Eventlog;
+	CalibrationEvent:		FB_Eventlog;
 	elevation_torque: REAL;
 END_VAR
 VAR CONSTANT
@@ -106,7 +107,7 @@ MC_SetAcceptBlockedDriveSignal(
 
 ElevationCalibration(
 	Axis := GVL_Telescope.ElevationAxisRef,
-	Execute := GVL_Telescope.Elevation_Probe>0 AND NOT HomeAxis,
+	Execute := GVL_Telescope.Elevation_Probe>0 AND Calibrated,
 	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
 
 
@@ -144,12 +145,6 @@ IF ElevationAxis.ResetDone THEN
 	reset := FALSE;
 END_IF
 
-// FIXME fix position bug
-IF Calibrated AND act_position > 95.0 THEN
-	Error := TRUE;
-	ErrorID := 16#0001;
-END_IF
-
 readydelay(IN :=  HydraulicsControl.brake_open, PT := T#6000MS, Q=> ready);
 	
 elevation_torque := GVL_Telescope.Elevation_torque / 10.0;
@@ -181,10 +176,17 @@ ElevationReCalEvent(Trigger := GVL_Telescope.Elevation_Probe>0,
 				OnMessage := 'Elevation was recalibrated on encoder reference.');
 				
 TorqueWarning(	
-	Trigger := 		elevation_torque > 12.0, 
+	Trigger := 		ABS(elevation_torque) > 50.0, 
 	Level := 		ADSLOG_MSGTYPE_WARN,
 	FormatString :=	'%s',
-	OnMessage := 	'Elevation torque is high.');]]></ST>
+	OnMessage := 	'Elevation torque is high.');
+	
+CalibrationEvent(
+	Trigger :=	Calibrated,
+	Level :=	ADSLOG_MSGTYPE_HINT,
+	OnMessage := 'Elevation is calibrated.'
+	);
+]]></ST>
     </Implementation>
     <LineIds Name="ElevationControl">
       <LineId Id="379" Count="0" />
@@ -242,12 +244,6 @@ TorqueWarning(
       <LineId Id="192" Count="2" />
       <LineId Id="135" Count="0" />
       <LineId Id="214" Count="11" />
-      <LineId Id="613" Count="0" />
-      <LineId Id="611" Count="0" />
-      <LineId Id="385" Count="0" />
-      <LineId Id="620" Count="0" />
-      <LineId Id="622" Count="0" />
-      <LineId Id="621" Count="0" />
       <LineId Id="612" Count="0" />
       <LineId Id="386" Count="0" />
       <LineId Id="136" Count="0" />
@@ -267,6 +263,10 @@ TorqueWarning(
       <LineId Id="841" Count="0" />
       <LineId Id="843" Count="3" />
       <LineId Id="842" Count="0" />
+      <LineId Id="902" Count="0" />
+      <LineId Id="904" Count="3" />
+      <LineId Id="903" Count="0" />
+      <LineId Id="908" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
