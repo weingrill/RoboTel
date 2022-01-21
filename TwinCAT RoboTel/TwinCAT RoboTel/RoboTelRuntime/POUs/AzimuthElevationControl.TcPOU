@@ -39,6 +39,7 @@ VAR
 	// delay until commutator angle is measured
 	readydelay:			TON;
 	HomeDelay:			FB_TONTP;
+	TorqueError:		TON := (PT := T#3S);
 	azimuth_torque: 	REAL;
 	TorqueWarning:		FB_EventLog;
 	CalibrationEvent:	FB_Eventlog;
@@ -55,12 +56,8 @@ END_VAR
 Power must be on and brake must be open for the axis to operate
 *)
 
-(*
-Enable := TelescopeControl.power OR PendantControl.Azimuth_enable;
-*)
 IF Enable THEN
 	ElevationControl.enable := TRUE;
-	// HydraulicsControl.open_brake := TRUE;
 END_IF
 
 // generate the ready signal after enabling the drive
@@ -133,6 +130,7 @@ IF AzimuthAxis.ResetDone THEN
 END_IF
 
 azimuth_torque := GVL_Telescope.Azimuth_torque / 10.0;
+TorqueError(IN := ABS(azimuth_torque) > 50.0);
 
 
 AzimuthAxisEvent(	
@@ -142,7 +140,7 @@ AzimuthAxisEvent(
 	OnMessage := 	NCError_TO_STRING(ErrorID));
 	
 TorqueWarning(	
-	Trigger := 		ABS(azimuth_torque) > 50.0, 
+	Trigger := 		TorqueError.Q, 
 	Level := 		ADSLOG_MSGTYPE_WARN,
 	FormatString :=	'%s',
 	OnMessage := 	'Azimuth torque is high.');
@@ -159,11 +157,9 @@ CalibrationEvent(
       <LineId Id="174" Count="0" />
       <LineId Id="173" Count="0" />
       <LineId Id="251" Count="0" />
-      <LineId Id="179" Count="1" />
-      <LineId Id="128" Count="0" />
       <LineId Id="114" Count="0" />
       <LineId Id="229" Count="0" />
-      <LineId Id="152" Count="1" />
+      <LineId Id="153" Count="0" />
       <LineId Id="340" Count="1" />
       <LineId Id="284" Count="0" />
       <LineId Id="345" Count="0" />
@@ -200,6 +196,7 @@ CalibrationEvent(
       <LineId Id="158" Count="10" />
       <LineId Id="446" Count="0" />
       <LineId Id="448" Count="0" />
+      <LineId Id="512" Count="0" />
       <LineId Id="447" Count="0" />
       <LineId Id="157" Count="0" />
       <LineId Id="79" Count="0" />
