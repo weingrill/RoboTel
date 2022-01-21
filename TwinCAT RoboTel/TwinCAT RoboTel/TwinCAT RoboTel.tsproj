@@ -4181,6 +4181,11 @@ External Setpoint Generation:
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
+							<Name>GVL_Auxiliary.Dewar_temperature_error</Name>
+							<Comment><![CDATA[ Dewar Temperature sensor error]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>FanControl.Fan_axis.MDP5001_511_733_Input</Name>
 							<Type GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Type>
 						</Var>
@@ -4224,13 +4229,10 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.Azimut_raw</Name>
-							<Comment><![CDATA[ EL5151]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Dome.Azimut_home</Name>
-							<Comment><![CDATA[ Azimuth home signal]]></Comment>
+							<Comment><![CDATA[ EL5151
+ Azimut_raw				AT%I*:	INT;
+ Azimuth home signal]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -11948,19 +11950,19 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 									<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
 									<BootStrapData>0010f400f410f400</BootStrapData>
 									<Pdo Name="RTD Inputs Channel 1" Index="#x1a00" Flags="#x0011" SyncMan="3">
-										<Entry Name="Status__Underrange" Index="#x6000" Sub="#x01">
+										<Entry Name="Status__Underrange" Index="#x6000" Sub="#x01" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__Overrange" Index="#x6000" Sub="#x02">
+										<Entry Name="Status__Overrange" Index="#x6000" Sub="#x02" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
-										<Entry Name="Status__Limit 1" Index="#x6000" Sub="#x03">
+										<Entry Name="Status__Limit 1" Index="#x6000" Sub="#x03" Flags="#x00008020">
 											<Type>BIT2</Type>
 										</Entry>
-										<Entry Name="Status__Limit 2" Index="#x6000" Sub="#x05">
+										<Entry Name="Status__Limit 2" Index="#x6000" Sub="#x05" Flags="#x00008020">
 											<Type>BIT2</Type>
 										</Entry>
-										<Entry Name="Status__Error" Index="#x6000" Sub="#x07">
+										<Entry Name="Status__Error" Index="#x6000" Sub="#x07" Flags="#x00008020">
 											<Type>BIT</Type>
 										</Entry>
 										<Entry>
@@ -12818,25 +12820,25 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 									<BootStrapData>0010f400f410f400</BootStrapData>
 									<Pdo Name="AI Standard Channel 1" Index="#x1a00" Flags="#x0010" SyncMan="3">
 										<ExcludePdo>#x1a01</ExcludePdo>
-										<Entry Name="Status__Underrange" Index="#x6000" Sub="#x01">
+										<Entry Name="Status__Underrange" Index="#x6000" Sub="#x01" Flags="#x00008020">
 											<Type>BIT</Type>
 											<Comment><![CDATA[Underrange event active]]></Comment>
 										</Entry>
-										<Entry Name="Status__Overrange" Index="#x6000" Sub="#x02">
+										<Entry Name="Status__Overrange" Index="#x6000" Sub="#x02" Flags="#x00008020">
 											<Type>BIT</Type>
 											<Comment><![CDATA[Overrange event active]]></Comment>
 										</Entry>
-										<Entry Name="Status__Limit 1" Index="#x6000" Sub="#x03">
+										<Entry Name="Status__Limit 1" Index="#x6000" Sub="#x03" Flags="#x00008020">
 											<Type>BIT2</Type>
 											<Comment><![CDATA[Bit0: Value smaller/equal Limit1
 Bit1: Value bigger/equal Limit1]]></Comment>
 										</Entry>
-										<Entry Name="Status__Limit 2" Index="#x6000" Sub="#x05">
+										<Entry Name="Status__Limit 2" Index="#x6000" Sub="#x05" Flags="#x00008020">
 											<Type>BIT2</Type>
 											<Comment><![CDATA[Bit0: Value smaller/equal Limit2
 Bit1: Value bigger/equal Limit2]]></Comment>
 										</Entry>
-										<Entry Name="Status__Error" Index="#x6000" Sub="#x07">
+										<Entry Name="Status__Error" Index="#x6000" Sub="#x07" Flags="#x00008020">
 											<Type>BIT</Type>
 											<Comment><![CDATA[Bit set when Over- or Underrange]]></Comment>
 										</Entry>
@@ -12846,7 +12848,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 										<Entry Name="Status__">
 											<Type GUID="{18071995-0000-0000-0000-002000000006}">ARRAY [0..5] OF BIT</Type>
 										</Entry>
-										<Entry Name="Status__TxPDO State" Index="#x6000" Sub="#x0f">
+										<Entry Name="Status__TxPDO State" Index="#x6000" Sub="#x0f" Flags="#x00008020">
 											<Type>BIT</Type>
 											<Comment><![CDATA[TRUE when this TxPDO is not valid]]></Comment>
 										</Entry>
@@ -13507,13 +13509,14 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000a00000020000000000000000000000000000000000000000000000003406a0000000000ed0043757272656e74206c6f6f702070726f706f7274696f6e616c206761696e203100</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002b000000000000000000000000000000000000000000000003406b0000000000080043757272656e7420636f6e74726f6c206c6f6f7020696e74656772616c20616374696f6e2074696d65203100</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002900000000000000000000000000000000000000000000000340ff8100000000960056656c6f636974792066696c74657220313a204c6f7720706173732074696d6520636f6e7374616e7400</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c0000001f000000000000000000000000000000000000000000000003406400000000002500000056656c6f63697479206c6f6f702070726f706f7274696f6e616c206761696e00</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000002200000000000000000000000000000000000000000000000340650000000000500056656c6f63697479206c6f6f7020696e74656772616c20616374696f6e2074696d6500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001f000000000000000000000000000000000000000000000003406400000000006400000056656c6f63697479206c6f6f702070726f706f7274696f6e616c206761696e00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000002200000000000000000000000000000000000000000000000340650000000000140056656c6f63697479206c6f6f7020696e74656772616c20616374696f6e2074696d6500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c000000230000000000000000000000000000000000000000000000034091810000000010001201506f736974696f6e206c696d69742073776974636820636f6e66696775726174696f6e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a00000014000000000000000000000000000000000000000000000003402e81000000000d00446973706c61792076616c7565206c696e65203100</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c00000011000000000000000000000000000000000000000000000003409f00000000007f842e004d6f6e69746f72696e672077696e646f7700</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001e000000000000000000000000000000000000000000000003405c0100000000e803416363656c65726174696f6e206665656420666f7277617264206761696e00</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a00000020000000000000000000000000000000000000000000000003405c0000000000c8004269706f6c617220746f727175652f666f726365206c696d69742076616c756500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a00000020000000000000000000000000000000000000000000000003405c0000000000fa004269706f6c617220746f727175652f666f726365206c696d69742076616c756500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a00000017000000000000000000000000000000000000000000000003406800000000006400506f736974696f6e206c6f6f70204b762d666163746f7200</MBoxUserCmdData>
 						<Pdo Name="AT 1" Index="#x0010" Flags="#x0001" SyncMan="3">
 							<Entry Name="Drive status word" BitLen="16" Index="#x0087" Flags="#x00000800">
 								<Type>UINT</Type>
@@ -16298,6 +16301,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 1^Control"/>
 				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 1^Velocity"/>
 			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Temp1 (EL3202-0010)">
+				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_bearing2" VarB="RTD Inputs Channel 1^Value"/>
+			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Temp2 (EL3202-0010)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_mirror1" VarB="RTD Inputs Channel 2^Value"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_mirror2" VarB="RTD Inputs Channel 1^Value"/>
@@ -16324,6 +16330,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_FilterWheel.bCalibrationCam" VarB="FB Touch probe status^Touch probe status^TP1 Input"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 84 (EK1521)^Term 87 (EK1501)^Temp5 (EL3202-0010)">
+				<Link VarA="PlcTask Inputs^GVL_Auxiliary.Dewar_temperature_error" VarB="RTD Inputs Channel 1^Status^Error"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_Dewar" VarB="RTD Inputs Channel 1^Value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 84 (EK1521)^Term 87 (EK1501)^Term 24 (EL3064)">

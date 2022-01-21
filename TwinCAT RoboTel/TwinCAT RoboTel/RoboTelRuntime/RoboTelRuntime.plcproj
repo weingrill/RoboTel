@@ -32,6 +32,10 @@
     <Compile Include="GlobalTextList.TcGTLO">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="GVLs\GVL_Auxiliary.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="GVLs\GVL_Dome.TcGVL">
       <SubType>Code</SubType>
     </Compile>
@@ -134,9 +138,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_LightTimer.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_MQTTLog.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_MQTTPublisher.TcPOU">
