@@ -42,10 +42,8 @@ temperature_tube 	:= GVL_Telescope.temperature_tube / 100.0;
 temperature_bearing1 := GVL_Telescope.temperature_bearing1 / 100.0;
 temperature_bearing2 := GVL_Telescope.temperature_bearing2 / 100.0;
 
-pressure_voltage := F_YREAL(GVL_Telescope.temperature_Dewar, 0, 32767, 0.0, 10.0);
+pressure_voltage := F_YREAL(GVL_Telescope.pressure_Dewar, 0, 32767, 0.0, 10.0);
 pressure_Dewar := LREAL_TO_REAL(EXPT(10.0, (1.5*pressure_voltage - 12.0)));
-
-
 temperature_Dewar := GVL_Telescope.temperature_Dewar / 100.0;
 
 MQTTTimer(IN:=TRUE);
@@ -76,10 +74,14 @@ IF MQTTTimer.Q THEN // publish new payload every second
 					bQueue:= FALSE );
 
 	sPayloadPub2 := 'instrument,location=dome,host=CX-4E6032,module=TelescopeAuxiliary ';
-	sPayloadPub2 := APPEND(sPayloadPub2, 'DewarTemperature=',	LREAL_TO_FMTSTR(temperature_Dewar, 2, TRUE));
-	sPayloadPub2 := APPEND(sPayloadPub2, ',DewarPressure=',	LREAL_TO_FMTSTR(pressure_Dewar, 2, TRUE));
-	sPayloadPub2 := APPEND(sPayloadPub2, ',DewarPressureVoltage=',	LREAL_TO_FMTSTR(pressure_voltage, 3, TRUE));
-
+	sPayloadPub2 := APPEND(sPayloadPub2, 'DewarPressureVoltage=',	LREAL_TO_FMTSTR(pressure_voltage, 3, TRUE));
+	IF NOT GVL_Auxiliary.Dewar_temperature_error THEN
+		sPayloadPub2 := APPEND(sPayloadPub2, ',DewarTemperature=',	LREAL_TO_FMTSTR(temperature_Dewar, 2, TRUE));
+	END_IF
+	IF pressure_voltage > 0.001 THEN
+		sPayloadPub2 := APPEND(sPayloadPub2, ',DewarPressure=',	LREAL_TO_FMTSTR(pressure_Dewar, 2, TRUE));
+	END_IF
+	
 	published2 := MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
 					pPayload:= ADR(sPayloadPub2), 
@@ -100,8 +102,7 @@ END_IF
       <LineId Id="40" Count="0" />
       <LineId Id="82" Count="0" />
       <LineId Id="84" Count="1" />
-      <LineId Id="83" Count="0" />
-      <LineId Id="47" Count="4" />
+      <LineId Id="48" Count="3" />
       <LineId Id="53" Count="3" />
       <LineId Id="87" Count="0" />
       <LineId Id="57" Count="0" />
@@ -113,9 +114,12 @@ END_IF
       <LineId Id="81" Count="0" />
       <LineId Id="96" Count="0" />
       <LineId Id="60" Count="7" />
-      <LineId Id="98" Count="3" />
-      <LineId Id="112" Count="0" />
-      <LineId Id="97" Count="0" />
+      <LineId Id="98" Count="1" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="100" Count="0" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="181" Count="3" />
+      <LineId Id="178" Count="0" />
       <LineId Id="102" Count="6" />
       <LineId Id="144" Count="0" />
       <LineId Id="68" Count="1" />
