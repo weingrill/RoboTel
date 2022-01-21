@@ -29,7 +29,7 @@ VAR_GLOBAL
 	// dehumidifier MOSFET
 	DeHumidifier			AT%Q*: 	BOOL;
 	// EL5151
-	Azimut_raw				AT%I*:	INT;
+	// Azimut_raw				AT%I*:	INT;
 	// Azimuth home signal
 	Azimut_home				AT%I*:	BOOL;
 	
