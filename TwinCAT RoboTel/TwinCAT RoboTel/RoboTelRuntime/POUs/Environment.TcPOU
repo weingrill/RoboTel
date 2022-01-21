@@ -30,6 +30,8 @@ VAR
 	PressureAverage,
 	Rain_average: FB_TimeAverage;
 	RainDelay:	TON;
+	sunpos:		FB_SUNPOS;
+	eq2hor2:	FB_EQ2HOR2;
 	avg_wind, max_wind: REAL;
 	MQTTTimer : TON := (PT:=T#5S);
 	sPayloadPub: STRING(255) := '';
@@ -71,6 +73,12 @@ IF WeatherBad AND DomeControl.DomeOpened THEN
 	DomeControl.CloseDome := TRUE;
 END_IF
 
+sunpos(JD := TelescopeControl.jd);
+eq2hor2(alpha := sunpos.RA,
+	delta := sunpos.Dec,
+	lon := TelescopeControl.longitude,
+	lat := TelescopeControl.latitude,
+	JD := TelescopeControl.jd);
 
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
@@ -167,6 +175,7 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="576" Count="4" />
       <LineId Id="904" Count="0" />
       <LineId Id="581" Count="3" />
+      <LineId Id="906" Count="5" />
       <LineId Id="622" Count="3" />
       <LineId Id="665" Count="0" />
       <LineId Id="727" Count="1" />
