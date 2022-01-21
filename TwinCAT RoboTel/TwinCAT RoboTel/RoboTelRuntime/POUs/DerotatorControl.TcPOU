@@ -28,9 +28,11 @@ VAR_OUTPUT
 	Ready:				BOOL;
 END_VAR
 VAR
+	TorqueError:	TON := (PT := T#3S);
 	DerotatorAxis:	FB_Axis2;
 	DerotatorEvent:	FB_EventLog;
 	TorqueWarning:	FB_EventLog;
+	CalibrationEvent:	FB_EventLog;
 	derotator_torque: REAL;
 END_VAR
 VAR CONSTANT
@@ -108,6 +110,8 @@ Ready := DeRotatorAxis.Ready;
 
 derotator_torque := GVL_Telescope.Derotator_torque / 10.0;
 
+TorqueError(IN := ABS(derotator_torque) > 16.0);
+
 DerotatorEvent(	
 	Trigger := 		Error, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
@@ -117,11 +121,16 @@ DerotatorEvent(
 	OffLevel := 	ADSLOG_MSGTYPE_HINT);
 	
 TorqueWarning(	
-	Trigger := 		ABS(derotator_torque) > 16.0, 
+	Trigger := 		TorqueError.Q, 
 	Level := 		ADSLOG_MSGTYPE_WARN,
 	FormatString :=	'%s',
 	OnMessage := 	'Derotator torque is high.');
-]]></ST>
+
+CalibrationEvent(	
+	Trigger := 		Calibrated, 
+	Level := 		ADSLOG_MSGTYPE_HINT,
+	OnMessage := 	'Derotator is calibrated.');
+	]]></ST>
     </Implementation>
     <LineIds Name="DerotatorControl">
       <LineId Id="128" Count="0" />
@@ -169,12 +178,15 @@ TorqueWarning(
       <LineId Id="240" Count="1" />
       <LineId Id="314" Count="0" />
       <LineId Id="316" Count="0" />
+      <LineId Id="366" Count="1" />
       <LineId Id="55" Count="6" />
       <LineId Id="43" Count="0" />
       <LineId Id="319" Count="0" />
       <LineId Id="321" Count="3" />
       <LineId Id="327" Count="0" />
+      <LineId Id="368" Count="3" />
       <LineId Id="320" Count="0" />
+      <LineId Id="372" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
