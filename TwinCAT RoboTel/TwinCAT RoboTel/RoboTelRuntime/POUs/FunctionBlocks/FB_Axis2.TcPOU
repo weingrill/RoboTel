@@ -89,7 +89,7 @@ VAR
 	Direction:		DINT;
 	Acceleration:	LREAL := 1.0;
 	EndTracking:	F_TRIG;
-	
+	PositionPID:	FB_BasicPID;
 END_VAR
 
 VAR_IN_OUT
@@ -137,6 +137,14 @@ IF Position > AbsolutePosition THEN
 ELSE
 	Direction := 1;
 END_IF
+
+PositionPID(fSetPointValue := Position,
+	fActualValue := ActualPosition,
+	bReset := NOT Tracking,
+	fCtrlCycleTime := 0.1,
+	fKp := 1.0,
+	fTn := 0.001,
+	fTv := 0.01);
 	
 MC_ExtSetPointGenFeed(
 	Position :=		0.95*ActualPosition + 0.05*Position,
@@ -181,7 +189,7 @@ Axis_Home(
 	bCalibrationCam := bCalibrationCam,
 	Done => 		HomeDone);	
 	
-IF MoveDone OR HomeDone OR JogDone THEN
+IF (MoveDone OR HomeDone OR JogDone) AND NOT StopDone THEN
 	bStop := TRUE;
 END_IF
 
@@ -330,6 +338,7 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="1417" Count="0" />
       <LineId Id="1419" Count="1" />
       <LineId Id="1418" Count="0" />
+      <LineId Id="1715" Count="7" />
       <LineId Id="1416" Count="0" />
       <LineId Id="1287" Count="0" />
       <LineId Id="1297" Count="3" />
