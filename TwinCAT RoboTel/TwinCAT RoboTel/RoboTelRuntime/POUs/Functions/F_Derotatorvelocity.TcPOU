@@ -27,7 +27,7 @@ https://circuitcellar.com/research-design-hub/projects/field-derotator-for-astro
 returns the rotational velocity for the de-rotator in degrees per second
 azimuth, latitutde and elevation are converted to radians
 *)
-IF ABS(COS(elevation * d2r))> 0.0 THEN
+IF ABS(COS(elevation * d2r))> 1.0e-3 THEN
 	F_Derotatorvelocity := -Omega * COS(azimuth * d2r) * COS(latitude * d2r) / COS(elevation * d2r);
 ELSE
 	F_Derotatorvelocity := 0.0;	
