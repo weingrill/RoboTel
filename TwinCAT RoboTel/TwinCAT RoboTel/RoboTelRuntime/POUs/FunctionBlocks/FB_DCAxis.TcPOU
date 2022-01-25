@@ -30,7 +30,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[enable_state(SET := enable,
+      <ST><![CDATA[enable_state(SET := enable AND Ready_to_enable,
 			 RESET1 := reset);			
 axis_ref.MDP5001_511_733_Output.MDP5001_733_Velocity := 0;
 IF open AND limit_open THEN
