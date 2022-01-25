@@ -89,7 +89,6 @@ VAR
 	Direction:		DINT;
 	Acceleration:	LREAL := 1.0;
 	EndTracking:	F_TRIG;
-	PositionPID:	FB_BasicPID;
 END_VAR
 
 VAR_IN_OUT
@@ -101,12 +100,6 @@ END_VAR]]></Declaration>
 Axis_Status(Enable := TRUE,
 			Axis := AxisRef);
 
-// deactivate the Enable signal on Reset			
-IF Reset THEN
-	wasEnabled := Enable;
-	Enable := FALSE;
-END_IF
-			
 // Enable the axis (power signal or manual enable)
 Axis_Power(
 	Axis := AxisRef,
@@ -121,12 +114,6 @@ Axis_Reset(
 	Execute := 	Reset,
 	Done => 	ResetDone);
 
-// reenable the Enable signal if Reset was Done	
-IF ResetDone THEN
-	Reset := FALSE;
-	Enable := wasEnabled;
-END_IF
-
 Axis_SetpointEnable(Axis := AxisRef,
 	Execute :=		Tracking AND Ready AND Calibrated AND NOT bStop,
 	Position :=		Position,	// final destination
@@ -137,14 +124,6 @@ IF Position > AbsolutePosition THEN
 ELSE
 	Direction := 1;
 END_IF
-
-PositionPID(fSetPointValue := Position,
-	fActualValue := ActualPosition,
-	bReset := NOT Tracking,
-	fCtrlCycleTime := 0.1,
-	fKp := 1.0,
-	fTn := 0.001,
-	fTv := 0.01);
 	
 MC_ExtSetPointGenFeed(
 	Position :=		0.95*ActualPosition + 0.05*Position,
@@ -189,7 +168,7 @@ Axis_Home(
 	bCalibrationCam := bCalibrationCam,
 	Done => 		HomeDone);	
 	
-IF (MoveDone OR HomeDone OR JogDone) AND NOT StopDone THEN
+IF (MoveDone OR HomeDone OR JogDone) AND NOT Axis_Status.StandStill THEN
 	bStop := TRUE;
 END_IF
 
@@ -314,11 +293,6 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="292" Count="0" />
       <LineId Id="200" Count="1" />
       <LineId Id="1619" Count="0" />
-      <LineId Id="1614" Count="0" />
-      <LineId Id="293" Count="0" />
-      <LineId Id="1618" Count="0" />
-      <LineId Id="1616" Count="1" />
-      <LineId Id="1615" Count="0" />
       <LineId Id="198" Count="0" />
       <LineId Id="27" Count="0" />
       <LineId Id="294" Count="0" />
@@ -327,18 +301,13 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="286" Count="0" />
       <LineId Id="39" Count="1" />
       <LineId Id="1620" Count="0" />
-      <LineId Id="287" Count="0" />
-      <LineId Id="44" Count="1" />
-      <LineId Id="1613" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="1279" Count="1" />
+      <LineId Id="1280" Count="0" />
       <LineId Id="1283" Count="2" />
       <LineId Id="1415" Count="0" />
       <LineId Id="1301" Count="0" />
       <LineId Id="1417" Count="0" />
       <LineId Id="1419" Count="1" />
       <LineId Id="1418" Count="0" />
-      <LineId Id="1715" Count="7" />
       <LineId Id="1416" Count="0" />
       <LineId Id="1287" Count="0" />
       <LineId Id="1297" Count="3" />
