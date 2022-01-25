@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="F_DerotatorPosition2" Id="{e646c6f5-cf02-4188-95c2-c7b920ede3a4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_DerotatorPosition2 : LREAL
+VAR_INPUT
+	// azimuth of the target
+	azimuth: LREAL;
+	// elevation of the target in degrees
+	elevation: LREAL;
+	// declination of the target in degrees
+	declination: LREAL;
+	// latitude in degrees
+	latitude:	LREAL;
+END_VAR
+VAR
+	// parallactic angle
+	sinpa, de, az, el, la: LREAL;
+	parallactic_angle:	LREAL;
+	zenith_distance: LREAL;
+END_VAR
+VAR CONSTANT
+	d2r:	LREAL := PI/180.0;
+	r2d:	LREAL := 180.0/PI;
+	h2r:	LREAL := PI/12.0;
+	h2d:	LREAL := 15.0;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// calculate the parallactic angle
+de := LIMIT(-90.0, declination, 90.0) * d2r;
+az := MODABS(azimuth, 360.0) * d2r;
+el := LIMIT(0.0, elevation, 90.0) * d2r;
+la := LIMIT(-90.0, latitude, 90.0) * d2r;
+IF ABS(COS(de)) > 1E-3 THEN
+	sinpa := SIN(az) * COS(la) / COS(de);
+	parallactic_angle := r2d * ASIN(LIMIT(-1.0, sinpa, 1.0));
+ELSE
+	// WARNING: arbitrary definition
+	parallactic_angle := 0.0;
+END_IF
+zenith_distance := 90.0 - elevation;
+F_DerotatorPosition2 := parallactic_angle + azimuth - zenith_distance;]]></ST>
+    </Implementation>
+    <LineIds Name="F_DerotatorPosition2">
+      <LineId Id="95" Count="12" />
+      <LineId Id="22" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
