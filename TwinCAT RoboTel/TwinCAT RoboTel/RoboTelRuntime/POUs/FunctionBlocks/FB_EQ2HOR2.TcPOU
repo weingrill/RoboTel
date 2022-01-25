@@ -77,9 +77,9 @@ END_IF
 
 length := sinaz*sinaz + cosaz*cosaz;
 
-az1 := ASIN(sinaz) * r2d;
+az1 := ASIN(LIMIT(-1.0, sinaz, 1.0)) * r2d;
 
-az2 := ACOS(cosaz) * r2d;
+az2 := ACOS(LIMIT(-1.0, cosaz, 1.0)) * r2d;
 
 az3 := ATAN2(SIN(phi_r)*COS(tau_r) - COS(phi_r)*TAN(delta_r), SIN(tau_r)) * r2d;
 
