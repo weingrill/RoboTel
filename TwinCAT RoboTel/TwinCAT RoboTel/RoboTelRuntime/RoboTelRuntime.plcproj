@@ -182,31 +182,16 @@
     <Compile Include="POUs\Functions\DateTime2JD.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Functions\F_AbsoluteDecoder.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Functions\F_DeclinationLimit.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Functions\F_Decoder.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\Functions\F_Derotatorvelocity.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\F_Dewpoint.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Functions\F_HourangleLimit.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Functions\F_MeanDirection.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\Functions\F_YREAL.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Functions\ImageRotation.TcPOU">
+    <Compile Include="POUs\Functions\F_DerotatorPosition2.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\LREAL_TO_FMTESTR.TcPOU">
