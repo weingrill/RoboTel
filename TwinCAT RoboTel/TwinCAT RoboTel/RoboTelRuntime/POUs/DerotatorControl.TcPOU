@@ -13,6 +13,8 @@ VAR_INPUT
 	right:		BOOL;
 	// set the absolute position
 	position:	LREAL;
+	// derotator velocity
+	Velocity:	LREAL := 10.0;
 	// move to given position
 	MoveAxis: 	BOOL;
 	// calibrate the axis
@@ -21,19 +23,33 @@ VAR_INPUT
 	Tracking:	BOOL;
 END_VAR
 VAR_OUTPUT
+	// error flag
 	Error:				BOOL;
+	// nc error id
 	ErrorID:			UDINT;
+	// actual position of the derotator
 	actual_position:	LREAL;
+	// calibrated flag
 	Calibrated:			BOOL;
+	// axis ready flag
 	Ready:				BOOL;
+	// position to move the axis to
+	slewtime: 			LREAL;
 END_VAR
 VAR
-	TorqueError:	TON := (PT := T#3S);
-	DerotatorAxis:	FB_Axis2;
-	DerotatorEvent:	FB_EventLog;
-	TorqueWarning:	FB_EventLog;
+	// trigger for the torque error
+	TorqueError:		TON := (PT := T#3S);
+	// axis function block
+	DerotatorAxis:		FB_Axis2;
+	
+	DerotatorEvent:		FB_EventLog;
+	// torque warning event
+	TorqueWarning:		FB_EventLog;
+	// torque calibration event
 	CalibrationEvent:	FB_EventLog;
-	derotator_torque: REAL;
+	// percentage of the derotator torque
+	derotator_torque:	REAL;
+	ReadParameter:		MC_ReadParameter;
 END_VAR
 VAR CONSTANT
 	// current position of the calibration cam. Apply an offset here if necessary
@@ -53,7 +69,7 @@ SPS-Interface:
 TcNc-Lib, siehe SPS-Funktion AxisSetAcceptBlockedDriveSignal in der TwinCAT  PLC Library: NC.
 *)
 
-position := LIMIT(-1.0, position, 461.0);
+position := LIMIT(calibration_position - 460.0, position, calibration_position);
 
 // WARNING: Homing disables the limit Switches!
 
@@ -61,11 +77,6 @@ MC_SetAcceptBlockedDriveSignal(
 	Axis := GVL_Telescope.DerotatorAxisRef,
 	Enable := HomeAxis);
 
-(* Disable autohoming until limit switches are fixed
-IF enable AND TelescopeControl.power AND NOT DerotatorAxis.Calibrated THEN
-	HomeAxis := TRUE;
-END_IF
-*)
 
 IF DerotatorAxis.Calibrated THEN
 	HomeAxis := FALSE;
@@ -76,12 +87,22 @@ IF HomeAxis THEN
 	position := calibration_position;
 END_IF
 
+IF Tracking THEN
+	IF ABS(actual_position - position) > 1.0 THEN
+		Tracking := FALSE;
+		MoveAxis := TRUE;
+	ELSE
+		MoveAxis := FALSE;
+	END_IF
+END_IF
+
 DeRotatorAxis(
 	enable := 			enable,
 	Reset := 			Reset,
 	MoveAxis :=			MoveAxis,
 	HomeAxis :=			HomeAxis,
 	Position := 		position, 
+	Velocity :=			Velocity,
 	Enable_Positive := 	NOT GVL_Telescope.Derotator_inputs.0 OR HomeAxis,
 	Enable_Negative := 	NOT GVL_Telescope.Derotator_inputs.1,
 	Jog_Forward := 		right,
@@ -107,6 +128,15 @@ IF DeRotatorAxis.ResetDone THEN
 END_IF
 
 Ready := DeRotatorAxis.Ready;
+
+ReadParameter(	Axis := GVL_Telescope.DerotatorAxisRef, 
+				Enable := DeRotatorAxis.InMotion, 
+				ParameterNumber := MC_AxisParameter.AxisRemainingTimeToGo, 
+				ReadMode := E_ReadMode.READMODE_CYCLIC);
+				
+IF ReadParameter.Valid THEN
+	slewtime := ReadParameter.Value;
+END_IF
 
 derotator_torque := GVL_Telescope.Derotator_torque / 10.0;
 
@@ -150,10 +180,6 @@ CalibrationEvent(
       <LineId Id="147" Count="0" />
       <LineId Id="145" Count="0" />
       <LineId Id="275" Count="0" />
-      <LineId Id="159" Count="0" />
-      <LineId Id="158" Count="0" />
-      <LineId Id="160" Count="1" />
-      <LineId Id="276" Count="0" />
       <LineId Id="164" Count="0" />
       <LineId Id="163" Count="0" />
       <LineId Id="165" Count="0" />
@@ -162,11 +188,18 @@ CalibrationEvent(
       <LineId Id="155" Count="0" />
       <LineId Id="142" Count="0" />
       <LineId Id="156" Count="1" />
-      <LineId Id="100" Count="0" />
+      <LineId Id="436" Count="1" />
+      <LineId Id="442" Count="0" />
+      <LineId Id="438" Count="0" />
+      <LineId Id="440" Count="0" />
+      <LineId Id="443" Count="2" />
+      <LineId Id="439" Count="0" />
+      <LineId Id="424" Count="0" />
       <LineId Id="10" Count="0" />
       <LineId Id="23" Count="0" />
       <LineId Id="93" Count="2" />
       <LineId Id="312" Count="0" />
+      <LineId Id="431" Count="0" />
       <LineId Id="11" Count="3" />
       <LineId Id="97" Count="2" />
       <LineId Id="313" Count="0" />
@@ -176,6 +209,9 @@ CalibrationEvent(
       <LineId Id="42" Count="0" />
       <LineId Id="44" Count="10" />
       <LineId Id="240" Count="1" />
+      <LineId Id="448" Count="0" />
+      <LineId Id="450" Count="6" />
+      <LineId Id="449" Count="0" />
       <LineId Id="314" Count="0" />
       <LineId Id="316" Count="0" />
       <LineId Id="366" Count="1" />
