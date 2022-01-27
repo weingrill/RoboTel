@@ -20,8 +20,8 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	de: LREAL := 29.0 + 05.0/60.0 + 26.99/3600.0;
 	// boolean, TRUE: MOVE telescope TO last ra/de AND start tracking. Set 'goto' TO FALSE, IF TRUE. FALSE: Stop tracking as soon as possible
 	track: BOOL;
-	// apparent hour anlge, degrees, double, south=zero, west>0)
-	tau: LREAL := 0.0;
+	// apparent hour angle, degrees, double, south=zero, west>0)
+//	tau: LREAL := 0.0;
 	// boolean, TRUE: MOVE telescope TO tau/de AND stop there. Set track TO FALSE, IF TRUE. FALSE: no effect.)
 	goto: BOOL;	
 	// move the telescope to a given az-alt position
@@ -31,7 +31,7 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	// internal command: telescope is moved to pumping position
 	pumping: BOOL;
 	//	offset TO current tracking point on axis tau, degrees, double
-	tauoffset: LREAL;
+//	tauoffset: LREAL;
 	// 	offset TO current tracking point on axis dec, degrees, double 
 	deoffset: LREAL;
 	// initiates hard-reset on all axis
@@ -57,7 +57,7 @@ VAR
 	// current Julian Date calculated from system time
 	jd:	LREAL;
 	// desired elevation of the telescope pointing 
-	elevation:	LREAL := 15.0;
+	elevation:	LREAL := 45.0;
 	// desired azimut of the telescope pointing 
 	azimuth:	LREAL := 320.0;
 	// image derotation
@@ -67,8 +67,7 @@ VAR
 	// values calulated when ra and dec are set by TCS
 	elevation_calc:	LREAL; 
 	azimuth_calc:	LREAL;
-	elevation_current:	LREAL;
-	azimuth_current:	LREAL;
+	
 	rightascension_calc:	LREAL;
 	declination_calc:	LREAL;
 	
@@ -89,6 +88,7 @@ VAR
 	poweroff:		F_TRIG;
 	poweronwarning:	TP;
 	poweron_reset:	TP;
+	power_timeout:	TON;
 	
 	
 	CalibrationEvent,
@@ -111,16 +111,16 @@ VAR
 	MQTTTimer : TON := (PT:=T#5S);
 	// MQTT Message
 	sPayloadPub: STRING(255);
+	// rotational velocity of the derotator
+	DerotatorVelocity: LREAL;
 END_VAR
 VAR_OUTPUT
 	//		TRUE, IF telescope can be operated
 	ready:	BOOL; 
-	//integer, highest error severity currently in effect (0=no error, 1=info,2=warning,4=error,8=panic)
-	error:	UDINT;	
+	// indicates an error on one of the components
+	error:	BOOL;	
 	//number OF errors encountered
 	errnr:	UINT;	
-	//INT[] error numbers as an ARRAY, valid are errnr entries.
-	errlist:	ARRAY [0..10] OF UINT;
 	//TRUE, IF telescope is in fast-MOVE phase (includes pole-swap)
 	sliding: BOOL;	
 	//TRUE, IF telescope is on tracking position AND currently tracking.
@@ -130,7 +130,9 @@ VAR_OUTPUT
 	// Current tau/dec. in degrees.
 	decurrent, taucurrent: LREAL; 
 	// (all degrees, azimuth 0=S, W>0)
-	racurrent,azcurrent,altcurrent: LREAL; 
+	racurrent: LREAL; 
+	elevation_current:	LREAL;
+	azimuth_current:	LREAL;
 	//	(time in sec. to reach the goto/track position)
 	slewtime: LREAL; 
 	// 	(TIME in sec. available UNTIL pole-swap necessary).
@@ -152,7 +154,7 @@ VAR CONSTANT
 	altitude: LREAL := 33.0;
 	siderial_velocity: LREAL := 360.0 / 86164.099;
 	position_velocity: LREAL := 1.0;
-	elevation_park: LREAL := 80.0;
+	elevation_park: LREAL := 70.0;
 	azimuth_park: LREAL := 190.0;
 
 	elevation_home: LREAL := 45.0;
@@ -187,10 +189,35 @@ ELSIF DerotatorControl.Error THEN
 	DerotatorControl.reset := reset;
 END_IF
 
+error := ElevationControl.error OR 
+		 AzimuthElevationControl.error OR
+		 FilterWheelControl.Error OR
+		 // DomeControl.Error OR
+		 Focuscontrol.Error OR
+		 DerotatorControl.Error;
+
+ready := 	ElevationControl.Calibrated AND
+			AzimuthElevationControl.calibrated AND
+			FilterWheelControl.Calibrated AND
+			FocusControl.Calibrated AND
+			DerotatorControl.Calibrated AND NOT Error;
+
+slewtime := MAX(MAX(ElevationControl.slewtime, AzimuthElevationControl.slewtime), DerotatorControl.slewtime);
+			
+IF error THEN
+	gohome := 	FALSE;
+	park  := 	FALSE;
+	track := 	FALSE;
+	goto := 	FALSE;
+	slew := 	FALSE;
+	pumping :=	FALSE;
+END_IF
+		 
 IF ElevationControl.error THEN
 	ElevationControl.enable := FALSE;
 	AzimuthElevationControl.enable := FALSE;
 	HydraulicsControl.close_brake := TRUE;
+	power := FALSE;
 END_IF
 
 IF AzimuthElevationControl.error THEN
@@ -227,15 +254,27 @@ hor2eq(alt := elevation_current,
 		dec => declination_calc);		
 
 // TODO check sign; offset is applied later
-derotation_calc := ImageRotation(azimuth_calc, elevation_calc, declination_calc, latitude);
+derotation_calc := F_DerotatorPosition2(azimuth_calc, elevation_calc, declination_calc, latitude);
+IF Tracking THEN
+	DerotatorVelocity := F_Derotatorvelocity(elevation_calc, azimuth_calc, latitude);
+ELSE
+	DerotatorVelocity := 10.0;
+END_IF
 		
 poweronwarning(IN := power OR (NOT ElevationControl.enable AND HydraulicsControl.brake_open), PT := T#250MS, Q => GVL_Telescope.horn);
 poweron(CLK := power);
 poweroff(CLK := power);
 poweron_reset(IN := power AND NOT PendantControl.manual, PT := T#50MS);
+// park the telescope after 12 hours
+power_timeout(IN := power, PT := T#12H);
+IF power_timeout.Q THEN
+	park := TRUE;
+END_IF
 // reset fan
 FanControl.reset := poweron_reset.Q OR reset;
 CoverControl.reset := poweron_reset.Q OR reset;
+
+
 	
 IF power THEN
 	IF NOT Main.brake_clearing THEN
@@ -308,11 +347,12 @@ IF power THEN
 		FocusControl.MoveAxis := ABS(FocusControl.actual_position - focus_position) > 0.005;
 	END_IF
 ELSIF poweroff.Q THEN
-	gohome := FALSE;
-	park  := FALSE;
-	track := FALSE;
-	goto := FALSE;
-	slew := FALSE;
+	gohome := 	FALSE;
+	park  := 	FALSE;
+	track := 	FALSE;
+	goto := 	FALSE;
+	slew := 	FALSE;
+	pumping :=	FALSE;
 	// disable azimuth
 	AzimuthElevationControl.enable := FALSE;
 	// disbale elevation (closes brake)
@@ -411,6 +451,7 @@ ELSIF TCS_command = E_TCSCommand.track THEN
 	ElevationControl.position := elevation_calc + elevation_offset;
 	AzimuthElevationControl.position := azimuth_calc + azimuth_offset;
 	DerotatorControl.position := derotation_calc + derotator_offset;
+	DerotatorControl.Velocity := DerotatorVelocity;
 	ElevationControl.Tracking := TRUE;
 	AzimuthElevationControl.Tracking := TRUE;
 	DerotatorControl.Tracking := TRUE;
@@ -490,20 +531,6 @@ IF MQTTTimer.Q THEN // publish new payload every second
 					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
 					bRetain:= FALSE, 
 					bQueue:= FALSE );
-(*
-	sPayloadPub := 'telescope,location=dome,host=CX-4E6032,module=TelescopeControl ';
-	sPayloadPub := APPEND(sPayloadPub, 'AzimuthTorque=', LREAL_TO_FMTSTR(azimuth_torque, 1, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',ElevationTorque=', LREAL_TO_FMTSTR(elevation_torque, 1, TRUE));
-	
-	
-	MQTTCommunication.fbMqttClient.Publish(	
-					sTopic:= 'RoboTel/Telemetry', 
-					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)),
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= FALSE, 
-					bQueue:= FALSE );
-*)
 END_IF
 
 (* Event function blocks start here. *)
@@ -560,9 +587,20 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4302" Count="0" />
       <LineId Id="4312" Count="6" />
       <LineId Id="4252" Count="0" />
+      <LineId Id="6575" Count="6" />
+      <LineId Id="6593" Count="0" />
+      <LineId Id="6583" Count="0" />
+      <LineId Id="6594" Count="3" />
+      <LineId Id="6601" Count="0" />
+      <LineId Id="6600" Count="0" />
+      <LineId Id="6598" Count="0" />
       <LineId Id="4330" Count="0" />
+      <LineId Id="6587" Count="5" />
+      <LineId Id="6586" Count="0" />
+      <LineId Id="6584" Count="0" />
       <LineId Id="4246" Count="1" />
       <LineId Id="5528" Count="1" />
+      <LineId Id="6602" Count="0" />
       <LineId Id="4248" Count="0" />
       <LineId Id="6402" Count="0" />
       <LineId Id="6404" Count="1" />
@@ -586,14 +624,19 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="6202" Count="0" />
       <LineId Id="6200" Count="0" />
       <LineId Id="4243" Count="0" />
+      <LineId Id="6570" Count="4" />
       <LineId Id="6201" Count="0" />
       <LineId Id="4075" Count="0" />
       <LineId Id="5185" Count="0" />
       <LineId Id="4076" Count="0" />
       <LineId Id="4242" Count="0" />
+      <LineId Id="6610" Count="0" />
+      <LineId Id="6608" Count="1" />
+      <LineId Id="6611" Count="1" />
       <LineId Id="4347" Count="0" />
       <LineId Id="4346" Count="0" />
       <LineId Id="4835" Count="0" />
+      <LineId Id="6606" Count="1" />
       <LineId Id="3591" Count="0" />
       <LineId Id="3547" Count="0" />
       <LineId Id="3592" Count="0" />
@@ -649,6 +692,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3755" Count="0" />
       <LineId Id="4261" Count="3" />
       <LineId Id="6373" Count="0" />
+      <LineId Id="6582" Count="0" />
       <LineId Id="3757" Count="0" />
       <LineId Id="3774" Count="0" />
       <LineId Id="3758" Count="0" />
@@ -730,6 +774,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="3920" Count="0" />
       <LineId Id="5364" Count="1" />
       <LineId Id="6203" Count="0" />
+      <LineId Id="6567" Count="0" />
       <LineId Id="5357" Count="0" />
       <LineId Id="5367" Count="0" />
       <LineId Id="6197" Count="0" />
@@ -774,9 +819,6 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4855" Count="0" />
       <LineId Id="4857" Count="0" />
       <LineId Id="4843" Count="7" />
-      <LineId Id="5170" Count="3" />
-      <LineId Id="5176" Count="8" />
-      <LineId Id="4677" Count="0" />
       <LineId Id="4656" Count="0" />
       <LineId Id="3530" Count="1" />
       <LineId Id="3583" Count="2" />

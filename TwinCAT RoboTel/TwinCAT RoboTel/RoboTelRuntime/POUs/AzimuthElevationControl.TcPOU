@@ -31,6 +31,8 @@ VAR_OUTPUT
 	calibrated:		BOOL;
 	// drive is ready
 	ready:			BOOL;
+	// time to reach target position
+	slewtime:		LREAL;
 END_VAR
 VAR
 	AzimuthAxis:		FB_Axis2;
@@ -43,6 +45,7 @@ VAR
 	azimuth_torque: 	REAL;
 	TorqueWarning:		FB_EventLog;
 	CalibrationEvent:	FB_Eventlog;
+	ReadParameter:		MC_ReadParameter;
 END_VAR
 VAR CONSTANT
 	// reference position for homing
@@ -129,6 +132,13 @@ IF AzimuthAxis.ResetDone THEN
 	reset := FALSE;
 END_IF
 
+ReadParameter(	Axis := GVL_Telescope.AzimuthAxisRef, Enable := AzimuthAxis.InMotion, 
+				ParameterNumber := MC_AxisParameter.AxisRemainingTimeToGo, 
+				ReadMode := E_ReadMode.READMODE_CYCLIC);
+IF ReadParameter.Valid THEN
+	slewtime := ReadParameter.Value;
+END_IF
+
 azimuth_torque := GVL_Telescope.Azimuth_torque / 10.0;
 TorqueError(IN := ABS(azimuth_torque) > 50.0);
 
@@ -194,6 +204,11 @@ CalibrationEvent(
       <LineId Id="177" Count="1" />
       <LineId Id="176" Count="0" />
       <LineId Id="158" Count="10" />
+      <LineId Id="564" Count="0" />
+      <LineId Id="566" Count="1" />
+      <LineId Id="569" Count="0" />
+      <LineId Id="565" Count="0" />
+      <LineId Id="570" Count="1" />
       <LineId Id="446" Count="0" />
       <LineId Id="448" Count="0" />
       <LineId Id="512" Count="0" />

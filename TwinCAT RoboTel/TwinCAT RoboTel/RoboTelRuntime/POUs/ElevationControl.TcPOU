@@ -33,6 +33,8 @@ VAR_OUTPUT
 	ErrorID: 		UDINT;
 	// axis is calibrated
 	Calibrated:		BOOL;
+	// time to reach target position
+	slewtime:		LREAL;
 END_VAR
 VAR
 	ElevationAxis:			FB_Axis2;
@@ -48,6 +50,7 @@ VAR
 	ElevationRecalEvent:	FB_Eventlog;
 	CalibrationEvent:		FB_Eventlog;
 	elevation_torque: REAL;
+	ReadParameter:		MC_ReadParameter;
 END_VAR
 VAR CONSTANT
 	// reference position for homing
@@ -146,7 +149,16 @@ IF ElevationAxis.ResetDone THEN
 END_IF
 
 readydelay(IN :=  HydraulicsControl.brake_open, PT := T#6000MS, Q=> ready);
-	
+
+ReadParameter(	Axis := GVL_Telescope.ElevationAxisRef, 
+				Enable := ElevationAxis.InMotion, 
+				ParameterNumber := MC_AxisParameter.AxisRemainingTimeToGo, 
+				ReadMode := E_ReadMode.READMODE_CYCLIC);
+				
+IF ReadParameter.Valid THEN
+	slewtime := ReadParameter.Value;
+END_IF
+
 elevation_torque := GVL_Telescope.Elevation_torque / 10.0;
 
 		
@@ -246,7 +258,15 @@ CalibrationEvent(
       <LineId Id="214" Count="11" />
       <LineId Id="612" Count="0" />
       <LineId Id="386" Count="0" />
+      <LineId Id="969" Count="0" />
+      <LineId Id="971" Count="0" />
+      <LineId Id="976" Count="0" />
+      <LineId Id="972" Count="1" />
+      <LineId Id="975" Count="0" />
+      <LineId Id="974" Count="0" />
+      <LineId Id="970" Count="0" />
       <LineId Id="136" Count="0" />
+      <LineId Id="977" Count="0" />
       <LineId Id="829" Count="0" />
       <LineId Id="828" Count="0" />
       <LineId Id="827" Count="0" />
