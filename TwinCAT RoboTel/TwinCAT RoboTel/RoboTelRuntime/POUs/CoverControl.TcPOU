@@ -38,6 +38,8 @@ VAR_OUTPUT
 	isclosed:		BOOL;
 	// is TRUE if any cover-driver reports an error
 	Error: 	BOOL;
+	// warning state of the DC drives
+	Warning: BOOL;
 	// cover1 is open
 	Cover1_opened, 
 	// cover1 is closed
@@ -82,6 +84,8 @@ VAR
 	Covers_closed_event:	FB_EventLog;
 	// Event log for a generic drive error
 	Covers_Error_event:		FB_EventLog;
+	// Event log for a generic drive warning
+	Covers_Warning_event:		FB_EventLog;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -166,6 +170,8 @@ isopen := cover3_opened AND cover2_opened AND (cover1_opened OR GVL_Main.isRoboT
 isclosed := cover2_closed AND cover3_closed AND (cover1_closed OR GVL_Main.isRoboTel);
 // error indicates an axis error on any axis
 Error := (Cover1_control.error AND NOT GVL_Main.isRoboTel) OR Cover2_control.error OR Cover3_control.error;
+Warning := Cover1_control.Warning OR Cover2_control.Warning OR Cover3_control.Warning;
+
 
 // A timeout occurs, when we open the cover, and the opened signal does not activate within n seconds.
 // The same holds for closing the cover. This should not take longer then 10 seconds
@@ -175,26 +181,39 @@ Cover2_timeout(IN := NOT (Cover2_opened XOR Cover2_closed), PT := T#20S);
 				
 Cover3_timeout(IN := NOT (Cover3_opened XOR Cover3_closed), PT := T#20S);
 
+Covers_Error_Event.OnMessage := 'Cover drive error';
+IF Error THEN
+	IF Cover3_control.error THEN 
+		Covers_Error_Event.OnMessage := 'Cover 3 has a drive error.';
+	END_IF
+	IF Cover2_control.error THEN 
+		Covers_Error_Event.OnMessage := 'Cover 2 has a drive error.';
+	END_IF
+	IF Cover1_control.error THEN 
+		Covers_Error_Event.OnMessage := 'Cover 1 has a drive error.';
+	END_IF
+END_IF
+
 Covers_Error_event(	Trigger := Error, 
-					Level := ADSLOG_MSGTYPE_ERROR, 
-					FormatString := '%s', 
-					OnMessage := 'Cover drive error');
+					Level := ADSLOG_MSGTYPE_ERROR);
+
+Covers_Warning_event(	Trigger := Warning, 
+						Level := ADSLOG_MSGTYPE_WARN, 
+						FormatString := '%s', 
+						OnMessage := 'A cover drive has a warning.');
 
 // raise an error, if both opened and closed signals are activated
 // handle RoboTel differently
 Cover1_Event(	Trigger := cover1_open AND cover1_closed AND NOT GVL_Main.isRoboTel,
 				Level := ADSLOG_MSGTYPE_ERROR, 
-				FormatString := '%s',
 				OnMessage := 'Cover1: limit switch error');
 
 Cover2_Event(Trigger := cover2_opened AND cover2_closed,
 				Level := ADSLOG_MSGTYPE_ERROR, 
-				FormatString := '%s',
 				OnMessage := 'Cover2: limit switch error');
 
 Cover3_Event(Trigger := cover3_opened AND cover3_closed,
 				Level := ADSLOG_MSGTYPE_ERROR, 
-				FormatString := '%s',
 				OnMessage := 'Cover3: limit switch error');
 
 //trigger an event, if we encounter a timeout
@@ -202,27 +221,22 @@ Cover3_Event(Trigger := cover3_opened AND cover3_closed,
 
 Cover1_Timeout_Event(Trigger := Cover1_timeout.Q AND NOT GVL_Main.isRoboTel,
 				Level := ADSLOG_MSGTYPE_ERROR, 
-				FormatString := '%s',
 				OnMessage := 'Cover1: Timeout');
 
 Cover2_Timeout_Event(Trigger := Cover2_timeout.Q,
 				Level := ADSLOG_MSGTYPE_ERROR, 
-				FormatString := '%s',
 				OnMessage := 'Cover2: Timeout');
 
 Cover3_Timeout_Event(Trigger := Cover3_timeout.Q,
 				Level := ADSLOG_MSGTYPE_ERROR, 
-				FormatString := '%s',
 				OnMessage := 'Cover3: Timeout');
 // Log if we are opened
 Covers_opened_event(Trigger := isopen,
 					Level := ADSLOG_MSGTYPE_WARN,
-					FormatString := '%s',
 					OnMessage := 'All covers are open');
 //log if we are closed
 Covers_closed_event(Trigger := isclosed,
 					Level := ADSLOG_MSGTYPE_HINT,
-					FormatString := '%s',
 					OnMessage := 'All covers are closed');
 				]]></ST>
     </Implementation>
@@ -283,6 +297,8 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="143" Count="0" />
       <LineId Id="423" Count="0" />
       <LineId Id="256" Count="0" />
+      <LineId Id="628" Count="0" />
+      <LineId Id="627" Count="0" />
       <LineId Id="373" Count="0" />
       <LineId Id="353" Count="0" />
       <LineId Id="374" Count="0" />
@@ -291,34 +307,42 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="350" Count="0" />
       <LineId Id="359" Count="0" />
       <LineId Id="357" Count="0" />
-      <LineId Id="448" Count="4" />
+      <LineId Id="623" Count="0" />
+      <LineId Id="620" Count="0" />
+      <LineId Id="624" Count="0" />
+      <LineId Id="632" Count="0" />
+      <LineId Id="634" Count="0" />
+      <LineId Id="633" Count="0" />
+      <LineId Id="635" Count="5" />
+      <LineId Id="630" Count="0" />
+      <LineId Id="643" Count="0" />
+      <LineId Id="449" Count="0" />
+      <LineId Id="452" Count="0" />
+      <LineId Id="644" Count="4" />
       <LineId Id="356" Count="0" />
       <LineId Id="334" Count="0" />
       <LineId Id="535" Count="0" />
       <LineId Id="335" Count="0" />
       <LineId Id="377" Count="0" />
       <LineId Id="381" Count="0" />
-      <LineId Id="380" Count="0" />
       <LineId Id="340" Count="1" />
       <LineId Id="382" Count="1" />
-      <LineId Id="344" Count="2" />
+      <LineId Id="345" Count="1" />
       <LineId Id="384" Count="1" />
-      <LineId Id="349" Count="0" />
       <LineId Id="375" Count="0" />
       <LineId Id="364" Count="0" />
       <LineId Id="537" Count="0" />
       <LineId Id="536" Count="0" />
       <LineId Id="365" Count="0" />
       <LineId Id="386" Count="1" />
-      <LineId Id="366" Count="2" />
+      <LineId Id="367" Count="1" />
       <LineId Id="388" Count="1" />
-      <LineId Id="369" Count="2" />
+      <LineId Id="370" Count="1" />
       <LineId Id="390" Count="1" />
-      <LineId Id="372" Count="0" />
       <LineId Id="426" Count="0" />
       <LineId Id="339" Count="0" />
-      <LineId Id="427" Count="2" />
-      <LineId Id="431" Count="4" />
+      <LineId Id="427" Count="1" />
+      <LineId Id="431" Count="3" />
       <LineId Id="430" Count="0" />
     </LineIds>
   </POU>
