@@ -63,8 +63,6 @@ VAR
    	DomeStatusWord:	WORD;
 	// last status Word
 	LastStatus:			WORD;
-	// start delay for the dehumidifier to prevent overcurrent
-	DeHumidifierDelay:	TON;
 	// permanent communication error
 	PermanentError:		TON := (IN:=FALSE, PT:=T#30S);
 	HomeDelay:			FB_TONTP;
@@ -221,9 +219,6 @@ IF stop_done THEN
 	move_azimuth := FALSE;
 END_IF
 
-// delay startup of the dehumidifiert to prevent power-spike
-// turn off dehumidifier if dome is open
-DeHumidifierDelay(IN := NOT OpenDome, PT := T#5S, Q => GVL_Dome.DeHumidifier);
 
 // Light is switched off after 60 minutes or if Light signal is low
 LightTimer(IN := Light, PT := T#60M);
@@ -459,8 +454,6 @@ CloseDomeEvent(
       <LineId Id="330" Count="0" />
       <LineId Id="952" Count="1" />
       <LineId Id="771" Count="0" />
-      <LineId Id="1006" Count="1" />
-      <LineId Id="772" Count="0" />
       <LineId Id="1005" Count="0" />
       <LineId Id="1004" Count="0" />
       <LineId Id="830" Count="0" />
