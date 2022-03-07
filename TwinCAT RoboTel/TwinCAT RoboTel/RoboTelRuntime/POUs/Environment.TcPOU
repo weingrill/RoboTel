@@ -66,8 +66,8 @@ Rain_average(IN := BOOL_TO_INT(NOT GVL_Environment.rawRain) * 100.0, PT := T#60s
 WeatherBad := Rain OR
 				HumidityAverage.AVG >= 80.0 OR
 				HumidityDomeAverage.AVG >= 80.0 OR
-				WindAverage.AVG > 8.0 OR
-				max_wind > 10.0;
+				WindAverage.AVG*2.0 > 10.0 OR
+				max_wind*2 > 15.0;
 
 IF WeatherBad AND DomeControl.DomeOpened THEN
 	DomeControl.CloseDome := TRUE;
