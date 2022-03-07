@@ -52,6 +52,9 @@ VAR_OUTPUT
 	Cover3_opened, 
 	// cover3 is closed
 	Cover3_closed:	BOOL;
+	Cover1_error: BOOL;
+	Cover2_error: BOOL;
+	Cover3_error: BOOL;
 END_VAR
 VAR
 	// delay timer for opening cover2
@@ -149,27 +152,30 @@ Cover1_control(
 	reset := 		reset,
 	limit_open := 	GVL_Telescope.cover1_open,
 	limit_close := 	GVL_Telescope.cover1_closed,
-	axis_ref := 	GVL_Telescope.Cover1_axis);
+	axis_ref := 	GVL_Telescope.Cover1_axis,
+	error => 		Cover1_error);
 // Cover 2 can only be moved in manual operation if cover 3 is not closed to protect the lid.
 Cover2_control(
 	enable := 		enable OR (Cover2_enable AND NOT cover3_closed),
 	reset := 		reset,
 	limit_open := 	GVL_Telescope.cover2_open,
 	limit_close := 	GVL_Telescope.cover2_closed,
-	axis_ref := 	GVL_Telescope.Cover2_axis);
+	axis_ref := 	GVL_Telescope.Cover2_axis,
+	error => 		Cover2_error);
 Cover3_control(
 	enable := 		enable OR Cover3_enable,
 	reset := 		reset,
 	limit_open := 	GVL_Telescope.cover3_open,
 	limit_close := 	GVL_Telescope.cover3_closed,
-	axis_ref := 	GVL_Telescope.Cover3_axis);
+	axis_ref := 	GVL_Telescope.Cover3_axis,
+	error => 		Cover3_error);
 
 // we are open, if all covers are open
 isopen := cover3_opened AND cover2_opened AND (cover1_opened OR GVL_Main.isRoboTel);
 // we are closed, if all covers are closed
 isclosed := cover2_closed AND cover3_closed AND (cover1_closed OR GVL_Main.isRoboTel);
 // error indicates an axis error on any axis
-Error := (Cover1_control.error AND NOT GVL_Main.isRoboTel) OR Cover2_control.error OR Cover3_control.error;
+Error := (Cover1_error AND NOT GVL_Main.isRoboTel) OR Cover2_error OR Cover3_error;
 Warning := Cover1_control.Warning OR Cover2_control.Warning OR Cover3_control.Warning;
 
 
@@ -183,13 +189,13 @@ Cover3_timeout(IN := NOT (Cover3_opened XOR Cover3_closed), PT := T#20S);
 
 Covers_Error_Event.OnMessage := 'Cover drive error';
 IF Error THEN
-	IF Cover3_control.error THEN 
+	IF Cover3_error THEN 
 		Covers_Error_Event.OnMessage := 'Cover 3 has a drive error.';
 	END_IF
-	IF Cover2_control.error THEN 
+	IF Cover2_error THEN 
 		Covers_Error_Event.OnMessage := 'Cover 2 has a drive error.';
 	END_IF
-	IF Cover1_control.error THEN 
+	IF Cover1_error  AND NOT GVL_Main.isRoboTel THEN 
 		Covers_Error_Event.OnMessage := 'Cover 1 has a drive error.';
 	END_IF
 END_IF
@@ -286,10 +292,14 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="440" Count="1" />
       <LineId Id="160" Count="0" />
       <LineId Id="163" Count="4" />
+      <LineId Id="738" Count="0" />
       <LineId Id="209" Count="0" />
       <LineId Id="168" Count="0" />
-      <LineId Id="171" Count="5" />
+      <LineId Id="171" Count="4" />
+      <LineId Id="739" Count="0" />
+      <LineId Id="176" Count="0" />
       <LineId Id="179" Count="4" />
+      <LineId Id="740" Count="0" />
       <LineId Id="159" Count="0" />
       <LineId Id="142" Count="0" />
       <LineId Id="139" Count="0" />
