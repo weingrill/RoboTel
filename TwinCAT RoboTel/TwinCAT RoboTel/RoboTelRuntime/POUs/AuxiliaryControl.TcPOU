@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="AuxiliaryControl" Id="{30a3eb2e-ebab-4f9f-a38d-cee5e71b2e38}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM AuxiliaryControl
+VAR
+	// start delay for the dehumidifier to prevent overcurrent
+	DeHumidifierDelay:	TON;
+	DeHumidifier:		BOOL;
+END_VAR
+VAR CONSTANT
+	humidity_high:	REAL := 75.0;
+	humidity_low:	REAL := 65.0;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// turn off dehumidifier if dome is open
+IF Environment.HumidityDome >= humidity_high AND DomeControl.DomeClosed THEN
+	DeHumidifier := TRUE;
+ELSIF Environment.HumidityDome < humidity_low OR DomeControl.DomeOpened OR Environment.Humidity < Environment.HumidityDome THEN
+	DeHumidifier := FALSE;
+END_IF
+
+// delay startup of the dehumidifier to prevent power-spike
+DeHumidifierDelay(IN := DeHumidifier, PT := T#5S, Q=> GVL_Dome.DeHumidifier);
+]]></ST>
+    </Implementation>
+    <LineIds Name="AuxiliaryControl">
+      <LineId Id="7" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

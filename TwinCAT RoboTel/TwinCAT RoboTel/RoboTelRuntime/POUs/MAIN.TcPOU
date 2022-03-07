@@ -102,6 +102,7 @@ DerotatorControl();	//
 FilterWheelControl();	//
 FocusControl();
 Environment();	//
+AuxiliaryControl(); //
 MQTTCommunication();
 
 
@@ -245,6 +246,7 @@ TemperatureEvent(
       <LineId Id="350" Count="0" />
       <LineId Id="398" Count="0" />
       <LineId Id="167" Count="0" />
+      <LineId Id="1001" Count="0" />
       <LineId Id="701" Count="0" />
       <LineId Id="741" Count="0" />
       <LineId Id="237" Count="0" />
