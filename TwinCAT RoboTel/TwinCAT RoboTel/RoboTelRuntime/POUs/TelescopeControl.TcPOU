@@ -200,7 +200,7 @@ ready := 	ElevationControl.Calibrated AND
 			AzimuthElevationControl.calibrated AND
 			FilterWheelControl.Calibrated AND
 			FocusControl.Calibrated AND
-			DerotatorControl.Calibrated AND NOT Error;
+			DerotatorControl.Calibrated;
 
 slewtime := MAX(MAX(ElevationControl.slewtime, AzimuthElevationControl.slewtime), DerotatorControl.slewtime);
 			
