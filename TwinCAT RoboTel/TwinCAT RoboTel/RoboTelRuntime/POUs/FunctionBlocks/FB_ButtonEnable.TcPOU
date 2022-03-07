@@ -1,10 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="FB_ButtonEnable" Id="{3211ceeb-9597-41c3-8547-3ce80543891d}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_ButtonEnable
 VAR_INPUT
 	SET:	BOOL;
 	RESET:	BOOL;
+	state:	BOOL;
 END_VAR
 VAR_OUTPUT
 	Q: BOOL;
@@ -12,20 +13,38 @@ END_VAR
 VAR
 	trigger:	R_TRIG;
 	ftrigger:	F_TRIG;
-	state:		RS;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[trigger(CLK := SET);
 ftrigger(CLK := SET);
-state(SET := trigger.Q AND NOT Q,
-	RESET1 := RESET OR (trigger.Q AND Q),
-	Q1 => Q);]]></ST>
+
+IF (NOT state) AND ftrigger.Q THEN
+	Q := TRUE;
+END_IF
+
+IF state AND trigger.Q THEN
+	Q := FALSE;
+END_IF
+
+// if reset is enabled we disable the output
+
+IF RESET THEN
+	Q := FALSE;
+END_IF]]></ST>
     </Implementation>
     <LineIds Name="FB_ButtonEnable">
       <LineId Id="9" Count="0" />
       <LineId Id="31" Count="0" />
-      <LineId Id="15" Count="2" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="51" Count="2" />
+      <LineId Id="57" Count="1" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="55" Count="1" />
     </LineIds>
   </POU>
 </TcPlcObject>
