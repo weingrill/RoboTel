@@ -82,7 +82,8 @@ END_IF
 Calibrated := ElevationAxis.Calibrated;
 
 IF HomeAxis THEN
-	position := homing_position;
+//	position := homing_position;
+	position := calibration_position;
 	MoveAxis := FALSE;
 	Tracking := FALSE;
 END_IF
@@ -90,14 +91,14 @@ END_IF
 IF MoveAxis THEN
 	Tracking := FALSE;
 END_IF
-
+(*
 HomeDelay(IN := Calibrated, PT1 := T#5S, PT2 := T#100MS);
 
 IF HomeDelay.Q THEN
 	position := calibration_position;
 	MoveAxis := TRUE;
 END_IF
-
+*)
 // if NOT Enabled and ActVelo>1 then issue a warning
 warning := NOT enable AND GVL_Telescope.ElevationAxisRef.NcToPlc.ActVelo>2.0;
 
@@ -107,12 +108,12 @@ MC_SetAcceptBlockedDriveSignal(
 	Enable := HomeAxis);
 
 // perform recalibration on encoder reference signal (positive latch of elevation probe)
-
+(*
 ElevationCalibration(
 	Axis := GVL_Telescope.ElevationAxisRef,
 	Execute := GVL_Telescope.Elevation_Probe>0 AND Calibrated,
 	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
-
+*)
 
 IF Tracking AND ABS(position - act_position) > 1.0 THEN
 	MoveAxis := TRUE;
@@ -188,7 +189,7 @@ ElevationReCalEvent(Trigger := GVL_Telescope.Elevation_Probe>0,
 				OnMessage := 'Elevation was recalibrated on encoder reference.');
 				
 TorqueWarning(	
-	Trigger := 		ABS(elevation_torque) > 50.0, 
+	Trigger := 		ABS(elevation_torque) > 60.0, 
 	Level := 		ADSLOG_MSGTYPE_WARN,
 	FormatString :=	'%s',
 	OnMessage := 	'Elevation torque is high.');
@@ -216,7 +217,8 @@ CalibrationEvent(
       <LineId Id="254" Count="1" />
       <LineId Id="558" Count="1" />
       <LineId Id="626" Count="0" />
-      <LineId Id="257" Count="1" />
+      <LineId Id="257" Count="0" />
+      <LineId Id="1036" Count="1" />
       <LineId Id="769" Count="1" />
       <LineId Id="259" Count="0" />
       <LineId Id="772" Count="0" />

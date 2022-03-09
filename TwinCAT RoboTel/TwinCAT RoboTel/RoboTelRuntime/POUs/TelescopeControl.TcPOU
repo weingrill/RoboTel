@@ -106,7 +106,8 @@ VAR
 	TCSgotoEvent,
 	TCStrackEvent,
 	TCSstopEvent,
-	AltitudeEvent: FB_Eventlog;
+	AltitudeEvent,
+	TCSreadyEvent: FB_Eventlog;
 	FocusDelay: TON := (PT:=T#5S);
 	MQTTTimer : TON := (PT:=T#5S);
 	// MQTT Message
@@ -220,10 +221,11 @@ IF ElevationControl.error THEN
 	power := FALSE;
 END_IF
 
+(*
 IF AzimuthElevationControl.error THEN
 	AzimuthElevationControl.enable := FALSE;
 END_IF
-
+*)
 
 // determine the operation of the telescope based on the switch set
 IF GVL_pendant_control.key_switch THEN
@@ -510,7 +512,7 @@ END_IF
 sliding := ElevationControl.MoveAxis OR AzimuthElevationControl.MoveAxis;
 tracking := ElevationControl.Tracking AND AzimuthElevationControl.Tracking;
 stopped :=  ElevationControl.ElevationAxis.StandStill AND AzimuthElevationControl.AzimuthAxis.StandStill;
-homed := ElevationControl.Calibrated AND AzimuthElevationControl.calibrated;
+homed := ElevationControl.Calibrated AND AzimuthElevationControl.calibrated AND DerotatorControl.Calibrated;
 
 
 MQTTTimer(IN:=TRUE);
@@ -523,6 +525,7 @@ IF MQTTTimer.Q THEN // publish new payload every second
 	sPayloadPub := APPEND(sPayloadPub, ',HourAngle=', LREAL_TO_FMTSTR(hourangle_calc, 5, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',RightAscension=', LREAL_TO_FMTSTR(rightascension_calc, 5, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',Declination=', LREAL_TO_FMTSTR(declination_calc, 5, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',Derotator=', LREAL_TO_FMTSTR(derotation_calc, 5, TRUE));
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
@@ -537,6 +540,7 @@ END_IF
 TCSpowerEvent(	Trigger := powerfailure, 
 				Level := ADSLOG_MSGTYPE_ERROR,
 				FormatString := 'power %s',
+				OnMessage := 'Failure',
 				OffMessage := 'OK');
 
 TCSgohomeEvent(	Trigger := gohome, 
@@ -570,7 +574,10 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
 				FormatString := '%s',
 				OnMessage := 'Target below horizon',
 				OffMEssage := '');
-				]]></ST>
+TCSreadyEvent(	Trigger := power AND ready, 
+				Level := ADSLOG_MSGTYPE_HINT,
+				FormatString := '%s',
+				OnMessage := 'RoboTel startup finished');]]></ST>
     </Implementation>
     <LineIds Name="TelescopeControl">
       <LineId Id="5012" Count="1" />
@@ -602,6 +609,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="5528" Count="1" />
       <LineId Id="6602" Count="0" />
       <LineId Id="4248" Count="0" />
+      <LineId Id="6779" Count="0" />
       <LineId Id="6402" Count="0" />
       <LineId Id="6404" Count="1" />
       <LineId Id="6409" Count="0" />
@@ -818,10 +826,12 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="4853" Count="0" />
       <LineId Id="4855" Count="0" />
       <LineId Id="4857" Count="0" />
-      <LineId Id="4843" Count="7" />
+      <LineId Id="6780" Count="1" />
+      <LineId Id="4844" Count="6" />
       <LineId Id="4656" Count="0" />
       <LineId Id="3530" Count="1" />
       <LineId Id="3583" Count="2" />
+      <LineId Id="6778" Count="0" />
       <LineId Id="5530" Count="0" />
       <LineId Id="3085" Count="0" />
       <LineId Id="931" Count="1" />
@@ -843,6 +853,7 @@ AltitudeEvent(	Trigger := power AND elevation_calc<0.0,
       <LineId Id="1186" Count="0" />
       <LineId Id="1209" Count="0" />
       <LineId Id="1491" Count="4" />
+      <LineId Id="6773" Count="2" />
       <LineId Id="3293" Count="0" />
     </LineIds>
   </POU>
