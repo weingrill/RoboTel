@@ -60,7 +60,7 @@ VAR
 	// bit to indicate if domestatus is valid
 	DomeValid:			BOOL;
 	// dome control word
-   	DomeStatusWord:	WORD;
+   	DomeStatusWord:		WORD;
 	// last status Word
 	LastStatus:			WORD;
 	// permanent communication error
@@ -303,25 +303,21 @@ IF MQTTTimer.Q THEN // publish new payload every second
 					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
 					bRetain:= FALSE, 
 					bQueue:= FALSE );
+	// invalidate last status for testing
+	LastStatus := 0;
 END_IF
 
 IF DomeStatusWord <> LastStatus THEN
 	LastStatus := DomeStatusWord;
-	sPayloadPub := 'dome,location=dome,host=CX-4E6032 ';
-	sPayloadPub := APPEND(sPayloadPub, 'DomeClosed=', BOOL_TO_STRING(DomeClosed));
-	sPayloadPub := APPEND(sPayloadPub, 'DomeOpened=', BOOL_TO_STRING(DomeOpened));
-	IF FlapOpen THEN
-		sPayloadPub := APPEND(sPayloadPub, ',FlapOpen=', BOOL_TO_STRING(FlapOpen));	
-	END_IF
-	IF FlapClosed THEN
-		sPayloadPub := APPEND(sPayloadPub, ',FlapClosed=', BOOL_TO_STRING(FlapClosed));	
-	END_IF
-	IF SlitOpen THEN
-		sPayloadPub := APPEND(sPayloadPub, ',SlitOpen=', BOOL_TO_STRING(SlitOpen));	
-	END_IF
-	IF SlitClosed THEN
-		sPayloadPub := APPEND(sPayloadPub, ',SlitClosed=', BOOL_TO_STRING(SlitClosed));	
-	END_IF
+	sPayloadPub := 'dome,location=dome,host=CX-4E6032,module=DomeControl ';
+	sPayloadPub := APPEND(sPayloadPub, 'DomeCommunicationOK=', BOOL_TO_STRING(NOT PermanentError.Q));
+	sPayloadPub := APPEND(sPayloadPub, ',DomeClosed=', BOOL_TO_STRING(DomeClosed));
+	sPayloadPub := APPEND(sPayloadPub, ',DomeOpened=', BOOL_TO_STRING(DomeOpened));
+	sPayloadPub := APPEND(sPayloadPub, ',FlapOpen=', BOOL_TO_STRING(FlapOpen));	
+	sPayloadPub := APPEND(sPayloadPub, ',FlapClosed=', BOOL_TO_STRING(FlapClosed));	
+	sPayloadPub := APPEND(sPayloadPub, ',SlitOpen=', BOOL_TO_STRING(SlitOpen));	
+	sPayloadPub := APPEND(sPayloadPub, ',SlitClosed=', BOOL_TO_STRING(SlitClosed));	
+	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
 					pPayload:= ADR(sPayloadPub), 
@@ -329,7 +325,6 @@ IF DomeStatusWord <> LastStatus THEN
 					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
 					bRetain:= TRUE, 
 					bQueue:= FALSE );
-
 END_IF
 
 DomeCommEvent(	Trigger := PermanentError.Q, 
@@ -499,18 +494,20 @@ CloseDomeEvent(
       <LineId Id="1979" Count="0" />
       <LineId Id="1989" Count="5" />
       <LineId Id="1988" Count="0" />
+      <LineId Id="2313" Count="0" />
+      <LineId Id="2312" Count="0" />
       <LineId Id="1978" Count="0" />
       <LineId Id="1980" Count="1" />
       <LineId Id="1984" Count="0" />
       <LineId Id="1622" Count="0" />
+      <LineId Id="2310" Count="0" />
       <LineId Id="1625" Count="0" />
       <LineId Id="1995" Count="0" />
       <LineId Id="1705" Count="0" />
-      <LineId Id="1942" Count="1" />
-      <LineId Id="1945" Count="2" />
-      <LineId Id="1952" Count="5" />
+      <LineId Id="1946" Count="0" />
+      <LineId Id="1953" Count="0" />
+      <LineId Id="1956" Count="1" />
       <LineId Id="1628" Count="6" />
-      <LineId Id="1553" Count="0" />
       <LineId Id="1077" Count="0" />
       <LineId Id="758" Count="3" />
       <LineId Id="763" Count="0" />
