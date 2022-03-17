@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.6">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="NasmythControl" Id="{44cc95a4-2714-4f68-86b9-267e29c12088}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM NasmythControl
 VAR_INPUT
@@ -7,66 +7,151 @@ VAR_INPUT
 	enable:	BOOL;
 	// resets the drive
 	reset: BOOL;
+	// turns the Nasmyth mirror to left port (seen from top)
 	left:	BOOL;
+	// turns the Nasmyth mirror to right port (seen from top)
 	right:	BOOL;
 END_VAR
 VAR_OUTPUT
+	// Nasmyth drive error
 	error:	BOOL;
 END_VAR
 VAR
+	// axis function block
 	Nasmyth_control:	FB_DCAxis;
+	// delay for the Nasmyth holding brake
 	Nasmyth_delay:		TON;
-	Nasmyth_unlock,
+	// status word for MQTT message
+	Nasmyth_status:		WORD;
+	// last status word to trigger MQTT message if different
+	LastStatus:			WORD;
+	// unlock the holding brake
+	Nasmyth_unlock:		BOOL;
+	// holding brake is unlocked
 	Nasmyth_unlocked:	BOOL;
-
+	// Nasmyth points to right mirror
+	Nasmyth_right:		BOOL;
+	// Nasmyth points to left mirror
+	Nasmyth_left:		BOOL;
+	// event log of error
+	NasmythEvent: 		FB_Eventlog;
+	NasmythLeftEvent:	FB_Eventlog;
+	NasmythRightEvent:	FB_Eventlog;
+	Nasmyth_Timeout:	TON := (PT := T#10S);
+	MQTTTimer: 			TON := (PT:=T#10S);
+	// MQTT String
+	sPayloadPub: STRING(255);
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//TODO: Safe enable state with RS flip-flop
+      <ST><![CDATA[// get the inputs
+Nasmyth_left := GVL_Telescope.nasmyth_limit_right;
+Nasmyth_right := GVL_Telescope.nasmyth_limit_left;
 
-GVL_Telescope.nasmyth_lock := enable;
+// disable command, if position has been reached or 
+IF Nasmyth_left OR right THEN
+	left := FALSE;
+END_IF
+
+IF  Nasmyth_right OR left THEN
+	right := FALSE;
+END_IF
+
+Nasmyth_status.0 := Nasmyth_unlocked;
+Nasmyth_status.1 := error;
+Nasmyth_status.2 := Nasmyth_left;
+Nasmyth_status.3 := Nasmyth_right;
+Nasmyth_status.4 := Nasmyth_Timeout.Q;
+
+Nasmyth_unlock := enable AND (left OR right);
 // report Nasmyth unlocked after n milliseconds										
 Nasmyth_delay(
-	IN := enable,
+	IN := Nasmyth_unlock,
 	PT := T#250MS,
 	Q => Nasmyth_unlocked);
+
+// set the outputs
+GVL_Telescope.nasmyth_lock := Nasmyth_unlock;
 	
 Nasmyth_control(
 	open := left,
 	close := right,
 	enable := Nasmyth_unlocked,
 	reset := reset,
-	limit_open := NOT GVL_Telescope.nasmyth_limit_right,
-	limit_close := NOT GVL_Telescope.nasmyth_limit_left,
+	limit_open := NOT Nasmyth_left,
+	limit_close := NOT Nasmyth_right,
 	error => error,
 	velocity := 18000,
 	axis_ref := GVL_Telescope.Nasmyth_axis);
 
-IF NOT GVL_Telescope.nasmyth_limit_right THEN
-	left := FALSE;
+Nasmyth_Timeout(IN := (left AND NOT Nasmyth_left) OR (right AND NOT Nasmyth_right));
+
+IF Nasmyth_status <> LastStatus THEN
+	LastStatus := Nasmyth_status;
+	sPayloadPub := 'telescope,location=dome,host=CX-4E6032,module=NasmythControl ';
+	sPayloadPub := APPEND(sPayloadPub, 'NasmythUnlocked=', BOOL_TO_STRING(Nasmyth_unlocked));
+	sPayloadPub := APPEND(sPayloadPub, ',NasmythAxisOK=', BOOL_TO_STRING(NOT error));
+	sPayloadPub := APPEND(sPayloadPub, ',NasmythIsLeft=', BOOL_TO_STRING(Nasmyth_left));
+	sPayloadPub := APPEND(sPayloadPub, ',NasmythIsRight=', BOOL_TO_STRING(Nasmyth_right));
+	
+	
+	MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Telemetry', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= TRUE, 
+					bQueue:= FALSE );
 END_IF
 
-IF  NOT GVL_Telescope.nasmyth_limit_left THEN
-	right := FALSE;
-END_IF]]></ST>
+
+NasmythEvent(	Trigger := error, 
+				Level := ADSLOG_MSGTYPE_ERROR,
+				OnMessage := 'Nasmyth axis error',
+				OffMessage := 'OK',
+				OffLevel := ADSLOG_MSGTYPE_HINT);
+
+NasmythLeftEvent(	Trigger := Nasmyth_left, 
+					Level := ADSLOG_MSGTYPE_HINT,
+					OnMessage := 'Nasmyth is on left port');
+
+NasmythRightEvent(	Trigger := Nasmyth_right, 
+					Level := ADSLOG_MSGTYPE_HINT,
+					OnMessage := 'Nasmyth is on right port');]]></ST>
     </Implementation>
     <LineIds Name="NasmythControl">
-      <LineId Id="70" Count="1" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="126" Count="1" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="133" Count="6" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="145" Count="2" />
+      <LineId Id="178" Count="0" />
+      <LineId Id="131" Count="0" />
       <LineId Id="33" Count="0" />
       <LineId Id="35" Count="0" />
       <LineId Id="12" Count="0" />
       <LineId Id="37" Count="0" />
       <LineId Id="13" Count="1" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="142" Count="0" />
       <LineId Id="38" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="36" Count="0" />
       <LineId Id="16" Count="7" />
       <LineId Id="43" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="44" Count="1" />
-      <LineId Id="48" Count="0" />
-      <LineId Id="47" Count="0" />
-      <LineId Id="49" Count="1" />
+      <LineId Id="92" Count="5" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="128" Count="1" />
+      <LineId Id="103" Count="9" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="113" Count="5" />
+      <LineId Id="167" Count="3" />
+      <LineId Id="173" Count="2" />
+      <LineId Id="91" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
