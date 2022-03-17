@@ -4527,11 +4527,6 @@ External Setpoint Generation:
 							<Type>WORD</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Telescope.Elevation_Probe</Name>
-							<Comment><![CDATA[ reference signal]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Telescope.Elevation_torque</Name>
 							<Comment><![CDATA[ torque feedback]]></Comment>
 							<Type>INT</Type>
@@ -4540,11 +4535,6 @@ External Setpoint Generation:
 							<Name>GVL_Telescope.Azimuth_inputs</Name>
 							<Comment><![CDATA[ digital inputs for limit switches]]></Comment>
 							<Type>WORD</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.Azimuth_Probe</Name>
-							<Comment><![CDATA[ reference signal]]></Comment>
-							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.Azimuth_torque</Name>
@@ -4655,6 +4645,26 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Main.ups_output_current</Name>
 							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.Elevation_class1</Name>
+							<Comment><![CDATA[ C1D error]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.Elevation_diagnostic</Name>
+							<Comment><![CDATA[ diagnostic number]]></Comment>
+							<Type>UDINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.Azimuth_class1</Name>
+							<Comment><![CDATA[ C1D error]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.Azimuth_diagnostic</Name>
+							<Comment><![CDATA[ diagnostic number]]></Comment>
+							<Type>UDINT</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -14494,6 +14504,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<InitCmd DriveNo="0" IDN="32861" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32918" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32922" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="33088" MotorDataLevel="0" DisableMode="0">
+									<RetainData>24002400d5000600ca0002002c9d5b002c9d5b000000000000000000000000002260000000000000</RetainData>
+								</InitCmd>
 								<InitCmd DriveNo="0" IDN="33093" MotorDataLevel="0" DisableMode="0">
 									<RetainData>16001a004a616e2020332032303230202c2030383a32313a3437</RetainData>
 								</InitCmd>
@@ -14621,7 +14634,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<SyncMan>001880002600010001000000800080008000001826010000</SyncMan>
 						<SyncMan>001a80002200010002000000800080008000001a22010000</SyncMan>
 						<SyncMan>00100a002400010003000000000000000000001024010000</SyncMan>
-						<SyncMan>00111e002200010004000000000000000000001122010000</SyncMan>
+						<SyncMan>001116002200010004000000000000000000001122010000</SyncMan>
 						<SyncMan>002000002400010005000000000000000000002024010000</SyncMan>
 						<SyncMan>002400002000010006000000000000000000002420010000</SyncMan>
 						<Fmmu>0000000000000000001000020100000001000000000000000000000000000000</Fmmu>
@@ -14714,20 +14727,11 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 							<Entry Name="Digital inputs, state" BitLen="16" Index="#x8321">
 								<Type>INT</Type>
 							</Entry>
-							<Entry Name="Probe 1 logic state" BitLen="16" Index="#x80fc">
+							<Entry Name="Class 1 diagnostic (C1D)" BitLen="16" Index="#x000b">
 								<Type>INT</Type>
 							</Entry>
-							<Entry Name="Probe 1 positive latched" BitLen="16" Index="#x0199">
-								<Type>INT</Type>
-							</Entry>
-							<Entry Name="Probe value 1 positive edge" BitLen="32" Index="#x0082">
-								<Type>DINT</Type>
-							</Entry>
-							<Entry Name="Probe value 1 negative edge" BitLen="32" Index="#x0083">
-								<Type>DINT</Type>
-							</Entry>
-							<Entry Name="Probe 1 negative latched" BitLen="16" Index="#x019a">
-								<Type>INT</Type>
+							<Entry Name="Diagnostic number" BitLen="32" Index="#x0186">
+								<Type>UDINT</Type>
 							</Entry>
 						</Pdo>
 						<Pdo Name="MDT" Index="#x0018" InOut="1" Flags="#x0001" SyncMan="2">
@@ -15930,11 +15934,11 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 							<Entry Name="Digital inputs, state" BitLen="16" Index="#x8321">
 								<Type>INT</Type>
 							</Entry>
-							<Entry Name="Probe 1 positive latched" BitLen="16" Index="#x0199">
-								<Type>UINT</Type>
+							<Entry Name="Class 1 diagnostic (C1D)" BitLen="16" Index="#x000b">
+								<Type>INT</Type>
 							</Entry>
-							<Entry Name="Probe value 1 positive edge" BitLen="32" Index="#x0082">
-								<Type>DINT</Type>
+							<Entry Name="Diagnostic number" BitLen="32" Index="#x0186">
+								<Type>UDINT</Type>
 							</Entry>
 						</Pdo>
 						<Pdo Name="MDT" Index="#x0018" InOut="1" Flags="#x0001" SyncMan="2">
@@ -15984,13 +15988,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT^Master control word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT^Position feedback 1 value"/>
-				<Link VarA="Enc^Inputs^In^nDataIn3" VarB="AT^Probe value 1 positive edge"/>
-				<Link VarA="Enc^Inputs^In^nDataIn4" VarB="AT^Probe value 1 negative edge"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Enc^Inputs^In^nState5" VarB="AT^Probe 1 positive latched"/>
-				<Link VarA="Enc^Inputs^In^nState6" VarB="AT^Probe 1 negative latched"/>
 				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="MDT^Probe 1 enable"/>
 			</OwnerB>
 		</OwnerA>
@@ -16044,11 +16044,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT^Master control word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT^Position feedback 1 value"/>
-				<Link VarA="Enc^Inputs^In^nDataIn3" VarB="AT^Probe value 1 positive edge"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
-				<Link VarA="Enc^Inputs^In^nState5" VarB="AT^Probe 1 positive latched"/>
 				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="MDT^Probe 1 enable"/>
 			</OwnerB>
 		</OwnerA>
@@ -16140,7 +16138,8 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 		</OwnerA>
 		<OwnerA Name="TIPC^RoboTelRuntime^RoboTelRuntime Instance">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Azimuth (AX5125-0000-0213)">
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Azimuth_Probe" VarB="AT^Probe 1 positive latched"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.Azimuth_class1" VarB="AT^Class 1 diagnostic (C1D)"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.Azimuth_diagnostic" VarB="AT^Diagnostic number"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Azimuth_inputs" VarB="AT^Digital inputs, state"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Azimuth_torque" VarB="AT^Torque/force feedback value"/>
 			</OwnerB>
@@ -16157,7 +16156,8 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Derotator_torque" VarB="AT 1^Torque/force feedback value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Elevation (AX5125-0000-0213)">
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Elevation_Probe" VarB="AT^Probe 1 positive latched"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.Elevation_class1" VarB="AT^Class 1 diagnostic (C1D)"/>
+				<Link VarA="PlcTask Inputs^GVL_Telescope.Elevation_diagnostic" VarB="AT^Diagnostic number"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Elevation_inputs" VarB="AT^Digital inputs, state"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Elevation_torque" VarB="AT^Torque/force feedback value"/>
 			</OwnerB>

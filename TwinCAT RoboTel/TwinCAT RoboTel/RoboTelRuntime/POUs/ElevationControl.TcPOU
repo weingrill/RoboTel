@@ -47,7 +47,6 @@ VAR
 	HighElevationEvent: 	FB_Eventlog;
 	LowElevationEvent:		FB_Eventlog;
 	TorqueWarning:			FB_EventLog;
-	ElevationRecalEvent:	FB_Eventlog;
 	CalibrationEvent:		FB_Eventlog;
 	elevation_torque: REAL;
 	ReadParameter:		MC_ReadParameter;
@@ -183,11 +182,6 @@ ElevationBrakeEvent( Trigger := NOT enable AND HydraulicsControl.brake_open,
 				FormatString := '%s',
 				OnMessage := 'Brake was opened without elevation axis enabled!'); 
 
-ElevationReCalEvent(Trigger := GVL_Telescope.Elevation_Probe>0, 
-				Level := ADSLOG_MSGTYPE_HINT,
-				FormatString := '%s',
-				OnMessage := 'Elevation was recalibrated on encoder reference.');
-				
 TorqueWarning(	
 	Trigger := 		ABS(elevation_torque) > 60.0, 
 	Level := 		ADSLOG_MSGTYPE_WARN,
@@ -280,9 +274,7 @@ CalibrationEvent(
       <LineId Id="698" Count="3" />
       <LineId Id="5" Count="0" />
       <LineId Id="396" Count="3" />
-      <LineId Id="837" Count="3" />
-      <LineId Id="395" Count="0" />
-      <LineId Id="841" Count="0" />
+      <LineId Id="837" Count="0" />
       <LineId Id="843" Count="3" />
       <LineId Id="842" Count="0" />
       <LineId Id="902" Count="0" />

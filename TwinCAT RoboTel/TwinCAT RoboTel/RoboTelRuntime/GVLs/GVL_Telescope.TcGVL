@@ -65,15 +65,19 @@ VAR_GLOBAL
 	
 	// digital inputs for limit switches
 	Elevation_inputs		AT%I*: WORD;
-	// reference signal
-	Elevation_Probe			AT%I*: INT;
+	// C1D error
+	Elevation_class1		AT%I*: INT;
+	// diagnostic number
+	Elevation_diagnostic	AT%I*: UDINT;
 	// torque feedback
 	Elevation_torque		AT%I*: INT;
 	
 	// digital inputs for limit switches
 	Azimuth_inputs			AT%I*: WORD;
-	// reference signal
-	Azimuth_Probe			AT%I*: INT;
+	// C1D error
+	Azimuth_class1			AT%I*: INT;
+	// diagnostic number
+	Azimuth_diagnostic		AT%I*: UDINT;
 	// torque feedback
 	Azimuth_torque			AT%I*: INT;
 	
