@@ -127,8 +127,8 @@ END_IF
 	
 MC_ExtSetPointGenFeed(
 	Position :=		0.95*ActualPosition + 0.05*Position,
-	Velocity :=		Velocity,
-	Acceleration :=	Acceleration,
+	Velocity :=		ABS(Velocity),
+	Acceleration :=	ABS(Acceleration),
 	Direction :=	Direction, 
 	Axis :=			AxisRef);
 
