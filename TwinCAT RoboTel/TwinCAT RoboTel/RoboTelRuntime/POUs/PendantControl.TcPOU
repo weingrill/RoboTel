@@ -68,31 +68,34 @@ right := GVL_pendant_control.direction_right;
 R_Enable(CLK := enable);
 // the error lamp is the same as the error lamp of the main panel
 GVL_pendant_control.lamp_error := GVL_Main.lamp_error;
-
+CoverControl.active_cover := 0;
 // enable only the selected item and connect lamps and buttons accordingly
 CASE Selection OF
 	1:	// reserved for Cover1 control
-		CoverControl.Cover1_enable := manual;
+		CoverControl.active_cover := 1;
+		CoverControl.enable := manual;
 		CoverControl.reset := reset;
-		CoverControl.Cover1_open := up;
-		CoverControl.Cover1_close := down;
+		CoverControl.open := up;
+		CoverControl.close := down;
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover1_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover1_closed;
 		GVL_pendant_control.lamp_error := CoverControl.Cover1_Error;
 
 	2: // Cover2 control
-		CoverControl.Cover2_enable := manual;
+		CoverControl.active_cover := 2;
+		CoverControl.enable := manual;
 		CoverControl.reset := reset;
-		CoverControl.Cover2_open := up;
-		CoverControl.Cover2_close := down;
+		CoverControl.open := up;
+		CoverControl.close := down;
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover2_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover2_closed;
 		GVL_pendant_control.lamp_error := CoverControl.Cover2_Error;
  	
 	3:  // Cover3 control
-		CoverControl.Cover3_enable := manual;
-		CoverControl.Cover3_open := up;
-		CoverControl.Cover3_close := down;
+		CoverControl.active_cover := 3;
+		CoverControl.enable := manual;
+		CoverControl.open := up;
+		CoverControl.close := down;
 		CoverControl.reset := reset;
 		GVL_pendant_control.lamp_up := GVL_Telescope.cover3_open;
 		GVL_pendant_control.lamp_down := GVL_Telescope.cover3_closed;
@@ -290,6 +293,7 @@ END_CASE
       <LineId Id="627" Count="0" />
       <LineId Id="331" Count="0" />
       <LineId Id="11" Count="1" />
+      <LineId Id="1286" Count="0" />
       <LineId Id="995" Count="0" />
       <LineId Id="1037" Count="0" />
       <LineId Id="634" Count="0" />
@@ -297,6 +301,7 @@ END_CASE
       <LineId Id="1244" Count="0" />
       <LineId Id="643" Count="0" />
       <LineId Id="34" Count="0" />
+      <LineId Id="1287" Count="0" />
       <LineId Id="632" Count="0" />
       <LineId Id="996" Count="0" />
       <LineId Id="1038" Count="0" />
@@ -305,6 +310,7 @@ END_CASE
       <LineId Id="1245" Count="0" />
       <LineId Id="101" Count="0" />
       <LineId Id="59" Count="0" />
+      <LineId Id="1288" Count="0" />
       <LineId Id="633" Count="0" />
       <LineId Id="997" Count="0" />
       <LineId Id="638" Count="0" />
