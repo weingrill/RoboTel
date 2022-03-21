@@ -50,6 +50,8 @@ VAR
 	sPayloadPub: 		STRING(255);
 	GetHostName:		FB_GetHostName;
 	HostName: 			STRING(255);
+	LightSwitch:		FB_ButtonEnable;
+	Lightbutton: 		BOOL;
 	bExecute:			BOOL := TRUE;
 END_VAR
 ]]></Declaration>
@@ -141,7 +143,7 @@ ups_output_current 		:= GVL_MAIN.ups_output_current / 1000.0;
 ups_temperature 		:= GVL_MAIN.ups_temperature / 10.0;
 ups_battery_temperature := GVL_MAIN.ups_battery_temperature / 10.0;
 
-
+LightSwitch(SET := Lightbutton, Q := DomeControl.Light);
 
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
