@@ -39,6 +39,7 @@ VAR_OUTPUT
 	Cover1_error: BOOL;
 	Cover2_error: BOOL;
 	Cover3_error: BOOL;
+	Ready:		BOOL;
 END_VAR
 VAR
 	// delay timer for opening cover2
@@ -122,16 +123,19 @@ CASE active_cover OF
 		Cover1_Control.reset := reset;
 		Cover1_control.open :=	open;
 		Cover1_control.close := close;
+		Ready := Cover1_control.Ready;
 	2:	
 		Cover2_Control.enable := enable;
 		Cover2_Control.reset := reset;
 		Cover2_control.open :=	open;
 		Cover2_control.close :=	close AND NOT cover3_closed;
+		Ready := Cover2_control.Ready;
 	3:
 		Cover3_Control.enable := enable;
 		Cover3_Control.reset := reset;
 		Cover3_control.open :=	open;
 		Cover3_control.close :=	close;
+		Ready := Cover3_control.Ready;
 ELSE	
 	// enable all drives
 	Cover1_Control.enable := enable;
@@ -152,6 +156,7 @@ ELSE
 	Cover3_control.close := close3_delay.Q;
 	// close cover 1 if cover 3 is closed;
 	Cover1_control.close :=	Cover3_closed;	
+	Ready := Cover1_Control.Ready AND Cover2_Control.Ready AND Cover3_Control.Ready;
 END_CASE
 		
 
@@ -288,16 +293,19 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="892" Count="0" />
       <LineId Id="881" Count="0" />
       <LineId Id="840" Count="0" />
+      <LineId Id="928" Count="0" />
       <LineId Id="836" Count="0" />
       <LineId Id="843" Count="0" />
       <LineId Id="882" Count="0" />
       <LineId Id="893" Count="0" />
       <LineId Id="841" Count="0" />
+      <LineId Id="929" Count="0" />
       <LineId Id="837" Count="0" />
       <LineId Id="845" Count="0" />
       <LineId Id="883" Count="0" />
       <LineId Id="894" Count="0" />
       <LineId Id="844" Count="0" />
+      <LineId Id="930" Count="0" />
       <LineId Id="846" Count="0" />
       <LineId Id="848" Count="0" />
       <LineId Id="886" Count="0" />
@@ -306,6 +314,7 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="847" Count="0" />
       <LineId Id="849" Count="9" />
       <LineId Id="839" Count="0" />
+      <LineId Id="927" Count="0" />
       <LineId Id="835" Count="0" />
       <LineId Id="34" Count="0" />
       <LineId Id="438" Count="0" />

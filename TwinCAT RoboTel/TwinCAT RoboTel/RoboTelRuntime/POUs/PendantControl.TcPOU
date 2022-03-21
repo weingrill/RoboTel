@@ -23,7 +23,10 @@ VAR
 	right:		BOOL;
 	// counter for filter position
 	Filter_position:	CTUD;
-	
+	CoverEnable: FB_ButtonEnable;
+	NasmythEnable: FB_ButtonEnable;
+	FocusEnable: FB_ButtonEnable;
+	DerotatorEnable:	FB_ButtonEnable;
 	Elevation_enable_Button: 	FB_ButtonEnable;
 	Azimuth_enable_Button: 		FB_ButtonEnable;
 	TelescopeControl_enable: 	FB_ButtonEnable;
@@ -72,62 +75,74 @@ CoverControl.active_cover := 0;
 // enable only the selected item and connect lamps and buttons accordingly
 CASE Selection OF
 	1:	// reserved for Cover1 control
-		CoverControl.active_cover := 1;
-		CoverControl.enable := manual;
-		CoverControl.reset := reset;
-		CoverControl.open := up;
-		CoverControl.close := down;
-		GVL_pendant_control.lamp_up := GVL_Telescope.cover1_open;
-		GVL_pendant_control.lamp_down := GVL_Telescope.cover1_closed;
-		GVL_pendant_control.lamp_error := CoverControl.Cover1_Error;
+		GVL_pendant_control.lamp_up := GVL_Telescope.cover1_open AND CoverControl.Ready;
+		GVL_pendant_control.lamp_down := GVL_Telescope.cover1_closed AND CoverControl.Ready;
+		CoverEnable(SET := enable AND manual, Q := CoverControl.enable);
+		IF manual THEN
+			CoverControl.active_cover := 1;
+			CoverControl.reset := reset;
+			CoverControl.open := up AND CoverControl.Ready;
+			CoverControl.close := down AND CoverControl.Ready;
+			GVL_pendant_control.lamp_error := CoverControl.Cover1_Error;			
+		END_IF
 
 	2: // Cover2 control
-		CoverControl.active_cover := 2;
-		CoverControl.enable := manual;
-		CoverControl.reset := reset;
-		CoverControl.open := up;
-		CoverControl.close := down;
-		GVL_pendant_control.lamp_up := GVL_Telescope.cover2_open;
-		GVL_pendant_control.lamp_down := GVL_Telescope.cover2_closed;
-		GVL_pendant_control.lamp_error := CoverControl.Cover2_Error;
+		GVL_pendant_control.lamp_up := GVL_Telescope.cover2_open AND CoverControl.Ready;
+		GVL_pendant_control.lamp_down := GVL_Telescope.cover2_closed AND CoverControl.Ready;
+		CoverEnable(SET := enable AND manual, Q := CoverControl.enable);
+		IF manual THEN
+			CoverControl.active_cover := 2;
+			CoverControl.reset := reset;
+			CoverControl.open := up AND CoverControl.Ready;
+			CoverControl.close := down AND CoverControl.Ready;
+			GVL_pendant_control.lamp_error := CoverControl.Cover2_Error;
+		END_IF
  	
 	3:  // Cover3 control
-		CoverControl.active_cover := 3;
-		CoverControl.enable := manual;
-		CoverControl.open := up;
-		CoverControl.close := down;
-		CoverControl.reset := reset;
-		GVL_pendant_control.lamp_up := GVL_Telescope.cover3_open;
-		GVL_pendant_control.lamp_down := GVL_Telescope.cover3_closed;
-		GVL_pendant_control.lamp_error := CoverControl.Cover3_Error;
+		GVL_pendant_control.lamp_up := GVL_Telescope.cover3_open AND CoverControl.Ready;
+		GVL_pendant_control.lamp_down := GVL_Telescope.cover3_closed AND CoverControl.Ready;
+		CoverEnable(SET := enable AND manual, Q := CoverControl.enable);
+		IF manual THEN
+			CoverControl.active_cover := 3;
+			CoverControl.open := up AND CoverControl.Ready;
+			CoverControl.close := down AND CoverControl.Ready;
+			CoverControl.reset := reset;
+			GVL_pendant_control.lamp_error := CoverControl.Cover3_Error;
+		END_IF
 		
 	4:	// Nasmyth / mirror M3 control
-		NasmythControl.enable := manual;
-		NasmythControl.left := left;
-		NasmythControl.right := right;
-		NasmythControl.reset := reset;
-		GVL_pendant_control.lamp_left := GVL_Telescope.nasmyth_limit_left;
-		GVL_pendant_control.lamp_right := GVL_Telescope.nasmyth_limit_right;
-		GVL_pendant_control.lamp_error := Nasmythcontrol.error;
+		NasmythEnable(SET := enable AND manual, Q := NasmythControl.enable);
+		GVL_pendant_control.lamp_left := GVL_Telescope.nasmyth_limit_left AND NasmythControl.Ready;
+		GVL_pendant_control.lamp_right := GVL_Telescope.nasmyth_limit_right AND NasmythControl.Ready;
+		IF manual THEN
+			NasmythControl.left := left;
+			NasmythControl.right := right;
+			NasmythControl.reset := reset;
+			GVL_pendant_control.lamp_error := Nasmythcontrol.error;
+		END_IF
 		
 	5:	// Focus Control
-		FocusControl.enable := manual;
-		FocusControl.outward := up;
-		FocusControl.inward := down;
-		Focuscontrol.reset := reset;
-		GVL_pendant_control.lamp_up := NOT GVL_Telescope.focus_limit_far;
-		GVL_pendant_control.lamp_down := NOT GVL_Telescope.focus_limit_near;
-		GVL_pendant_control.lamp_error := FocusControl.error;
-						
+		GVL_pendant_control.lamp_up := FocusControl.Ready AND NOT GVL_Telescope.focus_limit_far;
+		GVL_pendant_control.lamp_down := FocusControl.Ready AND NOT GVL_Telescope.focus_limit_near;
+		FocusEnable(SET := enable AND manual, Q := FocusControl.enable);
+		IF manual THEN
+			FocusControl.outward := up;
+			FocusControl.inward := down;
+			Focuscontrol.reset := reset;
+			GVL_pendant_control.lamp_error := FocusControl.error;
+		END_IF
+							
 	6:	// Derotator control
-		DerotatorControl.enable := manual;
-		DerotatorControl.left := left AND NOT GVL_Telescope.Derotator_inputs.1;
-		DerotatorControl.right := right AND NOT GVL_Telescope.Derotator_inputs.0;
-		DerotatorControl.reset := reset;
-		GVL_pendant_control.lamp_left := NOT GVL_Telescope.Derotator_inputs.1;
-		GVL_pendant_control.lamp_right := NOT GVL_Telescope.Derotator_inputs.0;
-		GVL_pendant_control.lamp_error := DerotatorControl.Error;
-						
+		GVL_pendant_control.lamp_left := DerotatorControl.Ready AND NOT GVL_Telescope.Derotator_inputs.1;
+		GVL_pendant_control.lamp_right :=DerotatorControl.Ready AND NOT GVL_Telescope.Derotator_inputs.0;
+		DerotatorEnable(SET := enable AND manual, Q := DerotatorControl.enable);
+		IF manual THEN
+			DerotatorControl.left := left AND NOT GVL_Telescope.Derotator_inputs.1;
+			DerotatorControl.right := right AND NOT GVL_Telescope.Derotator_inputs.0;
+			DerotatorControl.reset := reset;
+			GVL_pendant_control.lamp_error := DerotatorControl.Error;
+		END_IF
+							
 	7:	// Elevation Control
 		
 		ElevationControl.up := up AND GVL_Telescope.Elevation_inputs.0;
@@ -135,9 +150,7 @@ CASE Selection OF
 		IF manual THEN
 			Elevation_enable_button(
 				SET := enable, 
-				// RESET := ElevationControl.error OR ElevationControl.warning, 
-				state := ElevationControl.enable,
-				Q => ElevationControl.enable);	
+				Q := ElevationControl.enable);	
 		END_IF
 		ElevationControl.reset := reset;
 		GVL_pendant_control.lamp_up := GVL_Telescope.Elevation_inputs.0;
@@ -151,10 +164,9 @@ CASE Selection OF
 		AzimuthElevationControl.right := right AND GVL_Telescope.Azimuth_inputs.1;
 		AzimuthElevationControl.reset := reset;
 		IF manual THEN
-			Azimuth_enable_button(SET := enable, 
-			// RESET := AzimuthElevationControl.error, 
-			state := AzimuthElevationControl.enable,
-			Q => AzimuthElevationControl.enable);
+			Azimuth_enable_button(
+				SET := enable, 
+				Q := AzimuthElevationControl.enable);
 			GVL_pendant_control.lamp_error := AzimuthElevationControl.error;
 		END_IF
 		
@@ -174,6 +186,7 @@ CASE Selection OF
 		
 		
 	10:	// FilterWheel control
+		//FIXME
 		FilterWheelControl.Enable := manual;
 		GVL_pendant_control.lamp_left := manual;
 		GVL_pendant_control.lamp_right := manual;
@@ -202,18 +215,16 @@ CASE Selection OF
 			TelescopeControl.goto := right;
 			Tracking_enable(SET := enable, 
 							RESET := reset, 
-							state := TelescopeControl.tracking,
-							Q=> TelescopeControl.track);
+							Q := TelescopeControl.track);
 			TelescopeControl.reset := reset;
 			Telescopecontrol.stop := left;	
 			GVL_pendant_control.lamp_error := Telescopecontrol.error;
 		END_IF
 		
 	13: // Telescope Control
-		Telescopecontrol_enable(SET := enable, 
-			// RESET := ElevationControl.error OR AzimuthElevationControl.error, 
-			state := TelescopeControl.power,
-			Q => TelescopeControl.power);
+		Telescopecontrol_enable(
+			SET := enable, 
+			Q := TelescopeControl.power);
 		TelescopeControl.reset := reset;
 		IF manual THEN
 			ElevationControl.up := up AND GVL_Telescope.Elevation_inputs.0;
@@ -250,14 +261,12 @@ CASE Selection OF
 		GVL_pendant_control.lamp_left := HydraulicsControl.pump_running;
 		GVL_pendant_control.lamp_right := HydraulicsControl.suction_running;
 		IF manual THEN
-			Hydraulics_enable_button(SET := enable, 
-			RESET := HydraulicsControl.error OR reset,
-			state := HydraulicsControl.oil_pressure_OK);
-			IF Hydraulics_enable_button.Q THEN
-				Hydraulicscontrol.start := TRUE;
-			ELSE
-				Hydraulicscontrol.stop := TRUE;
-			END_IF
+			Hydraulics_enable_button(
+				SET := enable, 
+				Q := Hydraulicscontrol.start);
+			Hydraulicscontrol.stop := reset;
+			
+			
 			IF up THEN
 				Hydraulicscontrol.open_brake := TRUE;
 				Hydraulicscontrol.close_brake := FALSE;
@@ -293,60 +302,67 @@ END_CASE
       <LineId Id="627" Count="0" />
       <LineId Id="331" Count="0" />
       <LineId Id="11" Count="1" />
-      <LineId Id="1286" Count="0" />
-      <LineId Id="995" Count="0" />
-      <LineId Id="1037" Count="0" />
-      <LineId Id="634" Count="0" />
-      <LineId Id="640" Count="2" />
-      <LineId Id="1244" Count="0" />
+      <LineId Id="1309" Count="1" />
+      <LineId Id="1323" Count="0" />
+      <LineId Id="1299" Count="0" />
+      <LineId Id="1302" Count="1" />
+      <LineId Id="1305" Count="1" />
+      <LineId Id="1300" Count="1" />
       <LineId Id="643" Count="0" />
       <LineId Id="34" Count="0" />
+      <LineId Id="1314" Count="1" />
+      <LineId Id="1324" Count="0" />
+      <LineId Id="1311" Count="0" />
       <LineId Id="1287" Count="0" />
       <LineId Id="632" Count="0" />
-      <LineId Id="996" Count="0" />
       <LineId Id="1038" Count="0" />
       <LineId Id="636" Count="0" />
-      <LineId Id="106" Count="1" />
       <LineId Id="1245" Count="0" />
+      <LineId Id="1313" Count="0" />
       <LineId Id="101" Count="0" />
       <LineId Id="59" Count="0" />
+      <LineId Id="1318" Count="1" />
+      <LineId Id="1325" Count="0" />
+      <LineId Id="1316" Count="0" />
       <LineId Id="1288" Count="0" />
       <LineId Id="633" Count="0" />
-      <LineId Id="997" Count="0" />
       <LineId Id="638" Count="0" />
       <LineId Id="117" Count="0" />
-      <LineId Id="1039" Count="0" />
-      <LineId Id="81" Count="0" />
       <LineId Id="1246" Count="0" />
+      <LineId Id="1320" Count="0" />
       <LineId Id="628" Count="0" />
       <LineId Id="80" Count="0" />
-      <LineId Id="770" Count="0" />
+      <LineId Id="1297" Count="0" />
+      <LineId Id="1330" Count="1" />
+      <LineId Id="1328" Count="0" />
       <LineId Id="602" Count="2" />
-      <LineId Id="1217" Count="2" />
+      <LineId Id="1219" Count="0" />
       <LineId Id="605" Count="0" />
+      <LineId Id="1329" Count="0" />
       <LineId Id="236" Count="0" />
+      <LineId Id="1334" Count="1" />
+      <LineId Id="1296" Count="0" />
       <LineId Id="726" Count="0" />
       <LineId Id="507" Count="0" />
       <LineId Id="506" Count="0" />
       <LineId Id="505" Count="0" />
-      <LineId Id="1220" Count="0" />
-      <LineId Id="1222" Count="0" />
       <LineId Id="240" Count="0" />
+      <LineId Id="1333" Count="0" />
       <LineId Id="1223" Count="0" />
       <LineId Id="238" Count="0" />
-      <LineId Id="727" Count="0" />
-      <LineId Id="222" Count="0" />
+      <LineId Id="1346" Count="1" />
+      <LineId Id="1295" Count="0" />
+      <LineId Id="1342" Count="0" />
+      <LineId Id="1338" Count="0" />
       <LineId Id="554" Count="1" />
-      <LineId Id="1225" Count="1" />
       <LineId Id="1224" Count="0" />
       <LineId Id="465" Count="0" />
+      <LineId Id="1339" Count="0" />
       <LineId Id="311" Count="0" />
       <LineId Id="609" Count="0" />
       <LineId Id="327" Count="1" />
       <LineId Id="1040" Count="0" />
       <LineId Id="1043" Count="2" />
-      <LineId Id="1247" Count="0" />
-      <LineId Id="1046" Count="0" />
       <LineId Id="1042" Count="0" />
       <LineId Id="772" Count="0" />
       <LineId Id="1230" Count="1" />
@@ -358,9 +374,9 @@ END_CASE
       <LineId Id="309" Count="0" />
       <LineId Id="371" Count="1" />
       <LineId Id="1047" Count="0" />
-      <LineId Id="1050" Count="1" />
-      <LineId Id="1248" Count="0" />
-      <LineId Id="1052" Count="0" />
+      <LineId Id="1050" Count="0" />
+      <LineId Id="1291" Count="0" />
+      <LineId Id="1051" Count="0" />
       <LineId Id="1083" Count="0" />
       <LineId Id="1049" Count="0" />
       <LineId Id="463" Count="0" />
@@ -375,6 +391,7 @@ END_CASE
       <LineId Id="1232" Count="0" />
       <LineId Id="464" Count="0" />
       <LineId Id="298" Count="0" />
+      <LineId Id="1292" Count="0" />
       <LineId Id="998" Count="0" />
       <LineId Id="611" Count="0" />
       <LineId Id="457" Count="2" />
@@ -392,7 +409,6 @@ END_CASE
       <LineId Id="1151" Count="0" />
       <LineId Id="1249" Count="0" />
       <LineId Id="1251" Count="0" />
-      <LineId Id="1250" Count="0" />
       <LineId Id="1148" Count="0" />
       <LineId Id="1150" Count="0" />
       <LineId Id="1243" Count="0" />
@@ -400,9 +416,8 @@ END_CASE
       <LineId Id="1090" Count="0" />
       <LineId Id="841" Count="0" />
       <LineId Id="846" Count="0" />
+      <LineId Id="1293" Count="0" />
       <LineId Id="1035" Count="0" />
-      <LineId Id="1252" Count="0" />
-      <LineId Id="1036" Count="0" />
       <LineId Id="843" Count="0" />
       <LineId Id="1027" Count="0" />
       <LineId Id="1058" Count="0" />
@@ -428,9 +443,12 @@ END_CASE
       <LineId Id="234" Count="0" />
       <LineId Id="419" Count="1" />
       <LineId Id="941" Count="0" />
-      <LineId Id="1055" Count="1" />
-      <LineId Id="1253" Count="0" />
-      <LineId Id="944" Count="6" />
+      <LineId Id="1055" Count="0" />
+      <LineId Id="1294" Count="0" />
+      <LineId Id="1056" Count="0" />
+      <LineId Id="947" Count="1" />
+      <LineId Id="1290" Count="0" />
+      <LineId Id="949" Count="1" />
       <LineId Id="955" Count="0" />
       <LineId Id="951" Count="1" />
       <LineId Id="956" Count="0" />
