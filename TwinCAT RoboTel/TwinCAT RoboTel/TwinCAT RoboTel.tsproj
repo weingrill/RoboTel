@@ -5537,7 +5537,7 @@ DOUT9 1.0]]></Comment>
 						<ImageId>1005</ImageId>
 						<EtherCAT SlaveType="1" PdiType="#x0d00" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x05f12c52" RevisionNo="#x00150000" CheckRevisionNoType="3" PortPhys="4867" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1521 1-Port EtherCAT-Abzweig (FX-MultiMode)" Desc="EK1521" PortABoxInfo="#x01000006"/>
 						<Box Id="8" BoxType="9099">
-							<Name>Klemme 8 (EK1501)</Name>
+							<Name>Telescope Cabinet (EK1501)</Name>
 							<Comment><![CDATA[Unterverteiler Teleskop]]></Comment>
 							<ImageId>1006</ImageId>
 							<EtherCAT SlaveType="1" PdiType="#x0d04" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x05dd2c52" RevisionNo="#x00130000" PortPhys="305" IdentificationAdo="4096" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1501 EtherCAT-Koppler (2A E-Bus, FX-MultiMode, ID-Switch)" Desc="EK1501" PortABoxInfo="#x03000007">
@@ -10010,7 +10010,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<ImageId>1005</ImageId>
 						<EtherCAT SlaveType="1" PdiType="#x0d00" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x05f12c52" RevisionNo="#x00150000" CheckRevisionNoType="3" PortPhys="4867" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1521 1-Port EtherCAT-Abzweig (FX-MultiMode)" Desc="EK1521" PortABoxInfo="#x02000007"/>
 						<Box Id="87" BoxType="9099">
-							<Name>Klemme 87 (EK1501)</Name>
+							<Name>Filterwheel Cabinet (EK1501)</Name>
 							<ImageId>1006</ImageId>
 							<EtherCAT SlaveType="1" PdiType="#x0d04" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x05dd2c52" RevisionNo="#x00130000" PortPhys="305" IdentificationAdo="4096" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1501 EtherCAT-Koppler (2A E-Bus, FX-MultiMode, ID-Switch)" Desc="EK1501" PortABoxInfo="#x03000054">
 								<SyncMan>001002000000010004000000000000000000001000000000</SyncMan>
@@ -13040,16 +13040,16 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<EtherCAT SlaveType="1" PdiType="#x0100" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x04562c52" RevisionNo="#x00110000" PortPhys="19" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1110 EtherCAT-Verlängerung" Desc="EK1110" PortABoxInfo="#x02000054"/>
 					</Box>
 				</Box>
-				<Box Id="23" BoxType="9099">
-					<Name>Box 23 (Uninterruptible Power Supply)</Name>
-					<ImageId>114</ImageId>
-					<EtherCAT SlaveType="2" PdiType="#x0c08" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="35" FoeType="1" VendorId="#x00000084" ProductCode="#x002c5bc9" SerialNo="#x0114a47d" InfoDataAddr="true" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="QUINT4-UPS/24DC/24DC/40/EC" Desc="Uninterruptible Power Supply" PortABoxInfo="#x01000016">
-						<SyncMan>0018f600260001000100000000000000f600001826010000</SyncMan>
-						<SyncMan>f618f600220001000200000000000000f600f61822010000</SyncMan>
+				<Box Id="104" BoxType="9099" BoxFlags="#x00000020">
+					<Name>QUINT4-UPS (Uninterruptible Power Supply)</Name>
+					<ImageId>65</ImageId>
+					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="35" FoeType="1" VendorId="#x00000084" ProductCode="#x002c5bc9" InfoDataAddr="true" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="QUINT4-UPS/24DC/24DC/40/EC" Desc="Uninterruptible Power Supply" PortABoxInfo="#x01000016">
+						<SyncMan>0018f60026000100010000002800ce05f600001826010000</SyncMan>
+						<SyncMan>f618f60022000100020000002800ce05f600f61822010000</SyncMan>
 						<SyncMan>00103a006000010004000000000000003a00001060010000</SyncMan>
 						<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
 						<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
-						<Pdo Name="TxPDO 1" Index="#x1a00" Flags="#x0000" SyncMan="2">
+						<Pdo Name="TxPDO 1" Index="#x1a00" Flags="#x0010" SyncMan="2">
 							<Entry Name="STATUS FUNCTIONS" Index="#x4000">
 								<Type>UDINT</Type>
 							</Entry>
@@ -13461,7 +13461,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 							</StatusBar>
 						</AX5XXXDriveTool>
 					</Xml>
-					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" DownloadPdoCfg="true" CycleMBoxPollingTime="0" FoeType="1" SoeChannels="2" VendorId="#x00000002" ProductCode="#x14566012" RevisionNo="#x00d50000" InfoDataAddr="true" InfoDataSoeDS401="true" InfoDataDcTimes="true" TimeoutStateChange2="20000" TimeoutStateChange3="10000" TimeoutStateChange4="500" AutoRestoreAfterWcOk="true" CheckRevisionNoType="4" PortPhys="12305" IdentificationAdo="308" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AX5206-0000-0213 EtherCAT Drive (SoE, 2 Ch.)" Desc="AX5206-0000-0213" PortABoxInfo="#x01000017">
+					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" DownloadPdoCfg="true" CycleMBoxPollingTime="0" FoeType="1" SoeChannels="2" VendorId="#x00000002" ProductCode="#x14566012" RevisionNo="#x00d50000" InfoDataAddr="true" InfoDataSoeDS401="true" InfoDataDcTimes="true" TimeoutStateChange2="20000" TimeoutStateChange3="10000" TimeoutStateChange4="500" AutoRestoreAfterWcOk="true" CheckRevisionNoType="4" PortPhys="12305" IdentificationAdo="308" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AX5206-0000-0213 EtherCAT Drive (SoE, 2 Ch.)" Desc="AX5206-0000-0213" PortABoxInfo="#x01000068">
 						<SyncMan>001880002600010001000000800080008000001826010000</SyncMan>
 						<SyncMan>001a80002200010002000000800080008000001a22010000</SyncMan>
 						<SyncMan>00100c002400010003000000000000000000001024010000</SyncMan>
@@ -16051,7 +16051,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^Filterrad">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 84 (EK1521)^Term 87 (EK1501)^Filterrad (EL7211-0010)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 84 (EK1521)^Filterwheel Cabinet (EK1501)^Filterrad (EL7211-0010)">
 				<Link VarA="Drive^Inputs^In^nDcOutputTime" VarB="InfoData^DcOutputShift"/>
 				<Link VarA="Drive^Inputs^In^nState1" VarB="DRV Statusword^Statusword"/>
 				<Link VarA="Drive^Inputs^In^nState2" VarB="DRV Statusword^Statusword" Size="8" OffsB="8"/>
@@ -16089,7 +16089,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^Focus">
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Encoder (EL5101)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Encoder (EL5101)">
 				<Link VarA="Enc^Inputs^In^nDataIn1[0]" VarB="ENC Status compact^Counter value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn2[0]" VarB="ENC Status compact^Latch value"/>
 				<Link VarA="Enc^Inputs^In^nState1" VarB="ENC Status compact^Status^Counter overflow" Size="1" OffsA="4"/>
@@ -16116,7 +16116,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="Enc^Outputs^Out^nCtrl1" VarB="ENC Control compact^Control^Set counter" Size="1" OffsA="2"/>
 				<Link VarA="Enc^Outputs^Out^nDataOut1[0]" VarB="ENC Control compact^Set counter value"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Motor1 (EL7342)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Motor1 (EL7342)">
 				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Error" Size="1" OffsA="3"/>
 				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Moving negative" Size="1" OffsA="5"/>
 				<Link VarA="Drive^Inputs^In^nState1" VarB="DCM Status Channel 1^Status^Moving positive" Size="1" OffsA="4"/>
@@ -16143,14 +16143,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Azimuth_inputs" VarB="AT^Digital inputs, state"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Azimuth_torque" VarB="AT^Torque/force feedback value"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Box 23 (Uninterruptible Power Supply)">
-				<Link VarA="PlcTask Inputs^GVL_Main.ups_battery_temperature" VarB="TxPDO 1^STATUS BATTERY TEMPERATURE"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.ups_input_current" VarB="TxPDO 1^STATUS ACTUAL INPUT CURRENT"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.ups_input_voltage" VarB="TxPDO 1^STATUS ACTUAL INPUT VOLTAGE"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.ups_output_current" VarB="TxPDO 1^STATUS ACTUAL OUTPUT CURRENT 1"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.ups_output_voltage" VarB="TxPDO 1^STATUS ACTUAL OUTPUT VOLTAGE 1"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.ups_temperature" VarB="TxPDO 1^STATUS DEVICE TEMPERATURE"/>
-			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Derotator (AX5206-0000-0213)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Derotator_inputs" VarB="AT 1^Digital inputs, state"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Derotator_torque" VarB="AT 1^Torque/force feedback value"/>
@@ -16160,6 +16152,14 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Elevation_diagnostic" VarB="AT^Diagnostic number"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Elevation_inputs" VarB="AT^Digital inputs, state"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Elevation_torque" VarB="AT^Torque/force feedback value"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^QUINT4-UPS (Uninterruptible Power Supply)">
+				<Link VarA="PlcTask Inputs^GVL_Main.ups_battery_temperature" VarB="TxPDO 1^STATUS BATTERY TEMPERATURE"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.ups_input_current" VarB="TxPDO 1^STATUS ACTUAL INPUT CURRENT"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.ups_input_voltage" VarB="TxPDO 1^STATUS ACTUAL INPUT VOLTAGE"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.ups_output_current" VarB="TxPDO 1^STATUS ACTUAL OUTPUT CURRENT 1"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.ups_output_voltage" VarB="TxPDO 1^STATUS ACTUAL OUTPUT VOLTAGE 1"/>
+				<Link VarA="PlcTask Inputs^GVL_Main.ups_temperature" VarB="TxPDO 1^STATUS DEVICE TEMPERATURE"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Aux IN (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_Main.brake_clearing" VarB="Channel 3^Input"/>
@@ -16215,12 +16215,12 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Dome Azimuth (EK1501)^Velo OUT (EL4002)">
 				<Link VarA="PlcTask Outputs^GVL_Dome.Inverter_Velocity" VarB="AO Outputs Channel 1^Analog output"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Aux OUT (EL2008)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Aux OUT (EL2008)">
 				<Link VarA="PlcTask Outputs^GVL_Telescope.focus_lock" VarB="Channel 1^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_Telescope.horn" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_Telescope.nasmyth_lock" VarB="Channel 2^Output"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Cover IN (EL1008)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Cover IN (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.cover1_closed" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.cover1_open" VarB="Channel 1^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.cover2_closed" VarB="Channel 4^Input"/>
@@ -16228,7 +16228,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.cover3_closed" VarB="Channel 6^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.cover3_open" VarB="Channel 5^Input"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Handcontrol IN1 (EL1008)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Handcontrol IN1 (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD1" VarB="Channel 1^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD2" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_pendant_control.BCD4" VarB="Channel 3^Input"/>
@@ -16238,29 +16238,29 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_pendant_control.key_switch" VarB="Channel 8^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_pendant_control.reset_switch" VarB="Channel 5^Input"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Handcontrol IN2 (EL1008)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Handcontrol IN2 (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_pendant_control.direction_left" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_pendant_control.direction_right" VarB="Channel 3^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_pendant_control.start_switch" VarB="Channel 1^Input"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Handcontrol OUT (EL2008)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Handcontrol OUT (EL2008)">
 				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_down" VarB="Channel 2^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_error" VarB="Channel 5^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_left" VarB="Channel 4^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_right" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_pendant_control.lamp_up" VarB="Channel 1^Output"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Hydraulics IN (EL1008)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Hydraulics IN (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_Hydraulics.oil_reserve" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Hydraulics.oilpan_maximum" VarB="Channel 1^Input"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Limits IN1 (EL1008)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Limits IN1 (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.focus_limit_far" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.focus_limit_near" VarB="Channel 1^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.nasmyth_limit_left" VarB="Channel 3^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.nasmyth_limit_right" VarB="Channel 4^Input"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Motor1 (EL7342)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Motor1 (EL7342)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 2^Counter value"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 2^Latch value"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 2^Status"/>
@@ -16270,7 +16270,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 2^Control"/>
 				<Link VarA="PlcTask Outputs^GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 2^Velocity"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Motor2 (EL7342)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Motor2 (EL7342)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover1_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 1^Counter value"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover1_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 1^Latch value"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover1_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 1^Status"/>
@@ -16288,7 +16288,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover2_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 2^Control"/>
 				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover2_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 2^Velocity"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Motor3 (EL7342)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Motor3 (EL7342)">
 				<Link VarA="PlcTask Inputs^FanControl.Fan_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 2^Counter value"/>
 				<Link VarA="PlcTask Inputs^FanControl.Fan_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 2^Latch value"/>
 				<Link VarA="PlcTask Inputs^FanControl.Fan_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 2^Status"/>
@@ -16306,18 +16306,18 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 1^Control"/>
 				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 1^Velocity"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Temp1 (EL3202-0010)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Temp1 (EL3202-0010)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_bearing2" VarB="RTD Inputs Channel 1^Value"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Temp2 (EL3202-0010)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Temp2 (EL3202-0010)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_mirror1" VarB="RTD Inputs Channel 2^Value"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_mirror2" VarB="RTD Inputs Channel 1^Value"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Temp3 (EL3202-0010)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Temp3 (EL3202-0010)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_mirror3" VarB="RTD Inputs Channel 1^Value"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_tube" VarB="RTD Inputs Channel 2^Value"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Term 8 (EK1501)^Temp4 (EL3202-0010)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Temp4 (EL3202-0010)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_bearing1" VarB="RTD Inputs Channel 1^Value"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_cabinet" VarB="RTD Inputs Channel 2^Value"/>
 			</OwnerB>
@@ -16331,14 +16331,14 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Weather (EK1501)^Rain IN (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_Environment.rawRain" VarB="Channel 1^Input"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 84 (EK1521)^Term 87 (EK1501)^Filterrad (EL7211-0010)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 84 (EK1521)^Filterwheel Cabinet (EK1501)^Filterrad (EL7211-0010)">
 				<Link VarA="PlcTask Inputs^GVL_FilterWheel.bCalibrationCam" VarB="FB Touch probe status^Touch probe status^TP1 Input"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 84 (EK1521)^Term 87 (EK1501)^Temp5 (EL3202-0010)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 84 (EK1521)^Filterwheel Cabinet (EK1501)^Temp5 (EL3202-0010)">
 				<Link VarA="PlcTask Inputs^GVL_Auxiliary.Dewar_temperature_error" VarB="RTD Inputs Channel 1^Status^Error"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_Dewar" VarB="RTD Inputs Channel 1^Value"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 84 (EK1521)^Term 87 (EK1501)^Term 24 (EL3064)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 84 (EK1521)^Filterwheel Cabinet (EK1501)^Term 24 (EL3064)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.pressure_Dewar" VarB="AI Standard Channel 1^Value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^TwinSAFE Logic (EL6910)">
