@@ -52,21 +52,13 @@ VAR_GLOBAL
 	//Horn 4.7
 	horn			AT%Q*: BOOL;
 	
-	// calibration signal for elevation
-	elevation_calibration	AT%I*: BOOL;
-	// calibration signal for azimuth
-	azimuth_calibration		AT%I*: BOOL;
 	// digitale inputs der Endlagen
 	Derotator_inputs		AT%I*: WORD;
-	// Controlword for homing
-	Derotator_ControlDWord	AT%Q*: DWORD;
 	// derotator torque feedback
 	Derotator_torque		AT%I*: INT;
 	
 	// digital inputs for limit switches
 	Elevation_inputs		AT%I*: WORD;
-	// C1D error
-	Elevation_class1		AT%I*: INT;
 	// diagnostic number
 	Elevation_diagnostic	AT%I*: UDINT;
 	// torque feedback
@@ -74,17 +66,10 @@ VAR_GLOBAL
 	
 	// digital inputs for limit switches
 	Azimuth_inputs			AT%I*: WORD;
-	// C1D error
-	Azimuth_class1			AT%I*: INT;
 	// diagnostic number
 	Azimuth_diagnostic		AT%I*: UDINT;
 	// torque feedback
 	Azimuth_torque			AT%I*: INT;
-	
-	// dewar pressure 0..10V Pfeiffer 
-	pressure_Dewar			AT%I*: INT;
-	// dewar temperature PT100
-	temperature_Dewar		AT%I*: INT;
 	
 	// Zyklisches Interface zwischen NC und Achse
 	AzimuthAxisRef: 	AXIS_REF;
@@ -101,7 +86,6 @@ VAR_GLOBAL
 	Cover2_axis: 		MDP5001_511_733_2BD37790;
 	// Motor3 Channel 1: MDP5001_511_733_BA4AEFF1
 	Cover3_axis: 		MDP5001_511_733_BA4AEFF1;
-		
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

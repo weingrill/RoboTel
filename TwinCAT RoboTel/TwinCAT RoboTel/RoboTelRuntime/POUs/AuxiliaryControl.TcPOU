@@ -6,6 +6,9 @@ VAR
 	// start delay for the dehumidifier to prevent overcurrent
 	DeHumidifierDelay:	TON;
 	DeHumidifier:		BOOL;
+	pressure_voltage,
+	pressure_Dewar,
+	temperature_Dewar: REAL;
 END_VAR
 VAR CONSTANT
 	humidity_high:	REAL := 75.0;
@@ -21,6 +24,10 @@ END_IF
 
 // delay startup of the dehumidifier to prevent power-spike
 DeHumidifierDelay(IN := DeHumidifier, PT := T#5S, Q=> GVL_Dome.DeHumidifier);
+
+pressure_voltage := F_YREAL(GVL_Auxiliary.pressure_Dewar, 0, 32767, 0.0, 10.0);
+pressure_Dewar := LREAL_TO_REAL(EXPT(10.0, (1.5*pressure_voltage - 12.0)));
+temperature_Dewar := GVL_Auxiliary.temperature_Dewar / 100.0;
 ]]></ST>
     </Implementation>
     <LineIds Name="AuxiliaryControl">
@@ -31,6 +38,7 @@ DeHumidifierDelay(IN := DeHumidifier, PT := T#5S, Q=> GVL_Dome.DeHumidifier);
       <LineId Id="26" Count="0" />
       <LineId Id="28" Count="0" />
       <LineId Id="27" Count="0" />
+      <LineId Id="38" Count="3" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

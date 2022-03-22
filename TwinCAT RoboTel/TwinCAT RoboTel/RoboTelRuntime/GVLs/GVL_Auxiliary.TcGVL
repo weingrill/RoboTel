@@ -5,7 +5,11 @@
 VAR_GLOBAL
 	// Dewar Temperature sensor error
 	Dewar_temperature_error	AT%I*: BOOL;
-
+	// dewar pressure 0..10V Pfeiffer 
+	pressure_Dewar			AT%I*: INT;
+	// dewar raw temperature
+	temperature_Dewar 		AT%I*: INT;
+	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
