@@ -44,8 +44,8 @@ VAR
 	PhaseLog,
 	PowerLog,
 	TemperatureEvent:	FB_EventLog;
-	MQTTPublisher:		FB_MQTTPublisher;
-	MQTTTelegraf:		FB_MQTTTelegraf;
+	//MQTTPublisher:		FB_MQTTPublisher;
+	//MQTTTelegraf:		FB_MQTTTelegraf;
 	MQTTTimer : 		TON := (PT:=T#5S);
 	sPayloadPub: 		STRING(255);
 	GetHostName:		FB_GetHostName;
@@ -68,6 +68,8 @@ Main control loop
 GetHostName(bExecute := bExecute, sHostName => HostName);
 bExecute := FALSE;
 GVL_Main.isRoboTel := HostName = 'CX-4E6032';
+start := GVL_Main.start_switch;
+stop := GVL_Main.stop_switch;
 
 power_OK := GVL_main.power_available;
 phase_available := GVL_Main.phase_available;
@@ -215,6 +217,7 @@ TemperatureEvent(
       <LineId Id="29" Count="0" />
       <LineId Id="944" Count="1" />
       <LineId Id="948" Count="1" />
+      <LineId Id="1055" Count="1" />
       <LineId Id="16" Count="0" />
       <LineId Id="61" Count="0" />
       <LineId Id="522" Count="0" />
