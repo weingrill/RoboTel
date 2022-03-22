@@ -46,14 +46,17 @@ VAR
 	TorqueWarning:		FB_EventLog;
 	CalibrationEvent:	FB_Eventlog;
 	ReadParameter:		MC_ReadParameter;
+	getlastposition:	BOOL := TRUE;
 END_VAR
 VAR CONSTANT
 	// reference position for homing
-	homing_position:		LREAL := 439.0; // was 442 - -21.21 = 463.21; 463 + 24 = 439
-	// current position of the calibration cam. Apply an offset here if necessary
+	// homing_position:		LREAL := 439.0; // was 442 - -21.21 = 463.21; 463 + 24 = 439
+	// current position of the calibration cam encoder zero index. Apply an offset here if necessary
 	calibration_position:	LREAL := 156.1195; // 180.0 - 24.0;
 END_VAR
-]]></Declaration>
+VAR PERSISTENT
+	last_position:	LREAL := -1.0;
+END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(* Azimuth Axis control section
 Power must be on and brake must be open for the axis to operate
@@ -74,6 +77,7 @@ calibrated := AzimuthAxis.Calibrated;
 
 IF AzimuthAxis.Calibrated OR Error THEN
 	HomeAxis := FALSE;
+	getlastposition := FALSE;
 END_IF
 	
 IF HomeAxis THEN
@@ -89,13 +93,12 @@ IF HomeDelay.Q THEN
 	MoveAxis := TRUE;
 END_IF
 
-(*
 // perform a recalibration, if we pass the reference mark on the encoder
 AzimuthCalibration(
 	Axis := GVL_Telescope.AzimuthAxisRef,
-	Execute := GVL_Telescope.Azimuth_Probe>0 AND NOT HomeAxis,
-	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
-*)
+	Execute := getlastposition AND last_position>=0.0 AND NOT Calibrated,
+	Position := last_position);
+
 // deactivate limit switches on homing
 MC_SetAcceptBlockedDriveSignal(
 	Axis := GVL_Telescope.AzimuthAxisRef, 
@@ -181,14 +184,16 @@ CalibrationEvent(
       <LineId Id="333" Count="0" />
       <LineId Id="285" Count="0" />
       <LineId Id="334" Count="0" />
-      <LineId Id="244" Count="6" />
+      <LineId Id="244" Count="1" />
+      <LineId Id="683" Count="0" />
+      <LineId Id="246" Count="4" />
       <LineId Id="624" Count="0" />
       <LineId Id="400" Count="0" />
       <LineId Id="393" Count="6" />
       <LineId Id="625" Count="0" />
-      <LineId Id="347" Count="0" />
       <LineId Id="287" Count="4" />
-      <LineId Id="238" Count="4" />
+      <LineId Id="680" Count="0" />
+      <LineId Id="239" Count="3" />
       <LineId Id="115" Count="0" />
       <LineId Id="33" Count="0" />
       <LineId Id="108" Count="0" />
