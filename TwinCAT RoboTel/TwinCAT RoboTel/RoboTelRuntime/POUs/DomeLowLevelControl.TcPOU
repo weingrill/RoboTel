@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="DomeLowLevelControl" Id="{5043f649-b650-4559-92ff-7f85fab560c6}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM DomeLowLevelControl
+VAR_INPUT
+	enable : BOOL;
+END_VAR
+VAR
+	Inverter_Enable:	BOOL;
+	Inverter_Velocity:	UINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* source: https://infosys.beckhoff.de/english.php?content=../content/1033/tcplclib_tc2_system/18014399220202635.html&id= *)
+
+IF GVL_Dome.bVeloHigh THEN
+	// High Speed
+	Inverter_Velocity := 32767;
+	Inverter_Enable := enable;
+ELSIF GVL_Dome.bVeloLow THEN
+	// low speed
+	Inverter_Velocity := 10000;
+	Inverter_Enable := enable;
+ELSIF GVL_Dome.bBreak THEN
+	// breaking (halt)
+	Inverter_Velocity := 0;
+	Inverter_Enable := FALSE;
+ELSE
+	// default
+	Inverter_Velocity := 0;
+	Inverter_Enable := FALSE;
+END_IF
+
+GVL_Dome.Inverter_DirectionMinus := GVL_Dome.bDirectionPlus;
+GVL_Dome.Inverter_Enable := Inverter_Enable;
+GVL_Dome.Inverter_Velocity := Inverter_Velocity;
+]]></ST>
+    </Implementation>
+    <LineIds Name="DomeLowLevelControl">
+      <LineId Id="38" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="24" Count="2" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

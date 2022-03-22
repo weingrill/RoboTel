@@ -73,15 +73,13 @@ VAR
 	// time delay for dome light
 	LightTimer:			TP;
 	// next state
-	nState:				BYTE := 0;
+	//:				BYTE := 0;
 	// ADS communiaction busy
 	bBusy: 				BOOL;
 	// ADS communication error
 	bError: 			BOOL;
 	// ADS communication error id
 	nErrID: 			UDINT;
-	arrBool: 			ARRAY[0..3] OF BOOL;(* Server data to be written *)
-	i: 					INT;
 	// cycle timer for the ADS write cycle
 	ReadCycle:			TON := (PT:=T#1S);
 	
@@ -118,28 +116,7 @@ The second section controls the dome axis.
 The third section handles the communications via ADS with the dome PLC.
 *)
 
-(* source: https://infosys.beckhoff.de/english.php?content=../content/1033/tcplclib_tc2_system/18014399220202635.html&id= *)
-GVL_Dome.Inverter_Enable := FALSE;
-GVL_Dome.Inverter_Velocity := 0;
-
-enable := GVL_Safety.Run;
-
-IF GVL_Dome.bVeloHigh THEN
-	GVL_Dome.Inverter_Velocity := 32767;
-	GVL_Dome.Inverter_Enable := TRUE;
-END_IF
-
-IF GVL_Dome.bVeloLow THEN
-	GVL_Dome.Inverter_Velocity := 10000;
-	GVL_Dome.Inverter_Enable := TRUE;
-END_IF
-
-IF GVL_Dome.bBreak THEN
-	GVL_Dome.Inverter_Velocity := 0;
-	GVL_Dome.Inverter_Enable := FALSE;
-END_IF
-
-GVL_Dome.Inverter_DirectionMinus := GVL_Dome.bDirectionPlus;
+DomeLowLevelControl(enable := GVL_Safety.Run);
 
 // if we are calibrated or encounter an error while calibrating, deactivate homing
 IF DomeAxis.Calibrated OR Error THEN
@@ -171,14 +148,11 @@ END_IF
 
 SyncDome := DomeAxis.Calibrated AND TelescopeControl.power AND AzimuthElevationControl.calibrated;
 // if we are on automatic, tie the dome to the telescope
-(*
+
 IF DomeAxis.Calibrated AND TelescopeControl.power AND AzimuthElevationControl.calibrated THEN
 	position := MODABS(TelescopeControl.azimuth_current, 360.0);
 	move_azimuth := ABS(Azimuth_current - position) > tolerance;
 END_IF
-
-MC_GearIn
-*)
 
 Calibrated := DomeAxis.Calibrated;
 // when homing, ensure that the position is the calibration position
@@ -380,21 +354,8 @@ CloseDomeEvent(
       <LineId Id="1011" Count="2" />
       <LineId Id="1010" Count="0" />
       <LineId Id="1009" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="650" Count="0" />
-      <LineId Id="673" Count="0" />
-      <LineId Id="1215" Count="0" />
-      <LineId Id="666" Count="0" />
-      <LineId Id="636" Count="0" />
-      <LineId Id="635" Count="0" />
-      <LineId Id="639" Count="0" />
-      <LineId Id="647" Count="0" />
-      <LineId Id="638" Count="0" />
-      <LineId Id="668" Count="4" />
-      <LineId Id="640" Count="2" />
-      <LineId Id="648" Count="0" />
-      <LineId Id="643" Count="2" />
       <LineId Id="1425" Count="0" />
+      <LineId Id="2354" Count="0" />
       <LineId Id="1216" Count="0" />
       <LineId Id="955" Count="0" />
       <LineId Id="1209" Count="0" />
@@ -424,9 +385,6 @@ CloseDomeEvent(
       <LineId Id="1406" Count="2" />
       <LineId Id="1403" Count="0" />
       <LineId Id="1452" Count="0" />
-      <LineId Id="1451" Count="0" />
-      <LineId Id="1427" Count="0" />
-      <LineId Id="1454" Count="0" />
       <LineId Id="1428" Count="0" />
       <LineId Id="1414" Count="1" />
       <LineId Id="1418" Count="0" />
