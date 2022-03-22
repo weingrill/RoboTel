@@ -9,8 +9,8 @@ VAR
     bSetParameter   : BOOL := TRUE;
     bConnect        : BOOL := TRUE;
 	(* published message *)
-    sTopicPub   : STRING(255) := 'RoboTel';
-    sPayloadPub : STRING(255);
+    //sTopicPub   : STRING(255) := 'RoboTel';
+    //sPayloadPub : STRING(255);
 //	epos : INT;
 	(* received message *)
     bSubscribed    : BOOL;
@@ -82,6 +82,8 @@ IF fbMessageQueue.nQueuedMessages > 0 THEN
 					TelescopeControl.goto := STRING_TO_BOOL(value);
 				ELSIF parameter = 'reset' THEN
 					TelescopeControl.reset := STRING_TO_BOOL(value);
+				ELSIF parameter = 'nasmyth' THEN
+					TelescopeControl.Nasmyth_port := STRING_TO_USINT(value);
 				END_IF
 			END_IF // measurement
 		END_IF // Topic
@@ -112,6 +114,7 @@ END_IF
       <LineId Id="67" Count="0" />
       <LineId Id="175" Count="19" />
       <LineId Id="201" Count="1" />
+      <LineId Id="228" Count="1" />
       <LineId Id="195" Count="4" />
       <LineId Id="66" Count="0" />
       <LineId Id="73" Count="0" />
