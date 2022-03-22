@@ -38,15 +38,21 @@ VAR
 	Focus_max:			LREAL;
 	FocusUnlocked:		BOOL;
 	FocusCalibration:	MC_SetPosition;
+	MQTTTimer : TON := (PT:=T#10S);
+	// MQTT String
+	sPayloadPub: STRING(255);
+	getlastposition:	BOOL := TRUE;
 	FocusAxisEvent:		FB_EventLog;
 	CalibrationEvent:	FB_EventLog;
 END_VAR
 
 VAR CONSTANT
-	Focus_precision:	LREAL := 0.002;
 	// reference position for homing
 	homing_position:		LREAL := 97.96; // 107,50 - 9,54
-
+	calibration_position:	LREAL := 0.0;
+END_VAR
+VAR PERSISTENT
+	last_position:	LREAL := -1.0;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*
@@ -114,17 +120,47 @@ IF FocusAxis.Calibrated OR Error THEN
 END_IF
 
 Calibrated := FocusAxis.Calibrated;
-	
-// Calibrate on the other end
-FocusCalibration(Axis := GVL_Telescope.FocusAxisRef,
-	Execute := GVL_Telescope.focus_limit_near,
-	Position := 0.0);
 
+IF getlastposition AND last_position>=0.0 AND NOT Calibrated THEN
+	// calibrate on stored position
+	FocusCalibration.Execute := getlastposition AND FocusAxis.Ready;
+	FocusCalibration.Position := last_position;
+ELSE
+	// Calibrate on near end
+	FocusCalibration.Execute := GVL_Telescope.focus_limit_near;
+	FocusCalibration.Position := calibration_position;
+END_IF
+	
+
+FocusCalibration(Axis := GVL_Telescope.FocusAxisRef);
+
+IF FocusCalibration.Done OR Calibrated THEN
+	last_position := actual_position;
+	getlastposition := FALSE;
+END_IF
+
+	
 IF GVL_Telescope.focus_limit_far THEN
 	Focus_max := actual_position;
 END_IF
 
 Ready := FocusAxis.Ready AND FocusAxis.StandStill;
+
+MQTTTimer(IN:=Enable);
+IF MQTTTimer.Q THEN // publish new payload every second
+	MQTTTimer(IN:=FALSE);
+	sPayloadPub := 'telescope,location=dome,host=CX-4E6032,module=FocusControl ';
+	sPayloadPub := APPEND(sPayloadPub, 'FocusPosition=', LREAL_TO_FMTSTR(actual_position, 5, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',Calibrated=', BOOL_TO_STRING(Calibrated));	
+	sPayloadPub := APPEND(sPayloadPub, ',Ready=', BOOL_TO_STRING(Ready));	
+	MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Telemetry', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= FALSE, 
+					bQueue:= FALSE );
+END_IF
 
 FocusAxisEvent(	
 	Trigger := 		FocusAxis.Error, 
@@ -180,13 +216,30 @@ CalibrationEvent(
       <LineId Id="368" Count="0" />
       <LineId Id="370" Count="2" />
       <LineId Id="426" Count="1" />
+      <LineId Id="547" Count="0" />
+      <LineId Id="549" Count="0" />
+      <LineId Id="556" Count="0" />
+      <LineId Id="550" Count="2" />
+      <LineId Id="555" Count="0" />
+      <LineId Id="553" Count="1" />
+      <LineId Id="548" Count="0" />
       <LineId Id="373" Count="0" />
       <LineId Id="314" Count="0" />
-      <LineId Id="316" Count="2" />
+      <LineId Id="318" Count="0" />
+      <LineId Id="542" Count="0" />
+      <LineId Id="544" Count="0" />
+      <LineId Id="575" Count="0" />
+      <LineId Id="545" Count="1" />
       <LineId Id="315" Count="0" />
+      <LineId Id="543" Count="0" />
       <LineId Id="192" Count="0" />
       <LineId Id="320" Count="1" />
       <LineId Id="433" Count="1" />
+      <LineId Id="557" Count="0" />
+      <LineId Id="559" Count="5" />
+      <LineId Id="574" Count="0" />
+      <LineId Id="565" Count="6" />
+      <LineId Id="558" Count="0" />
       <LineId Id="322" Count="0" />
       <LineId Id="193" Count="5" />
       <LineId Id="156" Count="0" />
