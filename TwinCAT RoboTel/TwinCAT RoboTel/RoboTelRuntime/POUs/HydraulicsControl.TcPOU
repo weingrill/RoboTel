@@ -76,7 +76,6 @@ VAR
 	suction_timer : FB_Timer;
 	// MQTT Message
 	sPayloadPub: STRING(255);
-	rftrig:		FB_RFTRIG;
 	StatusWord, LastStatus:	UDINT;
 END_VAR
 ]]></Declaration>
