@@ -84,7 +84,7 @@ VAR
 	Axis_SetpointDisable:	MC_ExtSetPointGenDisable;
 	bStop: 			BOOL;
 	StopAllowed:	BOOL;
-	wasEnabled:		BOOL;
+	//wasEnabled:		BOOL;
 	// Direction fot Axis_SetpointFeed
 	Direction:		DINT;
 	Acceleration:	LREAL := 1.0;

@@ -33,7 +33,7 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	//	offset TO current tracking point on axis tau, degrees, double
 //	tauoffset: LREAL;
 	// 	offset TO current tracking point on axis dec, degrees, double 
-	deoffset: LREAL;
+	//deoffset: LREAL;
 	// initiates hard-reset on all axis
 	reset:		BOOL;
 	// absolute offset for elevation
@@ -91,15 +91,6 @@ VAR
 	power_timeout:	TON;
 	
 	
-	CalibrationEvent,
-	DeclinationCalEvent,
-	DeclinationErrorEvent,
-	DeclinationLagEvent,
-	DeclinationAxisEvent,
-	HourangleCalEvent,
-	HourangleErrorEvent,
-	HourangleLagEvent,
-	HourangleAxisEvent,
 	TCSpowerEvent,
 	TCSgohomeEvent,
 	TCSparkEvent,
@@ -121,7 +112,7 @@ VAR_OUTPUT
 	// indicates an error on one of the components
 	error:	BOOL;	
 	//number OF errors encountered
-	errnr:	UINT;	
+	//errnr:	UINT;	
 	//TRUE, IF telescope is in fast-MOVE phase (includes pole-swap)
 	sliding: BOOL;	
 	//TRUE, IF telescope is on tracking position AND currently tracking.
@@ -129,15 +120,15 @@ VAR_OUTPUT
 	//TRUE, IF telescope is AT rest.
 	stopped: BOOL;	
 	// Current tau/dec. in degrees.
-	decurrent, taucurrent: LREAL; 
+	//decurrent, taucurrent: LREAL; 
 	// (all degrees, azimuth 0=S, W>0)
-	racurrent: LREAL; 
+	//racurrent: LREAL; 
 	elevation_current:	LREAL;
 	azimuth_current:	LREAL;
 	//	(time in sec. to reach the goto/track position)
 	slewtime: LREAL; 
 	// 	(TIME in sec. available UNTIL pole-swap necessary).
-	tracktime: LREAL;	
+	//tracktime: LREAL;	
 	// True: telescope is calibrated
 	homed: BOOL;
 END_VAR
@@ -153,8 +144,8 @@ VAR CONSTANT
 	latitude: LREAL := 52.404940;
 	// telescope site height above sea level: estimated
 	altitude: LREAL := 33.0;
-	siderial_velocity: LREAL := 360.0 / 86164.099;
-	position_velocity: LREAL := 1.0;
+	//siderial_velocity: LREAL := 360.0 / 86164.099;
+	//position_velocity: LREAL := 1.0;
 	elevation_park: LREAL := 70.0;
 	azimuth_park: LREAL := 190.0;
 
@@ -263,7 +254,7 @@ ELSE
 	DerotatorVelocity := 10.0;
 END_IF
 		
-poweronwarning(IN := power OR (NOT ElevationControl.enable AND HydraulicsControl.brake_open), PT := T#250MS, Q => GVL_Telescope.horn);
+poweronwarning(IN := power OR (NOT ElevationControl.enable AND HydraulicsControl.brake_open), PT := T#250MS);
 poweron(CLK := power);
 poweroff(CLK := power);
 poweron_reset(IN := power AND NOT PendantControl.manual, PT := T#50MS);
@@ -514,6 +505,7 @@ tracking := ElevationControl.Tracking AND AzimuthElevationControl.Tracking;
 stopped :=  ElevationControl.ElevationAxis.StandStill AND AzimuthElevationControl.AzimuthAxis.StandStill;
 homed := ElevationControl.Calibrated AND AzimuthElevationControl.calibrated AND DerotatorControl.Calibrated;
 
+GVL_Telescope.horn := poweronwarning.Q OR Pendantcontrol.horn;
 
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
@@ -819,6 +811,7 @@ TCSreadyEvent(	Trigger := power AND ready,
       <LineId Id="4256" Count="0" />
       <LineId Id="4255" Count="0" />
       <LineId Id="4257" Count="0" />
+      <LineId Id="6942" Count="0" />
       <LineId Id="5167" Count="0" />
       <LineId Id="4662" Count="3" />
       <LineId Id="4837" Count="2" />

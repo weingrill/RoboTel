@@ -16,7 +16,7 @@ VAR CONSTANT
 	// Earth's angular rotation frequency in [deg/s]
 	Omega: LREAL := 4.178E-3;
 	d2r:	LREAL := PI/180.0;
-	r2d:	LREAL := 180.0/PI;
+	//r2d:	LREAL := 180.0/PI;
 END_VAR
 ]]></Declaration>
     <Implementation>

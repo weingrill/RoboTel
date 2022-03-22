@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="FB_HOR2EQ" Id="{a0256175-d56a-4186-a182-fc276b1c60fe}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_HOR2EQ
 VAR_INPUT
@@ -46,9 +46,9 @@ VAR
 	ddec2: LREAL;
 END_VAR
 VAR CONSTANT
-	d2r:	LREAL := PI/180.0;
-	r2d:	LREAL := 180.0/PI;
-	h2r:	LREAL := PI/12.0;
+	//d2r:	LREAL := PI/180.0;
+	//r2d:	LREAL := 180.0/PI;
+	//h2r:	LREAL := PI/12.0;
 	h2d:	LREAL := 15.0;
 END_VAR]]></Declaration>
     <Implementation>

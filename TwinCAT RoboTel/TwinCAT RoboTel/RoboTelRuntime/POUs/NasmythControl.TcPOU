@@ -40,7 +40,7 @@ VAR
 	NasmythLeftEvent:	FB_Eventlog;
 	NasmythRightEvent:	FB_Eventlog;
 	Nasmyth_Timeout:	TON := (PT := T#10S);
-	MQTTTimer: 			TON := (PT:=T#10S);
+	//MQTTTimer: 			TON := (PT:=T#10S);
 	// MQTT String
 	sPayloadPub: STRING(255);
 END_VAR

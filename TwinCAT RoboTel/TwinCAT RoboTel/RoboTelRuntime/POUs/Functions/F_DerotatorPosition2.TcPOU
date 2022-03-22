@@ -21,8 +21,8 @@ END_VAR
 VAR CONSTANT
 	d2r:	LREAL := PI/180.0;
 	r2d:	LREAL := 180.0/PI;
-	h2r:	LREAL := PI/12.0;
-	h2d:	LREAL := 15.0;
+	//h2r:	LREAL := PI/12.0;
+	//h2d:	LREAL := 15.0;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[// calculate the parallactic angle

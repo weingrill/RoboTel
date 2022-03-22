@@ -17,7 +17,7 @@ VAR_GLOBAL
 	bVeloHigh 				AT%I*:	BOOL;
 	// PLC NC command break
 	bBreak 					AT%I*:	BOOL;
-	bBreakInv 				AT%I*:	BOOL;
+	//bBreakInv 				AT%I*:	BOOL;
 	
 	// enable the azimuth inverter
 	Inverter_Enable 		AT%Q*:	BOOL;
@@ -33,10 +33,9 @@ VAR_GLOBAL
 	// Azimuth home signal
 	Azimut_home				AT%I*:	BOOL;
 	
-	WatchDogReset:					BOOL;
 	ActVelo					AT%I*:	LREAL;
 	// stop signal
-	Stop:							BOOL;
+	//Stop:							BOOL;
 	// Dome Axis Reference for the azimuth
 	DomeAxisRef: 					AXIS_REF;
 	// ControlWord to be read by the dome PLC

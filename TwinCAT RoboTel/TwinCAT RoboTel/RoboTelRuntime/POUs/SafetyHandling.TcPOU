@@ -4,7 +4,7 @@
     <Declaration><![CDATA[PROGRAM SafetyHandling
 VAR
 	restart_safety 	: TP;
-	safety_state 	: RS;
+	//safety_state 	: RS;
 	start_delay 	: TON;
 	ErrAck_Pulse	: TP;
 	SafetyLog		: FB_EventLog;

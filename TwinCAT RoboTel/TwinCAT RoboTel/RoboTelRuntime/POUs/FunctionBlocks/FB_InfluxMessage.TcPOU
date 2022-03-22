@@ -15,8 +15,8 @@ VAR_OUTPUT
 	value:			STRING(255) := '';
 END_VAR
 VAR
-	space_position:		INT;
-	equial_position:	INT;
+	//space_position:		INT;
+	//equial_position:	INT;
 	comma_position:		INT;
 	measurement_tags:	STRING(255);
 	parameter_value: 	STRING(255);
