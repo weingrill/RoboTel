@@ -42,10 +42,6 @@ temperature_tube 	:= GVL_Telescope.temperature_tube / 100.0;
 temperature_bearing1 := GVL_Telescope.temperature_bearing1 / 100.0;
 temperature_bearing2 := GVL_Telescope.temperature_bearing2 / 100.0;
 
-pressure_voltage := F_YREAL(GVL_Telescope.pressure_Dewar, 0, 32767, 0.0, 10.0);
-pressure_Dewar := LREAL_TO_REAL(EXPT(10.0, (1.5*pressure_voltage - 12.0)));
-temperature_Dewar := GVL_Telescope.temperature_Dewar / 100.0;
-
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 
@@ -101,8 +97,7 @@ END_IF
       <LineId Id="5" Count="0" />
       <LineId Id="40" Count="0" />
       <LineId Id="82" Count="0" />
-      <LineId Id="84" Count="1" />
-      <LineId Id="48" Count="3" />
+      <LineId Id="50" Count="1" />
       <LineId Id="53" Count="3" />
       <LineId Id="87" Count="0" />
       <LineId Id="57" Count="0" />
