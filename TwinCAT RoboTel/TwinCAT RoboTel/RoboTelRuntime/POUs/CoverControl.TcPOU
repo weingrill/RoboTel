@@ -102,6 +102,7 @@ open2_delay(IN := open AND NOT cover3_closed,
 close3_delay(IN := close AND NOT cover2_opened,
 			PT := T#1500MS);
 
+(*
 Cover1_Control.enable := FALSE;
 Cover2_Control.enable := FALSE;
 Cover3_Control.enable := FALSE;
@@ -114,7 +115,7 @@ Cover3_Control.open := FALSE;
 Cover1_Control.close := FALSE;
 Cover2_Control.close := FALSE;
 Cover3_Control.close := FALSE;
-
+*)
 
 
 CASE active_cover OF
@@ -155,7 +156,7 @@ ELSE
 	Cover2_control.close := close;
 	Cover3_control.close := close3_delay.Q;
 	// close cover 1 if cover 3 is closed;
-	Cover1_control.close :=	Cover3_closed;	
+	Cover1_control.close :=	close AND Cover3_closed AND NOT Cover1_closed;	
 	Ready := Cover1_Control.Ready AND Cover2_Control.Ready AND Cover3_Control.Ready;
 END_CASE
 		
@@ -282,6 +283,7 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="33" Count="0" />
       <LineId Id="277" Count="0" />
       <LineId Id="35" Count="1" />
+      <LineId Id="931" Count="0" />
       <LineId Id="877" Count="0" />
       <LineId Id="887" Count="0" />
       <LineId Id="899" Count="0" />
