@@ -39,9 +39,11 @@ END_VAR
 VAR
 	ElevationAxis:			FB_Axis2;
 	ElevationCalibration: 	MC_SetPosition;
+	fbSoEReset: 			FB_SoEReset;
+	bSoEReset : BOOL;
 	// delay until commutator angle is measured
 	readydelay:				TON;
-	HomeDelay:				FB_TONTP;
+	getlastposition:		BOOL := TRUE;
 	ElevationAxisEvent: 	FB_Eventlog;
 	ElevationBrakeEvent: 	FB_Eventlog;
 	HighElevationEvent: 	FB_Eventlog;
@@ -52,12 +54,12 @@ VAR
 	ReadParameter:		MC_ReadParameter;
 END_VAR
 VAR CONSTANT
-	// reference position for homing
-	homing_position:		LREAL := 91.0; // 95.0?
 	// current position of the calibration cam. Apply an offset here if necessary
 	calibration_position:	LREAL := 45.0;
 END_VAR
-
+VAR PERSISTENT
+	last_position:	LREAL := -1.0;
+END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[// limit the position input to a sane value
@@ -90,14 +92,7 @@ END_IF
 IF MoveAxis THEN
 	Tracking := FALSE;
 END_IF
-(*
-HomeDelay(IN := Calibrated, PT1 := T#5S, PT2 := T#100MS);
 
-IF HomeDelay.Q THEN
-	position := calibration_position;
-	MoveAxis := TRUE;
-END_IF
-*)
 // if NOT Enabled and ActVelo>1 then issue a warning
 warning := NOT enable AND GVL_Telescope.ElevationAxisRef.NcToPlc.ActVelo>2.0;
 
@@ -105,14 +100,6 @@ warning := NOT enable AND GVL_Telescope.ElevationAxisRef.NcToPlc.ActVelo>2.0;
 MC_SetAcceptBlockedDriveSignal(
 	Axis := GVL_Telescope.ElevationAxisRef, 
 	Enable := HomeAxis);
-
-// perform recalibration on encoder reference signal (positive latch of elevation probe)
-(*
-ElevationCalibration(
-	Axis := GVL_Telescope.ElevationAxisRef,
-	Execute := GVL_Telescope.Elevation_Probe>0 AND Calibrated,
-	Position := calibration_position); // TODO: Options := ST_SetPositionOptions.ClearPositionLag
-*)
 
 IF Tracking AND ABS(position - act_position) > 1.0 THEN
 	MoveAxis := TRUE;
@@ -147,6 +134,31 @@ END_IF
 IF ElevationAxis.ResetDone THEN
 	reset := FALSE;
 END_IF
+
+ElevationCalibration(Axis := GVL_Telescope.ElevationAxisRef,
+	Execute := getlastposition AND last_position>=0.0 AND NOT Calibrated,
+	Position := last_position);
+
+IF ElevationCalibration.Done THEN
+	getlastposition := FALSE;
+END_IF
+
+IF Calibrated THEN
+	last_position := act_position;
+END_IF
+	
+bSoEReset := GVL_Telescope.Elevation_diagnostic = 16#0000F10B OR GVL_Telescope.Elevation_diagnostic = 16#0000F601;
+
+IF bSoEReset THEN
+	fbSoEReset(
+		Axis := GVL_Telescope.ElevationAxisRef,
+		Execute := TRUE,
+		Timeout := DEFAULT_ADS_TIMEOUT);
+ 	IF NOT fbSoEReset.Busy THEN
+		fbSoEReset(Axis := GVL_Telescope.ElevationAxisRef, Execute := FALSE);
+		bSoEReset := FALSE;
+	END_IF
+END_IF 
 
 readydelay(IN :=  HydraulicsControl.brake_open, PT := T#6000MS, Q=> ready);
 
@@ -218,13 +230,6 @@ CalibrationEvent(
       <LineId Id="772" Count="0" />
       <LineId Id="630" Count="0" />
       <LineId Id="773" Count="1" />
-      <LineId Id="639" Count="0" />
-      <LineId Id="638" Count="0" />
-      <LineId Id="633" Count="0" />
-      <LineId Id="497" Count="0" />
-      <LineId Id="627" Count="0" />
-      <LineId Id="629" Count="0" />
-      <LineId Id="628" Count="0" />
       <LineId Id="637" Count="0" />
       <LineId Id="636" Count="0" />
       <LineId Id="394" Count="0" />
@@ -233,13 +238,6 @@ CalibrationEvent(
       <LineId Id="243" Count="0" />
       <LineId Id="291" Count="1" />
       <LineId Id="381" Count="0" />
-      <LineId Id="280" Count="0" />
-      <LineId Id="619" Count="0" />
-      <LineId Id="283" Count="0" />
-      <LineId Id="299" Count="0" />
-      <LineId Id="284" Count="1" />
-      <LineId Id="614" Count="0" />
-      <LineId Id="761" Count="0" />
       <LineId Id="763" Count="2" />
       <LineId Id="762" Count="0" />
       <LineId Id="615" Count="0" />
@@ -252,7 +250,19 @@ CalibrationEvent(
       <LineId Id="192" Count="2" />
       <LineId Id="135" Count="0" />
       <LineId Id="214" Count="11" />
+      <LineId Id="1098" Count="0" />
+      <LineId Id="1100" Count="1" />
+      <LineId Id="1099" Count="0" />
+      <LineId Id="1103" Count="0" />
       <LineId Id="612" Count="0" />
+      <LineId Id="1105" Count="1" />
+      <LineId Id="1108" Count="3" />
+      <LineId Id="1104" Count="0" />
+      <LineId Id="1115" Count="0" />
+      <LineId Id="1119" Count="5" />
+      <LineId Id="1126" Count="3" />
+      <LineId Id="1118" Count="0" />
+      <LineId Id="1112" Count="0" />
       <LineId Id="386" Count="0" />
       <LineId Id="969" Count="0" />
       <LineId Id="971" Count="0" />
