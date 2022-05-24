@@ -99,7 +99,7 @@ VAR
 	getlastposition:	BOOL := TRUE;
 END_VAR
 VAR CONSTANT
-	tolerance:				LREAL := 3.0;
+	tolerance:				LREAL := 5.0;
 	calibration_position:	LREAL := 172.5;
 	home_position:			LREAL := 180.0;
 END_VAR
@@ -117,6 +117,7 @@ The third section handles the communications via ADS with the dome PLC.
 *)
 
 DomeLowLevelControl(enable := GVL_Safety.Run);
+enable := GVL_Safety.Run;
 
 // if we are calibrated or encounter an error while calibrating, deactivate homing
 IF DomeAxis.Calibrated OR Error THEN
@@ -215,8 +216,8 @@ IF CloseDome THEN
 	GVL_Dome.DomeControlWord.1 := FALSE; // CloseFlap
 	GVL_Dome.DomeControlWord.2 := FALSE; // CloseSlit
 ELSIF OpenDome THEN
-	GVL_Dome.DomeControlWord.1 := TRUE; // OpenFlap
-	GVL_Dome.DomeControlWord.2 := TRUE; // OpenSlit
+	GVL_Dome.DomeControlWord.3 := TRUE; // OpenFlap
+	GVL_Dome.DomeControlWord.4 := TRUE; // OpenSlit
 END_IF
 
 ReadCycle(IN := TRUE);
@@ -355,6 +356,7 @@ CloseDomeEvent(
       <LineId Id="1010" Count="0" />
       <LineId Id="1009" Count="0" />
       <LineId Id="1425" Count="0" />
+      <LineId Id="2356" Count="0" />
       <LineId Id="2354" Count="0" />
       <LineId Id="1216" Count="0" />
       <LineId Id="955" Count="0" />
