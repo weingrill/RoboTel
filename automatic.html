@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Remote or Robotic Operation &#8212; RoboTel Telescope Firmware  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
@@ -43,7 +44,7 @@
           <div class="body" role="main">
             
   <section id="remote-or-robotic-operation">
-<h1>Remote or Robotic Operation<a class="headerlink" href="#remote-or-robotic-operation" title="Permalink to this headline">¶</a></h1>
+<h1>Remote or Robotic Operation<a class="headerlink" href="#remote-or-robotic-operation" title="Permalink to this heading">¶</a></h1>
 <p>The telescope is primarily designed to be operated remotely or robotic. The main
 interface is the Beckhoff ADS connection to the <cite>TelescopeControl</cite> by setting the
 respective variables listed below. Since the ADS communication cycle is in the
@@ -56,11 +57,11 @@ order of tens of seconds this can be considered a realtime interface.</p>
 <li><p>The selector on the pendant control is in setting 15, 14 or 11.</p></li>
 </ol>
 <section id="api-description">
-<h2>API Description<a class="headerlink" href="#api-description" title="Permalink to this headline">¶</a></h2>
+<h2>API Description<a class="headerlink" href="#api-description" title="Permalink to this heading">¶</a></h2>
 <p>Since ADS does not implement protected variables, specific input and output
 variables have been defined.</p>
 <section id="input-variables">
-<h3>Input Variables<a class="headerlink" href="#input-variables" title="Permalink to this headline">¶</a></h3>
+<h3>Input Variables<a class="headerlink" href="#input-variables" title="Permalink to this heading">¶</a></h3>
 <ul>
 <li><p><cite>power</cite>: activates the the telescope.
 The telescope performs the following actions:</p>
@@ -101,7 +102,7 @@ for pumping the Dewar.</p></li>
 </ul>
 </section>
 <section id="output-variables">
-<h3>Output Variables<a class="headerlink" href="#output-variables" title="Permalink to this headline">¶</a></h3>
+<h3>Output Variables<a class="headerlink" href="#output-variables" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p><cite>ready</cite>: signals that the last command has been executed and the telescope is
 ready for a new command.</p></li>
@@ -166,7 +167,7 @@ ascension and declination position.</p></li>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -189,7 +190,7 @@ ascension and declination position.</p></li>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jörg Weingrill.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.1.
     </div>
   </body>
 </html>

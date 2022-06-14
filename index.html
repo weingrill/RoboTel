@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>RoboTel Firmware documentation &#8212; RoboTel Telescope Firmware  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
@@ -39,7 +40,7 @@
           <div class="body" role="main">
             
   <section id="robotel-firmware-documentation">
-<h1>RoboTel Firmware documentation<a class="headerlink" href="#robotel-firmware-documentation" title="Permalink to this headline">¶</a></h1>
+<h1>RoboTel Firmware documentation<a class="headerlink" href="#robotel-firmware-documentation" title="Permalink to this heading">¶</a></h1>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -96,7 +97,7 @@
 </ul>
 </div>
 <section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">¶</a></h2>
 <p>RoboTel was build by Halfmann and upgraded by AIP in 2020/2021. All important
 electronic components have been replaced by Beckhoff modules.
 A central Beckhoff PLC controls the servo controllers, DC controllers,
@@ -117,11 +118,11 @@ There are several levels of protection to prevent remote operation of the telesc
 TwinCAT3 IDE in debugging mode.</em></p>
 </section>
 <section id="logical-structure">
-<h2>Logical Structure<a class="headerlink" href="#logical-structure" title="Permalink to this headline">¶</a></h2>
+<h2>Logical Structure<a class="headerlink" href="#logical-structure" title="Permalink to this heading">¶</a></h2>
 <p>The telescope electronics have been split up into several components for security,
 safety and design reasons.</p>
 <section id="main-cabinet">
-<h3>Main Cabinet<a class="headerlink" href="#main-cabinet" title="Permalink to this headline">¶</a></h3>
+<h3>Main Cabinet<a class="headerlink" href="#main-cabinet" title="Permalink to this heading">¶</a></h3>
 <p>The main cabinet contains the main PLC and the high voltage components for the
 servo drivers, which are also situated here. Azimuth, elevation and de-rotator
 drives are powered and controlled from here as well as the hydraulic system.
@@ -141,31 +142,31 @@ here using EtherCAT over fibre connections.</p>
 </ul>
 </section>
 <section id="telescope-cabinet">
-<h3>Telescope Cabinet<a class="headerlink" href="#telescope-cabinet" title="Permalink to this headline">¶</a></h3>
+<h3>Telescope Cabinet<a class="headerlink" href="#telescope-cabinet" title="Permalink to this heading">¶</a></h3>
 <p>The small cabinet at the telescope contains all DC drivers for the covers, M2(focus)
 and M3 (Nasmyth mirror). It also interfaces all temperature sensors and digital
 inputs for the limit switches.</p>
 <p>An EtherCAT fibre link connects to the dome control.</p>
 </section>
 <section id="dome-control">
-<h3>Dome Control<a class="headerlink" href="#dome-control" title="Permalink to this headline">¶</a></h3>
+<h3>Dome Control<a class="headerlink" href="#dome-control" title="Permalink to this heading">¶</a></h3>
 <p>The dome azimuth and the dome shutters are controlled from here. See also <a class="reference internal" href="dome.html"><span class="doc">Dome Operation</span></a></p>
 </section>
 <section id="weather-station">
-<h3>Weather Station<a class="headerlink" href="#weather-station" title="Permalink to this headline">¶</a></h3>
+<h3>Weather Station<a class="headerlink" href="#weather-station" title="Permalink to this heading">¶</a></h3>
 <p>The weather station has analog inputs for the wind, temperature und humidity
 sensors and a digital input for the rain sensor.</p>
 </section>
 </section>
 <section id="design-issues">
-<h2>Design issues<a class="headerlink" href="#design-issues" title="Permalink to this headline">¶</a></h2>
+<h2>Design issues<a class="headerlink" href="#design-issues" title="Permalink to this heading">¶</a></h2>
 <p>The RoboTel telescope has some design flaws originating from the original design
 by Halfmann. See <a class="reference internal" href="issues.html"><span class="doc">Design Issues</span></a> for a detailed analysis and potential upgrades of
 the system.</p>
 </section>
 </section>
 <section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h1>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
@@ -219,7 +220,7 @@ the system.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -239,7 +240,7 @@ the system.</p>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Jörg Weingrill.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.5.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.0.1.
     </div>
   </body>
 </html>
