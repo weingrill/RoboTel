@@ -11,10 +11,12 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[STRING_TO_APPEND := CONCAT(STRING_TO_APPEND, STRING1);
+      <ST><![CDATA[// TODO: replace by CONCAT2
+STRING_TO_APPEND := CONCAT(STRING_TO_APPEND, STRING1);
 APPEND := CONCAT(STRING_TO_APPEND, STRING2);]]></ST>
     </Implementation>
     <LineIds Name="APPEND">
+      <LineId Id="20" Count="0" />
       <LineId Id="11" Count="0" />
       <LineId Id="7" Count="0" />
     </LineIds>

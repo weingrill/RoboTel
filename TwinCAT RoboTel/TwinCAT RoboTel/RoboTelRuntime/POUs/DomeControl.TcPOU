@@ -213,9 +213,13 @@ GVL_Dome.Light := Light AND LightTimer.Q;
 GVL_Dome.DomeControlWord.0 := TRUE;
 IF CloseDome THEN
 	OpenDome := FALSE;
+	GVL_Dome.DomeControlWord.1 := TRUE; // CloseFlap
+	GVL_Dome.DomeControlWord.2 := TRUE; // CloseSlit
+	GVL_Dome.DomeControlWord.3 := FALSE; // OpenFlap
+	GVL_Dome.DomeControlWord.4 := FALSE; // OpenSlit
+ELSIF OpenDome THEN
 	GVL_Dome.DomeControlWord.1 := FALSE; // CloseFlap
 	GVL_Dome.DomeControlWord.2 := FALSE; // CloseSlit
-ELSIF OpenDome THEN
 	GVL_Dome.DomeControlWord.3 := TRUE; // OpenFlap
 	GVL_Dome.DomeControlWord.4 := TRUE; // OpenSlit
 END_IF
@@ -227,7 +231,10 @@ IF ReadCycle.Q THEN
 				BUSY => bBusy,
 				ERR =>	bError,
 				ERRID => nErrID);
-	IF NOT bBusy THEN
+	IF bBusy THEN
+		// reset the read command
+		fbReadReq(READ := FALSE);
+	ELSE
 		// read the variable
 		fbReadReq(  IDXGRP := 16#4020, 
 					IDXOFFS := 0, 
@@ -238,11 +245,9 @@ IF ReadCycle.Q THEN
 					ERR =>	bError,
 					ERRID => nErrID);
 		// restart the read cycle
-		ReadCycle(IN := FALSE);
-	ELSE
-		// reset the read command
-		fbReadReq(READ := FALSE);
+		ReadCycle(IN := FALSE);		
 	END_IF
+	
 	IF NOT bError THEN
 		DomeValid  := DomeStatusWord.0;
 		DomeOpened := DomeStatusWord.1;
@@ -340,12 +345,12 @@ DomeClosedEvent(
 	OnMessage := 	'Dome is closed.');
 	
 OpenDomeEvent(
-	Trigger := 		DomeOpened, 
+	Trigger := 		OpenDome, 
 	Level := 		ADSLOG_MSGTYPE_WARN,
 	OnMessage := 	'Dome is opening.');
 	
 CloseDomeEvent(
-	Trigger := 		DomeClosed, 
+	Trigger := 		CloseDome, 
 	Level := 		ADSLOG_MSGTYPE_HINT,
 	OnMessage := 	'Dome is closing.');]]></ST>
     </Implementation>
@@ -436,7 +441,9 @@ CloseDomeEvent(
       <LineId Id="1135" Count="0" />
       <LineId Id="1145" Count="0" />
       <LineId Id="1345" Count="1" />
+      <LineId Id="2463" Count="1" />
       <LineId Id="1138" Count="0" />
+      <LineId Id="2461" Count="1" />
       <LineId Id="1146" Count="1" />
       <LineId Id="1137" Count="0" />
       <LineId Id="756" Count="0" />
@@ -446,13 +453,13 @@ CloseDomeEvent(
       <LineId Id="2049" Count="2" />
       <LineId Id="2004" Count="0" />
       <LineId Id="2013" Count="0" />
+      <LineId Id="2467" Count="2" />
       <LineId Id="2068" Count="0" />
       <LineId Id="2041" Count="7" />
       <LineId Id="2069" Count="0" />
-      <LineId Id="2014" Count="1" />
-      <LineId Id="2070" Count="0" />
-      <LineId Id="2016" Count="0" />
+      <LineId Id="2014" Count="0" />
       <LineId Id="2021" Count="0" />
+      <LineId Id="2470" Count="0" />
       <LineId Id="2052" Count="7" />
       <LineId Id="2063" Count="0" />
       <LineId Id="2065" Count="1" />
