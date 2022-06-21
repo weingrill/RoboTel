@@ -1,0 +1,149 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Transformer" Id="{0a280e03-5b4e-47d4-8865-661b3df896f8}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM Transformer
+VAR
+	// watchdog for trafo softstarter
+	power_watchdog: 	TON;
+	power_timer:		FB_timer;
+	startup_timeout:	TIME := T#2S;
+	power_error_state:	SR;
+	// trafo failed to start after timeout
+	power_failure:		BOOL;
+	reset_error:		BOOL := FALSE;
+	softstart_trafo:	BOOL;
+	PowerEvent:			FB_EventLog;
+	PowerLog:			FB_EventLog;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[power_timer(bStart := GVL_Main.softstart_trafo, bStop := power_OK);
+power_watchdog(IN := GVL_Main.softstart_trafo AND NOT power_OK,
+				PT := startup_timeout,
+				Q => power_failure);
+power_error_state(SET1 := power_failure, RESET := reset_error);
+
+GVL_Main.softstart_trafo := softstart_trafo AND NOT error;
+
+PowerEvent(	
+	Trigger := 		power_failure, 
+	Level := 		ADSLOG_MSGTYPE_ERROR,
+	FormatString :=	'%s',
+	OnMessage := 	'Servo power FAILURE!',
+	OffMEssage := 	'Servo power OK');
+PowerLog(	
+	Trigger := 		power_OK, 
+	Level := 		ADSLOG_MSGTYPE_HINT,
+	FormatString :=	'%s',
+	OnMessage := 	'Power is ON',
+	OffMEssage := 	'Power is OFF');
+]]></ST>
+    </Implementation>
+    <Property Name="error" Id="{4119c9eb-4956-4e1d-9bb0-76d34951f705}">
+      <Declaration><![CDATA[PROPERTY error : BOOL]]></Declaration>
+      <Get Name="Get" Id="{e45da732-7f2c-4a0e-907f-de39a5f0c547}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[error := power_error_state.Q1;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="power_ok" Id="{b0563a1e-dd5f-461f-9fae-5a1c236a42b8}">
+      <Declaration><![CDATA[PROPERTY power_ok : BOOL
+// indicates the power state for the AX5000
+	]]></Declaration>
+      <Get Name="Get" Id="{5f1a2942-c9ab-478b-ae9d-c8ca63749554}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[power_ok := GVL_main.power_available;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="reset" Id="{b8036108-f586-442e-9cc9-919ffec9b1dd}">
+      <Declaration><![CDATA[METHOD reset : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF error THEN
+	reset_error := TRUE;
+ELSE
+	reset_error := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="start" Id="{a80781e7-508e-41b1-b8d1-4bd694cc587f}">
+      <Declaration><![CDATA[METHOD start : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[softstart_trafo := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="startup_time" Id="{8d0359b7-73eb-49bc-a2c4-6389e6c8a8c3}">
+      <Declaration><![CDATA[PROPERTY startup_time : TIME]]></Declaration>
+      <Get Name="Get" Id="{9d98fddd-76c6-4d13-856d-d066f5e879ac}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[startup_time := power_timer.tDifference;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{2a464548-0a55-47a9-a440-6ca3ebe43469}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[startup_timeout := startup_time;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="stop" Id="{615c1e3c-bdce-41f6-a0af-3d3824c0fb9b}">
+      <Declaration><![CDATA[METHOD stop : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[softstart_trafo := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Transformer">
+      <LineId Id="7" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="26" Count="12" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+    <LineIds Name="Transformer.error.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Transformer.power_ok.Get">
+      <LineId Id="5" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Transformer.reset">
+      <LineId Id="5" Count="4" />
+    </LineIds>
+    <LineIds Name="Transformer.start">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Transformer.startup_time.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Transformer.startup_time.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Transformer.stop">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

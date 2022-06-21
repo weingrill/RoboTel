@@ -20,6 +20,7 @@ VAR
 	// calculated velocity
 	velocity:		INT;
 	velocity_percentage:	REAL;
+	lrVelocity:		LREAL;
 	// issue temperature warning
 	TemperatureWarning: FB_EventLog;
 	MQTTTimer:		TON := (PT:=T#5S);
@@ -32,14 +33,15 @@ END_VAR
       <ST><![CDATA[(* Upper telescope cabinet fan control *)
 
 // enable the fan as soon as main cabinet is ready AND temperature exceeds ambient temperature
-Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := MAIN.power_OK AND NOT Reset AND (temperature > Environment.TemperatureDome);
+Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Enable := Transformer.power_OK AND NOT Reset AND (temperature > Environment.TemperatureDome);
 // reset on MAIN reset
 Fan_axis.MDP5001_511_733_Output.MDP5001_733_Control_1.Reset := reset OR softreset;
 // calculate the temperatur from analog input
 temperature := GVL_Telescope.temperature_cabinet / 100.0;
 
 // set the fan velocity as a function of temperature difference
-velocity := LREAL_TO_INT(F_YREAL(temperature - Environment.TemperatureDome , 2.5, 5.0, 0, 32767));
+lrvelocity:= F_YREAL(temperature - Environment.TemperatureDome, 1.0, 2.0, 0, 32767) ;
+velocity := LREAL_TO_INT(lrvelocity);
 
 velocity_percentage := 100.0*INT_TO_REAL(velocity)/32767.0;
 // apply the calculated velocity
@@ -81,6 +83,7 @@ TemperatureWarning(Trigger := temperature >= 40.0,
       <LineId Id="32" Count="0" />
       <LineId Id="239" Count="0" />
       <LineId Id="247" Count="0" />
+      <LineId Id="275" Count="0" />
       <LineId Id="244" Count="0" />
       <LineId Id="238" Count="0" />
       <LineId Id="196" Count="0" />
