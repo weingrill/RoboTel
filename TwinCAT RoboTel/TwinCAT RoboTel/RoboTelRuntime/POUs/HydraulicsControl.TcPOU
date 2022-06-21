@@ -11,6 +11,8 @@ VAR_INPUT
 	open_brake:	BOOL := FALSE;
 	// command to open the brake
 	close_brake: BOOL;
+	// reset any hydraulics error
+	reset: 		BOOL;
 END_VAR
 VAR_OUTPUT
 	// status of the brake: is the brake open?
@@ -42,7 +44,7 @@ VAR_OUTPUT
 	// suction pump is running
 	suction_running :	BOOL := FALSE;
 	// error condition
-	error: BOOL;
+	error: 				BOOL;
 END_VAR
 VAR
 	// monitors the pressure of the pump is running
@@ -56,11 +58,13 @@ VAR
 	// represents the state of the main pump
 	oil_pump_state:		RS;
 	// represents the state of the brake
-	brake_state: RS;
+	brake_state: 		RS;
 	// wait for the brake to open after pressure has been established
 	brake_open_delay:	TON;
 	// report brake opend after a short delay
 	brake_opened_delay:	TON;
+	// error state (set dominant)
+	error_state:	SR;
 	HydraulicsLog,
 	PumpLog,
 	ReserveLog,
@@ -92,7 +96,6 @@ Main control Logic for the Hydraulics system
 oil_low := NOT GVL_Hydraulics.oil_low;
 oil_high := NOT GVL_Hydraulics.oil_high;
 oil_warning := GVL_Hydraulics.oil_reserve;
-// Michi Email 22.10.2020 True = OK
 oil_pressure_OK := GVL_Hydraulics.oil_pressure_OK;
 oil_filter_dirty := NOT GVL_Hydraulics.oilfilter_dirty;
 oil_cold := NOT GVL_Hydraulics.oil_undertemperature;
@@ -104,13 +107,12 @@ IF stop THEN
 	start := FALSE;
 END_IF
 
+error_state(SET1 := pressure_failure OR	suction_failure OR hydraulics_failure OR oil_low,
+			RESET := reset,
+			Q1 => error);
+
 oil_pump_state(SET := start,
-				RESET1 := stop OR
-						pressure_failure OR
-						suction_failure OR 
-						hydraulics_failure OR
-						oil_low OR
-						NOT MAIN.phase_available);
+				RESET1 := stop OR error OR NOT MAIN.phase_available);
 
 GVL_Hydraulics.oil_pump_enable := oil_pump_state.Q1;
 
@@ -151,7 +153,6 @@ IF brake_closed THEN
 	close_brake := FALSE;
 END_IF
 
-error := pressure_failure OR suction_failure OR oil_low;
 (* This is the end of the brake control section *)
 
 // measure suction pump cycle
@@ -299,13 +300,10 @@ BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
     </Implementation>
     <LineIds Name="HydraulicsControl">
       <LineId Id="308" Count="11" />
-      <LineId Id="454" Count="0" />
       <LineId Id="321" Count="5" />
       <LineId Id="702" Count="3" />
-      <LineId Id="333" Count="3" />
-      <LineId Id="493" Count="0" />
-      <LineId Id="1217" Count="0" />
-      <LineId Id="337" Count="1" />
+      <LineId Id="1388" Count="4" />
+      <LineId Id="334" Count="1" />
       <LineId Id="786" Count="0" />
       <LineId Id="340" Count="0" />
       <LineId Id="788" Count="0" />
@@ -336,9 +334,8 @@ BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
       <LineId Id="629" Count="0" />
       <LineId Id="695" Count="1" />
       <LineId Id="859" Count="0" />
-      <LineId Id="626" Count="0" />
       <LineId Id="555" Count="0" />
-      <LineId Id="547" Count="0" />
+      <LineId Id="1300" Count="0" />
       <LineId Id="350" Count="1" />
       <LineId Id="494" Count="0" />
       <LineId Id="352" Count="4" />

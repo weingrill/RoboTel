@@ -277,8 +277,8 @@ CASE Selection OF
 			HydraulicsEnable(
 				SET := enable, 
 				Q := Hydraulicscontrol.start);
-			Hydraulicscontrol.stop := reset OR NOT Hydraulicscontrol.start;
-			
+			Hydraulicscontrol.stop := NOT Hydraulicscontrol.start;
+			Hydraulicscontrol.reset := reset;
 			
 			IF up THEN
 				Hydraulicscontrol.open_brake := TRUE;
