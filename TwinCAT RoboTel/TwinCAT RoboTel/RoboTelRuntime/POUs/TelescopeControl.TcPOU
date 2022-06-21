@@ -9,33 +9,31 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 *)
 	
 	// boolean, true: Power on, false: power off
-	power: BOOL;
+	power: 		BOOL;
 	// boolean, true: go to home position, unset track/goto if active
-	gohome: BOOL;
+	gohome: 	BOOL;
 	// boolean, true: go into park position, ready to stow telescope, unset track/goto
-	park: BOOL;
-	// apparent right ascension, degrees, double
-	ra:	LREAL := (00.0 + 08.0/60.0 + 23.17/3600.0) *15.0;	
-	// apparent declination, degrees, double
-	de: LREAL := 29.0 + 05.0/60.0 + 26.99/3600.0;
+	park: 		BOOL;
 	// boolean, TRUE: MOVE telescope TO last ra/de AND start tracking. Set 'goto' TO FALSE, IF TRUE. FALSE: Stop tracking as soon as possible
-	track: BOOL;
-	// apparent hour angle, degrees, double, south=zero, west>0)
-//	tau: LREAL := 0.0;
+	track: 		BOOL;
 	// boolean, TRUE: MOVE telescope TO tau/de AND stop there. Set track TO FALSE, IF TRUE. FALSE: no effect.)
-	goto: BOOL;	
+	goto:		BOOL;	
 	// move the telescope to a given az-alt position
-	slew: BOOL;
+	slew:		BOOL;
 	// boolean, TRUE: Stop motion OF telescope immediately, set goto AND track TO FALSE. FALSE: Allow motion OF telescope again via track/goto).
-	stop: BOOL;	
+	stop:		BOOL;	
 	// internal command: telescope is moved to pumping position
-	pumping: BOOL;
-	//	offset TO current tracking point on axis tau, degrees, double
-//	tauoffset: LREAL;
-	// 	offset TO current tracking point on axis dec, degrees, double 
-	//deoffset: LREAL;
+	pumping:	BOOL;
 	// initiates hard-reset on all axis
 	reset:		BOOL;
+	// apparent right ascension, degrees, double
+	ra:			LREAL := (00.0 + 08.0/60.0 + 23.17/3600.0) *15.0;	
+	// apparent declination, degrees, double
+	de: 		LREAL := 29.0 + 05.0/60.0 + 26.99/3600.0;
+	// desired elevation of the telescope pointing 
+	elevation:	LREAL := 45.0;
+	// desired azimut of the telescope pointing 
+	azimuth:	LREAL := 320.0;
 	// absolute offset for elevation
 	elevation_offset:	LREAL := 0.0;
 	// absolute offset for azimuth
@@ -56,10 +54,6 @@ VAR
 	TCS_command: 	E_TCSCommand;
 	// current Julian Date calculated from system time
 	jd:	LREAL;
-	// desired elevation of the telescope pointing 
-	elevation:	LREAL := 45.0;
-	// desired azimut of the telescope pointing 
-	azimuth:	LREAL := 320.0;
 	// image derotation
 	derotation_calc:	LREAL;
 	// local siderial time calculated from Julian date
@@ -67,7 +61,7 @@ VAR
 	// values calulated when ra and dec are set by TCS
 	elevation_calc:	LREAL; 
 	azimuth_calc:	LREAL;
-	
+	// values calulated when azimuth and elevation are set by TCS
 	rightascension_calc:	LREAL;
 	declination_calc:	LREAL;
 	
@@ -274,7 +268,7 @@ IF power THEN
 		powerfailure := TRUE;
 		TCSpowerEvent.OnMessage := 'failure: brake clearing not set';
 		power := FALSE;
-	ELSIF NOT Main.power_OK THEN
+	ELSIF NOT Transformer.power_OK THEN
 		powerfailure := TRUE;
 		TCSpowerEvent.OnMessage := 'failure: main power failure';
 		power := FALSE;
