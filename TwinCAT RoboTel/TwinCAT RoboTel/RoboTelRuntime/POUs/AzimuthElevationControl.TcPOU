@@ -142,8 +142,9 @@ IF bSoEReset THEN
 		Axis := GVL_Telescope.AzimuthAxisRef,
 		Execute := TRUE,
 		Timeout := DEFAULT_ADS_TIMEOUT);
- 	IF NOT fbSoEReset.Busy THEN
+ 	IF fbSoEReset.Busy THEN
 		fbSoEReset(Axis := GVL_Telescope.AzimuthAxisRef, Execute := FALSE);
+	ELSE
 		bSoEReset := FALSE;
 	END_IF
 END_IF 
@@ -239,7 +240,10 @@ CalibrationEvent(
       <LineId Id="156" Count="0" />
       <LineId Id="177" Count="1" />
       <LineId Id="684" Count="0" />
-      <LineId Id="686" Count="11" />
+      <LineId Id="686" Count="7" />
+      <LineId Id="767" Count="0" />
+      <LineId Id="765" Count="0" />
+      <LineId Id="695" Count="2" />
       <LineId Id="685" Count="0" />
       <LineId Id="176" Count="0" />
       <LineId Id="158" Count="10" />
