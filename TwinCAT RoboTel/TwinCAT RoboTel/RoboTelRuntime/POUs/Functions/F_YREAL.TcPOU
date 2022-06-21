@@ -1,15 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.0">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="F_YREAL" Id="{de87cd9e-9e50-4d38-82bb-04f167b6bbb8}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION F_YREAL : REAL
 VAR_INPUT
 	fX:		LREAL;
 	fXmin:	REAL := 0.0;
 	fXmax:	REAL := 32767.0;
-	fYmin, fYmax:	REAL;
+	fYmin:	REAL := 0.0;
+	fYmax:	REAL := 1.0;
 END_VAR
 VAR
-	fgain,
+	fgain:		LREAL;
 	foffset:	LREAL;
 END_VAR
 ]]></Declaration>
