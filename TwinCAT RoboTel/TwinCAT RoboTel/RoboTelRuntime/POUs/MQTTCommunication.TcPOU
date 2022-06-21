@@ -80,10 +80,24 @@ IF fbMessageQueue.nQueuedMessages > 0 THEN
 					TelescopeControl.track := STRING_TO_BOOL(value);
 				ELSIF parameter = 'goto' THEN
 					TelescopeControl.goto := STRING_TO_BOOL(value);
+				ELSIF parameter = 'slew' THEN
+					TelescopeControl.slew := STRING_TO_BOOL(value);
+				ELSIF parameter = 'stop' THEN
+					TelescopeControl.stop := STRING_TO_BOOL(value);
 				ELSIF parameter = 'reset' THEN
 					TelescopeControl.reset := STRING_TO_BOOL(value);
 				ELSIF parameter = 'nasmyth' THEN
 					TelescopeControl.Nasmyth_port := STRING_TO_USINT(value);
+				ELSIF parameter = 'ra' THEN
+					TelescopeControl.ra := STRING_TO_REAL(value);
+				ELSIF parameter = 'de' THEN
+					TelescopeControl.de := STRING_TO_REAL(value);
+				ELSIF parameter = 'elevation' THEN
+					TelescopeControl.elevation := STRING_TO_REAL(value);
+				ELSIF parameter = 'azimuth' THEN
+					TelescopeControl.azimuth := STRING_TO_REAL(value);
+				ELSIF parameter = 'focus' THEN
+					TelescopeControl.focus_position := STRING_TO_REAL(value);
 				END_IF
 			END_IF // measurement
 		END_IF // Topic
@@ -113,8 +127,15 @@ END_IF
       <LineId Id="205" Count="0" />
       <LineId Id="67" Count="0" />
       <LineId Id="175" Count="19" />
-      <LineId Id="201" Count="1" />
+      <LineId Id="264" Count="3" />
+      <LineId Id="263" Count="0" />
+      <LineId Id="202" Count="0" />
       <LineId Id="228" Count="1" />
+      <LineId Id="252" Count="1" />
+      <LineId Id="255" Count="1" />
+      <LineId Id="260" Count="2" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="257" Count="1" />
       <LineId Id="195" Count="4" />
       <LineId Id="66" Count="0" />
       <LineId Id="73" Count="0" />
