@@ -3,14 +3,10 @@
   <POU Name="MAIN" Id="{c39aef1e-7c14-41dc-ad83-03bececdc52a}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-	// indicates the power state for the AX5000
-	power_OK:			BOOL;
 	// indicates the phases for the hydraulics
 	phase_available:	BOOL;
 	// telescope drives are ready to enable
 	ready:				BOOL;
-	// trafo did not soft start
-	power_failure:		BOOL;
 	// error stat on drive, power or hydraulics
 	error:				BOOL;
 	// manual, panel or remote reset
@@ -27,8 +23,6 @@ VAR
 	brake_clearing:		BOOL := FALSE;
 	// blink error lamp on warning
 	warn_blink: 		FB_BLINK;
-	// watchdog for trafo softstarter
-	power_watchdog: 	TON;
 	// main cabinet temperature in degrees
 	cabinet_temperature:	REAL;
 	// measures time between soft start command and power available
@@ -39,13 +33,9 @@ VAR
 	ups_output_voltage:		REAL;
 	ups_output_current:		REAL;
 
-	power_timer:		FB_Timer;
-	PowerEvent,
-	PhaseLog,
-	PowerLog,
-	TemperatureEvent:	FB_EventLog;
-	//MQTTPublisher:		FB_MQTTPublisher;
-	//MQTTTelegraf:		FB_MQTTTelegraf;
+	PhaseLog:				FB_EventLog;
+	TemperatureEvent:		FB_EventLog;
+	
 	MQTTTimer : 		TON := (PT:=T#5S);
 	sPayloadPub: 		STRING(255);
 	GetHostName:		FB_GetHostName;
@@ -71,7 +61,6 @@ GVL_Main.isRoboTel := HostName = 'CX-4E6032';
 start := GVL_Main.start_switch;
 stop := GVL_Main.stop_switch;
 
-power_OK := GVL_main.power_available;
 phase_available := GVL_Main.phase_available;
 IF GVL_Main.start_switch THEN
 	HydraulicsControl.start := TRUE;
@@ -87,7 +76,7 @@ brake_clearing := GVL_Main.brake_clearing;
 cabinet_temperature := INT_TO_REAL(GVL_Main.main_cabinet_temperature) / 100.0;
 
 // telescope is ready when power available and hydraulics ok
-ready := power_OK AND HydraulicsControl.oil_pressure_OK;
+ready := Transformer.power_OK AND HydraulicsControl.oil_pressure_OK;
 IF ready THEN
 	// SimpleLog(Message := 'power and Hydraulics ready');
 END_IF
@@ -108,16 +97,17 @@ FocusControl();
 Environment();	//
 AuxiliaryControl(); //
 MQTTCommunication();
+Transformer();
 
+IF key_switch THEN
+	Transformer.start();
+ELSE
+	Transformer.stop();
+END_IF
 
-GVL_Main.softstart_trafo := key_switch AND NOT power_failure;
-power_timer(bStart := key_switch, bStop := power_OK);
-power_watchdog(IN := GVL_Main.softstart_trafo AND NOT power_OK,
-				PT := T#2S,
-				Q => power_failure);
 warn_blink(ENABLE := HydraulicsControl.oil_warning OR HydraulicsControl.oil_hot, 
 	Q => warning);
-error := power_failure OR 
+error := Transformer.error OR 
 			HydraulicsControl.pressure_failure 
 			OR (NOT phase_available)
 			OR GVL_Telescope.azimut_limit_switch
@@ -135,7 +125,7 @@ error := power_failure OR
 // set control lights					
 GVL_Main.lamp_ready := ready;
 GVL_Main.lamp_error := error OR warning;
-GVL_Main.lamp_power := power_ok AND phase_available;
+GVL_Main.lamp_power := Transformer.power_ok AND phase_available;
 SafetyHandling();
 
 ups_input_voltage 		:= GVL_MAIN.ups_input_voltage / 1000.0;
@@ -152,7 +142,7 @@ IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
 	sPayloadPub := 'electronics,location=base,host=CX-4E6032,module=MAIN ';
 	sPayloadPub := APPEND(sPayloadPub, 'MainCabinetTemperature=', LREAL_TO_FMTSTR(cabinet_temperature, 2, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',PowerOK=', BOOL_TO_STRING(power_ok));
+	sPayloadPub := APPEND(sPayloadPub, ',PowerOK=', BOOL_TO_STRING(Transformer.power_ok));
 	sPayloadPub := APPEND(sPayloadPub, ',PhaseOK=', BOOL_TO_STRING(phase_available));
 	
 	MQTTCommunication.fbMqttClient.Publish(	
@@ -182,18 +172,6 @@ IF MQTTTimer.Q THEN // publish new payload every second
 
 END_IF
 
-PowerEvent(	
-	Trigger := 		power_failure, 
-	Level := 		ADSLOG_MSGTYPE_ERROR,
-	FormatString :=	'%s',
-	OnMessage := 	'Servo power FAILURE!',
-	OffMEssage := 	'Servo power OK');
-PowerLog(	
-	Trigger := 		power_OK, 
-	Level := 		ADSLOG_MSGTYPE_HINT,
-	FormatString :=	'%s',
-	OnMessage := 	'Power is ON',
-	OffMEssage := 	'Power is OFF');
 PhaseLog(	
 	Trigger := 		NOT phase_available, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
@@ -218,7 +196,6 @@ TemperatureEvent(
       <LineId Id="944" Count="1" />
       <LineId Id="948" Count="1" />
       <LineId Id="1055" Count="1" />
-      <LineId Id="16" Count="0" />
       <LineId Id="61" Count="0" />
       <LineId Id="522" Count="0" />
       <LineId Id="157" Count="0" />
@@ -254,11 +231,12 @@ TemperatureEvent(
       <LineId Id="1001" Count="0" />
       <LineId Id="701" Count="0" />
       <LineId Id="741" Count="0" />
+      <LineId Id="1112" Count="0" />
       <LineId Id="237" Count="0" />
-      <LineId Id="69" Count="0" />
-      <LineId Id="154" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="37" Count="1" />
+      <LineId Id="1113" Count="0" />
+      <LineId Id="1115" Count="1" />
+      <LineId Id="1114" Count="0" />
+      <LineId Id="38" Count="0" />
       <LineId Id="70" Count="0" />
       <LineId Id="521" Count="0" />
       <LineId Id="41" Count="0" />
@@ -290,9 +268,8 @@ TemperatureEvent(
       <LineId Id="880" Count="7" />
       <LineId Id="793" Count="0" />
       <LineId Id="744" Count="0" />
-      <LineId Id="354" Count="5" />
-      <LineId Id="353" Count="0" />
-      <LineId Id="650" Count="10" />
+      <LineId Id="354" Count="0" />
+      <LineId Id="656" Count="4" />
       <LineId Id="662" Count="0" />
       <LineId Id="661" Count="0" />
       <LineId Id="649" Count="0" />
