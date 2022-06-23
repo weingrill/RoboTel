@@ -1,0 +1,119 @@
+﻿<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.20">
+  <POU Name="FB_InfoConnection" Id="{c59ecbc2-45f1-4baf-8eff-1ff89cf667ab}">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_InfoConnection
+VAR_INPUT
+	stInfoData:ST_InfoDataConnection;
+	eMode:E_ModeLanguage:=1;
+END_VAR
+VAR_OUTPUT
+	sState:STRING;
+	sDiag:STRING;
+	bChannel1:BOOL;
+	bChannel2:BOOL;
+	bChannel3:BOOL;
+	bChannel4:BOOL;
+END_VAR
+VAR
+	arTextState:ARRAY[1..2] OF STRING;
+	arTextDiag:ARRAY[1..2] OF STRING;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF stInfoData.usiMapState = 100 THEN
+	arTextState[1]:='Zustand Reset';
+	arTextState[2]:='State Reset';
+ELSIF stInfoData.usiMapState = 101 THEN
+	arTextState[1]:='Zustand Session';
+	arTextState[2]:='State Session';
+ELSIF stInfoData.usiMapState = 102 THEN
+	arTextState[1]:='Zustand Connection';
+	arTextState[2]:='State Connection';
+ELSIF stInfoData.usiMapState = 103 THEN
+	arTextState[1]:='Zustand Parameter';
+	arTextState[2]:='State Parameter';
+ELSIF stInfoData.usiMapState = 104 THEN
+	arTextState[1]:='Zustand Data';
+	arTextState[2]:='State Data';
+ELSIF stInfoData.usiMapState = 105 THEN
+	arTextState[1]:='Zustand Shutdown';
+	arTextState[2]:='State Shutdown';
+ELSE
+	arTextState[1]:='Error';
+	arTextState[2]:='Error';
+END_IF
+
+IF stInfoData.usiMapDiag = 0 THEN
+	arTextDiag[1]:='Kein Fehler';
+	arTextDiag[2]:='No error';
+ELSIF	stInfoData.usiMapDiag.0 = TRUE THEN
+	arTextDiag[1]:='Ungültiges Kommando';
+	arTextDiag[2]:='Invalid Command';
+ELSIF	stInfoData.usiMapDiag.1 = TRUE THEN
+	arTextDiag[1]:='Unbekanntes Kommando';
+	arTextDiag[2]:='Unknown Command';
+ELSIF	(stInfoData.usiMapDiag.1 AND stInfoData.usiMapDiag.0)= TRUE THEN
+	arTextDiag[1]:='Ungültige Connection ID';
+	arTextDiag[2]:='Invalid Connection ID';
+ELSIF	 stInfoData.usiMapDiag.2= TRUE THEN
+	arTextDiag[1]:='Ungültige CRC';
+	arTextDiag[2]:='Invalid CRC';
+ELSIF	(stInfoData.usiMapDiag.0 AND stInfoData.usiMapDiag.2)= TRUE THEN
+	arTextDiag[1]:='Watchdog abgelaufen';
+	arTextDiag[2]:='Watchdog expired';
+ELSIF	(stInfoData.usiMapDiag.1 AND stInfoData.usiMapDiag.2)= TRUE THEN
+	arTextDiag[1]:='Ungültige FSoE Adresse';
+	arTextDiag[2]:='Invalid FSoE address';
+ELSIF	(stInfoData.usiMapDiag.0 AND stInfoData.usiMapDiag.1 AND stInfoData.usiMapDiag.2)= TRUE THEN
+	arTextDiag[1]:='Ungültige Daten';
+	arTextDiag[2]:='Invalid data';
+ELSIF	stInfoData.usiMapDiag.3= TRUE THEN
+	arTextDiag[1]:='Ungültige Komm.-Parameterlänge';
+	arTextDiag[2]:='Invalid Com.-Parameter length';
+ELSIF	(stInfoData.usiMapDiag.0 AND stInfoData.usiMapDiag.3)= TRUE THEN
+	arTextDiag[1]:='Ungültige Komm.-Parameter';
+	arTextDiag[2]:='Invalid Com.-Parameter ';
+ELSIF	(stInfoData.usiMapDiag.1 AND stInfoData.usiMapDiag.3)= TRUE THEN
+	arTextDiag[1]:='Ungültige Anw.-Parameterlänge';
+	arTextDiag[2]:='Invalid User.-Parameter length';
+ELSIF	(stInfoData.usiMapDiag.0 AND stInfoData.usiMapDiag.1 AND stInfoData.usiMapDiag.3)= TRUE THEN
+	arTextDiag[1]:='Ungültige Anw.-Parameter';
+	arTextDiag[2]:='Invalid User.-Parameter ';
+ELSIF	(stInfoData.usiMapDiag.2 AND stInfoData.usiMapDiag.3)= TRUE THEN
+	arTextDiag[1]:='FSoE Master Reset ';
+	arTextDiag[2]:='FSoE Master Reset  ';
+ELSIF	stInfoData.usiMapDiag.4= TRUE THEN
+	arTextDiag[1]:='Fehler beim FSoE Slave erkannt';
+	arTextDiag[2]:='Error by FSoE Slave detected';
+ELSIF	stInfoData.usiMapDiag.5= TRUE THEN
+	arTextDiag[1]:='FSoE Slave meldet Failsafe Value aktiv';
+	arTextDiag[2]:='FSoE Slave reports Failsafe value active';
+ELSIF	stInfoData.usiMapDiag.6= TRUE THEN
+	arTextDiag[1]:='StartUp';
+	arTextDiag[2]:='StartUp';
+ELSIF	stInfoData.usiMapDiag.7= TRUE THEN
+	arTextDiag[1]:='FSoE Master meldet Failsafe Value aktiv';
+	arTextDiag[2]:='FSoE Master reports Failsafe value active';
+ELSE
+	arTextDiag[1]:='Error';
+	arTextDiag[2]:='Error';
+END_IF
+
+IF eMode= 1 THEN
+	sState:=arTextState[1];
+	sDiag:=arTextDiag[1];
+ELSIF eMode= 2 THEN
+	sState:=arTextState[2];
+	sDiag:=arTextDiag[2];
+ELSE
+	sState:='Fehler eMode';
+	sDiag:='Error eMode';
+END_IF
+
+(*Signals*)
+bChannel1:=stInfoData.bySignals.0;
+bChannel2:=stInfoData.bySignals.1;
+bChannel3:=stInfoData.bySignals.2;
+bChannel4:=stInfoData.bySignals.3;]]></ST>
+    </Implementation>
+    <ObjectProperties />
+  </POU>
+</TcPlcObject>

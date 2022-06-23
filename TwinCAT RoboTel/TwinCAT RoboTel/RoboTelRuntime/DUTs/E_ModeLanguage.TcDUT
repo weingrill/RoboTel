@@ -1,0 +1,9 @@
+﻿<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.0.20">
+  <DUT Name="E_ModeLanguage" Id="{25f0301c-c5cf-4d68-80c6-fc5e62d07642}">
+    <Declaration><![CDATA[TYPE E_ModeLanguage :(Deutsch:=1,English:=2);
+
+
+END_TYPE]]></Declaration>
+    <ObjectProperties />
+  </DUT>
+</TcPlcObject>

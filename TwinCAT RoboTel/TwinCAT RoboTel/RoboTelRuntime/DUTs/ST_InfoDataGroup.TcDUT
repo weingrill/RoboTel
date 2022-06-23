@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <DUT Name="ST_InfoDataGroup" Id="{ae06926f-e8bf-4119-b822-5528fb116efe}">
+    <Declaration><![CDATA[TYPE ST_InfoDataGroup :
+STRUCT
+	usiMapState:	USINT;
+	usiMapDiag:		USINT;
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

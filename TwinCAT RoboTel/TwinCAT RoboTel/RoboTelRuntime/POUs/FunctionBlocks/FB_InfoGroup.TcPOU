@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_InfoGroup" Id="{ef27a35d-b6db-405e-b1c2-4a47bc669586}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_InfoGroup
+VAR_INPUT
+	stInfoData:ST_InfoDataGroup;
+END_VAR
+VAR_OUTPUT
+	sState:STRING;
+END_VAR
+VAR
+	mapDiag:	USINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF stInfoData.usiMapState= 1 THEN
+	sState:='RUN';
+ELSIF stInfoData.usiMapState= 2 THEN
+	sState:='STOP';
+ELSIF stInfoData.usiMapState= 3 THEN
+	sState:='SAFE';
+ELSIF stInfoData.usiMapState= 4 THEN
+	sState:='ERROR';
+ELSIF stInfoData.usiMapState= 5 THEN
+	sState:='RESET';
+ELSE
+	sState:='Unknown';
+END_IF
+mapDiag := stInfoData.usiMapDiag;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_InfoGroup">
+      <LineId Id="3" Count="11" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="24" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

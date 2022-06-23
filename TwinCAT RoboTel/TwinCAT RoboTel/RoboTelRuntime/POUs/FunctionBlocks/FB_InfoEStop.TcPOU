@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_InfoEStop" Id="{4844900e-f182-4369-b36a-2397b8bc8bdb}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_InfoEStop
+VAR_INPUT
+	stInfoData:ST_InfoDataFB;
+	eMode:E_ModeLanguage:=1;
+END_VAR
+VAR_OUTPUT
+	sState:STRING;
+	sDiag:STRING;
+END_VAR
+VAR
+	arTextDiag:ARRAY[1..2] OF STRING;
+	Dummy:	USINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF stInfoData.usiMapState= 0 THEN
+	sState:='undefined';
+ELSIF stInfoData.usiMapState= 1 THEN
+	sState:='RUN';
+ELSIF stInfoData.usiMapState= 2 THEN
+	sState:='STOP';
+ELSIF stInfoData.usiMapState= 3 THEN
+	sState:='SAFE';
+ELSIF stInfoData.usiMapState= 4 THEN
+	sState:='ERROR';
+ELSIF stInfoData.usiMapState= 5 THEN
+	sState:='RESET';
+ELSIF stInfoData.usiMapState= 6 THEN
+	sState:='START';
+ELSIF stInfoData.usiMapState= 8 THEN
+	sState:='DELAYOUT';
+ELSE
+	sState:='Unknown';
+END_IF
+
+IF stInfoData.uiMapDiag = 0 THEN
+	arTextDiag[1]:='Kein Fehler';
+	arTextDiag[2]:='No error';
+ELSIF stInfoData.uiMapDiag.0 THEN
+	arTextDiag[1]:='Diskrepanzfehler Eingangsgruppe 1';
+	arTextDiag[2]:='Discrepancy error input group 1';
+ELSIF stInfoData.uiMapDiag.1 THEN
+	arTextDiag[1]:='Diskrepanzfehler Eingangsgruppe 2';
+	arTextDiag[2]:='Discrepancy error input group 2';
+ELSIF stInfoData.uiMapDiag.2 THEN
+	arTextDiag[1]:='Diskrepanzfehler Eingangsgruppe 3';
+	arTextDiag[2]:='Discrepancy error input group 3';
+ELSIF stInfoData.uiMapDiag.3 THEN
+	arTextDiag[1]:='Diskrepanzfehler Eingangsgruppe 4';
+	arTextDiag[2]:='Discrepancy error input group 4';
+ELSIF stInfoData.uiMapDiag.4 THEN
+	arTextDiag[1]:='EDM Überwachungsfehler EDM 1';
+	arTextDiag[2]:='EDM Error EDM 1';
+ELSIF stInfoData.uiMapDiag.5 THEN
+	arTextDiag[1]:='EDM Überwachungsfehler EDM 2';
+	arTextDiag[2]:='EDM Error EDM 2';
+ELSE
+	arTextDiag[1]:='Unbekannt';
+	arTextDiag[2]:='Unknown';
+END_IF
+
+IF eMode= 1 THEN
+	sDiag:=arTextDiag[1];
+ELSIF eMode= 2 THEN
+	sDiag:=arTextDiag[2];
+ELSE
+	sState:='Fehler eMode';
+	sDiag:='Error eMode';
+END_IF
+
+Dummy := stInfoData.usiDummy;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_InfoEStop">
+      <LineId Id="3" Count="52" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="68" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
