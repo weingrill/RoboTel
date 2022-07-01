@@ -16,6 +16,21 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"379"</v>
+              <v n="TextDefault">"Covers"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"462"</v>
+              <v n="TextDefault">"covers closed"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"683"</v>
+              <v n="TextDefault">"covers open"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"957"</v>
               <v n="TextDefault">"Elevation enable"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -28,6 +43,11 @@
             <o>
               <v n="TextID">"760"</v>
               <v n="TextDefault">"goto"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"339"</v>
+              <v n="TextDefault">"Hydraulics"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -46,6 +66,11 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"101"</v>
+              <v n="TextDefault">"Licht"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"483"</v>
               <v n="TextDefault">"Light"</v>
               <l n="LanguageTexts" t="ArrayList" />
@@ -53,6 +78,11 @@
             <o>
               <v n="TextID">"725"</v>
               <v n="TextDefault">"open brake"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"470"</v>
+              <v n="TextDefault">"open cover"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
@@ -91,8 +121,23 @@
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>
+              <v n="TextID">"649"</v>
+              <v n="TextDefault">"start hydraulics"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"414"</v>
+              <v n="TextDefault">"stop hydraulics"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
               <v n="TextID">"661"</v>
               <v n="TextDefault">"suction running"</v>
+              <l n="LanguageTexts" t="ArrayList" />
+            </o>
+            <o>
+              <v n="TextID">"990"</v>
+              <v n="TextDefault">"Telescope control"</v>
               <l n="LanguageTexts" t="ArrayList" />
             </o>
             <o>

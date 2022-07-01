@@ -152,7 +152,12 @@ SyncDome := DomeAxis.Calibrated AND TelescopeControl.power AND AzimuthElevationC
 
 IF DomeAxis.Calibrated AND TelescopeControl.power AND AzimuthElevationControl.calibrated THEN
 	position := MODABS(TelescopeControl.azimuth_current, 360.0);
-	move_azimuth := ABS(Azimuth_current - position) > tolerance;
+	IF ABS(Azimuth_current - position) > tolerance THEN
+		move_azimuth := TRUE;
+	ELSE
+		move_azimuth := FALSE;
+	END_IF
+	
 END_IF
 
 Calibrated := DomeAxis.Calibrated;
@@ -389,7 +394,11 @@ CloseDomeEvent(
       <LineId Id="1424" Count="0" />
       <LineId Id="1405" Count="0" />
       <LineId Id="1433" Count="0" />
-      <LineId Id="1406" Count="2" />
+      <LineId Id="1406" Count="1" />
+      <LineId Id="2575" Count="1" />
+      <LineId Id="2579" Count="1" />
+      <LineId Id="2577" Count="0" />
+      <LineId Id="1408" Count="0" />
       <LineId Id="1403" Count="0" />
       <LineId Id="1452" Count="0" />
       <LineId Id="1428" Count="0" />

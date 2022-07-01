@@ -30,8 +30,9 @@ IF b+T > 0 THEN
 ELSE
 	SDD := 6.1078;
 END_IF
-
-DD := relhum/100.0 * SDD;
+IF SDD>0.0 THEN
+	DD := relhum/100.0 * SDD;
+END_IF
 v := LOG(DD/6.1078);
 IF a <> v THEN
 	F_Dewpoint := b*v/(a-v);	
@@ -52,6 +53,7 @@ END_IF
       <LineId Id="45" Count="0" />
       <LineId Id="48" Count="0" />
       <LineId Id="13" Count="0" />
+      <LineId Id="63" Count="0" />
       <LineId Id="23" Count="0" />
       <LineId Id="39" Count="2" />
       <LineId Id="15" Count="0" />

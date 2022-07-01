@@ -3140,7 +3140,7 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-00200000000D}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..12] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-00200000000D}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..12] OF BIT</Name>
 			<BitSize>13</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -4196,11 +4196,6 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.Clockwise</Name>
-							<Comment><![CDATA[ clockwise rotation of the dome azimuth	]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Auxiliary.pressure_Dewar</Name>
 							<Comment><![CDATA[ dewar pressure 0..10V Pfeiffer ]]></Comment>
 							<Type>INT</Type>
@@ -4209,6 +4204,11 @@ External Setpoint Generation:
 							<Name>GVL_Auxiliary.temperature_Dewar</Name>
 							<Comment><![CDATA[ dewar raw temperature]]></Comment>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Clockwise</Name>
+							<Comment><![CDATA[ clockwise rotation of the dome azimuth	]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.CounterClockwise</Name>
@@ -4248,11 +4248,6 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Environment.rawRain</Name>
-							<Comment><![CDATA[ Digital Input 1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Environment.rawWindSpeed</Name>
 							<Comment><![CDATA[ Input 1]]></Comment>
 							<Type>INT</Type>
@@ -4286,6 +4281,15 @@ External Setpoint Generation:
 							<Type>INT</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Environment.rawRain</Name>
+							<Comment><![CDATA[ Digital Input 1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_FilterWheel.bCalibrationCam</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Environment.rawHumidityDome</Name>
 							<Comment><![CDATA[ indoors]]></Comment>
 							<Type>INT</Type>
@@ -4293,14 +4297,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Environment.rawTemperatureDome</Name>
 							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
-							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_FilterWheel.bCalibrationCam</Name>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.BCD1</Name>
@@ -4331,6 +4327,10 @@ External Setpoint Generation:
 							<Name>GVL_pendant_control.direction_up</Name>
 							<Comment><![CDATA[DIN22 2.5]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
+							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.direction_down</Name>
@@ -4500,6 +4500,11 @@ DIN39 4.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Main.phase_available</Name>
+							<Comment><![CDATA[DIN1 0.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Telescope.Derotator_inputs</Name>
 							<Comment><![CDATA[ digitale inputs der Endlagen]]></Comment>
 							<Type>WORD</Type>
@@ -4515,14 +4520,14 @@ DIN39 4.6]]></Comment>
 							<Type>WORD</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Telescope.Elevation_diagnostic</Name>
-							<Comment><![CDATA[ diagnostic number]]></Comment>
-							<Type>UDINT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Telescope.Elevation_torque</Name>
 							<Comment><![CDATA[ torque feedback]]></Comment>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.Elevation_diagnostic</Name>
+							<Comment><![CDATA[ diagnostic number]]></Comment>
+							<Type>UDINT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.Azimuth_inputs</Name>
@@ -4530,45 +4535,14 @@ DIN39 4.6]]></Comment>
 							<Type>WORD</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Telescope.Azimuth_diagnostic</Name>
-							<Comment><![CDATA[ diagnostic number]]></Comment>
-							<Type>UDINT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Telescope.Azimuth_torque</Name>
 							<Comment><![CDATA[ torque feedback]]></Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.phase_available</Name>
-							<Comment><![CDATA[DIN1 0.0]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.power_available</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.key_switch_remote</Name>
-							<Comment><![CDATA[DIN2 0.1
-key_switch			AT%I*: BOOL;
-DIN3 0.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.start_switch</Name>
-							<Comment><![CDATA[DIN4 0.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.stop_switch</Name>
-							<Comment><![CDATA[DIN5 0.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.reset_switch</Name>
-							<Comment><![CDATA[DIN8 0.7]]></Comment>
-							<Type>BOOL</Type>
+							<Name>GVL_Telescope.Azimuth_diagnostic</Name>
+							<Comment><![CDATA[ diagnostic number]]></Comment>
+							<Type>UDINT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.AzimuthAxisRef.NcToPlc</Name>
@@ -4603,14 +4577,40 @@ DIN3 0.2]]></Comment>
 							<Type GUID="{2D9F1DEF-D0A1-8CE8-8800-12F336222FE8}">MDP5001_511_733_I_BA4AEFF1</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.main_cabinet_temperature</Name>
-							<Comment><![CDATA[BT1]]></Comment>
-							<Type>INT</Type>
+							<Name>GVL_Main.power_available</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.key_switch_remote</Name>
+							<Comment><![CDATA[DIN2 0.1
+key_switch			AT%I*: BOOL;
+DIN3 0.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.start_switch</Name>
+							<Comment><![CDATA[DIN4 0.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.stop_switch</Name>
+							<Comment><![CDATA[DIN5 0.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.reset_switch</Name>
+							<Comment><![CDATA[DIN8 0.7]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Main.brake_clearing</Name>
 							<Comment><![CDATA[DIN15 1.6]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.main_cabinet_temperature</Name>
+							<Comment><![CDATA[BT1]]></Comment>
+							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Main.ups_input_voltage</Name>
@@ -4670,13 +4670,13 @@ DIN3 0.2]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.Inverter_Velocity</Name>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Dome.Light</Name>
 							<Comment><![CDATA[ light relais]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.Inverter_Velocity</Name>
+							<Type>UINT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.DeHumidifier</Name>
@@ -14484,6 +14484,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<InitCmd DriveNo="0" IDN="32861" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32918" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32922" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="33088" MotorDataLevel="0" DisableMode="0">
+									<RetainData>24002400d5000600ca0002002c9d5b002c9d5b000000000000000000000000002260000000000000</RetainData>
+								</InitCmd>
 								<InitCmd DriveNo="0" IDN="33093" MotorDataLevel="0" DisableMode="0">
 									<RetainData>16001a004a616e2020332032303230202c2030383a32313a3437</RetainData>
 								</InitCmd>
@@ -14497,7 +14500,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								</Element>
 								<Element option="0" SortOder="0" SubIdx="0">
 									<Index>390</Index>
-									<Width>173</Width>
+									<Width>319</Width>
 								</Element>
 								<Element option="0" SortOder="0" SubIdx="0">
 									<Index>95</Index>
@@ -14617,7 +14620,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<SyncMan>001880002600010001000000800080008000001826010000</SyncMan>
 						<SyncMan>001a80002200010002000000800080008000001a22010000</SyncMan>
 						<SyncMan>00100a002400010003000000000000000000001024010000</SyncMan>
-						<SyncMan>001116002200010004000000000000000000001122010000</SyncMan>
+						<SyncMan>00111c002200010004000000000000000000001122010000</SyncMan>
 						<SyncMan>002000002400010005000000000000000000002024010000</SyncMan>
 						<SyncMan>002400002000010006000000000000000000002420010000</SyncMan>
 						<Fmmu>0000000000000000001000020100000001000000000000000000000000000000</Fmmu>
@@ -14652,7 +14655,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000c000000230000000000000000000000000000000000000000000000034091810000000011011100506f736974696f6e206c696d69742073776974636820636f6e66696775726174696f6e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000002500000000000000000000000000000000000000000000000340388000000000640000004d6178206d6f746f722073706565642077697468206d617820746f727175652f666f72636500</MBoxUserCmdData>
 						<MBoxUserCmdData>02000500140000001b00000000000000000000000000000000000000000000000340fb800000000008000800008008000100000050726f62652031206c6f67696320636f6e66696775726174696f6e00</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000001700000000000000000000000000000000000000000000000340a90000000000230150726f626520636f6e74726f6c20706172616d6574657200</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001700000000000000000000000000000000000000000000000340a90000000000210150726f626520636f6e74726f6c20706172616d6574657200</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001a00000000000000000000000000000000000000000000000340280100000000102756656c6f63697479206665656420666f7277617264206761696e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005004c0000001e00000000000000000000000000000000000000000000000340038200000000400040000100000002000000f401000000000000f40100000000000000000000000000001e00000000000040b9db68cb000000004724973400000000000000000000000043757272656e7420636f6d6d616e642076616c75652066696c746572203100</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001500000000000000000000000000000000000000000000000340a30000000000000057656967687420636f756e74657262616c616e636500</MBoxUserCmdData>
@@ -14715,6 +14718,12 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 							</Entry>
 							<Entry Name="Diagnostic number" BitLen="32" Index="#x0186">
 								<Type>UDINT</Type>
+							</Entry>
+							<Entry Name="Probe value 1 positive edge" BitLen="32" Index="#x0082">
+								<Type>DINT</Type>
+							</Entry>
+							<Entry Name="Probe 1 positive latched" BitLen="16" Index="#x0199">
+								<Type>INT</Type>
 							</Entry>
 						</Pdo>
 						<Pdo Name="MDT" Index="#x0018" InOut="1" Flags="#x0001" SyncMan="2">
@@ -15815,7 +15824,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<SyncMan>001880002600010001000000800080008000001826010000</SyncMan>
 						<SyncMan>001a80002200010002000000800080008000001a22010000</SyncMan>
 						<SyncMan>001008002400010003000000000000000000001024010000</SyncMan>
-						<SyncMan>00111c002200010004000000000000000000001122010000</SyncMan>
+						<SyncMan>001124002200010004000000000000000000001122010000</SyncMan>
 						<SyncMan>002000002400010005000000000000000000002024010000</SyncMan>
 						<SyncMan>002400002000010006000000000000000000002420010000</SyncMan>
 						<Fmmu>0000000000000000001000020100000001000000000000000000000000000000</Fmmu>
@@ -15855,7 +15864,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000c00000011000000000000000000000000000000000000000000000003407c0000000000865d01005374616e647374696c6c2077696e646f7700</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001a00000000000000000000000000000000000000000000000340280100000000102756656c6f63697479206665656420666f7277617264206761696e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002d0000000000000000000000000000000000000000000000034031820000000002004269706f6c617220706f736974696f6e20636f6e74726f6c6c6572206f7574707574206c696d69746174696f6e00</MBoxUserCmdData>
-						<MBoxUserCmdData>02000500140000001b00000000000000000000000000000000000000000000000340fb800000000008000800000008800100000050726f62652031206c6f67696320636f6e66696775726174696f6e00</MBoxUserCmdData>
+						<MBoxUserCmdData>02000500140000001b00000000000000000000000000000000000000000000000340fb800000000008000800008008000100000050726f62652031206c6f67696320636f6e66696775726174696f6e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001700000000000000000000000000000000000000000000000340a90000000000210150726f626520636f6e74726f6c20706172616d6574657200</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001400000000000000000000000000000000000000000000000340fa8000000000000050726f626520312076616c756520736f7572636500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000000e00000000000000000000000000000000000000000000000340950100000000010050726f6265203120656e61626c6500</MBoxUserCmdData>
@@ -15923,6 +15932,15 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 							<Entry Name="Diagnostic number" BitLen="32" Index="#x0186">
 								<Type>UDINT</Type>
 							</Entry>
+							<Entry Name="Probe value 1 positive edge" BitLen="32" Index="#x0082">
+								<Type>DINT</Type>
+							</Entry>
+							<Entry Name="Probe 1 positive latched" BitLen="16" Index="#x0199">
+								<Type>INT</Type>
+							</Entry>
+							<Entry Name="Probe status" BitLen="16" Index="#x00b3">
+								<Type>INT</Type>
+							</Entry>
 						</Pdo>
 						<Pdo Name="MDT" Index="#x0018" InOut="1" Flags="#x0001" SyncMan="2">
 							<Entry Name="Master control word" BitLen="16" Index="#x0086" Flags="#x00000800">
@@ -15971,9 +15989,11 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT^Master control word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT^Position feedback 1 value"/>
+				<Link VarA="Enc^Inputs^In^nDataIn3" VarB="AT^Probe value 1 positive edge"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
+				<Link VarA="Enc^Inputs^In^nState5" VarB="AT^Probe 1 positive latched"/>
 				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="MDT^Probe 1 enable"/>
 			</OwnerB>
 		</OwnerA>
@@ -16027,9 +16047,11 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="Drive^Outputs^Out^nCtrl1" VarB="MDT^Master control word" Size="8" OffsB="8"/>
 				<Link VarA="Drive^Outputs^Out^nDataOut1" VarB="MDT^Position command value"/>
 				<Link VarA="Enc^Inputs^In^nDataIn1" VarB="AT^Position feedback 1 value"/>
+				<Link VarA="Enc^Inputs^In^nDataIn3" VarB="AT^Probe value 1 positive edge"/>
 				<Link VarA="Enc^Inputs^In^nDcInputTime" VarB="InfoData^DcInputShift"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^InputToggle" Size="1" OffsA="1"/>
 				<Link VarA="Enc^Inputs^In^nState4" VarB="WcState^WcState"/>
+				<Link VarA="Enc^Inputs^In^nState5" VarB="AT^Probe 1 positive latched"/>
 				<Link VarA="Enc^Outputs^Out^nCtrl5" VarB="MDT^Probe 1 enable"/>
 			</OwnerB>
 		</OwnerA>

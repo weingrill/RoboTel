@@ -150,6 +150,7 @@ END_IF
 bSoEReset := GVL_Telescope.Elevation_diagnostic = 16#0000F10B OR GVL_Telescope.Elevation_diagnostic = 16#0000F601;
 
 IF bSoEReset THEN
+	last_position := -1.0;
 	fbSoEReset(
 		Axis := GVL_Telescope.ElevationAxisRef,
 		Execute := TRUE,
@@ -157,6 +158,7 @@ IF bSoEReset THEN
  	IF NOT fbSoEReset.Busy THEN
 		fbSoEReset(Axis := GVL_Telescope.ElevationAxisRef, Execute := FALSE);
 		bSoEReset := FALSE;
+		Reset := TRUE;
 	END_IF
 END_IF 
 
@@ -259,8 +261,12 @@ CalibrationEvent(
       <LineId Id="1108" Count="3" />
       <LineId Id="1104" Count="0" />
       <LineId Id="1115" Count="0" />
-      <LineId Id="1119" Count="5" />
-      <LineId Id="1126" Count="3" />
+      <LineId Id="1119" Count="1" />
+      <LineId Id="1189" Count="0" />
+      <LineId Id="1121" Count="3" />
+      <LineId Id="1126" Count="2" />
+      <LineId Id="1190" Count="0" />
+      <LineId Id="1129" Count="0" />
       <LineId Id="1118" Count="0" />
       <LineId Id="1112" Count="0" />
       <LineId Id="386" Count="0" />

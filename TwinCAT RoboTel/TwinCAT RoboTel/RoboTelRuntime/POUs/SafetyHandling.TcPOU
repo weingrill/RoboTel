@@ -20,14 +20,14 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[// Safety can be stopped by pressing STOP and RESET on main panel
-GVL_Safety.Run := GVL_Main.phase_available AND NOT (GVL_Main.stop_switch AND GVL_Main.reset_switch) AND remote_run;
+GVL_Safety.Run := GVL_Main.phase_available AND remote_run;
 // power on delay for Safety RESTART after RUN=1
 restart_safety(IN := GVL_Main.phase_available, PT := T#1S);
 // RESTART Safety after pushing reset or power on delay
 GVL_Safety.Restart := Main.reset OR restart_safety.Q OR remote_restart;
 
 // wait n seconds after Start ...
-start_delay(IN := GVL_Main.phase_available, PT := T#15S);
+start_delay(IN := GVL_Main.phase_available, PT := T#2S);
 // ... and send ErrAck for n milliseconds
 ErrAck_Pulse(IN := GVL_Main.phase_available AND start_delay.Q, PT := T#200MS);
 

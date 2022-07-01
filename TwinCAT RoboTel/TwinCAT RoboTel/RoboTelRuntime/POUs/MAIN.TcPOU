@@ -43,6 +43,7 @@ VAR
 	LightSwitch:		FB_ButtonEnable;
 	Lightbutton: 		BOOL;
 	bExecute:			BOOL := TRUE;
+	cabinet_temperature_warning:	SR;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -74,12 +75,11 @@ reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch;
 key_switch := GVL_Main.key_switch_remote;
 brake_clearing := GVL_Main.brake_clearing;
 cabinet_temperature := INT_TO_REAL(GVL_Main.main_cabinet_temperature) / 100.0;
+cabinet_temperature_warning(SET1 := cabinet_temperature > 40.0,
+							RESET := cabinet_temperature < 35.0);
 
 // telescope is ready when power available and hydraulics ok
 ready := Transformer.power_OK AND HydraulicsControl.oil_pressure_OK;
-IF ready THEN
-	// SimpleLog(Message := 'power and Hydraulics ready');
-END_IF
 		
 TelescopeControl();	//
 DomeControl();	//
@@ -181,7 +181,7 @@ PhaseLog(
 	OffMEssage := 	'electrical phases:	active');
 
 TemperatureEvent(	
-	Trigger := 		cabinet_temperature > 40.0, 
+	Trigger := 		cabinet_temperature_warning.Q1, 
 	Level := 		ADSLOG_MSGTYPE_WARN,
 	FormatString :=	'Main Cabinet Temperature warning:	%s',
 	OnMessage := 	LREAL_TO_FMTSTR( cabinet_temperature, 1, TRUE),);]]></ST>
@@ -208,11 +208,11 @@ TemperatureEvent(
       <LineId Id="163" Count="0" />
       <LineId Id="169" Count="0" />
       <LineId Id="236" Count="0" />
+      <LineId Id="1161" Count="0" />
+      <LineId Id="1163" Count="0" />
       <LineId Id="170" Count="0" />
       <LineId Id="105" Count="0" />
       <LineId Id="23" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="602" Count="1" />
       <LineId Id="600" Count="0" />
       <LineId Id="2" Count="0" />
       <LineId Id="165" Count="0" />
