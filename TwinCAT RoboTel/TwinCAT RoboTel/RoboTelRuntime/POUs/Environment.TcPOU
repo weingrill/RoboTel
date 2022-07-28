@@ -8,12 +8,14 @@ VAR_OUTPUT
 	Temperature,
 	Humidity,
 	Pressure,
+	Brightness,
+	LightDirection,
+	Precipitation,
 	TemperatureDome,
 	HumidityDome,
 	DewpointDome:	REAL;
 	
 	Rain:	BOOL;
-	Rain_analog:	REAL;
 	WeatherBad:	BOOL;
 END_VAR
 VAR
@@ -27,8 +29,7 @@ VAR
 	WindDirectionAverage,
 	HumidityAverage,
 	HumidityDomeAverage,
-	PressureAverage,
-	Rain_average: FB_TimeAverage;
+	PressureAverage: FB_TimeAverage;
 	RainDelay:	TON;
 	sunpos:		FB_SUNPOS;
 	eq2hor2:	FB_EQ2HOR2;
@@ -38,19 +39,23 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[(* convert raw Sensor values to real values *)
-WindSpeed := 		F_YREAL(GVL_Environment.rawWindSpeed, 		0, 32767,   0.0, 50.0); // m/s
+      <ST><![CDATA[(* convert raw Sensor values to real values 
+calibration values in Thiess Clima manual table 9*)
+WindSpeed := 		F_YREAL(GVL_Environment.rawWindSpeed, 		0, 32767,   0.0, 60.0); // m/s
 WindDirection :=	F_YREAL(GVL_Environment.rawWindDirection, 	0, 32767,   0.0, 360.0); // °
-Temperature :=  	F_YREAL(GVL_Environment.rawTemperature, 	0, 32767, -30.0, 70.0); // °C -40...80?
+Temperature :=  	F_YREAL(GVL_Environment.rawTemperature, 	0, 32767, -40.0, 60.0); // °C -40...80?
 Humidity :=			F_YREAL(GVL_Environment.rawHumidity, 		0, 32767,   0.0, 100.0); // %
-Pressure := 		F_YREAL(GVL_Environment.rawPressure,		0, 32767, 600.0, 1520.0); // mBar 
+Pressure := 		F_YREAL(GVL_Environment.rawPressure,		0, 32767, 800.0, 1060.0); // mBar 
+Brightness := 		F_YREAL(GVL_Environment.rawBrightness,		0, 32767,   0.0, 120000.0); // Lux 
+LightDirection :=	F_YREAL(GVL_Environment.rawLightDirection, 	0, 32767,   0.0, 360.0); // °
+Precipitation := 	F_YREAL(GVL_Environment.rawPrecipitation,	0, 32767,   0.0, 100.0); // mm/h 
 
 HumidityDome :=		F_YREAL(GVL_Environment.rawHumidityDome, 		0, 32767,   0.0, 100.0); // %
 TemperatureDome :=  F_YREAL(GVL_Environment.rawTemperatureDome, 	0, 32767, -30.0, 70.0); // °C
 
 DewpointDome := 	F_Dewpoint(HumidityDome, TemperatureDome);
 
-RainDelay(IN := NOT GVL_Environment.rawRain, PT := T#10S, Q => Rain);
+RainDelay(IN := GVL_Environment.rawRain OR NOT GVL_Environment.rawNoRain, PT := T#10S, Q => Rain);
 
 WindAverage(IN := WindSpeed, PT := T#3M, AVG => avg_wind, MAXAVG => max_wind);
 Wind5sAverage(IN := WindSpeed, PT := T#5S);
@@ -61,13 +66,12 @@ PressureAverage(IN := Pressure, PT := T#5S);
 
 HumidityDomeAverage(IN := HumidityDome, PT := T#2M);
 
-Rain_average(IN := BOOL_TO_INT(NOT GVL_Environment.rawRain) * 100.0, PT := T#60s, AVG => Rain_analog);
 
 WeatherBad := Rain OR
 				HumidityAverage.AVG >= 80.0 OR
 				HumidityDomeAverage.AVG >= 80.0 OR
 				WindAverage.AVG*2.0 > 10.0 OR
-				max_wind*2 > 15.0;
+				max_wind > 15.0;
 
 IF WeatherBad AND DomeControl.DomeOpened THEN
 	DomeControl.CloseDome := TRUE;
@@ -90,8 +94,10 @@ IF MQTTTimer.Q THEN // publish new payload every second
 	sPayloadPub := APPEND(sPayloadPub, ',WindSpeedMax=', LREAL_TO_FMTSTR(Wind5sAverage.MAXAVG, 1, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',WindDirection=', LREAL_TO_FMTSTR(WindDirectionAverage.AVG, 1, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',Pressure=', LREAL_TO_FMTSTR(PressureAverage.AVG, 2, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',Brightness=', LREAL_TO_FMTSTR(Brightness, 2, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',LightDirection=', LREAL_TO_FMTSTR(LightDirection, 1, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',Rain=', BOOL_TO_STRING(Rain));
-	sPayloadPub := APPEND(sPayloadPub, ',RainAnalog=', LREAL_TO_FMTSTR(Rain_analog, 1, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',RainAnalog=', LREAL_TO_FMTSTR(Precipitation, 3, TRUE));
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
@@ -155,10 +161,13 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
     </Implementation>
     <LineIds Name="Environment">
       <LineId Id="3" Count="0" />
+      <LineId Id="955" Count="0" />
       <LineId Id="12" Count="0" />
       <LineId Id="97" Count="0" />
       <LineId Id="13" Count="1" />
-      <LineId Id="100" Count="0" />
+      <LineId Id="950" Count="1" />
+      <LineId Id="953" Count="0" />
+      <LineId Id="952" Count="0" />
       <LineId Id="507" Count="2" />
       <LineId Id="567" Count="0" />
       <LineId Id="506" Count="0" />
@@ -171,7 +180,7 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="297" Count="0" />
       <LineId Id="792" Count="0" />
       <LineId Id="511" Count="1" />
-      <LineId Id="800" Count="1" />
+      <LineId Id="800" Count="0" />
       <LineId Id="576" Count="4" />
       <LineId Id="904" Count="0" />
       <LineId Id="581" Count="3" />
@@ -183,6 +192,7 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="733" Count="0" />
       <LineId Id="835" Count="1" />
       <LineId Id="737" Count="0" />
+      <LineId Id="956" Count="1" />
       <LineId Id="730" Count="0" />
       <LineId Id="870" Count="0" />
       <LineId Id="796" Count="0" />
