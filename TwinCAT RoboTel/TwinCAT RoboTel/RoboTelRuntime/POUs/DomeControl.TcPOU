@@ -227,6 +227,11 @@ ELSIF OpenDome THEN
 	GVL_Dome.DomeControlWord.2 := FALSE; // CloseSlit
 	GVL_Dome.DomeControlWord.3 := TRUE; // OpenFlap
 	GVL_Dome.DomeControlWord.4 := TRUE; // OpenSlit
+ELSE
+	GVL_Dome.DomeControlWord.1 := FALSE; // CloseFlap
+	GVL_Dome.DomeControlWord.2 := FALSE; // CloseSlit
+	GVL_Dome.DomeControlWord.3 := FALSE; // OpenFlap
+	GVL_Dome.DomeControlWord.4 := FALSE; // OpenSlit
 END_IF
 
 ReadCycle(IN := TRUE);
@@ -275,7 +280,7 @@ ELSE
 			DomeCommEvent.OnMessage := UDINT_TO_STRING(nErrID);
 END_CASE
 
-PermanentError(IN := NOT DomeValid);
+PermanentError(IN := bError);
 		
 DomeError := PermanentError.Q OR Error;
 
@@ -454,6 +459,8 @@ CloseDomeEvent(
       <LineId Id="1138" Count="0" />
       <LineId Id="2461" Count="1" />
       <LineId Id="1146" Count="1" />
+      <LineId Id="2685" Count="0" />
+      <LineId Id="2687" Count="3" />
       <LineId Id="1137" Count="0" />
       <LineId Id="756" Count="0" />
       <LineId Id="755" Count="0" />
