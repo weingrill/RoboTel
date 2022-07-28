@@ -11,6 +11,8 @@ VAR
 	error:				BOOL;
 	// manual, panel or remote reset
 	reset:				BOOL;
+	// reset from API
+	soft_reset:			BOOL;
 	// hydraulics warning 
 	warning:			BOOL;
 	// start hydraulics
@@ -71,7 +73,7 @@ IF GVL_Main.stop_switch THEN
 	HydraulicsControl.stop := TRUE;
 	// SimpleLog(Message := 'manual Hydraulics stop');
 END_IF
-reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch;		
+reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch or soft_reset;		
 key_switch := GVL_Main.key_switch_remote;
 brake_clearing := GVL_Main.brake_clearing;
 cabinet_temperature := INT_TO_REAL(GVL_Main.main_cabinet_temperature) / 100.0;
@@ -105,6 +107,9 @@ ELSE
 	Transformer.stop();
 END_IF
 
+IF reset THEN
+	Transformer.reset();
+END_IF
 warn_blink(ENABLE := HydraulicsControl.oil_warning OR HydraulicsControl.oil_hot, 
 	Q => warning);
 error := Transformer.error OR 
@@ -236,7 +241,9 @@ TemperatureEvent(
       <LineId Id="1113" Count="0" />
       <LineId Id="1115" Count="1" />
       <LineId Id="1114" Count="0" />
+      <LineId Id="1208" Count="0" />
       <LineId Id="38" Count="0" />
+      <LineId Id="1209" Count="1" />
       <LineId Id="70" Count="0" />
       <LineId Id="521" Count="0" />
       <LineId Id="41" Count="0" />

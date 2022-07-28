@@ -3140,7 +3140,7 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-00200000000D}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..12] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-00200000000D}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..12] OF BIT</Name>
 			<BitSize>13</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -4186,11 +4186,6 @@ External Setpoint Generation:
 							<Type GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Safety.Error</Name>
-							<Comment><![CDATA[ Safety Error Condition]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Auxiliary.Dewar_temperature_error</Name>
 							<Comment><![CDATA[ Dewar Temperature sensor error]]></Comment>
 							<Type>BOOL</Type>
@@ -4248,55 +4243,8 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Environment.rawWindSpeed</Name>
-							<Comment><![CDATA[ Input 1]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawHumidity</Name>
-							<Comment><![CDATA[ Input 2]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawTemperature</Name>
-							<Comment><![CDATA[ Input 3]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.ActVelo</Name>
-							<Type>LREAL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
-							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawWindDirection</Name>
-							<Comment><![CDATA[ Input 4]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawPressure</Name>
-							<Comment><![CDATA[ Input 5]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawRain</Name>
-							<Comment><![CDATA[ Digital Input 1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_FilterWheel.bCalibrationCam</Name>
 							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawHumidityDome</Name>
-							<Comment><![CDATA[ indoors]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawTemperatureDome</Name>
-							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.BCD1</Name>
@@ -4324,13 +4272,21 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_pendant_control.direction_up</Name>
-							<Comment><![CDATA[DIN22 2.5]]></Comment>
-							<Type>BOOL</Type>
+							<Name>GVL_Dome.ActVelo</Name>
+							<Type>LREAL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
+							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
 							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
+							<Name>GVL_pendant_control.direction_up</Name>
+							<Comment><![CDATA[DIN22 2.5]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.direction_down</Name>
@@ -4407,6 +4363,11 @@ DIN39 4.6]]></Comment>
 						<Var>
 							<Name>GVL_Hydraulics.oil_reserve</Name>
 							<Comment><![CDATA[DIN40 4.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.Error</Name>
+							<Comment><![CDATA[ Safety Error Condition]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -4500,11 +4461,6 @@ DIN39 4.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.phase_available</Name>
-							<Comment><![CDATA[DIN1 0.0]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Telescope.Derotator_inputs</Name>
 							<Comment><![CDATA[ digitale inputs der Endlagen]]></Comment>
 							<Type>WORD</Type>
@@ -4545,6 +4501,27 @@ DIN39 4.6]]></Comment>
 							<Type>UDINT</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Main.phase_available</Name>
+							<Comment><![CDATA[DIN1 0.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.power_available</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.key_switch_remote</Name>
+							<Comment><![CDATA[DIN2 0.1
+key_switch			AT%I*: BOOL;
+DIN3 0.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.start_switch</Name>
+							<Comment><![CDATA[DIN4 0.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Telescope.AzimuthAxisRef.NcToPlc</Name>
 							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
@@ -4577,22 +4554,6 @@ DIN39 4.6]]></Comment>
 							<Type GUID="{2D9F1DEF-D0A1-8CE8-8800-12F336222FE8}">MDP5001_511_733_I_BA4AEFF1</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.power_available</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.key_switch_remote</Name>
-							<Comment><![CDATA[DIN2 0.1
-key_switch			AT%I*: BOOL;
-DIN3 0.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.start_switch</Name>
-							<Comment><![CDATA[DIN4 0.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Main.stop_switch</Name>
 							<Comment><![CDATA[DIN5 0.4]]></Comment>
 							<Type>BOOL</Type>
@@ -4603,14 +4564,14 @@ DIN3 0.2]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.brake_clearing</Name>
-							<Comment><![CDATA[DIN15 1.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Main.main_cabinet_temperature</Name>
 							<Comment><![CDATA[BT1]]></Comment>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.brake_clearing</Name>
+							<Comment><![CDATA[DIN15 1.6]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Main.ups_input_voltage</Name>
@@ -4636,27 +4597,71 @@ DIN3 0.2]]></Comment>
 							<Name>GVL_Main.ups_output_current</Name>
 							<Type>UINT</Type>
 						</Var>
+						<Var>
+							<Name>GVL_Environment.rawWindSpeed</Name>
+							<Comment><![CDATA[ Input 1]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawHumidity</Name>
+							<Comment><![CDATA[ Input 4]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawTemperature</Name>
+							<Comment><![CDATA[ Input 3]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawWindDirection</Name>
+							<Comment><![CDATA[ Input 2]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawPressure</Name>
+							<Comment><![CDATA[ Input 5]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawBrightness</Name>
+							<Comment><![CDATA[ Input 6]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawLightDirection</Name>
+							<Comment><![CDATA[ Input 7]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawPrecipitation</Name>
+							<Comment><![CDATA[ Input 8]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawRain</Name>
+							<Comment><![CDATA[ Digital Input 2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawHumidityDome</Name>
+							<Comment><![CDATA[ indoors]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawTemperatureDome</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Environment.rawNoRain</Name>
+							<Comment><![CDATA[ Digital Input 1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
 						<Var>
 							<Name>FanControl.Fan_axis.MDP5001_511_733_Output</Name>
 							<Type GUID="{0D3B3A77-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_O_32199BA1</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.Run</Name>
-							<Comment><![CDATA[ Run/Stop Safety]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.Restart</Name>
-							<Comment><![CDATA[ Restart Safety]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Safety.ErrAck</Name>
-							<Comment><![CDATA[ Error Acknowledgement ]]></Comment>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.Inverter_Enable</Name>
@@ -4725,6 +4730,21 @@ DOUT9 1.0]]></Comment>
 						<Var>
 							<Name>GVL_Hydraulics.oil_suction_enable</Name>
 							<Comment><![CDATA[DOUT5 0.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.Run</Name>
+							<Comment><![CDATA[ Run/Stop Safety]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.Restart</Name>
+							<Comment><![CDATA[ Restart Safety]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Safety.ErrAck</Name>
+							<Comment><![CDATA[ Error Acknowledgement ]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -9574,7 +9594,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 											<Type>BIT</Type>
 											<Comment><![CDATA[Bit toggles everytime when new value available]]></Comment>
 										</Entry>
-										<Entry Name="Value" Index="#x6000" Sub="#x11" Flags="#x00020000">
+										<Entry Name="GVL_Environment.rawWindSpeed" Index="#x6000" Sub="#x11" Flags="#x00020000">
 											<Type>INT</Type>
 										</Entry>
 									</Pdo>
@@ -9622,7 +9642,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 											<Type>BIT</Type>
 											<Comment><![CDATA[Bit toggles everytime when new value available]]></Comment>
 										</Entry>
-										<Entry Name="Value" Index="#x6010" Sub="#x11" Flags="#x00020000">
+										<Entry Name="GVL_Environment.rawWindDirection" Index="#x6010" Sub="#x11" Flags="#x00020000">
 											<Type>INT</Type>
 										</Entry>
 									</Pdo>
@@ -9670,7 +9690,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 											<Type>BIT</Type>
 											<Comment><![CDATA[Bit toggles everytime when new value available]]></Comment>
 										</Entry>
-										<Entry Name="Value" Index="#x6020" Sub="#x11" Flags="#x00020000">
+										<Entry Name="GVL_Environment.rawTemperature" Index="#x6020" Sub="#x11" Flags="#x00020000">
 											<Type>INT</Type>
 										</Entry>
 									</Pdo>
@@ -9718,7 +9738,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 											<Type>BIT</Type>
 											<Comment><![CDATA[Bit toggles everytime when new value available]]></Comment>
 										</Entry>
-										<Entry Name="Value" Index="#x6030" Sub="#x11" Flags="#x00020000">
+										<Entry Name="GVL_Environment.rawHumidity" Index="#x6030" Sub="#x11" Flags="#x00020000">
 											<Type>INT</Type>
 										</Entry>
 									</Pdo>
@@ -9766,7 +9786,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 											<Type>BIT</Type>
 											<Comment><![CDATA[Bit toggles everytime when new value available]]></Comment>
 										</Entry>
-										<Entry Name="Value" Index="#x6040" Sub="#x11" Flags="#x00020000">
+										<Entry Name="GVL_Environment.rawPressure" Index="#x6040" Sub="#x11" Flags="#x00020000">
 											<Type>INT</Type>
 										</Entry>
 									</Pdo>
@@ -9814,7 +9834,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 											<Type>BIT</Type>
 											<Comment><![CDATA[Bit toggles everytime when new value available]]></Comment>
 										</Entry>
-										<Entry Name="Value" Index="#x6050" Sub="#x11" Flags="#x00020000">
+										<Entry Name="GVL_Environment.rawBrightness" Index="#x6050" Sub="#x11" Flags="#x00020000">
 											<Type>INT</Type>
 										</Entry>
 									</Pdo>
@@ -9862,7 +9882,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 											<Type>BIT</Type>
 											<Comment><![CDATA[Bit toggles everytime when new value available]]></Comment>
 										</Entry>
-										<Entry Name="Value" Index="#x6060" Sub="#x11" Flags="#x00020000">
+										<Entry Name="GVL_Environment.rawLightDirection" Index="#x6060" Sub="#x11" Flags="#x00020000">
 											<Type>INT</Type>
 										</Entry>
 									</Pdo>
@@ -9910,7 +9930,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 											<Type>BIT</Type>
 											<Comment><![CDATA[Bit toggles everytime when new value available]]></Comment>
 										</Entry>
-										<Entry Name="Value" Index="#x6070" Sub="#x11" Flags="#x00020000">
+										<Entry Name="GVL_Environment.rawPrecipitation" Index="#x6070" Sub="#x11" Flags="#x00020000">
 											<Type>INT</Type>
 										</Entry>
 									</Pdo>
@@ -9937,12 +9957,12 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 									<SyncMan>001001000000010004000000000000000100001000010000</SyncMan>
 									<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
 									<Pdo Name="Channel 1" Index="#x1a00" Flags="#x0011" SyncMan="0">
-										<Entry Name="Input" Index="#x6000" Sub="#x01">
+										<Entry Name="GVL_Environment.rawNoRain" Index="#x6000" Sub="#x01">
 											<Type>BIT</Type>
 										</Entry>
 									</Pdo>
 									<Pdo Name="Channel 2" Index="#x1a01" Flags="#x0011" SyncMan="0">
-										<Entry Name="Input" Index="#x6010" Sub="#x01">
+										<Entry Name="GVL_Environment.rawRain" Index="#x6010" Sub="#x01">
 											<Type>BIT</Type>
 										</Entry>
 									</Pdo>
@@ -14484,9 +14504,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<InitCmd DriveNo="0" IDN="32861" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32918" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32922" MotorDataLevel="1" DisableMode="0"/>
-								<InitCmd DriveNo="0" IDN="33088" MotorDataLevel="0" DisableMode="0">
-									<RetainData>24002400d5000600ca0002002c9d5b002c9d5b000000000000000000000000002260000000000000</RetainData>
-								</InitCmd>
 								<InitCmd DriveNo="0" IDN="33093" MotorDataLevel="0" DisableMode="0">
 									<RetainData>16001a004a616e2020332032303230202c2030383a32313a3437</RetainData>
 								</InitCmd>
@@ -16324,14 +16341,18 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_cabinet" VarB="RTD Inputs Channel 2^Value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Weather (EK1501)^Analog IN (EL3068)">
-				<Link VarA="PlcTask Inputs^GVL_Environment.rawHumidity" VarB="AI Standard Channel 2^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_Environment.rawPressure" VarB="AI Standard Channel 4^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_Environment.rawTemperature" VarB="AI Standard Channel 3^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_Environment.rawWindDirection" VarB="AI Standard Channel 5^Value"/>
-				<Link VarA="PlcTask Inputs^GVL_Environment.rawWindSpeed" VarB="AI Standard Channel 1^Value"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawBrightness" VarB="AI Standard Channel 6^GVL_Environment.rawBrightness"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawHumidity" VarB="AI Standard Channel 4^GVL_Environment.rawHumidity"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawLightDirection" VarB="AI Standard Channel 7^GVL_Environment.rawLightDirection"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawPrecipitation" VarB="AI Standard Channel 8^GVL_Environment.rawPrecipitation"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawPressure" VarB="AI Standard Channel 5^GVL_Environment.rawPressure"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawTemperature" VarB="AI Standard Channel 3^GVL_Environment.rawTemperature"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawWindDirection" VarB="AI Standard Channel 2^GVL_Environment.rawWindDirection"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawWindSpeed" VarB="AI Standard Channel 1^GVL_Environment.rawWindSpeed"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Weather (EK1501)^Rain IN (EL1008)">
-				<Link VarA="PlcTask Inputs^GVL_Environment.rawRain" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawNoRain" VarB="Channel 1^GVL_Environment.rawNoRain"/>
+				<Link VarA="PlcTask Inputs^GVL_Environment.rawRain" VarB="Channel 2^GVL_Environment.rawRain"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 84 (EK1521)^Filterwheel Cabinet (EK1501)^Filterrad (EL7211-0010)">
 				<Link VarA="PlcTask Inputs^GVL_FilterWheel.bCalibrationCam" VarB="FB Touch probe status^Touch probe status^TP1 Input"/>

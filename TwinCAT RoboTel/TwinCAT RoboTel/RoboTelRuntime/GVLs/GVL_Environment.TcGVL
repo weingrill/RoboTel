@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.4">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <GVL Name="GVL_Environment" Id="{5aba1c40-190c-423b-85e3-0e4c78c9f67d}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 
@@ -7,14 +7,22 @@ VAR_GLOBAL
 	// Input 1
 	rawWindSpeed				AT%I*:	INT;
 	// Input 2
-	rawHumidity					AT%I*:	INT;
+	rawWindDirection			AT%I*:	INT;
 	// Input 3
 	rawTemperature				AT%I*:	INT;
 	// Input 4
-	rawWindDirection			AT%I*:	INT;
+	rawHumidity					AT%I*:	INT;
 	// Input 5
 	rawPressure 				AT%I*:	INT;
+	// Input 6
+	rawBrightness				AT%I*:	INT;
+	// Input 7
+	rawLightDirection			AT%I*:	INT;
+	// Input 8
+	rawPrecipitation			AT%I*:	INT;
 	// Digital Input 1
+	rawNoRain					AT%I*:	BOOL;
+	// Digital Input 2
 	rawRain						AT%I*:	BOOL;
 	
 	// indoors
