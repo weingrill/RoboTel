@@ -151,8 +151,8 @@ IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
 	sPayloadPub := 'telescope,location=dome,host=CX-4E6032,module=FocusControl ';
 	sPayloadPub := APPEND(sPayloadPub, 'FocusPosition=', LREAL_TO_FMTSTR(actual_position, 5, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',Calibrated=', BOOL_TO_STRING(Calibrated));	
-	sPayloadPub := APPEND(sPayloadPub, ',Ready=', BOOL_TO_STRING(Ready));	
+	sPayloadPub := APPEND(sPayloadPub, ',FocusCalibrated=', BOOL_TO_STRING(Calibrated));	
+	sPayloadPub := APPEND(sPayloadPub, ',FocusReady=', BOOL_TO_STRING(Ready));	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
 					pPayload:= ADR(sPayloadPub), 
