@@ -25,15 +25,18 @@ ELSE
 END_IF
 
 F_Dewpoint := -273.15;
-IF b+T > 0 THEN
+IF b+T > 0.0 THEN
 	SDD := LREAL_TO_REAL(6.1078 * EXPT(10, (a*T)/(b+T)));
 ELSE
 	SDD := 6.1078;
 END_IF
-IF SDD>0.0 THEN
+
+IF SDD > 0.0 THEN
 	DD := relhum/100.0 * SDD;
 END_IF
-v := LOG(DD/6.1078);
+
+v := LOG(ABS(DD)/6.1078);
+
 IF a <> v THEN
 	F_Dewpoint := b*v/(a-v);	
 END_IF
@@ -51,10 +54,13 @@ END_IF
       <LineId Id="44" Count="0" />
       <LineId Id="47" Count="0" />
       <LineId Id="45" Count="0" />
+      <LineId Id="78" Count="0" />
       <LineId Id="48" Count="0" />
       <LineId Id="13" Count="0" />
       <LineId Id="63" Count="0" />
+      <LineId Id="79" Count="0" />
       <LineId Id="23" Count="0" />
+      <LineId Id="80" Count="0" />
       <LineId Id="39" Count="2" />
       <LineId Id="15" Count="0" />
       <LineId Id="7" Count="0" />
