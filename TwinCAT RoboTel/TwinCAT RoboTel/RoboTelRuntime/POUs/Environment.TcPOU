@@ -3,20 +3,32 @@
   <POU Name="Environment" Id="{03869fa8-1755-402e-a7ee-189c483e0438}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM Environment
 VAR_OUTPUT
-	WindSpeed,
-	WindDirection,
-	Temperature,
-	Humidity,
-	Pressure,
-	Brightness,
-	LightDirection,
-	Precipitation,
-	TemperatureDome,
-	HumidityDome,
+	// wind speed in m/s
+	WindSpeed:		REAL;
+	// wind direction in degrees
+	WindDirection:	REAL;
+	// outside temperature in degrees celsius
+	Temperature:	REAL;
+	// humidity in percent (0...100)
+	Humidity:		REAL;
+	// Pressure in mBars
+	Pressure:		REAL;
+	// Brightness in lux
+	Brightness:		REAL;
+	// incoming light direction (solar azimuth)
+	LightDirection:	REAL;
+	// rain in mm/h
+	Precipitation:	REAL;
+	// dome temperature in degrees
+	TemperatureDome:REAL;
+	// dome humidity in percent
+	HumidityDome:	REAL;
+	// dome dewpoint in degrees celsius
 	DewpointDome:	REAL;
-	
-	Rain:	BOOL;
-	WeatherBad:	BOOL;
+	// boolean rain event
+	Rain:			BOOL;
+	// boolean weather bad condition
+	WeatherBad:		BOOL;
 END_VAR
 VAR
 	WindEvent,
@@ -27,13 +39,15 @@ VAR
 	WindAverage,
 	Wind5sAverage,
 	WindDirectionAverage,
-	HumidityAverage,
 	HumidityDomeAverage,
 	PressureAverage: FB_TimeAverage;
 	RainDelay:	TON;
 	sunpos:		FB_SUNPOS;
 	eq2hor2:	FB_EQ2HOR2;
 	avg_wind, max_wind: REAL;
+	HumidityThreshold:	SR;
+	WindThreshold:		SR;
+	WeatherBadDelay: 	TOF;
 	MQTTTimer : TON := (PT:=T#5S);
 	sPayloadPub: STRING(255) := '';
 END_VAR
@@ -60,19 +74,22 @@ RainDelay(IN := GVL_Environment.rawRain OR NOT GVL_Environment.rawNoRain, PT := 
 WindAverage(IN := WindSpeed, PT := T#3M, AVG => avg_wind, MAXAVG => max_wind);
 Wind5sAverage(IN := WindSpeed, PT := T#5S);
 WindDirectionAverage(IN := WindDirection, PT := T#5S);
-HumidityAverage(IN := Humidity, PT := T#2M);
-// TemperatureAverage(IN := Temperature, PT := T#5M);
 PressureAverage(IN := Pressure, PT := T#5S);
 
 HumidityDomeAverage(IN := HumidityDome, PT := T#2M);
 
+HumidityThreshold(	SET1 := Humidity >= 80.0,
+					RESET := Humidity < 65.0);
 
-WeatherBad := Rain OR
-				HumidityAverage.AVG >= 80.0 OR
+WindThreshold(	SET1 := WindAverage.AVG > 10.0 OR max_wind > 15.0, 
+				RESET := WindAverage.AVG < 5.0);
+
+WeatherBadDelay(IN := Rain OR
+				Precipitation >= 1.0 OR
+				HumidityThreshold.Q1 OR
 				HumidityDomeAverage.AVG >= 80.0 OR
-				WindAverage.AVG*2.0 > 10.0 OR
-				max_wind > 15.0;
-
+				WindThreshold.Q1, PT := T#4M, Q => WeatherBad);
+				
 IF WeatherBad AND DomeControl.DomeOpened THEN
 	DomeControl.CloseDome := TRUE;
 END_IF
@@ -129,10 +146,10 @@ WindEvent(	Trigger := avg_wind > 10.0,
 			OffMessage := 'OK',
 			OffLevel := ADSLOG_MSGTYPE_HINT);
 
-HumidityEvent(	Trigger :=  HumidityAverage.AVG>= 80.0, 
+HumidityEvent(	Trigger :=  HumidityThreshold.Q1, 
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := 'Humidity: %s',
-				OnMessage := LREAL_TO_FMTSTR( HumidityAverage.AVG, 1, TRUE),
+				OnMessage := LREAL_TO_FMTSTR( Humidity, 1, TRUE),
 				OffMessage := 'OK',
 				OffLevel := ADSLOG_MSGTYPE_HINT);
 
@@ -176,13 +193,15 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="230" Count="1" />
       <LineId Id="791" Count="0" />
       <LineId Id="795" Count="0" />
-      <LineId Id="293" Count="0" />
-      <LineId Id="297" Count="0" />
       <LineId Id="792" Count="0" />
       <LineId Id="511" Count="1" />
+      <LineId Id="995" Count="0" />
       <LineId Id="800" Count="0" />
-      <LineId Id="576" Count="4" />
-      <LineId Id="904" Count="0" />
+      <LineId Id="996" Count="0" />
+      <LineId Id="999" Count="2" />
+      <LineId Id="576" Count="0" />
+      <LineId Id="1006" Count="3" />
+      <LineId Id="1004" Count="0" />
       <LineId Id="581" Count="3" />
       <LineId Id="906" Count="5" />
       <LineId Id="622" Count="3" />
