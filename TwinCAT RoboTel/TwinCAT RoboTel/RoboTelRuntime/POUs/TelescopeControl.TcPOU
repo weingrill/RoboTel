@@ -99,6 +99,8 @@ VAR
 	sPayloadPub: STRING(255);
 	// rotational velocity of the derotator
 	DerotatorVelocity: LREAL;
+	
+	StatusWord, LastStatus:	UDINT;
 END_VAR
 VAR_OUTPUT
 	//		TRUE, IF telescope can be operated
@@ -498,6 +500,7 @@ sliding := ElevationControl.MoveAxis OR AzimuthElevationControl.MoveAxis;
 tracking := ElevationControl.Tracking AND AzimuthElevationControl.Tracking;
 stopped :=  ElevationControl.ElevationAxis.StandStill AND AzimuthElevationControl.AzimuthAxis.StandStill;
 homed := ElevationControl.Calibrated AND AzimuthElevationControl.calibrated AND DerotatorControl.Calibrated;
+ready := homed AND CoverControl.isopen AND HydraulicsControl.brake_open;
 
 GVL_Telescope.horn := poweronwarning.Q OR Pendantcontrol.horn;
 
@@ -521,6 +524,33 @@ IF MQTTTimer.Q THEN // publish new payload every second
 					bRetain:= FALSE, 
 					bQueue:= FALSE );
 END_IF
+
+StatusWord.0 := error;
+StatusWord.1 := ready;
+StatusWord.2 := sliding;
+StatusWord.3 := tracking;
+StatusWord.4 := stopped;
+StatusWord.5 := homed;
+
+IF StatusWord<>LastStatus THEN // publish new payload every second
+	LastStatus := StatusWord;
+	sPayloadPub := 'telescope,location=dome,host=CX-4E6032,module=TelescopeControl ';
+	sPayloadPub := APPEND(sPayloadPub, 'error=',		BOOL_TO_STRING(error));
+	sPayloadPub := APPEND(sPayloadPub, ',ready=',		BOOL_TO_STRING(ready));
+	sPayloadPub := APPEND(sPayloadPub, ',sliding=',		BOOL_TO_STRING(sliding));
+	sPayloadPub := APPEND(sPayloadPub, ',tracking=', 	BOOL_TO_STRING(tracking));
+	sPayloadPub := APPEND(sPayloadPub, ',stopped=',		BOOL_TO_STRING(stopped));
+	sPayloadPub := APPEND(sPayloadPub, ',homed=',		BOOL_TO_STRING(homed));
+	
+	MQTTCommunication.fbMqttClient.Publish(	
+					sTopic:= 'RoboTel/Telemetry', 
+					pPayload:= ADR(sPayloadPub), 
+					nPayloadSize:= LEN2(ADR(sPayloadPub)),
+					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+					bRetain:= TRUE, 
+					bQueue:= FALSE );
+END_IF
+
 
 (* Event function blocks start here. *)
 TCSpowerEvent(	Trigger := powerfailure, 
@@ -806,6 +836,7 @@ TCSreadyEvent(	Trigger := power AND ready,
       <LineId Id="4255" Count="0" />
       <LineId Id="4257" Count="0" />
       <LineId Id="6942" Count="0" />
+      <LineId Id="7133" Count="0" />
       <LineId Id="5167" Count="0" />
       <LineId Id="4662" Count="3" />
       <LineId Id="4837" Count="2" />
@@ -816,6 +847,13 @@ TCSreadyEvent(	Trigger := power AND ready,
       <LineId Id="6780" Count="1" />
       <LineId Id="4844" Count="6" />
       <LineId Id="4656" Count="0" />
+      <LineId Id="7090" Count="0" />
+      <LineId Id="7093" Count="4" />
+      <LineId Id="7091" Count="0" />
+      <LineId Id="7098" Count="9" />
+      <LineId Id="7109" Count="7" />
+      <LineId Id="7132" Count="0" />
+      <LineId Id="7092" Count="0" />
       <LineId Id="3530" Count="1" />
       <LineId Id="3583" Count="2" />
       <LineId Id="6778" Count="0" />
