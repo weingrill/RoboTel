@@ -12,13 +12,17 @@ VAR
 	// manual, panel or remote reset
 	reset:				BOOL;
 	// reset from API
-	soft_reset:			BOOL;
+	remote_reset:			BOOL;
 	// hydraulics warning 
 	warning:			BOOL;
 	// start hydraulics
 	start:				BOOL;
+	// start from API
+	remote_start:		BOOL;
 	// stop hydraulics 
 	stop:				BOOL;
+	// stop from API
+	remote_stop:		BOOL;
 	// soft start trafo
 	key_switch:			BOOL;
 	//	open brake
@@ -31,10 +35,12 @@ VAR
 	ups_input_voltage:		REAL;
 	ups_input_current:		REAL;
 	ups_temperature:		REAL;
-	ups_battery_temperature:		REAL;
+	ups_battery_temperature:	REAL;
 	ups_output_voltage:		REAL;
 	ups_output_current:		REAL;
-
+	ups_input_power:		REAL;
+	ups_output_power:		REAL;
+	
 	PhaseLog:				FB_EventLog;
 	TemperatureEvent:		FB_EventLog;
 	
@@ -61,24 +67,25 @@ Main control loop
 GetHostName(bExecute := bExecute, sHostName => HostName);
 bExecute := FALSE;
 GVL_Main.isRoboTel := HostName = 'CX-4E6032';
-start := GVL_Main.start_switch;
-stop := GVL_Main.stop_switch;
+start := GVL_Main.start_switch OR remote_start;
+stop := GVL_Main.stop_switch OR remote_stop;
 
 phase_available := GVL_Main.phase_available;
-IF GVL_Main.start_switch THEN
-	HydraulicsControl.start := TRUE;
-	// SimpleLog(Message := 'manual Hydraulics start');
-END_IF
-IF GVL_Main.stop_switch THEN
-	HydraulicsControl.stop := TRUE;
-	// SimpleLog(Message := 'manual Hydraulics stop');
-END_IF
-reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch or soft_reset;		
+reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch OR remote_reset;		
 key_switch := GVL_Main.key_switch_remote;
 brake_clearing := GVL_Main.brake_clearing;
 cabinet_temperature := INT_TO_REAL(GVL_Main.main_cabinet_temperature) / 100.0;
 cabinet_temperature_warning(SET1 := cabinet_temperature > 40.0,
 							RESET := cabinet_temperature < 35.0);
+
+IF start THEN
+	HydraulicsControl.start := TRUE;
+	// SimpleLog(Message := 'manual Hydraulics start');
+END_IF
+IF stop THEN
+	HydraulicsControl.stop := TRUE;
+	// SimpleLog(Message := 'manual Hydraulics stop');
+END_IF
 
 // telescope is ready when power available and hydraulics ok
 ready := Transformer.power_OK AND HydraulicsControl.oil_pressure_OK;
@@ -90,7 +97,7 @@ PendantControl();	//
 NasmythControl();	//
 HydraulicsControl();	//
 // deactivate noisy fan if we are on manual
-FanControl(enable := NOT PendantControl.manual);	//
+FanControl(enable := NOT PendantControl.manual);
 ElevationControl();	//
 AzimuthElevationControl();	//
 DerotatorControl();	//
@@ -110,6 +117,7 @@ END_IF
 IF reset THEN
 	Transformer.reset();
 END_IF
+
 warn_blink(ENABLE := HydraulicsControl.oil_warning OR HydraulicsControl.oil_hot, 
 	Q => warning);
 error := Transformer.error OR 
@@ -139,6 +147,9 @@ ups_output_voltage 		:= GVL_MAIN.ups_output_voltage / 1000.0;
 ups_output_current 		:= GVL_MAIN.ups_output_current / 1000.0;
 ups_temperature 		:= GVL_MAIN.ups_temperature / 10.0;
 ups_battery_temperature := GVL_MAIN.ups_battery_temperature / 10.0;
+ups_input_power			:= ups_input_voltage * ups_input_current;
+ups_output_power		:= ups_output_voltage * ups_output_current;
+
 
 LightSwitch(SET := Lightbutton, Q := DomeControl.Light);
 
@@ -149,6 +160,9 @@ IF MQTTTimer.Q THEN // publish new payload every second
 	sPayloadPub := APPEND(sPayloadPub, 'MainCabinetTemperature=', LREAL_TO_FMTSTR(cabinet_temperature, 2, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',PowerOK=', BOOL_TO_STRING(Transformer.power_ok));
 	sPayloadPub := APPEND(sPayloadPub, ',PhaseOK=', BOOL_TO_STRING(phase_available));
+	sPayloadPub := APPEND(sPayloadPub, ',MainReady=', BOOL_TO_STRING(ready));
+	sPayloadPub := APPEND(sPayloadPub, ',MasterError=', BOOL_TO_STRING(error));
+	
 	
 	MQTTCommunication.fbMqttClient.Publish(	
 					sTopic:= 'RoboTel/Telemetry', 
@@ -161,8 +175,10 @@ IF MQTTTimer.Q THEN // publish new payload every second
 	sPayloadPub := 'electronics,location=base,host=CX-4E6032,module=MAIN ';
 	sPayloadPub := APPEND(sPayloadPub, 'UPSInputVoltage=', LREAL_TO_FMTSTR(ups_input_voltage, 3, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',UPSInputCurrent=', LREAL_TO_FMTSTR(ups_input_current, 3, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',UPSInputPower=', LREAL_TO_FMTSTR(ups_input_power, 3, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',UPSOutputVoltage=', LREAL_TO_FMTSTR(ups_output_voltage, 3, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',UPSOutputCurrent=', LREAL_TO_FMTSTR(ups_output_current, 3, TRUE));
+	sPayloadPub := APPEND(sPayloadPub, ',UPSOutputPower=', LREAL_TO_FMTSTR(ups_output_power, 3, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',UPSTemperature=', LREAL_TO_FMTSTR(ups_temperature, 1, TRUE));
 	sPayloadPub := APPEND(sPayloadPub, ',UPSBatteryTemperature=', LREAL_TO_FMTSTR(ups_battery_temperature, 1, TRUE));
 	
@@ -192,95 +208,25 @@ TemperatureEvent(
 	OnMessage := 	LREAL_TO_FMTSTR( cabinet_temperature, 1, TRUE),);]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
-      <LineId Id="28" Count="0" />
-      <LineId Id="30" Count="3" />
-      <LineId Id="64" Count="0" />
-      <LineId Id="63" Count="0" />
-      <LineId Id="65" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="944" Count="1" />
-      <LineId Id="948" Count="1" />
-      <LineId Id="1055" Count="1" />
-      <LineId Id="61" Count="0" />
-      <LineId Id="522" Count="0" />
-      <LineId Id="157" Count="0" />
-      <LineId Id="598" Count="0" />
-      <LineId Id="523" Count="0" />
-      <LineId Id="525" Count="1" />
-      <LineId Id="599" Count="0" />
-      <LineId Id="527" Count="0" />
-      <LineId Id="166" Count="0" />
-      <LineId Id="163" Count="0" />
-      <LineId Id="169" Count="0" />
-      <LineId Id="236" Count="0" />
-      <LineId Id="1161" Count="0" />
-      <LineId Id="1163" Count="0" />
-      <LineId Id="170" Count="0" />
-      <LineId Id="105" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="600" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="165" Count="0" />
-      <LineId Id="313" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="311" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="312" Count="0" />
-      <LineId Id="171" Count="0" />
-      <LineId Id="173" Count="0" />
-      <LineId Id="197" Count="0" />
-      <LineId Id="274" Count="0" />
-      <LineId Id="350" Count="0" />
-      <LineId Id="398" Count="0" />
-      <LineId Id="167" Count="0" />
-      <LineId Id="1001" Count="0" />
-      <LineId Id="701" Count="0" />
-      <LineId Id="741" Count="0" />
-      <LineId Id="1112" Count="0" />
-      <LineId Id="237" Count="0" />
-      <LineId Id="1113" Count="0" />
-      <LineId Id="1115" Count="1" />
-      <LineId Id="1114" Count="0" />
-      <LineId Id="1208" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="1209" Count="1" />
-      <LineId Id="70" Count="0" />
-      <LineId Id="521" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="71" Count="0" />
-      <LineId Id="562" Count="0" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="80" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="172" Count="0" />
-      <LineId Id="437" Count="5" />
-      <LineId Id="482" Count="0" />
-      <LineId Id="443" Count="0" />
-      <LineId Id="113" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="44" Count="0" />
-      <LineId Id="78" Count="0" />
-      <LineId Id="866" Count="2" />
-      <LineId Id="871" Count="3" />
-      <LineId Id="864" Count="1" />
-      <LineId Id="743" Count="0" />
-      <LineId Id="745" Count="2" />
-      <LineId Id="799" Count="1" />
-      <LineId Id="802" Count="0" />
-      <LineId Id="813" Count="0" />
-      <LineId Id="804" Count="7" />
-      <LineId Id="875" Count="3" />
-      <LineId Id="888" Count="4" />
-      <LineId Id="880" Count="7" />
-      <LineId Id="793" Count="0" />
-      <LineId Id="744" Count="0" />
-      <LineId Id="354" Count="0" />
-      <LineId Id="656" Count="4" />
-      <LineId Id="662" Count="0" />
-      <LineId Id="661" Count="0" />
-      <LineId Id="649" Count="0" />
-      <LineId Id="606" Count="4" />
+      <LineId Id="1303" Count="15" />
+      <LineId Id="1327" Count="5" />
+      <LineId Id="1458" Count="8" />
+      <LineId Id="1333" Count="30" />
+      <LineId Id="1457" Count="0" />
+      <LineId Id="1364" Count="28" />
+      <LineId Id="1452" Count="0" />
+      <LineId Id="1454" Count="0" />
+      <LineId Id="1453" Count="0" />
+      <LineId Id="1393" Count="9" />
+      <LineId Id="1467" Count="0" />
+      <LineId Id="1469" Count="0" />
+      <LineId Id="1468" Count="0" />
+      <LineId Id="1403" Count="12" />
+      <LineId Id="1455" Count="0" />
+      <LineId Id="1416" Count="1" />
+      <LineId Id="1456" Count="0" />
+      <LineId Id="1418" Count="24" />
+      <LineId Id="610" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
