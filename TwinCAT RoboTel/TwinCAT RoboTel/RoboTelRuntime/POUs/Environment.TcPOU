@@ -85,7 +85,7 @@ WindThreshold(	SET1 := WindAverage.AVG > 10.0 OR max_wind > 15.0,
 				RESET := WindAverage.AVG < 5.0);
 
 WeatherBadDelay(IN := Rain OR
-				Precipitation >= 1.0 OR
+				Precipitation >= 0.1 OR
 				HumidityThreshold.Q1 OR
 				HumidityDomeAverage.AVG >= 80.0 OR
 				WindThreshold.Q1, PT := T#4M, Q => WeatherBad);
