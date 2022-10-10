@@ -23,6 +23,8 @@ VAR
 	fbMessageQueue : FB_IotMqttMessageQueue;
     fbMessage      : FB_IotMqttMessage;
 	influxmessage	: FB_Influxmessage;
+	
+	hrErrorOccurred : HRESULT; // contains the latest occurred error
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[(*
@@ -55,7 +57,12 @@ END_IF
 	
 IF fbMqttClient.bConnected THEN
     IF NOT bSubscribed THEN
-        bSubscribed := fbMqttClient.Subscribe(sTopic:=sTopicSub, eQoS:=TcIotMqttQos.AtMostOnceDelivery);
+        bSubscribed := fbMqttClient.Subscribe(sTopic:='RoboTel/Telescope/SET', 
+											  eQoS:=TcIotMqttQos.AtMostOnceDelivery);
+		IF fbMqttClient.bError THEN
+			// add your error logging here
+			hrErrorOccurred := fbMqttClient.hrErrorCode;
+		END_IF
     END_IF
 END_IF
 
@@ -64,6 +71,7 @@ IF fbMessageQueue.nQueuedMessages > 0 THEN
     IF fbMessageQueue.Dequeue(fbMessage:=fbMessage) THEN
         fbMessage.GetTopic(pTopic:=ADR(sTopicRcv), nTopicSize:=SIZEOF(sTopicRcv) );
         fbMessage.GetPayload(pPayload:=ADR(sPayloadRcv), nPayloadSize:=SIZEOF(sPayloadRcv), bSetNullTermination:=FALSE);
+		ADSLOGSTR( ADSLOG_MSGTYPE_HINT OR ADSLOG_MSGTYPE_LOG, 'MQTT %s', sPayloadRcv);
 		IF sTopicRcv = sTopicSub THEN
 			influxMessage(  sPayload := sPayloadRcv, 
 							measurement => measurement, 
@@ -122,11 +130,17 @@ END_IF
       <LineId Id="203" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="204" Count="0" />
-      <LineId Id="47" Count="4" />
+      <LineId Id="47" Count="3" />
+      <LineId Id="298" Count="0" />
+      <LineId Id="295" Count="2" />
+      <LineId Id="294" Count="0" />
+      <LineId Id="51" Count="0" />
       <LineId Id="46" Count="0" />
       <LineId Id="205" Count="0" />
       <LineId Id="67" Count="0" />
-      <LineId Id="175" Count="19" />
+      <LineId Id="175" Count="4" />
+      <LineId Id="291" Count="0" />
+      <LineId Id="180" Count="14" />
       <LineId Id="264" Count="3" />
       <LineId Id="263" Count="0" />
       <LineId Id="202" Count="0" />
