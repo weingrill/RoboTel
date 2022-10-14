@@ -45,13 +45,14 @@ VAR
 	TemperatureEvent:		FB_EventLog;
 	
 	MQTTTimer : 		TON := (PT:=T#5S);
-	sPayloadPub: 		STRING(255);
 	GetHostName:		FB_GetHostName;
 	HostName: 			STRING(255);
 	LightSwitch:		FB_ButtonEnable;
 	Lightbutton: 		BOOL;
 	bExecute:			BOOL := TRUE;
 	cabinet_temperature_warning:	SR;
+	
+	MQTTClient:		FB_MQTTCommunication;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -105,7 +106,7 @@ FilterWheelControl();	//
 FocusControl();
 Environment();	//
 AuxiliaryControl(); //
-MQTTCommunication();
+MQTTClient();
 Transformer();
 
 IF key_switch THEN
@@ -156,41 +157,19 @@ LightSwitch(SET := Lightbutton, Q := DomeControl.Light);
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
-	sPayloadPub := 'electronics,location=base,host=CX-4E6032,module=MAIN ';
-	sPayloadPub := APPEND(sPayloadPub, 'MainCabinetTemperature=', LREAL_TO_FMTSTR(cabinet_temperature, 2, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',PowerOK=', BOOL_TO_STRING(Transformer.power_ok));
-	sPayloadPub := APPEND(sPayloadPub, ',PhaseOK=', BOOL_TO_STRING(phase_available));
-	sPayloadPub := APPEND(sPayloadPub, ',MainReady=', BOOL_TO_STRING(ready));
-	sPayloadPub := APPEND(sPayloadPub, ',MasterError=', BOOL_TO_STRING(error));
-	
-	
-	MQTTCommunication.fbMqttClient.Publish(	
-					sTopic:= 'RoboTel/Telemetry', 
-					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)),
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= FALSE, 
-					bQueue:= FALSE );
-
-	sPayloadPub := 'electronics,location=base,host=CX-4E6032,module=MAIN ';
-	sPayloadPub := APPEND(sPayloadPub, 'UPSInputVoltage=', LREAL_TO_FMTSTR(ups_input_voltage, 3, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',UPSInputCurrent=', LREAL_TO_FMTSTR(ups_input_current, 3, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',UPSInputPower=', LREAL_TO_FMTSTR(ups_input_power, 3, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',UPSOutputVoltage=', LREAL_TO_FMTSTR(ups_output_voltage, 3, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',UPSOutputCurrent=', LREAL_TO_FMTSTR(ups_output_current, 3, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',UPSOutputPower=', LREAL_TO_FMTSTR(ups_output_power, 3, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',UPSTemperature=', LREAL_TO_FMTSTR(ups_temperature, 1, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',UPSBatteryTemperature=', LREAL_TO_FMTSTR(ups_battery_temperature, 1, TRUE));
-	
-	
-	MQTTCommunication.fbMqttClient.Publish(	
-					sTopic:= 'RoboTel/Telemetry', 
-					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)),
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= FALSE, 
-					bQueue:= FALSE );
-
+	MQTTClient.Publish('electronics', 'base', 'MainCabinetTemperature', LREAL_TO_FMTSTR(cabinet_temperature, 2, TRUE));
+	MQTTClient.Publish('electronics', 'base', 'PowerOK', BOOL_TO_STRING(Transformer.power_ok));
+	MQTTClient.Publish('electronics', 'base', 'PhaseOK', BOOL_TO_STRING(phase_available));
+	MQTTClient.Publish('electronics', 'base', 'MainReady', BOOL_TO_STRING(ready));
+	MQTTClient.Publish('electronics', 'base', 'MasterError', BOOL_TO_STRING(error));
+	MQTTClient.Publish('electronics', 'base', 'UPSInputVoltage', LREAL_TO_FMTSTR(ups_input_voltage, 3, TRUE));
+	MQTTClient.Publish('electronics', 'base', 'UPSInputCurrent', LREAL_TO_FMTSTR(ups_input_current, 3, TRUE));
+	MQTTClient.Publish('electronics', 'base', 'UPSInputPower', LREAL_TO_FMTSTR(ups_input_power, 3, TRUE));
+	MQTTClient.Publish('electronics', 'base', 'UPSOutputVoltage', LREAL_TO_FMTSTR(ups_output_voltage, 3, TRUE));
+	MQTTClient.Publish('electronics', 'base', 'UPSOutputCurrent', LREAL_TO_FMTSTR(ups_output_current, 3, TRUE));
+	MQTTClient.Publish('electronics', 'base', 'UPSOutputPower', LREAL_TO_FMTSTR(ups_output_power, 3, TRUE));
+	MQTTClient.Publish('electronics', 'base', 'UPSTemperature', LREAL_TO_FMTSTR(ups_temperature, 1, TRUE));
+	MQTTClient.Publish('electronics', 'base', 'UPSBatteryTemperature', LREAL_TO_FMTSTR(ups_battery_temperature, 1, TRUE));
 END_IF
 
 PhaseLog(	
@@ -217,15 +196,18 @@ TemperatureEvent(
       <LineId Id="1452" Count="0" />
       <LineId Id="1454" Count="0" />
       <LineId Id="1453" Count="0" />
-      <LineId Id="1393" Count="9" />
+      <LineId Id="1393" Count="5" />
+      <LineId Id="1524" Count="0" />
+      <LineId Id="1401" Count="1" />
       <LineId Id="1467" Count="0" />
       <LineId Id="1469" Count="0" />
-      <LineId Id="1468" Count="0" />
-      <LineId Id="1403" Count="12" />
+      <LineId Id="1412" Count="0" />
+      <LineId Id="1414" Count="1" />
       <LineId Id="1455" Count="0" />
       <LineId Id="1416" Count="1" />
       <LineId Id="1456" Count="0" />
-      <LineId Id="1418" Count="24" />
+      <LineId Id="1418" Count="0" />
+      <LineId Id="1429" Count="13" />
       <LineId Id="610" Count="0" />
     </LineIds>
   </POU>

@@ -94,8 +94,6 @@ VAR
 	CloseDomeEvent:		FB_Eventlog;
 	DomeCalibrationEvent: FB_Eventlog;
 	MQTTTimer : TON := (PT:=T#10S);
-	// MQTT String
-	sPayloadPub: STRING(255);
 	getlastposition:	BOOL := TRUE;
 END_VAR
 VAR CONSTANT
@@ -293,38 +291,21 @@ END_IF
 MQTTTimer(IN:=Enable);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
-	sPayloadPub := 'dome,location=dome,host=CX-4E6032 ';
-	sPayloadPub := APPEND(sPayloadPub, 'DomeAzimuth=', LREAL_TO_FMTSTR(Azimuth_current, 1, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',Calibrated=', BOOL_TO_STRING(Calibrated));	
-	MQTTCommunication.fbMqttClient.Publish(	
-					sTopic:= 'RoboTel/Telemetry', 
-					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)),
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= FALSE, 
-					bQueue:= FALSE );
+	MAIN.MQTTClient.Publish('dome', 'dome', 'DomeAzimuth', LREAL_TO_FMTSTR(Azimuth_current, 1, TRUE));
+	MAIN.MQTTClient.Publish('dome', 'dome', 'DomeCalibrated', BOOL_TO_STRING(Calibrated));	
 	// invalidate last status for testing
 	LastStatus := 0;
 END_IF
 
 IF DomeStatusWord <> LastStatus THEN
 	LastStatus := DomeStatusWord;
-	sPayloadPub := 'dome,location=dome,host=CX-4E6032,module=DomeControl ';
-	sPayloadPub := APPEND(sPayloadPub, 'DomeCommunicationOK=', BOOL_TO_STRING(NOT PermanentError.Q));
-	sPayloadPub := APPEND(sPayloadPub, ',DomeClosed=', BOOL_TO_STRING(DomeClosed));
-	sPayloadPub := APPEND(sPayloadPub, ',DomeOpened=', BOOL_TO_STRING(DomeOpened));
-	sPayloadPub := APPEND(sPayloadPub, ',FlapOpen=', BOOL_TO_STRING(FlapOpen));	
-	sPayloadPub := APPEND(sPayloadPub, ',FlapClosed=', BOOL_TO_STRING(FlapClosed));	
-	sPayloadPub := APPEND(sPayloadPub, ',SlitOpen=', BOOL_TO_STRING(SlitOpen));	
-	sPayloadPub := APPEND(sPayloadPub, ',SlitClosed=', BOOL_TO_STRING(SlitClosed));	
-	
-	MQTTCommunication.fbMqttClient.Publish(	
-					sTopic:= 'RoboTel/Telemetry', 
-					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)),
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= TRUE, 
-					bQueue:= FALSE );
+	MAIN.MQTTClient.Publish('dome', 'dome', 'DomeCommunicationOK', BOOL_TO_STRING(NOT PermanentError.Q));
+	MAIN.MQTTClient.Publish('dome', 'dome', 'DomeClosed', BOOL_TO_STRING(DomeClosed));
+	MAIN.MQTTClient.Publish('dome', 'dome', 'DomeOpened', BOOL_TO_STRING(DomeOpened));
+	MAIN.MQTTClient.Publish('dome', 'dome', 'FlapOpen', BOOL_TO_STRING(FlapOpen));	
+	MAIN.MQTTClient.Publish('dome', 'dome', 'FlapClosed', BOOL_TO_STRING(FlapClosed));	
+	MAIN.MQTTClient.Publish('dome', 'dome', 'SlitOpen', BOOL_TO_STRING(SlitOpen));	
+	MAIN.MQTTClient.Publish('dome', 'dome', 'SlitClosed', BOOL_TO_STRING(SlitClosed));	
 END_IF
 
 DomeCommEvent(	Trigger := PermanentError.Q, 
@@ -491,24 +472,19 @@ CloseDomeEvent(
       <LineId Id="1939" Count="2" />
       <LineId Id="1522" Count="2" />
       <LineId Id="1982" Count="1" />
-      <LineId Id="1986" Count="0" />
       <LineId Id="1979" Count="0" />
-      <LineId Id="1989" Count="5" />
-      <LineId Id="1988" Count="0" />
       <LineId Id="2313" Count="0" />
       <LineId Id="2312" Count="0" />
       <LineId Id="1978" Count="0" />
       <LineId Id="1980" Count="1" />
       <LineId Id="1984" Count="0" />
       <LineId Id="1622" Count="0" />
-      <LineId Id="2310" Count="0" />
       <LineId Id="1625" Count="0" />
       <LineId Id="1995" Count="0" />
       <LineId Id="1705" Count="0" />
       <LineId Id="1946" Count="0" />
       <LineId Id="1953" Count="0" />
-      <LineId Id="1956" Count="1" />
-      <LineId Id="1628" Count="6" />
+      <LineId Id="1956" Count="0" />
       <LineId Id="1077" Count="0" />
       <LineId Id="758" Count="3" />
       <LineId Id="763" Count="0" />

@@ -53,17 +53,8 @@ MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
 	sPayloadPub := 'electronics,location=dome,host=CX-4E6032,module=TelescopeCabinet ';
-	sPayloadPub := APPEND(sPayloadPub, 'TelescopeCabinetTemperature=', LREAL_TO_FMTSTR(Temperature, 2, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',FanVelocity=', LREAL_TO_FMTSTR(velocity_percentage, 1, TRUE));
-	
-	MQTTCommunication.fbMqttClient.Publish(	
-					sTopic:= 'RoboTel/Telemetry', 
-					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)),
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= FALSE, 
-					bQueue:= FALSE );
-
+	MAIN.MQTTClient.Publish('electronics', 'dome', 'TelescopeCabinetTemperature', LREAL_TO_FMTSTR(Temperature, 2, TRUE));
+	MAIN.MQTTClient.Publish('electronics', 'dome', 'FanVelocity', LREAL_TO_FMTSTR(velocity_percentage, 1, TRUE));
 END_IF
 
 TemperatureWarning(Trigger := temperature >= 40.0,
@@ -96,9 +87,6 @@ TemperatureWarning(Trigger := temperature >= 40.0,
       <LineId Id="146" Count="1" />
       <LineId Id="198" Count="1" />
       <LineId Id="201" Count="0" />
-      <LineId Id="203" Count="6" />
-      <LineId Id="197" Count="0" />
-      <LineId Id="151" Count="0" />
       <LineId Id="113" Count="0" />
       <LineId Id="46" Count="3" />
       <LineId Id="45" Count="0" />

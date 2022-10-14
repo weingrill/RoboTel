@@ -150,6 +150,9 @@
     <Compile Include="POUs\FunctionBlocks\FB_LightTimer.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FunctionBlocks\FB_MQTTCommunication.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_MQTTPublisher.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -223,9 +226,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\MQTTCommunication.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\NasmythControl.TcPOU">

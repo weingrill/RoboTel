@@ -46,10 +46,10 @@ VAR
 	eq2hor2:	FB_EQ2HOR2;
 	avg_wind, max_wind: REAL;
 	HumidityThreshold:	SR;
+	HumidityDomeThreshold:	SR;
 	WindThreshold:		SR;
 	WeatherBadDelay: 	TOF;
 	MQTTTimer : TON := (PT:=T#5S);
-	sPayloadPub: STRING(255) := '';
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -76,18 +76,22 @@ Wind5sAverage(IN := WindSpeed, PT := T#5S);
 WindDirectionAverage(IN := WindDirection, PT := T#5S);
 PressureAverage(IN := Pressure, PT := T#5S);
 
-HumidityDomeAverage(IN := HumidityDome, PT := T#2M);
+//HumidityDomeAverage(IN := HumidityDome, PT := T#2M);
 
 HumidityThreshold(	SET1 := Humidity >= 80.0,
 					RESET := Humidity < 65.0);
+
+HumidityDomeThreshold(	SET1 := HumidityDome >= 80.0,
+					RESET := HumidityDome <= 65.0);
+
 
 WindThreshold(	SET1 := WindAverage.AVG > 10.0 OR max_wind > 15.0, 
 				RESET := WindAverage.AVG < 5.0);
 
 WeatherBadDelay(IN := Rain OR
-				Precipitation >= 0.1 OR
+				Precipitation >= 0.2 OR
 				HumidityThreshold.Q1 OR
-				HumidityDomeAverage.AVG >= 80.0 OR
+				HumidityDomeThreshold.Q1 OR
 				WindThreshold.Q1, PT := T#4M, Q => WeatherBad);
 				
 IF WeatherBad AND DomeControl.DomeOpened THEN
@@ -104,39 +108,21 @@ eq2hor2(alpha := sunpos.RA,
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
-	sPayloadPub := 'environment,location=roof,host=CX-4E6032 ';
-	sPayloadPub := APPEND(sPayloadPub, 'OutsideTemperature=', LREAL_TO_FMTSTR(Temperature, 2, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',OutsideHumidity=', LREAL_TO_FMTSTR(Humidity, 1, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',WindSpeed=', LREAL_TO_FMTSTR(Wind5sAverage.AVG, 1, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',WindSpeedMax=', LREAL_TO_FMTSTR(Wind5sAverage.MAXAVG, 1, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',WindDirection=', LREAL_TO_FMTSTR(WindDirectionAverage.AVG, 1, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',Pressure=', LREAL_TO_FMTSTR(PressureAverage.AVG, 2, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',Brightness=', LREAL_TO_FMTSTR(Brightness, 2, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',LightDirection=', LREAL_TO_FMTSTR(LightDirection, 1, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',Rain=', BOOL_TO_STRING(Rain));
-	sPayloadPub := APPEND(sPayloadPub, ',RainAnalog=', LREAL_TO_FMTSTR(Precipitation, 3, TRUE));
+	MAIN.MQTTClient.Publish('environment', 'roof', 'OutsideTemperature', LREAL_TO_FMTSTR(Temperature, 2, TRUE));
+	MAIN.MQTTClient.Publish('environment', 'roof', 'OutsideHumidity', LREAL_TO_FMTSTR(Humidity, 1, TRUE));
+	MAIN.MQTTClient.Publish('environment', 'roof', 'WindSpeed', LREAL_TO_FMTSTR(Wind5sAverage.AVG, 1, TRUE));
+	MAIN.MQTTClient.Publish('environment', 'roof', 'WindSpeedMax', LREAL_TO_FMTSTR(Wind5sAverage.MAXAVG, 1, TRUE));
+	MAIN.MQTTClient.Publish('environment', 'roof', 'WindDirection', LREAL_TO_FMTSTR(WindDirectionAverage.AVG, 1, TRUE));
+	MAIN.MQTTClient.Publish('environment', 'roof', 'Pressure', LREAL_TO_FMTSTR(PressureAverage.AVG, 2, TRUE));
+	MAIN.MQTTClient.Publish('environment', 'roof', 'Brightness', LREAL_TO_FMTSTR(Brightness, 2, TRUE));
+	MAIN.MQTTClient.Publish('environment', 'roof', 'LightDirection', LREAL_TO_FMTSTR(LightDirection, 1, TRUE));
+	MAIN.MQTTClient.Publish('environment', 'roof', 'Rain', BOOL_TO_STRING(Rain));
+	MAIN.MQTTClient.Publish('environment', 'roof', 'RainAnalog', LREAL_TO_FMTSTR(Precipitation, 3, TRUE));
 	
-	MQTTCommunication.fbMqttClient.Publish(	
-					sTopic:= 'RoboTel/Telemetry', 
-					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)),
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= FALSE, 
-					bQueue:= FALSE );
 					
-	sPayloadPub := 'dome,location=dome,host=CX-4E6032 ';
-	sPayloadPub := APPEND(sPayloadPub, 'DomeTemperature=', LREAL_TO_FMTSTR(TemperatureDome, 2, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',DomeHumidity=', LREAL_TO_FMTSTR(HumidityDome, 1, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',WeatherBad=', BOOL_TO_STRING(WeatherBad));
-	
-	MQTTCommunication.fbMqttClient.Publish(	
-					sTopic:= 'RoboTel/Telemetry', 
-					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)),
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= FALSE, 
-					bQueue:= FALSE );
-
+	MAIN.MQTTClient.Publish('dome', 'dome', 'DomeTemperature', LREAL_TO_FMTSTR(TemperatureDome, 2, TRUE));
+	MAIN.MQTTClient.Publish('dome', 'dome', 'DomeHumidity', LREAL_TO_FMTSTR(HumidityDome, 1, TRUE));
+	MAIN.MQTTClient.Publish('dome', 'dome', 'WeatherBad', BOOL_TO_STRING(WeatherBad));
 END_IF
 
 WindEvent(	Trigger := avg_wind > 10.0, 
@@ -198,6 +184,8 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="995" Count="0" />
       <LineId Id="800" Count="0" />
       <LineId Id="996" Count="0" />
+      <LineId Id="1061" Count="2" />
+      <LineId Id="1060" Count="0" />
       <LineId Id="999" Count="2" />
       <LineId Id="576" Count="0" />
       <LineId Id="1006" Count="3" />
@@ -206,7 +194,7 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="906" Count="5" />
       <LineId Id="622" Count="3" />
       <LineId Id="665" Count="0" />
-      <LineId Id="727" Count="1" />
+      <LineId Id="727" Count="0" />
       <LineId Id="731" Count="0" />
       <LineId Id="733" Count="0" />
       <LineId Id="835" Count="1" />
@@ -214,16 +202,11 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="956" Count="1" />
       <LineId Id="730" Count="0" />
       <LineId Id="870" Count="0" />
-      <LineId Id="796" Count="0" />
-      <LineId Id="719" Count="5" />
       <LineId Id="718" Count="0" />
       <LineId Id="759" Count="0" />
-      <LineId Id="740" Count="1" />
+      <LineId Id="740" Count="0" />
       <LineId Id="743" Count="0" />
       <LineId Id="750" Count="0" />
-      <LineId Id="797" Count="0" />
-      <LineId Id="752" Count="6" />
-      <LineId Id="664" Count="0" />
       <LineId Id="628" Count="0" />
       <LineId Id="612" Count="0" />
       <LineId Id="144" Count="12" />

@@ -244,8 +244,8 @@ CASE Selection OF
 			ElevationControl.down := down AND GVL_Telescope.Elevation_inputs.1;
 			AzimuthElevationControl.left := left AND GVL_Telescope.Azimuth_inputs.0;
 			AzimuthElevationControl.right := right AND GVL_Telescope.Azimuth_inputs.1;
-			TelescopeControl.ra := TelescopeControl.rightascension_calc;
-			TelescopeControl.de := TelescopeControl.declination_calc;
+			TelescopeControl.rightascension := TelescopeControl.rightascension_calc;
+			TelescopeControl.declination := TelescopeControl.declination_calc;
 		ELSE
 			lamp_up := ElevationControl.enable;
 			lamp_down := ElevationControl.enable;

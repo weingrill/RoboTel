@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_MQTTCommunication" Id="{5f9ef57f-1a43-46d5-9870-b05542416a37}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MQTTCommunication
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	GetHostName:		FB_GetHostName;
+	HostName: 			STRING(255);
+    bSetParameter:		BOOL := FALSE;
+    bConnect:			BOOL := FALSE;
+    (* received message *)
+	bSubscribed: 		BOOL;
+	sTopicSub: 			STRING(255) := 'RoboTel/Telescope/SET';
+	{attribute 'TcEncoding':='UTF-8'}
+	sTopicRcv: 			STRING(255);
+	{attribute 'TcEncoding':='UTF-8'}
+	fbMessageQueue:		FB_IotMqttMessageQueue;
+    fbMessage:			FB_IotMqttMessage;
+	fbMqttClient:		FB_IotMqttClient;
+	sPayloadRcv: 		STRING;
+	influxMessage:		FB_InfluxMessage;
+	measurement, 
+	parameter, 
+	value:		STRING(255);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+MQTT Communication section
+
+Source:
+https://infosys.beckhoff.com/english.php?content=../content/1033/tf6701_tc3_iot_communication_mqtt/3518541195.html&id=
+
+*)
+IF HostName='' THEN
+	GetHostName.bExecute := TRUE;
+ELSE
+	GetHostName.bExecute := FALSE;
+	bSetParameter := TRUE;
+END_IF
+
+GetHostName(sHostName => HostName);
+
+// set the parameters once
+IF bSetParameter THEN
+    bSetParameter               := FALSE;
+    fbMqttClient.sHostName      := 'primitivo.aip.de';
+    fbMqttClient.nHostPort      := 1883;
+    fbMqttClient.sClientId      := HostName; 
+    fbMqttClient.sTopicPrefix   := ''; 
+	fbMqttClient.nKeepAlive     := 60; 
+    fbMqttClient.ipMessageQueue := fbMessageQueue;
+	bConnect := TRUE;
+END_IF
+
+// connect to the client
+IF NOT fbMqttClient.bConnected THEN
+;
+END_IF
+
+fbMqttClient.Execute(bConnect);
+	
+IF fbMqttClient.bConnected THEN
+    IF NOT bSubscribed THEN
+        bSubscribed := fbMqttClient.Subscribe(sTopic:=sTopicSub, 
+												eQoS:=TcIotMqttQos.AtMostOnceDelivery);
+    END_IF
+END_IF
+
+// receive queued messages
+IF fbMessageQueue.nQueuedMessages > 0 THEN
+    IF fbMessageQueue.Dequeue(fbMessage:=fbMessage) THEN
+        fbMessage.GetTopic(pTopic:=ADR(sTopicRcv), nTopicSize:=SIZEOF(sTopicRcv) );
+        fbMessage.GetPayload(pPayload:=ADR(sPayloadRcv), nPayloadSize:=SIZEOF(sPayloadRcv), bSetNullTermination:=TRUE);
+		ADSLOGSTR( ADSLOG_MSGTYPE_HINT OR ADSLOG_MSGTYPE_LOG, 'MQTT %s', sPayloadRcv);
+		IF sTopicRcv = sTopicSub THEN
+			influxMessage(  sPayload := sPayloadRcv, measurement => measurement, parameter => parameter, value => value);
+			IF measurement = 'command' THEN
+				IF parameter = 'power' THEN
+					TelescopeControl.power := STRING_TO_BOOL(value);
+				ELSIF parameter = 'park' THEN
+					TelescopeControl.park := STRING_TO_BOOL(value);
+				ELSIF parameter = 'gohome' THEN
+					TelescopeControl.gohome := STRING_TO_BOOL(value);
+				ELSIF parameter = 'track' THEN
+					TelescopeControl.track := STRING_TO_BOOL(value);
+				ELSIF parameter = 'goto' THEN
+					TelescopeControl.goto := STRING_TO_BOOL(value);
+				ELSIF parameter = 'slew' THEN
+					TelescopeControl.slew := STRING_TO_BOOL(value);
+				ELSIF parameter = 'stop' THEN
+					TelescopeControl.stop := STRING_TO_BOOL(value);
+				ELSIF parameter = 'reset' THEN
+					TelescopeControl.reset := STRING_TO_BOOL(value);
+				ELSIF parameter = 'nasmyth' THEN
+					TelescopeControl.Nasmyth_port := STRING_TO_USINT(value);
+				ELSIF parameter = 'rightascension' THEN
+					TelescopeControl.rightascension := STRING_TO_LREAL(value);
+				ELSIF parameter = 'declination' THEN
+					TelescopeControl.declination := STRING_TO_LREAL(value);
+				ELSIF parameter = 'elevation' THEN
+					TelescopeControl.elevation := STRING_TO_LREAL(value);
+				ELSIF parameter = 'azimuth' THEN
+					TelescopeControl.azimuth := STRING_TO_LREAL(value);
+				ELSIF parameter = 'focus' THEN
+					TelescopeControl.focus_position := STRING_TO_LREAL(value);
+				ELSIF parameter = 'derotator' THEN
+					TelescopeControl.derotator_offset := STRING_TO_LREAL(value);
+				ELSE
+					ADSLOGSTR( ADSLOG_MSGTYPE_WARN OR ADSLOG_MSGTYPE_LOG, 'MQTT not understood %s', sPayloadRcv);
+				END_IF
+			END_IF // measurement
+		END_IF // Topic
+		sPayloadRcv := '';
+    END_IF // Dequeue
+END_IF]]></ST>
+    </Implementation>
+    <Property Name="Error" Id="{78d1d012-baaf-423e-a194-3780c6f6dc78}">
+      <Declaration><![CDATA[PROPERTY Error : BOOL]]></Declaration>
+      <Get Name="Get" Id="{06797971-03f0-42f5-8ce7-317a6cd32c60}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Error := fbMqttClient.bError;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Publish" Id="{cdbc3347-8b58-489a-94fe-8e8502587296}">
+      <Declaration><![CDATA[METHOD Publish : BOOL
+VAR_INPUT
+	domain: 	STRING(255) := 'environment';
+	location: 	STRING(255) := 'roof';
+	parameter:	STRING(255);
+	value:		STRING(255);
+END_VAR
+VAR
+	sPayloadPub: STRING(255) := '';
+	fbFormat:	FB_FormatString;
+	bError:		BOOL;
+	nErrID: UDINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//sPayloadPub := 'environment,location=roof,host=CX-4E6032 ';
+fbFormat( sFormat := '%s,location=%s,host=%s %s=%s', 
+			arg1 := F_STRING(domain), 
+			arg2 := F_STRING(location), 
+			arg3 := F_STRING(HostName),
+			arg4 := F_STRING(parameter),
+			arg5 := F_STRING(value),
+ 
+			sOut => sPayloadPub,
+			bError => bError, 
+			nErrID => nErrID );
+//sPayloadPub := APPEND(sPayloadPub, 'OutsideTemperature=', LREAL_TO_FMTSTR(Temperature, 2, TRUE));
+//sPayloadPub := APPEND(sPayloadPub, ',OutsideHumidity=', LREAL_TO_FMTSTR(Humidity, 1, TRUE));
+
+fbMqttClient.Publish(	
+				sTopic:= 'RoboTel/Telemetry', 
+				pPayload:= ADR(sPayloadPub), 
+				nPayloadSize:= LEN2(ADR(sPayloadPub)),
+				eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+				bRetain:= FALSE, 
+				bQueue:= FALSE );
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PublishLog" Id="{e0ebb0b3-f1b8-4a54-a57a-d713d9f93164}">
+      <Declaration><![CDATA[METHOD PublishLog : BOOL
+VAR_INPUT
+	level: 	STRING(255) := 'INFO';
+	message:	STRING(255);
+	
+END_VAR
+VAR
+	sPayloadPub: STRING(255) := '';
+	fbFormat:	FB_FormatString;
+	bError:		BOOL;
+	nErrID: UDINT;
+END_VAR
+VAR_OUTPUT
+	published: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//sPayloadPub := 'environment,location=roof,host=CX-4E6032 ';
+fbFormat( sFormat := 'log,host=%s,level=%s message="%s"', 
+			arg1 := F_STRING(HostName), 
+			arg2 := F_STRING(level), 
+			arg3 := F_STRING(message),
+ 
+			sOut => sPayloadPub,
+			bError => bError, 
+			nErrID => nErrID );
+
+published := fbMqttClient.Publish(	
+				sTopic:= 'RoboTel/Log', 
+				pPayload:= ADR(sPayloadPub), 
+				nPayloadSize:= LEN2(ADR(sPayloadPub)),
+				eQoS:= TcIotMqttQos.AtMostOnceDelivery,
+				bRetain:= FALSE, 
+				bQueue:= FALSE );
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_MQTTCommunication">
+      <LineId Id="308" Count="78" />
+      <LineId Id="394" Count="1" />
+      <LineId Id="387" Count="6" />
+      <LineId Id="105" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MQTTCommunication.Error.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MQTTCommunication.Publish">
+      <LineId Id="6" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="36" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="39" Count="1" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="17" Count="7" />
+      <LineId Id="58" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MQTTCommunication.PublishLog">
+      <LineId Id="6" Count="4" />
+      <LineId Id="13" Count="3" />
+      <LineId Id="19" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -27,9 +27,9 @@ see https://gitlab.aip.de/bmk10k/telescope_firmware/snippets/5
 	// initiates hard-reset on all axis
 	reset:		BOOL;
 	// apparent right ascension, degrees, double
-	ra:			LREAL := (00.0 + 08.0/60.0 + 23.17/3600.0) *15.0;	
+	rightascension:			LREAL := (00.0 + 08.0/60.0 + 23.17/3600.0) *15.0;	
 	// apparent declination, degrees, double
-	de: 		LREAL := 29.0 + 05.0/60.0 + 26.99/3600.0;
+	declination: 		LREAL := 29.0 + 05.0/60.0 + 26.99/3600.0;
 	// desired elevation of the telescope pointing 
 	elevation:	LREAL := 45.0;
 	// desired azimut of the telescope pointing 
@@ -95,8 +95,6 @@ VAR
 	TCSreadyEvent: FB_Eventlog;
 	FocusDelay: TON := (PT:=T#5S);
 	MQTTTimer : TON := (PT:=T#5S);
-	// MQTT Message
-	sPayloadPub: STRING(255);
 	// rotational velocity of the derotator
 	DerotatorVelocity: LREAL;
 	
@@ -107,8 +105,8 @@ VAR_OUTPUT
 	ready:	BOOL; 
 	// indicates an error on one of the components
 	error:	BOOL;	
-	//number OF errors encountered
-	//errnr:	UINT;	
+	//error id of axis
+	errorid:	UDINT;	
 	//TRUE, IF telescope is in fast-MOVE phase (includes pole-swap)
 	sliding: BOOL;	
 	//TRUE, IF telescope is on tracking position AND currently tracking.
@@ -164,16 +162,22 @@ IF softreset THEN
 END_IF
 
 IF ElevationControl.error THEN
+	errorid := ElevationControl.ErrorID;
 	ElevationControl.reset := reset;
 ELSIF AzimuthElevationControl.error THEN
+	errorid := AzimuthElevationControl.ErrorID;
 	AzimuthElevationControl.Reset := reset;
 ELSIF FilterWheelControl.Error THEN
+	errorid := FilterWheelControl.ErrorID;
 	FilterWheelControl.Reset := reset;
 ELSIF DomeControl.Error THEN
+	errorid := DomeControl.ErrorID;
 	DomeControl.Reset := reset;
 ELSIF Focuscontrol.Error THEN
+	errorid := Focuscontrol.ErrorID;
 	FocusControl.reset := reset;
 ELSIF DerotatorControl.Error THEN
+	errorid := DerotatorControl.ErrorID;
 	DerotatorControl.reset := reset;
 END_IF
 
@@ -183,12 +187,6 @@ error := ElevationControl.error OR
 		 // DomeControl.Error OR
 		 Focuscontrol.Error OR
 		 DerotatorControl.Error;
-
-ready := 	ElevationControl.Calibrated AND
-			AzimuthElevationControl.calibrated AND
-			FilterWheelControl.Calibrated AND
-			FocusControl.Calibrated AND
-			DerotatorControl.Calibrated;
 
 slewtime := MAX(MAX(ElevationControl.slewtime, AzimuthElevationControl.slewtime), DerotatorControl.slewtime);
 			
@@ -221,8 +219,8 @@ ELSE
 	telescope_mode := E_TelescopeMode.automatic;
 END_IF
 
-eq2hor2(alpha := ra,
-	delta := de,
+eq2hor2(alpha := rightascension,
+	delta := declination,
 	lon := longitude,
 	lat := latitude,
 	JD := jd + time_offset,
@@ -263,7 +261,29 @@ END_IF
 FanControl.reset := poweron_reset.Q OR reset;
 CoverControl.reset := poweron_reset.Q OR reset;
 
-
+IF Nasmyth_port = 1 THEN
+	NasmythControl.right := FALSE;
+	IF NasmythControl.Nasmyth_left THEN
+		NasmythControl.left := FALSE;
+		NasmythControl.enable := FALSE;
+	ELSE
+		NasmythControl.left := TRUE;
+		NasmythControl.enable := TRUE;
+	END_IF
+ELSIF Nasmyth_port = 2 THEN
+	NasmythControl.left := FALSE;
+    IF NasMythControl.Nasmyth_right THEN
+		NasmythControl.right := FALSE;
+		NasmythControl.enable := FALSE;
+	ELSE
+		NasmythControl.right := TRUE;
+		NasmythControl.enable := TRUE;
+	END_IF
+ELSE
+	NasmythControl.right := FALSE;
+	NasmythControl.left := FALSE;
+	NasmythControl.enable := FALSE;	
+END_IF
 	
 IF power THEN
 	IF NOT Main.brake_clearing THEN
@@ -499,7 +519,11 @@ END_IF
 sliding := ElevationControl.MoveAxis OR AzimuthElevationControl.MoveAxis;
 tracking := ElevationControl.Tracking AND AzimuthElevationControl.Tracking;
 stopped :=  ElevationControl.ElevationAxis.StandStill AND AzimuthElevationControl.AzimuthAxis.StandStill;
-homed := ElevationControl.Calibrated AND AzimuthElevationControl.calibrated AND DerotatorControl.Calibrated;
+homed := ElevationControl.Calibrated AND
+			AzimuthElevationControl.calibrated AND
+			FilterWheelControl.Calibrated AND
+			FocusControl.Calibrated AND
+			DerotatorControl.Calibrated;
 ready := homed AND CoverControl.isopen AND HydraulicsControl.brake_open;
 
 GVL_Telescope.horn := poweronwarning.Q OR Pendantcontrol.horn;
@@ -508,21 +532,13 @@ MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
 
-	sPayloadPub := 'telescope,location=dome,host=CX-4E6032,module=TelescopeControl ';
-	sPayloadPub := APPEND(sPayloadPub, 'Azimuth=', LREAL_TO_FMTSTR(azimuth_current, 5, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',Elevation=', LREAL_TO_FMTSTR(elevation_current, 5, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',HourAngle=', LREAL_TO_FMTSTR(hourangle_calc, 5, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',RightAscension=', LREAL_TO_FMTSTR(rightascension_calc, 5, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',Declination=', LREAL_TO_FMTSTR(declination_calc, 5, TRUE));
-	sPayloadPub := APPEND(sPayloadPub, ',Derotator=', LREAL_TO_FMTSTR(derotation_calc, 5, TRUE));
-	
-	MQTTCommunication.fbMqttClient.Publish(	
-					sTopic:= 'RoboTel/Telemetry', 
-					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)),
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= FALSE, 
-					bQueue:= FALSE );
+	MAIN.MQTTClient.Publish('telescope', 'dome', 'Azimuth', LREAL_TO_FMTSTR(azimuth_current, 5, TRUE));
+	MAIN.MQTTClient.Publish('telescope', 'dome', 'Elevation', LREAL_TO_FMTSTR(elevation_current, 5, TRUE));
+	MAIN.MQTTClient.Publish('telescope', 'dome', 'HourAngle', LREAL_TO_FMTSTR(hourangle_calc, 5, TRUE));
+	MAIN.MQTTClient.Publish('telescope', 'dome', 'RightAscension', LREAL_TO_FMTSTR(rightascension_calc, 5, TRUE));
+	MAIN.MQTTClient.Publish('telescope', 'dome', 'Declination', LREAL_TO_FMTSTR(declination_calc, 5, TRUE));
+	MAIN.MQTTClient.Publish('telescope', 'dome', 'Derotator', LREAL_TO_FMTSTR(derotation_calc, 5, TRUE));
+	MAIN.MQTTClient.Publish('telescope', 'dome', 'errorid',		UDINT_TO_STRING(errorid));
 END_IF
 
 StatusWord.0 := error;
@@ -534,21 +550,12 @@ StatusWord.5 := homed;
 
 IF StatusWord<>LastStatus THEN // publish new payload every second
 	LastStatus := StatusWord;
-	sPayloadPub := 'telescope,location=dome,host=CX-4E6032,module=TelescopeControl ';
-	sPayloadPub := APPEND(sPayloadPub, 'error=',		BOOL_TO_STRING(error));
-	sPayloadPub := APPEND(sPayloadPub, ',ready=',		BOOL_TO_STRING(ready));
-	sPayloadPub := APPEND(sPayloadPub, ',sliding=',		BOOL_TO_STRING(sliding));
-	sPayloadPub := APPEND(sPayloadPub, ',tracking=', 	BOOL_TO_STRING(tracking));
-	sPayloadPub := APPEND(sPayloadPub, ',stopped=',		BOOL_TO_STRING(stopped));
-	sPayloadPub := APPEND(sPayloadPub, ',homed=',		BOOL_TO_STRING(homed));
-	
-	MQTTCommunication.fbMqttClient.Publish(	
-					sTopic:= 'RoboTel/Telemetry', 
-					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)),
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= TRUE, 
-					bQueue:= FALSE );
+	MAIN.MQTTClient.Publish('telescope', 'dome', 'error',		BOOL_TO_STRING(error));
+	MAIN.MQTTClient.Publish('telescope', 'dome', 'ready',		BOOL_TO_STRING(ready));
+	MAIN.MQTTClient.Publish('telescope', 'dome', 'sliding',		BOOL_TO_STRING(sliding));
+	MAIN.MQTTClient.Publish('telescope', 'dome', 'tracking', 	BOOL_TO_STRING(tracking));
+	MAIN.MQTTClient.Publish('telescope', 'dome', 'stopped',		BOOL_TO_STRING(stopped));
+	MAIN.MQTTClient.Publish('telescope', 'dome', 'homed',		BOOL_TO_STRING(homed));
 END_IF
 
 
@@ -604,16 +611,23 @@ TCSreadyEvent(	Trigger := power AND ready,
       <LineId Id="643" Count="0" />
       <LineId Id="646" Count="0" />
       <LineId Id="644" Count="1" />
-      <LineId Id="4249" Count="2" />
+      <LineId Id="4249" Count="1" />
+      <LineId Id="7318" Count="0" />
+      <LineId Id="4251" Count="0" />
       <LineId Id="4301" Count="0" />
+      <LineId Id="7319" Count="0" />
       <LineId Id="4253" Count="0" />
       <LineId Id="4302" Count="0" />
-      <LineId Id="4312" Count="6" />
+      <LineId Id="7320" Count="0" />
+      <LineId Id="4312" Count="1" />
+      <LineId Id="7321" Count="0" />
+      <LineId Id="4314" Count="1" />
+      <LineId Id="7322" Count="0" />
+      <LineId Id="4316" Count="1" />
+      <LineId Id="7323" Count="0" />
+      <LineId Id="4318" Count="0" />
       <LineId Id="4252" Count="0" />
       <LineId Id="6575" Count="6" />
-      <LineId Id="6593" Count="0" />
-      <LineId Id="6583" Count="0" />
-      <LineId Id="6594" Count="3" />
       <LineId Id="6601" Count="0" />
       <LineId Id="6600" Count="0" />
       <LineId Id="6598" Count="0" />
@@ -661,6 +675,24 @@ TCSreadyEvent(	Trigger := power AND ready,
       <LineId Id="4346" Count="0" />
       <LineId Id="4835" Count="0" />
       <LineId Id="6606" Count="1" />
+      <LineId Id="7305" Count="0" />
+      <LineId Id="7291" Count="1" />
+      <LineId Id="7296" Count="0" />
+      <LineId Id="7294" Count="0" />
+      <LineId Id="7304" Count="0" />
+      <LineId Id="7298" Count="0" />
+      <LineId Id="7293" Count="0" />
+      <LineId Id="7285" Count="0" />
+      <LineId Id="7306" Count="0" />
+      <LineId Id="7299" Count="0" />
+      <LineId Id="7307" Count="1" />
+      <LineId Id="7302" Count="0" />
+      <LineId Id="7287" Count="0" />
+      <LineId Id="7286" Count="0" />
+      <LineId Id="7289" Count="0" />
+      <LineId Id="7309" Count="0" />
+      <LineId Id="7311" Count="2" />
+      <LineId Id="7284" Count="0" />
       <LineId Id="3591" Count="0" />
       <LineId Id="3547" Count="0" />
       <LineId Id="3592" Count="0" />
@@ -834,24 +866,25 @@ TCSreadyEvent(	Trigger := power AND ready,
       <LineId Id="3539" Count="0" />
       <LineId Id="4256" Count="0" />
       <LineId Id="4255" Count="0" />
+      <LineId Id="7279" Count="3" />
       <LineId Id="4257" Count="0" />
       <LineId Id="6942" Count="0" />
       <LineId Id="7133" Count="0" />
       <LineId Id="5167" Count="0" />
       <LineId Id="4662" Count="3" />
-      <LineId Id="4837" Count="2" />
+      <LineId Id="4837" Count="1" />
       <LineId Id="4841" Count="0" />
       <LineId Id="4853" Count="0" />
       <LineId Id="4855" Count="0" />
       <LineId Id="4857" Count="0" />
-      <LineId Id="6780" Count="1" />
-      <LineId Id="4844" Count="6" />
+      <LineId Id="6780" Count="0" />
+      <LineId Id="7316" Count="0" />
       <LineId Id="4656" Count="0" />
       <LineId Id="7090" Count="0" />
       <LineId Id="7093" Count="4" />
       <LineId Id="7091" Count="0" />
-      <LineId Id="7098" Count="9" />
-      <LineId Id="7109" Count="7" />
+      <LineId Id="7098" Count="3" />
+      <LineId Id="7103" Count="4" />
       <LineId Id="7132" Count="0" />
       <LineId Id="7092" Count="0" />
       <LineId Id="3530" Count="1" />

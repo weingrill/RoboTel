@@ -16,8 +16,9 @@ END_VAR
 VAR
 	LogonTrigger: R_TRIG;
 	LogoffTrigger: F_TRIG; // R_Trig or F_Trig ?!
-	sPayloadPub, PayloadMessage: STRING(255);
+	PayloadMessage: STRING(255);
 	fbFormat:	FB_FormatString;
+	LevelString: STRING;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -35,47 +36,29 @@ IF LogoffTrigger.Q AND LEN(OffMessage)>0 THEN
 	ADSLOGSTR( OffLevel OR ADSLOG_MSGTYPE_LOG, FormatString, OffMessage);
 END_IF
 
-sPayloadPub := 'log,host=CX-4E6032';
-
 IF LogonTrigger.Q AND LEN(OnMessage)>1 THEN
 	IF Level=ADSLOG_MSGTYPE_HINT THEN
-		sPayloadPub := CONCAT(sPayloadPub, ',level=INFO');
+		LevelString := 'INFO';
 	ELSIF Level=ADSLOG_MSGTYPE_WARN THEN
-		sPayloadPub := CONCAT(sPayloadPub, ',level=WARNING');
+		LevelString := 'WARNING';
 	ELSE
-	    sPayloadPub := CONCAT(sPayloadPub, ',level=ERROR');
+	    LevelString := 'ERROR';
 	END_IF
 	fbFormat( sFormat := FormatString, arg1 := F_STRING(OnMessage), sOut => PayloadMessage);
-	sPayloadPub := APPEND(sPayloadPub, ' message="', PayloadMessage);
-	sPayloadPub := CONCAT(sPayloadPub, '"');
-	MQTTCommunication.fbMqttClient.Publish(	
-					sTopic:= 'RoboTel/Log', 
-					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)),
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= FALSE, 
-					bQueue:= FALSE );
+	MAIN.MQTTClient.PublishLog(LevelString, PayloadMessage);
+
 END_IF
 
 IF LogoffTrigger.Q AND LEN(OffMessage)>1 THEN
 	IF OffLevel=ADSLOG_MSGTYPE_HINT THEN
-		sPayloadPub := CONCAT(sPayloadPub, ',level=INFO');
+		LevelString := 'INFO';
 	ELSIF OffLevel=ADSLOG_MSGTYPE_WARN THEN
-		sPayloadPub := CONCAT(sPayloadPub, ',level=WARNING');
+		LevelString := 'WARNING';
 	ELSE
-	    sPayloadPub := CONCAT(sPayloadPub, ',level=ERROR');
+	    LevelString := 'ERROR';
 	END_IF
-	
 	fbFormat( sFormat := FormatString, arg1 := F_STRING(OffMessage), sOut => PayloadMessage);
-	sPayloadPub := APPEND(sPayloadPub, ' message="', PayloadMessage);
-	sPayloadPub := CONCAT(sPayloadPub, '"');
-	MQTTCommunication.fbMqttClient.Publish(	
-					sTopic:= 'RoboTel/Log', 
-					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)),
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= FALSE, 
-					bQueue:= FALSE );
+	MAIN.MQTTClient.PublishLog(LevelString, PayloadMessage);
 END_IF	
 ]]></ST>
     </Implementation>
@@ -85,12 +68,15 @@ END_IF
       <LineId Id="51" Count="2" />
       <LineId Id="29" Count="5" />
       <LineId Id="9" Count="0" />
-      <LineId Id="113" Count="1" />
-      <LineId Id="72" Count="8" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="73" Count="7" />
       <LineId Id="115" Count="0" />
-      <LineId Id="81" Count="20" />
-      <LineId Id="117" Count="0" />
-      <LineId Id="102" Count="8" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="89" Count="3" />
+      <LineId Id="146" Count="5" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="109" Count="1" />
       <LineId Id="71" Count="0" />
     </LineIds>
   </POU>

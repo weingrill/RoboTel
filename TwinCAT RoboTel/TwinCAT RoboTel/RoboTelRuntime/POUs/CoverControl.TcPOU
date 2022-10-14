@@ -74,6 +74,10 @@ VAR
 	Covers_Error_event:		FB_EventLog;
 	// Event log for a generic drive warning
 	Covers_Warning_event:		FB_EventLog;
+	// status word for MQTT message
+	Cover_status:		WORD;
+	// last status word to trigger MQTT message if different
+	LastStatus:			WORD;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -186,6 +190,29 @@ isclosed := cover2_closed AND cover3_closed AND (cover1_closed OR GVL_Main.isRob
 Error := (Cover1_error AND NOT GVL_Main.isRoboTel) OR Cover2_error OR Cover3_error;
 Warning := Cover1_control.Warning OR Cover2_control.Warning OR Cover3_control.Warning;
 
+Cover_status.0 := isopen;
+Cover_status.1 := isclosed;
+Cover_status.2 := Warning;
+Cover_status.3 := Error;
+Cover_status.4 := isopen;
+Cover_status.5 := Cover1_opened;
+Cover_status.6 := Cover2_opened;
+Cover_status.7 := Cover3_opened;
+Cover_status.8 := Cover1_closed;
+Cover_status.9 := Cover2_closed;
+Cover_status.10 := Cover3_closed;
+Cover_status.11 := Cover1_error;
+Cover_status.12 := Cover2_error;
+Cover_status.13 := Cover3_error;
+
+IF Cover_status <> LastStatus THEN
+	LastStatus := Cover_status;
+	MAIN.MQTTClient.Publish('telescope', 'cover', 'CoverIsOpen', BOOL_TO_STRING(isopen));
+	MAIN.MQTTClient.Publish('telescope', 'cover', 'CoverIsClosed', BOOL_TO_STRING(isclosed));
+	MAIN.MQTTClient.Publish('telescope', 'cover', 'CoverWarning', BOOL_TO_STRING(Warning));
+	MAIN.MQTTClient.Publish('telescope', 'cover', 'CoverError', BOOL_TO_STRING(Error));
+	MAIN.MQTTClient.Publish('telescope', 'cover', 'CoverStatus', WORD_TO_STRING(Cover_status));
+END_IF
 
 // A timeout occurs, when we open the cover, and the opened signal does not activate within n seconds.
 // The same holds for closing the cover. This should not take longer then 10 seconds
@@ -341,7 +368,15 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="423" Count="0" />
       <LineId Id="256" Count="0" />
       <LineId Id="628" Count="0" />
+      <LineId Id="1017" Count="2" />
       <LineId Id="627" Count="0" />
+      <LineId Id="1020" Count="1" />
+      <LineId Id="1023" Count="6" />
+      <LineId Id="1031" Count="1" />
+      <LineId Id="1022" Count="0" />
+      <LineId Id="1006" Count="5" />
+      <LineId Id="1030" Count="0" />
+      <LineId Id="1012" Count="0" />
       <LineId Id="373" Count="0" />
       <LineId Id="353" Count="0" />
       <LineId Id="374" Count="0" />

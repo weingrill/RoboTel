@@ -35,8 +35,8 @@ PowerLog(
 	Trigger := 		power_OK, 
 	Level := 		ADSLOG_MSGTYPE_HINT,
 	FormatString :=	'%s',
-	OnMessage := 	'Power is ON',
-	OffMEssage := 	'Power is OFF');
+	OnMessage := 	'Mains power is ON',
+	OffMEssage := 	'Mains power is OFF');
 ]]></ST>
     </Implementation>
     <Property Name="error" Id="{4119c9eb-4956-4e1d-9bb0-76d34951f705}">

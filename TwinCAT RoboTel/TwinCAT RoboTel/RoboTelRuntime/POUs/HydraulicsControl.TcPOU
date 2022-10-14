@@ -78,8 +78,6 @@ VAR
 	
 	// measures the operating cycle of the suction pump
 	suction_timer : FB_Timer;
-	// MQTT Message
-	sPayloadPub: STRING(255);
 	StatusWord, LastStatus:	UDINT;
 END_VAR
 ]]></Declaration>
@@ -203,37 +201,17 @@ StatusWord.10 := suction_running;
 
 IF StatusWord<>LastStatus THEN // publish new payload every second
 	LastStatus := StatusWord;
-	sPayloadPub := 'electronics,location=base,host=CX-4E6032,module=HydraulicsControl ';
-	sPayloadPub := APPEND(sPayloadPub, 'OilLow=',			BOOL_TO_STRING(oil_low));
-	sPayloadPub := APPEND(sPayloadPub, ',OilHigh=',			BOOL_TO_STRING(oil_high));
-	sPayloadPub := APPEND(sPayloadPub, ',OilReserve=',		BOOL_TO_STRING(oil_warning));
-	sPayloadPub := APPEND(sPayloadPub, ',OilPressureOK=', 	BOOL_TO_STRING(oil_pressure_OK));
-	sPayloadPub := APPEND(sPayloadPub, ',OilFilterDirty=',	BOOL_TO_STRING(oil_filter_dirty));
-	sPayloadPub := APPEND(sPayloadPub, ',OilCold=',			BOOL_TO_STRING(oil_cold));
-	sPayloadPub := APPEND(sPayloadPub, ',OilHot=',			BOOL_TO_STRING(oil_Hot));
-	
-	MQTTCommunication.fbMqttClient.Publish(	
-					sTopic:= 'RoboTel/Telemetry', 
-					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)),
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= TRUE, 
-					bQueue:= FALSE );
-
-	sPayloadPub := 'electronics,location=base,host=CX-4E6032,module=HydraulicsControl ';
-	sPayloadPub := APPEND(sPayloadPub, 'BrakeOpen=',		BOOL_TO_STRING(brake_open));
-	sPayloadPub := APPEND(sPayloadPub, ',BrakeClearing=',	BOOL_TO_STRING(GVL_Main.brake_clearing));
-	sPayloadPub := APPEND(sPayloadPub, ',PumpRunning=',		BOOL_TO_STRING(pump_running));
-	sPayloadPub := APPEND(sPayloadPub, ',SuctionRunning=',	BOOL_TO_STRING(suction_running));
-	
-	MQTTCommunication.fbMqttClient.Publish(	
-					sTopic:= 'RoboTel/Telemetry', 
-					pPayload:= ADR(sPayloadPub), 
-					nPayloadSize:= LEN2(ADR(sPayloadPub)),
-					eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-					bRetain:= TRUE, 
-					bQueue:= FALSE );
-	
+	MAIN.MQTTClient.Publish('hydraulics', 'base', 'OilLow',			BOOL_TO_STRING(oil_low));
+	MAIN.MQTTClient.Publish('hydraulics', 'base', 'OilHigh',		BOOL_TO_STRING(oil_high));
+	MAIN.MQTTClient.Publish('hydraulics', 'base', 'OilReserve',		BOOL_TO_STRING(oil_warning));
+	MAIN.MQTTClient.Publish('hydraulics', 'base', 'OilPressureOK', 	BOOL_TO_STRING(oil_pressure_OK));
+	MAIN.MQTTClient.Publish('hydraulics', 'base', 'OilFilterDirty',	BOOL_TO_STRING(oil_filter_dirty));
+	MAIN.MQTTClient.Publish('hydraulics', 'base', 'OilCold',		BOOL_TO_STRING(oil_cold));
+	MAIN.MQTTClient.Publish('hydraulics', 'base', 'OilHot',			BOOL_TO_STRING(oil_Hot));
+	MAIN.MQTTClient.Publish('hydraulics', 'base', 'BrakeOpen',		BOOL_TO_STRING(brake_open));
+	MAIN.MQTTClient.Publish('hydraulics', 'base', 'BrakeClearing',	BOOL_TO_STRING(GVL_Main.brake_clearing));
+	MAIN.MQTTClient.Publish('hydraulics', 'base', 'PumpRunning',	BOOL_TO_STRING(pump_running));
+	MAIN.MQTTClient.Publish('hydraulics', 'base', 'SuctionRunning',	BOOL_TO_STRING(suction_running));
 END_IF
 
 
@@ -357,19 +335,17 @@ BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
       <LineId Id="1135" Count="0" />
       <LineId Id="1017" Count="0" />
       <LineId Id="1019" Count="1" />
-      <LineId Id="1219" Count="1" />
+      <LineId Id="1220" Count="0" />
       <LineId Id="1061" Count="0" />
       <LineId Id="1063" Count="0" />
       <LineId Id="1076" Count="0" />
       <LineId Id="1078" Count="0" />
       <LineId Id="1080" Count="0" />
-      <LineId Id="1031" Count="7" />
-      <LineId Id="1082" Count="2" />
+      <LineId Id="1084" Count="0" />
       <LineId Id="1086" Count="0" />
       <LineId Id="1088" Count="0" />
       <LineId Id="1090" Count="0" />
-      <LineId Id="1098" Count="7" />
-      <LineId Id="1039" Count="1" />
+      <LineId Id="1040" Count="0" />
       <LineId Id="1014" Count="1" />
       <LineId Id="366" Count="0" />
       <LineId Id="369" Count="5" />
