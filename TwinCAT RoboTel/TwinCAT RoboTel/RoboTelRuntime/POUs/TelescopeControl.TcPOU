@@ -78,8 +78,8 @@ VAR
 	softreset:		BOOL;
 	// triggers power-failure event
 	powerfailure: 	BOOL;
-	poweron:		R_TRIG;
-	poweroff:		F_TRIG;
+	powerontrigger:		R_TRIG;
+	powerofftrigger:		F_TRIG;
 	poweronwarning:	TP;
 	poweron_reset:	TP;
 	power_timeout:	TON;
@@ -249,13 +249,13 @@ ELSE
 END_IF
 		
 poweronwarning(IN := power OR (NOT ElevationControl.enable AND HydraulicsControl.brake_open), PT := T#250MS);
-poweron(CLK := power);
-poweroff(CLK := power);
+powerontrigger(CLK := power);
+powerofftrigger(CLK := power);
 poweron_reset(IN := power AND NOT PendantControl.manual, PT := T#50MS);
 // park the telescope after 12 hours
 power_timeout(IN := power, PT := T#12H);
 IF power_timeout.Q THEN
-	park := TRUE;
+	power := FALSE;
 END_IF
 // reset fan
 FanControl.reset := poweron_reset.Q OR reset;
@@ -285,99 +285,10 @@ ELSE
 	NasmythControl.enable := FALSE;	
 END_IF
 	
-IF power THEN
-	IF NOT Main.brake_clearing THEN
-		powerfailure := TRUE;
-		TCSpowerEvent.OnMessage := 'failure: brake clearing not set';
-		power := FALSE;
-	ELSIF NOT Transformer.power_OK THEN
-		powerfailure := TRUE;
-		TCSpowerEvent.OnMessage := 'failure: main power failure';
-		power := FALSE;
-	ELSIF NOT Main.phase_available THEN
-		powerfailure := TRUE;
-		TCSpowerEvent.OnMessage := 'failure: hydraulics power failure';
-		power := FALSE;
-	ELSE
-		powerfailure := FALSE;		
-	END_IF
-	// enable hydraulics
-	HydraulicsControl.start := TRUE;
-	// open cover
-	// COVER MUST BE OPENED FOR A SUCCESSFUL WAKE & SHAKE COMMAND!
-	CoverControl.enable := TRUE;
-	//CoverControl.reset := poweron_reset.Q;
-	Covercontrol.open := TRUE;
-	IF Covercontrol.isopen THEN
-		Covercontrol.open := FALSE;
-	END_IF
-	// enable elevation enable azimuth
-	IF MAIN.ready AND CoverControl.isopen THEN
-		ElevationControl.enable := TRUE;
-	    // wait until azimuth comes to rest
-		IF GVL_Telescope.AzimuthAxisRef.NcToPlc.ActVelo < 0.1 THEN
-			AzimuthElevationControl.enable := TRUE;
-		END_IF	
-	END_IF
-	
-	IF ElevationControl.Ready AND NOT ElevationControl.Calibrated THEN
-		ElevationControl.HomeAxis := TRUE;
-	END_IF
-	
-	IF AzimuthElevationControl.ready AND NOT AzimuthElevationControl.calibrated THEN
-		AzimuthElevationControl.HomeAxis := TRUE;
-	END_IF
-
-	// if the dome is not calibrated while the power is on, start calibration
-	IF NOT DomeControl.Calibrated AND AzimuthElevationControl.calibrated THEN
-		DomeControl.HomeAxis := TRUE;
-	END_IF
-
-	// enable derotator
-	IF ElevationControl.Ready THEN
-		DerotatorControl.enable := TRUE;
-		DerotatorControl.HomeAxis := DerotatorControl.Ready AND NOT DerotatorControl.Calibrated;
-	END_IF
-	
-	// enable filterwheel after Derotator Axis to avoid additional torque
-	IF DerotatorControl.Calibrated THEN
-		FilterWheelControl.Enable := TRUE;
-		FilterWheelControl.HomeAxis := NOT FilterWheelControl.Calibrated;
-	END_IF
-	
-	// enable focus
-	FocusControl.enable := TRUE;
-	IF FocusControl.ready AND NOT FocusControl.Calibrated THEN
-		FocusControl.HomeAxis := TRUE;
-	END_IF
-	FocusDelay(IN := FocusControl.Calibrated AND FocusControl.Ready);
-	IF FocusDelay.Q THEN
-		FocusControl.position := focus_position;
-		FocusControl.MoveAxis := ABS(FocusControl.actual_position - focus_position) > 0.005;
-	END_IF
-ELSIF poweroff.Q THEN
-	gohome := 	FALSE;
-	park  := 	FALSE;
-	track := 	FALSE;
-	goto := 	FALSE;
-	slew := 	FALSE;
-	pumping :=	FALSE;
-	// disable azimuth
-	AzimuthElevationControl.enable := FALSE;
-	// disbale elevation (closes brake)
-	ElevationControl.enable := FALSE;
-	// disable focus
-	FocusControl.enable := FALSE;
-	// disable filterwheel
-	FilterWheelControl.Enable := FALSE;
-	// disable derotator
-	DerotatorControl.enable := FALSE;
-	// close cover
-	CoverControl.close := TRUE;
-	// disable hydraulics
-	HydraulicsControl.close_brake := TRUE;
-	HydraulicsControl.stop := TRUE;
-	// SimpleLog(Message := 'shutdown');
+IF powerontrigger.Q THEN
+	poweron();
+ELSIF powerofftrigger.Q THEN
+	poweroff();
 END_IF
 
 IF NOT power AND NOT PendantControl.manual THEN
@@ -438,15 +349,7 @@ IF NOT track THEN
 END_IF
 
 IF TCS_command = E_TCSCommand.park THEN
-	ElevationControl.position := elevation_park;
-	AzimuthElevationControl.position := azimuth_park;
-	ElevationControl.MoveAxis := TRUE;
-	AzimuthElevationControl.MoveAxis := TRUE;
-	IF ElevationControl.ElevationAxis.StopDone AND AzimuthElevationControl.AzimuthAxis.StopDone THEN
-		park := FALSE;
-		power := FALSE;
-	END_IF
-
+	parktelescope();
 ELSIF TCS_command = E_TCSCommand.gohome THEN
 	ElevationControl.position := elevation_home;
 	ElevationControl.MoveAxis := TRUE;
@@ -602,6 +505,142 @@ TCSreadyEvent(	Trigger := power AND ready,
 				FormatString := '%s',
 				OnMessage := 'RoboTel startup finished');]]></ST>
     </Implementation>
+    <Method Name="parktelescope" Id="{99ae1f40-9696-469a-b290-774914abbb25}">
+      <Declaration><![CDATA[METHOD parktelescope : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[gohome := 	FALSE;
+track := 	FALSE;
+goto := 	FALSE;
+slew := 	FALSE;
+pumping :=	FALSE;
+
+ElevationControl.position := elevation_park;
+AzimuthElevationControl.position := azimuth_park;
+ElevationControl.MoveAxis := TRUE;
+AzimuthElevationControl.MoveAxis := TRUE;
+CoverControl.close := TRUE;
+IF stopped and CoverControl.isclosed THEN
+	park := FALSE;
+	power := FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="poweroff" Id="{7801bc9a-aa08-4645-aed9-20fc5aa5a24f}">
+      <Declaration><![CDATA[METHOD poweroff : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[gohome := 	FALSE;
+park  := 	FALSE;
+track := 	FALSE;
+goto := 	FALSE;
+slew := 	FALSE;
+pumping :=	FALSE;
+// disable azimuth
+// disbale elevation (closes brake)
+IF stopped THEN
+	AzimuthElevationControl.enable := FALSE;
+	ElevationControl.enable := FALSE;
+END_IF
+// disable focus
+// FocusControl.Stop
+// IF FocusControl.FocusAxis.Standstill THEN
+FocusControl.enable := FALSE;
+// disable filterwheel
+FilterWheelControl.Enable := FALSE;
+// disable derotator
+DerotatorControl.enable := FALSE;
+// close cover
+CoverControl.close := TRUE;
+// disable hydraulics
+HydraulicsControl.close_brake := TRUE;
+HydraulicsControl.stop := TRUE;
+// SimpleLog(Message := 'shutdown');
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="poweron" Id="{34114692-caf6-4cf5-8270-8b1671f5dd0a}">
+      <Declaration><![CDATA[METHOD poweron : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT Main.brake_clearing THEN
+	powerfailure := TRUE;
+	TCSpowerEvent.OnMessage := 'failure: brake clearing not set';
+	power := FALSE;
+ELSIF NOT Transformer.power_OK THEN
+	powerfailure := TRUE;
+	TCSpowerEvent.OnMessage := 'failure: main power failure';
+	power := FALSE;
+ELSIF NOT Main.phase_available THEN
+	powerfailure := TRUE;
+	TCSpowerEvent.OnMessage := 'failure: hydraulics power failure';
+	power := FALSE;
+ELSE
+	powerfailure := FALSE;		
+END_IF
+// enable hydraulics
+HydraulicsControl.start := TRUE;
+// open cover
+// COVER MUST BE OPENED FOR A SUCCESSFUL WAKE & SHAKE COMMAND!
+CoverControl.enable := TRUE;
+//CoverControl.reset := poweron_reset.Q;
+Covercontrol.open := TRUE;
+IF Covercontrol.isopen THEN
+	Covercontrol.open := FALSE;
+END_IF
+// enable elevation enable azimuth
+IF MAIN.ready AND CoverControl.isopen THEN
+	ElevationControl.enable := TRUE;
+	// wait until azimuth comes to rest
+	IF GVL_Telescope.AzimuthAxisRef.NcToPlc.ActVelo < 0.1 THEN
+		AzimuthElevationControl.enable := TRUE;
+	END_IF	
+END_IF
+
+IF ElevationControl.Ready AND NOT ElevationControl.Calibrated THEN
+	ElevationControl.HomeAxis := TRUE;
+END_IF
+
+IF AzimuthElevationControl.ready AND NOT AzimuthElevationControl.calibrated THEN
+	AzimuthElevationControl.HomeAxis := TRUE;
+END_IF
+
+// if the dome is not calibrated while the power is on, start calibration
+IF NOT DomeControl.Calibrated AND AzimuthElevationControl.calibrated THEN
+	DomeControl.HomeAxis := TRUE;
+END_IF
+
+// enable derotator
+IF ElevationControl.Ready THEN
+	DerotatorControl.enable := TRUE;
+	DerotatorControl.HomeAxis := DerotatorControl.Ready AND NOT DerotatorControl.Calibrated;
+END_IF
+
+// enable filterwheel after Derotator Axis to avoid additional torque
+IF DerotatorControl.Calibrated THEN
+	FilterWheelControl.Enable := TRUE;
+	FilterWheelControl.HomeAxis := NOT FilterWheelControl.Calibrated;
+END_IF
+
+// enable focus
+FocusControl.enable := TRUE;
+IF FocusControl.ready AND NOT FocusControl.Calibrated THEN
+	FocusControl.HomeAxis := TRUE;
+END_IF
+FocusDelay(IN := FocusControl.Calibrated AND FocusControl.Ready);
+IF FocusDelay.Q THEN
+	FocusControl.position := focus_position;
+	FocusControl.MoveAxis := ABS(FocusControl.actual_position - focus_position) > 0.005;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
     <LineIds Name="TelescopeControl">
       <LineId Id="5012" Count="1" />
       <LineId Id="58" Count="0" />
@@ -695,76 +734,9 @@ TCSreadyEvent(	Trigger := power AND ready,
       <LineId Id="7284" Count="0" />
       <LineId Id="3591" Count="0" />
       <LineId Id="3547" Count="0" />
-      <LineId Id="3592" Count="0" />
-      <LineId Id="3548" Count="0" />
-      <LineId Id="3594" Count="0" />
-      <LineId Id="3608" Count="0" />
-      <LineId Id="3596" Count="0" />
-      <LineId Id="3602" Count="1" />
-      <LineId Id="3612" Count="0" />
-      <LineId Id="3605" Count="2" />
-      <LineId Id="3613" Count="0" />
-      <LineId Id="3604" Count="0" />
-      <LineId Id="3609" Count="0" />
-      <LineId Id="3593" Count="0" />
-      <LineId Id="3768" Count="0" />
-      <LineId Id="3764" Count="0" />
-      <LineId Id="3749" Count="0" />
-      <LineId Id="4319" Count="0" />
-      <LineId Id="4492" Count="0" />
-      <LineId Id="4328" Count="0" />
-      <LineId Id="3769" Count="0" />
-      <LineId Id="4320" Count="2" />
-      <LineId Id="3750" Count="0" />
-      <LineId Id="3922" Count="0" />
-      <LineId Id="3770" Count="0" />
-      <LineId Id="5531" Count="2" />
-      <LineId Id="4300" Count="0" />
-      <LineId Id="3923" Count="0" />
-      <LineId Id="5525" Count="0" />
-      <LineId Id="3924" Count="2" />
-      <LineId Id="3932" Count="0" />
-      <LineId Id="4088" Count="2" />
-      <LineId Id="4340" Count="4" />
-      <LineId Id="4244" Count="0" />
-      <LineId Id="3752" Count="0" />
-      <LineId Id="5690" Count="1" />
-      <LineId Id="5705" Count="0" />
-      <LineId Id="5692" Count="0" />
-      <LineId Id="3773" Count="0" />
-      <LineId Id="5696" Count="0" />
-      <LineId Id="5694" Count="0" />
-      <LineId Id="3775" Count="0" />
-      <LineId Id="5704" Count="0" />
-      <LineId Id="3754" Count="0" />
-      <LineId Id="5697" Count="0" />
-      <LineId Id="5695" Count="0" />
-      <LineId Id="3776" Count="0" />
-      <LineId Id="4499" Count="2" />
-      <LineId Id="5193" Count="0" />
-      <LineId Id="4502" Count="1" />
-      <LineId Id="4506" Count="0" />
       <LineId Id="4504" Count="0" />
       <LineId Id="3755" Count="0" />
-      <LineId Id="4261" Count="3" />
-      <LineId Id="6373" Count="0" />
-      <LineId Id="6582" Count="0" />
-      <LineId Id="3757" Count="0" />
-      <LineId Id="3774" Count="0" />
-      <LineId Id="3758" Count="0" />
-      <LineId Id="3771" Count="0" />
-      <LineId Id="3759" Count="0" />
-      <LineId Id="3777" Count="0" />
-      <LineId Id="3760" Count="0" />
-      <LineId Id="3778" Count="0" />
-      <LineId Id="3761" Count="0" />
-      <LineId Id="3779" Count="0" />
-      <LineId Id="3762" Count="0" />
-      <LineId Id="3767" Count="0" />
-      <LineId Id="3763" Count="0" />
-      <LineId Id="3766" Count="0" />
-      <LineId Id="3765" Count="0" />
-      <LineId Id="4096" Count="0" />
+      <LineId Id="7324" Count="0" />
       <LineId Id="3549" Count="0" />
       <LineId Id="5191" Count="0" />
       <LineId Id="3519" Count="0" />
@@ -812,13 +784,7 @@ TCSreadyEvent(	Trigger := power AND ready,
       <LineId Id="6205" Count="0" />
       <LineId Id="4296" Count="0" />
       <LineId Id="4299" Count="0" />
-      <LineId Id="3533" Count="1" />
-      <LineId Id="3538" Count="0" />
-      <LineId Id="4078" Count="0" />
-      <LineId Id="4081" Count="0" />
-      <LineId Id="4236" Count="1" />
-      <LineId Id="6021" Count="0" />
-      <LineId Id="4238" Count="0" />
+      <LineId Id="3533" Count="0" />
       <LineId Id="4235" Count="0" />
       <LineId Id="3541" Count="0" />
       <LineId Id="3543" Count="0" />
@@ -913,6 +879,31 @@ TCSreadyEvent(	Trigger := power AND ready,
       <LineId Id="1491" Count="4" />
       <LineId Id="6773" Count="2" />
       <LineId Id="3293" Count="0" />
+    </LineIds>
+    <LineIds Name="TelescopeControl.parktelescope">
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="3" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="6" Count="3" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="10" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="TelescopeControl.poweroff">
+      <LineId Id="6" Count="6" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="17" Count="10" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="TelescopeControl.poweron">
+      <LineId Id="6" Count="67" />
+      <LineId Id="5" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
