@@ -285,7 +285,7 @@ ELSE
 	NasmythControl.enable := FALSE;	
 END_IF
 	
-IF powerontrigger.Q THEN
+IF power THEN
 	poweron();
 ELSIF powerofftrigger.Q THEN
 	poweroff();
