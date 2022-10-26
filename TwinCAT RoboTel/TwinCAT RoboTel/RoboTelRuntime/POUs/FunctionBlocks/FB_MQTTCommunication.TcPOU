@@ -109,7 +109,12 @@ IF fbMessageQueue.nQueuedMessages > 0 THEN
 					TelescopeControl.focus_position := STRING_TO_LREAL(value);
 				ELSIF parameter = 'derotator' THEN
 					TelescopeControl.derotator_offset := STRING_TO_LREAL(value);
-				ELSE
+				ELSIF parameter = 'elevationoffset' THEN
+					TelescopeControl.elevation_offset := STRING_TO_LREAL(value);
+				ELSIF parameter = 'azimuthoffset' THEN
+					TelescopeControl.azimuth_offset := STRING_TO_LREAL(value);
+				ELSIF parameter = 'derotatoroffset' THEN
+					TelescopeControl.derotator_offset := STRING_TO_LREAL(value);ELSE
 					ADSLOGSTR( ADSLOG_MSGTYPE_WARN OR ADSLOG_MSGTYPE_LOG, 'MQTT not understood %s', sPayloadRcv);
 				END_IF
 			END_IF // measurement
@@ -208,6 +213,8 @@ published := fbMqttClient.Publish(
     <LineIds Name="FB_MQTTCommunication">
       <LineId Id="308" Count="78" />
       <LineId Id="394" Count="1" />
+      <LineId Id="421" Count="3" />
+      <LineId Id="427" Count="0" />
       <LineId Id="387" Count="6" />
       <LineId Id="105" Count="0" />
     </LineIds>
