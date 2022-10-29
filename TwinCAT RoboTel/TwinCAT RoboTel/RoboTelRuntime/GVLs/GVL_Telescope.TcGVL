@@ -46,7 +46,7 @@ VAR_GLOBAL
 	cover3_closed	AT%I*: BOOL;
 
 	//DOUT14 1.5
-	focus_lock		AT%Q*: BOOL;
+	focus_unlock		AT%Q*: BOOL;
 	//DOUT15 4.6
 	nasmyth_lock	AT%Q*: BOOL;
 	//Horn 4.7
