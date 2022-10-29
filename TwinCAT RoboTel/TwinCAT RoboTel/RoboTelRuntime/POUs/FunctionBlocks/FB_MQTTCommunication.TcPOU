@@ -147,6 +147,7 @@ VAR
 	fbFormat:	FB_FormatString;
 	bError:		BOOL;
 	nErrID: UDINT;
+	retain_message:		BOOL := FALSE;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[//sPayloadPub := 'environment,location=roof,host=CX-4E6032 ';
@@ -160,15 +161,15 @@ fbFormat( sFormat := '%s,location=%s,host=%s %s=%s',
 			sOut => sPayloadPub,
 			bError => bError, 
 			nErrID => nErrID );
-//sPayloadPub := APPEND(sPayloadPub, 'OutsideTemperature=', LREAL_TO_FMTSTR(Temperature, 2, TRUE));
-//sPayloadPub := APPEND(sPayloadPub, ',OutsideHumidity=', LREAL_TO_FMTSTR(Humidity, 1, TRUE));
+// retain message if value is boolean
+retain_message := value = 'TRUE' OR value = 'FALSE';
 
-fbMqttClient.Publish(	
+Publish := fbMqttClient.Publish(	
 				sTopic:= 'RoboTel/Telemetry', 
 				pPayload:= ADR(sPayloadPub), 
 				nPayloadSize:= LEN2(ADR(sPayloadPub)),
 				eQoS:= TcIotMqttQos.AtMostOnceDelivery,
-				bRetain:= FALSE, 
+				bRetain:= retain_message, 
 				bQueue:= FALSE );
 ]]></ST>
       </Implementation>
@@ -231,8 +232,10 @@ published := fbMqttClient.Publish(
       <LineId Id="43" Count="0" />
       <LineId Id="41" Count="0" />
       <LineId Id="39" Count="1" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="17" Count="7" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="18" Count="6" />
       <LineId Id="58" Count="0" />
     </LineIds>
     <LineIds Name="FB_MQTTCommunication.PublishLog">
