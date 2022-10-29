@@ -106,21 +106,8 @@ open2_delay(IN := open AND NOT cover3_closed,
 close3_delay(IN := close AND NOT cover2_opened,
 			PT := T#1500MS);
 
-(*
-Cover1_Control.enable := FALSE;
-Cover2_Control.enable := FALSE;
-Cover3_Control.enable := FALSE;
-Cover1_Control.reset := FALSE;
-Cover2_Control.reset := FALSE;
-Cover3_Control.reset := FALSE;
-Cover1_Control.open := FALSE;
-Cover2_Control.open := FALSE;
-Cover3_Control.open := FALSE;
-Cover1_Control.close := FALSE;
-Cover2_Control.close := FALSE;
-Cover3_Control.close := FALSE;
-*)
-
+// fix cover3 errors
+Cover3_control.velocity := 18000;
 
 CASE active_cover OF
 	1:	
@@ -310,13 +297,9 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="33" Count="0" />
       <LineId Id="277" Count="0" />
       <LineId Id="35" Count="1" />
+      <LineId Id="1112" Count="0" />
+      <LineId Id="1111" Count="0" />
       <LineId Id="931" Count="0" />
-      <LineId Id="877" Count="0" />
-      <LineId Id="887" Count="0" />
-      <LineId Id="899" Count="0" />
-      <LineId Id="889" Count="0" />
-      <LineId Id="902" Count="8" />
-      <LineId Id="895" Count="1" />
       <LineId Id="832" Count="2" />
       <LineId Id="842" Count="0" />
       <LineId Id="892" Count="0" />
