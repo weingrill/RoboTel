@@ -21,6 +21,8 @@ VAR_INPUT
 	position:	LREAL;
 	// initiate homing
 	HomeAxis:	BOOL;
+	// rotation velocity
+	velocity:	LREAL := 100.0;
 END_VAR
 VAR_OUTPUT
 	// error condition on the azimuth drive
@@ -99,7 +101,7 @@ END_VAR
 VAR CONSTANT
 	tolerance:				LREAL := 5.0;
 	calibration_position:	LREAL := 172.5;
-	home_position:			LREAL := 180.0;
+//	home_position:			LREAL := 180.0;
 END_VAR
 VAR PERSISTENT
 	last_position:	LREAL := -1.0;
@@ -139,18 +141,19 @@ position := MODABS(position, 360.0);
 
 // if we are calibrated, but azimuth is not, go to home position
 HomeDelay(IN := DomeAxis.Calibrated, PT1 := T#5S, PT2 := T#100MS);
-
+(*
 IF HomeDelay.Q THEN
 	position := home_position;
 	move_azimuth := TRUE;
 END_IF
-
+*)
 SyncDome := DomeAxis.Calibrated AND TelescopeControl.power AND AzimuthElevationControl.calibrated;
 // if we are on automatic, tie the dome to the telescope
 
-IF DomeAxis.Calibrated AND TelescopeControl.power AND AzimuthElevationControl.calibrated THEN
+IF SyncDome THEN
 	position := MODABS(TelescopeControl.azimuth_current, 360.0);
 	IF ABS(Azimuth_current - position) > tolerance THEN
+		velocity := 100.0;
 		move_azimuth := TRUE;
 	ELSE
 		move_azimuth := FALSE;
@@ -162,9 +165,10 @@ Calibrated := DomeAxis.Calibrated;
 // when homing, ensure that the position is the calibration position
 IF HomeAxis THEN
 	position := calibration_position;	
+	velocity := 15.0;
 END_IF
-F_Azimuth_home(CLK := GVL_Dome.Azimut_home);
-R_Azimuth_home(CLK := GVL_Dome.Azimut_home);
+F_Azimuth_home(CLK := GVL_Dome.Azimuth_home);
+R_Azimuth_home(CLK := GVL_Dome.Azimuth_home);
 
 Azimuth_home := (R_Azimuth_home.Q AND GVL_Dome.bDirectionPlus) OR 
 				(F_Azimuth_home.Q AND GVL_Dome.bDirectionMinus);
@@ -177,10 +181,10 @@ DomeAxis(
 	MoveAxis := 	move_azimuth,
 	HomeAxis :=		HomeAxis,
 	Position := 	position,
-	Velocity := 	3.0,
+	Velocity := 	velocity,
 	Jog_Forward :=	right OR GVL_Dome.Clockwise,
 	Jog_Backwards := left OR GVL_Dome.CounterClockwise,
-	bCalibrationCam := GVL_Dome.Azimut_home,
+	bCalibrationCam := GVL_Dome.Azimuth_home,
 	isModuloAxis := TRUE,
 	//StopDone =>		stop_done,
 	Error =>		error,
@@ -202,11 +206,11 @@ DomeCalibration(Axis := GVL_Dome.DomeAxisRef);
 IF DomeCalibration.Done OR Calibrated THEN
 	getlastposition := FALSE;
 END_IF
-
+(*
 IF DomeAxis.MoveDone THEN
 	move_azimuth := FALSE;
 END_IF
-
+*)
 
 // Light is switched off after 60 minutes or if Light signal is low
 LightTimer(IN := Light, PT := T#60M);
@@ -321,7 +325,7 @@ DomeAxisEvent(
 	OffMEssage := 	'OK');
 				
 DomeCalibrationEvent(	
-	Trigger := 		GVL_Dome.Azimut_home, 
+	Trigger := 		GVL_Dome.Azimuth_home, 
 	Level := 		ADSLOG_MSGTYPE_HINT,
 	OnMessage := 	'Dome is (re-)calibrated.');
 
@@ -381,7 +385,9 @@ CloseDomeEvent(
       <LineId Id="1405" Count="0" />
       <LineId Id="1433" Count="0" />
       <LineId Id="1406" Count="1" />
-      <LineId Id="2575" Count="1" />
+      <LineId Id="2575" Count="0" />
+      <LineId Id="2795" Count="0" />
+      <LineId Id="2576" Count="0" />
       <LineId Id="2579" Count="1" />
       <LineId Id="2577" Count="0" />
       <LineId Id="1408" Count="0" />
@@ -390,6 +396,7 @@ CloseDomeEvent(
       <LineId Id="1428" Count="0" />
       <LineId Id="1414" Count="1" />
       <LineId Id="1418" Count="0" />
+      <LineId Id="2796" Count="0" />
       <LineId Id="1417" Count="0" />
       <LineId Id="1443" Count="0" />
       <LineId Id="1445" Count="1" />

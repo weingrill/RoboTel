@@ -31,7 +31,7 @@ VAR_GLOBAL
 	// EL5151
 	// Azimut_raw				AT%I*:	INT;
 	// Azimuth home signal
-	Azimut_home				AT%I*:	BOOL;
+	Azimuth_home				AT%I*:	BOOL;
 	
 	ActVelo					AT%I*:	LREAL;
 	// stop signal
