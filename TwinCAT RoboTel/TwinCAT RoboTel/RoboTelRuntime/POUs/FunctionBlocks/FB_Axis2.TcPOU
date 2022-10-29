@@ -11,6 +11,8 @@ VAR_INPUT
 	MoveAxis: 	BOOL;
 	// HomeAxis;
 	HomeAxis:	BOOL;
+	// Stop the axis
+	StopAxis:	BOOL;
 	// position to move to
 	Position: 	LREAL;
 	// maximum velocity
@@ -82,7 +84,6 @@ VAR
 	Axis_Jog: 		MC_Jog;
 	Axis_SetpointEnable:	MC_ExtSetPointGenEnable;
 	Axis_SetpointDisable:	MC_ExtSetPointGenDisable;
-	bStop: 			BOOL;
 	StopAllowed:	BOOL;
 	//wasEnabled:		BOOL;
 	// Direction fot Axis_SetpointFeed
@@ -115,7 +116,7 @@ Axis_Reset(
 	Done => 	ResetDone);
 
 Axis_SetpointEnable(Axis := AxisRef,
-	Execute :=		Tracking AND Ready AND Calibrated AND NOT bStop,
+	Execute :=		Tracking AND Ready AND Calibrated AND NOT StopAxis,
 	Position :=		Position,	// final destination
 	PositionType := POSITIONTYPE_ABSOLUTE);
 
@@ -169,7 +170,7 @@ Axis_Home(
 	Done => 		HomeDone);	
 	
 IF (MoveDone OR HomeDone OR JogDone) AND NOT Axis_Status.StandStill THEN
-	bStop := TRUE;
+	StopAxis := TRUE;
 END_IF
 
 IF MoveDone THEN
@@ -187,7 +188,7 @@ IF HomeDone THEN
 END_IF
 
 IF StopDone THEN
-	bStop := FALSE;
+	StopAxis := FALSE;
 END_IF
 
 StopAllowed :=	Axis_Status.StandStill OR  
@@ -198,7 +199,7 @@ StopAllowed :=	Axis_Status.StandStill OR
 
 Axis_Stop( 
 	Axis := 	AxisRef,
-	Execute := 	bStop AND StopAllowed,
+	Execute := 	StopAxis AND StopAllowed,
 	Done => 	StopDone);
 
 Axis_Position(
