@@ -49,6 +49,8 @@ VAR
 	ReadParameter:		MC_ReadParameter;
 	getlastposition:	BOOL := TRUE;
 	bSoEReset:			BOOL;
+	azimuth_rest_timer:	TON;
+	azimuth_at_rest:	BOOL;
 END_VAR
 VAR CONSTANT
 	// reference position for homing
@@ -104,6 +106,15 @@ END_IF
 IF Calibrated THEN
 	last_position := act_position;
 END_IF
+
+// enable the azimuth if not moved by the power chain. Sorry for the hack
+azimuth_rest_timer(IN := HydraulicsControl.brake_open AND 
+				(ABS(GVL_Telescope.AzimuthAxisRef.NcToPlc.ActVelo) < 0.01), PT := T#2S);
+IF azimuth_rest_timer.Q THEN
+	azimuth_at_rest := TRUE;
+ELSIF HydraulicsControl.brake_closed THEN
+	azimuth_at_rest := FALSE;
+END_IF
 	
 // deactivate limit switches on homing
 MC_SetAcceptBlockedDriveSignal(
@@ -111,7 +122,7 @@ MC_SetAcceptBlockedDriveSignal(
 	Enable := HomeAxis);
 
 AzimuthAxis(	
-	Enable := 			enable AND HydraulicsControl.brake_open AND HydraulicsControl.oil_pressure_OK,
+	Enable := 			enable AND azimuth_at_rest,
 	Reset := 			reset,
 	MoveAxis :=			MoveAxis,
 	HomeAxis := 		HomeAxis,
@@ -210,6 +221,13 @@ CalibrationEvent(
       <LineId Id="701" Count="0" />
       <LineId Id="700" Count="0" />
       <LineId Id="702" Count="5" />
+      <LineId Id="893" Count="0" />
+      <LineId Id="885" Count="0" />
+      <LineId Id="887" Count="0" />
+      <LineId Id="892" Count="0" />
+      <LineId Id="895" Count="1" />
+      <LineId Id="898" Count="1" />
+      <LineId Id="897" Count="0" />
       <LineId Id="680" Count="0" />
       <LineId Id="239" Count="3" />
       <LineId Id="115" Count="0" />
