@@ -222,6 +222,9 @@
     <Compile Include="POUs\Functions\TEN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Trigger.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\HydraulicsControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>

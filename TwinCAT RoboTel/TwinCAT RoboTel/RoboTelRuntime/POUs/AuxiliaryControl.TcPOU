@@ -4,15 +4,16 @@
     <Declaration><![CDATA[PROGRAM AuxiliaryControl
 VAR
 	// start delay for the dehumidifier to prevent overcurrent
-	DeHumidifierDelay:	TON;
-	DeHumidifier:		BOOL;
+	DeHumidifierOnDelay:	TON;
+	DeHumidifierDelay: 		TON;
+	DeHumidifier:			BOOL;
 	pressure_voltage,
 	pressure_Dewar,
-	temperature_Dewar: REAL;
+	temperature_Dewar: 		REAL;
 END_VAR
 VAR CONSTANT
-	humidity_high:	REAL := 75.0;
-	humidity_low:	REAL := 65.0;
+	humidity_high:			REAL := 75.0;
+	humidity_low:			REAL := 65.0;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[// turn off dehumidifier if dome is open
@@ -21,24 +22,30 @@ IF Environment.HumidityDome >= humidity_high AND DomeControl.DomeClosed THEN
 ELSIF Environment.HumidityDome < humidity_low OR DomeControl.DomeOpened OR Environment.Humidity < Environment.HumidityDome THEN
 	DeHumidifier := FALSE;
 END_IF
+// start the dehumidifier, if we are above warning theshold for x hours
+DeHumidifierDelay(IN := (Environment.HumidityDome > humidity_low) AND 
+						(Environment.HumidityDome < humidity_high) AND
+						DomeControl.DomeClosed,
+					PT := T#2H);
 
 // delay startup of the dehumidifier to prevent power-spike
-DeHumidifierDelay(IN := DeHumidifier, PT := T#5S, Q=> GVL_Dome.DeHumidifier);
+DeHumidifierOnDelay(IN := DeHumidifier OR DeHumidifierDelay.Q, PT := T#5S, Q=> GVL_Dome.DeHumidifier);
 
 pressure_voltage := F_YREAL(GVL_Auxiliary.pressure_Dewar, 0, 32767, 0.0, 10.0);
 pressure_Dewar := LREAL_TO_REAL(EXPT(10.0, (1.5*pressure_voltage - 12.0)));
 temperature_Dewar := GVL_Auxiliary.temperature_Dewar / 100.0;
+
+IF Trigger(GVL_Dome.DeHumidifier) THEN
+	MAIN.MQTTClient.Publish('dome', 'dome', 'WeatherBad', BOOL_TO_STRING(GVL_Dome.DeHumidifier));	
+END_IF
 ]]></ST>
     </Implementation>
     <LineIds Name="AuxiliaryControl">
-      <LineId Id="7" Count="0" />
-      <LineId Id="16" Count="1" />
-      <LineId Id="23" Count="1" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="38" Count="3" />
+      <LineId Id="66" Count="5" />
+      <LineId Id="80" Count="4" />
+      <LineId Id="72" Count="6" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="85" Count="2" />
       <LineId Id="5" Count="0" />
     </LineIds>
   </POU>

@@ -48,7 +48,7 @@ VAR CONSTANT
 	// reference position for homing
 	homing_position:		LREAL := 97.96; // 107,50 - 9,54
 	calibration_position:	LREAL := 0.0;
-	tolerance:				LREAL := 0.001;
+	tolerance:				LREAL := 0.005;
 END_VAR
 VAR PERSISTENT
 	last_position:	LREAL := -1.0;
@@ -63,7 +63,7 @@ gear: Faulhaber ; MINIMOTOR SA ; swiss made ; 38/1S  43:1 ; 033896  503
 Focus is locked by default
 *)
 
-GVL_Telescope.focus_unlock := enable AND NOT FocusAxis.StandStill;
+GVL_Telescope.focus_unlock := FocusUnlock OR enable;
 
 // wait until the focus is unlocked for n milliseconds
 FocusDelay(IN := GVL_Telescope.focus_unlock, PT := T#500MS, Q => FocusUnlocked);
@@ -79,16 +79,16 @@ MC_SetAcceptBlockedDriveSignal(
 
 //GVL_Telescope.focus_lock := FocusUnlocked;
 FocusAxis(	
-	Enable := 			enable,
+	Enable := 			FocusUnlocked,
 	Reset := 			reset,
-	MoveAxis := 		MoveAxis,
-	HomeAxis :=			HomeAxis,
+	MoveAxis := 		MoveAxis AND FocusUnlocked,
+	HomeAxis :=			HomeAxis AND FocusUnlocked,
 	Position := 		position,
 	Velocity :=			1.0,
 	Enable_Positive := 	NOT GVL_Telescope.focus_limit_far OR HomeAxis,
 	Enable_Negative := 	NOT GVL_Telescope.focus_limit_near,
-	Jog_Forward :=		outward,
-	Jog_Backwards := 	inward,
+	Jog_Forward :=		outward AND FocusUnlocked,
+	Jog_Backwards := 	inward AND FocusUnlocked,
 	bCalibrationCam :=  GVL_Telescope.focus_limit_far,
 	ActualPosition => 	actual_position,
 	Error =>			error,
@@ -136,21 +136,26 @@ IF GVL_Telescope.focus_limit_far THEN
 	Focus_max := actual_position;
 END_IF
 
-IF Calibrated AND ABS(actual_position - position) > tolerance THEN
-	MoveAxis := TRUE;
-ELSE
-	MoveAxis := FALSE;
+IF Calibrated THEN
+ 	IF ABS(actual_position - position) > tolerance THEN
+		enable := TRUE;
+		MoveAxis := TRUE;
+	ELSE
+		MoveAxis := FALSE;
+		IF FocusAxis.StandStill THEN
+			enable := FALSE;
+		END_IF
+	END_IF
 END_IF
 
 Ready := FocusAxis.Ready AND FocusAxis.StandStill;
 
-MQTTTimer(IN:=Enable);
+MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
 	MAIN.MQTTClient.Publish('telescope', 'dome', 'FocusPosition', LREAL_TO_FMTSTR(actual_position, 5, TRUE));
 	MAIN.MQTTClient.Publish('telescope', 'dome', 'FocusCalibrated', BOOL_TO_STRING(Calibrated));	
 	MAIN.MQTTClient.Publish('telescope', 'dome', 'FocusReady', BOOL_TO_STRING(Ready));	
-	
 END_IF
 
 FocusAxisEvent(	
@@ -220,15 +225,18 @@ CalibrationEvent(
       <LineId Id="192" Count="0" />
       <LineId Id="320" Count="1" />
       <LineId Id="626" Count="1" />
+      <LineId Id="748" Count="0" />
       <LineId Id="629" Count="0" />
+      <LineId Id="747" Count="0" />
       <LineId Id="631" Count="1" />
+      <LineId Id="743" Count="2" />
+      <LineId Id="749" Count="0" />
       <LineId Id="630" Count="0" />
       <LineId Id="433" Count="1" />
       <LineId Id="557" Count="0" />
       <LineId Id="559" Count="3" />
       <LineId Id="564" Count="0" />
       <LineId Id="574" Count="0" />
-      <LineId Id="571" Count="0" />
       <LineId Id="558" Count="0" />
       <LineId Id="322" Count="0" />
       <LineId Id="193" Count="5" />

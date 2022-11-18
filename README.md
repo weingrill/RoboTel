@@ -10,9 +10,12 @@ The online manual can be found here:
 https://weingrill.github.io/RoboTel/index.html
 
 # ToDo
-* De-rotator algorithm
-* finalise telescope initialisation (focus, de-rotator)
-* MQTT integration
+* MQTT integration (in progress)
 * implementation of pointing model
+* different PID parameter sets for slewing and tracking
+* improvement of tracking algorithm
+
+# Licensing
+see LICENSE.txt
 
 (c) 2019–2022 Dr.Jörg Weingrill, Leibniz-Institut für Astrophysik Potsdam

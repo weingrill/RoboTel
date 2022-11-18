@@ -88,8 +88,9 @@ VAR
 	//wasEnabled:		BOOL;
 	// Direction fot Axis_SetpointFeed
 	Direction:		DINT;
-	Acceleration:	LREAL := 1.0;
+	Acceleration:	LREAL := 0.0;
 	EndTracking:	F_TRIG;
+	PositionDifference:	LREAL;
 END_VAR
 
 VAR_IN_OUT
@@ -120,15 +121,17 @@ Axis_SetpointEnable(Axis := AxisRef,
 	Position :=		Position,	// final destination
 	PositionType := POSITIONTYPE_ABSOLUTE);
 
-IF Position > AbsolutePosition THEN
+PositionDifference := Position - AbsolutePosition;
+IF PositionDifference < 0.0 THEN
 	Direction := -1;
+	
 ELSE
 	Direction := 1;
 END_IF
 	
 MC_ExtSetPointGenFeed(
-	Position :=		0.95*ActualPosition + 0.05*Position,
-	Velocity :=		ABS(Velocity),
+	Position :=		AbsolutePosition + LIMIT(-0.5, PositionDifference, 0.5),
+	Velocity :=		0, //ABS(Velocity),
 	Acceleration :=	ABS(Acceleration),
 	Direction :=	Direction, 
 	Axis :=			AxisRef);
@@ -173,7 +176,7 @@ IF (MoveDone OR HomeDone OR JogDone) AND NOT Axis_Status.StandStill THEN
 	StopAxis := TRUE;
 END_IF
 
-IF MoveDone THEN
+IF Axis_Modulo.Busy OR Axis_Move.Busy OR MoveDone THEN
 	MoveAxis := FALSE;
 END_IF
 
@@ -245,14 +248,15 @@ IF Axis_Stop.Error THEN
 	ErrorID := Axis_Stop.ErrorID;
 END_IF
 
-Busy := 	Axis_Power.Busy OR 
+Busy := 	// Axis_Power.Busy OR // always true if enabled 
 			Axis_SetpointEnable.Busy OR
 			Axis_Reset.Busy OR 
 			Axis_Modulo.Busy OR
 			Axis_Move.Busy OR 
 			Axis_Home.Busy OR
-			Axis_Jog.Busy OR
-			Axis_Position.Busy;
+			Axis_Jog.Busy
+			// OR Axis_Position.Busy // always true if enabled
+			;
 
 Error := 	Axis_Power.Error OR 
 			Axis_SetpointEnable.Error OR
@@ -263,7 +267,7 @@ Error := 	Axis_Power.Error OR
 			Axis_Jog.Error OR 
 			Axis_Stop.Error;
 
-Active := 	Axis_Power.Active OR 
+Active := 	// Axis_Power.Active OR //alsways true if enabled 
 			Axis_Modulo.Active OR
 			Axis_Move.Active OR 
 			Axis_Home.Active OR
@@ -304,9 +308,11 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="1620" Count="0" />
       <LineId Id="1280" Count="0" />
       <LineId Id="1283" Count="2" />
+      <LineId Id="1812" Count="0" />
       <LineId Id="1415" Count="0" />
       <LineId Id="1301" Count="0" />
       <LineId Id="1417" Count="0" />
+      <LineId Id="1810" Count="0" />
       <LineId Id="1419" Count="1" />
       <LineId Id="1418" Count="0" />
       <LineId Id="1416" Count="0" />
@@ -384,6 +390,7 @@ Homing :=	Axis_Status.Homing;]]></ST>
       <LineId Id="906" Count="2" />
       <LineId Id="911" Count="0" />
       <LineId Id="909" Count="1" />
+      <LineId Id="1715" Count="0" />
       <LineId Id="791" Count="0" />
       <LineId Id="608" Count="0" />
       <LineId Id="1518" Count="0" />

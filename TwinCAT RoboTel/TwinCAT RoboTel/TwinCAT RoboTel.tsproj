@@ -3396,6 +3396,7 @@ External Setpoint Generation:
 					</Drive>
 					<Controller Name="Ctrl" CtrType="1">
 						<CtrPara PriorControlFactor="0.1">
+							<PID PosKp="5"/>
 							<Observer BandWidth="20"/>
 						</CtrPara>
 					</Controller>
@@ -3877,12 +3878,12 @@ External Setpoint Generation:
 					<Name>DomeAzimuth</Name>
 					<AxisPara>
 						<General UnitName="°" UnitFlags="#x00000004"/>
-						<Dynamic AccelerationMaximum="1000" DecelerationMaximum="1000"/>
+						<Dynamic AccelerationMaximum="1" DecelerationMaximum="1"/>
 						<Velo RefSearch="15" RefSync="15" SlowManual="25" FastManual="75" Fast="100" Maximum="100"/>
 						<PositionAreaControl Enable="false"/>
 						<TargetPosControl Enable="false"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
-						<Discrete CreepDistancePos="10" CreepDistanceNeg="10" BreakDelayPos="0.1" BreakDelayNeg="0.1" CreepDistanceStop="5"/>
+						<Discrete CreepDistancePos="10" CreepDistanceNeg="10" BreakDistancePos="2.5" BreakDistanceNeg="2.5" BreakDelayPos="0.1" BreakDelayNeg="0.1" CreepDistanceStop="5"/>
 					</AxisPara>
 					<Encoder Name="Enc" EncType="4">
 						<EncPara ScaleFactorNumerator="0.0003641" Inverse="true" MaxCount="#x0000ffff">
@@ -4193,6 +4194,11 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Dome.Clockwise</Name>
+							<Comment><![CDATA[ clockwise rotation of the dome azimuth	]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Auxiliary.pressure_Dewar</Name>
 							<Comment><![CDATA[ dewar pressure 0..10V Pfeiffer ]]></Comment>
 							<Type>INT</Type>
@@ -4201,11 +4207,6 @@ External Setpoint Generation:
 							<Name>GVL_Auxiliary.temperature_Dewar</Name>
 							<Comment><![CDATA[ dewar raw temperature]]></Comment>
 							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.Clockwise</Name>
-							<Comment><![CDATA[ clockwise rotation of the dome azimuth	]]></Comment>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.CounterClockwise</Name>
@@ -4238,10 +4239,8 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Dome.Azimut_home</Name>
-							<Comment><![CDATA[ EL5151
- Azimut_raw				AT%I*:	INT;
- Azimuth home signal]]></Comment>
+							<Name>GVL_Environment.rawNoRain</Name>
+							<Comment><![CDATA[ Digital Input 1]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -4293,13 +4292,12 @@ External Setpoint Generation:
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Environment.rawNoRain</Name>
-							<Comment><![CDATA[ Digital Input 1]]></Comment>
+							<Name>GVL_Environment.rawRain</Name>
+							<Comment><![CDATA[ Digital Input 2]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Environment.rawRain</Name>
-							<Comment><![CDATA[ Digital Input 2]]></Comment>
+							<Name>GVL_FilterWheel.bCalibrationCam</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -4310,10 +4308,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>GVL_Environment.rawTemperatureDome</Name>
 							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_FilterWheel.bCalibrationCam</Name>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.BCD1</Name>
@@ -4331,13 +4325,13 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
-							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
 							<Name>GVL_pendant_control.BCD8</Name>
 							<Comment><![CDATA[DIN20 2.3]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
+							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.reset_switch</Name>
@@ -4522,6 +4516,11 @@ DIN39 4.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Main.phase_available</Name>
+							<Comment><![CDATA[DIN1 0.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Telescope.Derotator_inputs</Name>
 							<Comment><![CDATA[ digitale inputs der Endlagen]]></Comment>
 							<Type>WORD</Type>
@@ -4562,12 +4561,14 @@ DIN39 4.6]]></Comment>
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.phase_available</Name>
-							<Comment><![CDATA[DIN1 0.0]]></Comment>
+							<Name>GVL_Main.power_available</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.power_available</Name>
+							<Name>GVL_Main.key_switch_remote</Name>
+							<Comment><![CDATA[DIN2 0.1
+key_switch			AT%I*: BOOL;
+DIN3 0.2]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -4603,13 +4604,6 @@ DIN39 4.6]]></Comment>
 							<Type GUID="{2D9F1DEF-D0A1-8CE8-8800-12F336222FE8}">MDP5001_511_733_I_BA4AEFF1</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.key_switch_remote</Name>
-							<Comment><![CDATA[DIN2 0.1
-key_switch			AT%I*: BOOL;
-DIN3 0.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Main.start_switch</Name>
 							<Comment><![CDATA[DIN4 0.3]]></Comment>
 							<Type>BOOL</Type>
@@ -4625,14 +4619,14 @@ DIN3 0.2]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.main_cabinet_temperature</Name>
-							<Comment><![CDATA[BT1]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Main.brake_clearing</Name>
 							<Comment><![CDATA[DIN15 1.6]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.main_cabinet_temperature</Name>
+							<Comment><![CDATA[BT1]]></Comment>
+							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Main.ups_input_voltage</Name>
@@ -4658,9 +4652,21 @@ DIN3 0.2]]></Comment>
 							<Name>GVL_Main.ups_output_current</Name>
 							<Type>UINT</Type>
 						</Var>
+						<Var>
+							<Name>GVL_Dome.Azimuth_home</Name>
+							<Comment><![CDATA[ EL5151
+ Azimut_raw				AT%I*:	INT;
+ Azimuth home signal]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>GVL_Telescope.focus_unlock</Name>
+							<Comment><![CDATA[DOUT14 1.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 						<Var>
 							<Name>FanControl.Fan_axis.MDP5001_511_733_Output</Name>
 							<Type GUID="{0D3B3A77-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_O_32199BA1</Type>
@@ -4677,13 +4683,13 @@ DIN3 0.2]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Dome.Inverter_Velocity</Name>
+							<Type>UINT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Dome.Light</Name>
 							<Comment><![CDATA[ light relais]]></Comment>
 							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Dome.Inverter_Velocity</Name>
-							<Type>UINT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.DeHumidifier</Name>
@@ -4752,11 +4758,6 @@ DOUT9 1.0]]></Comment>
 						<Var>
 							<Name>GVL_Telescope.brake_azimuth_eve</Name>
 							<Comment><![CDATA[DOUT6 0.5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.focus_lock</Name>
-							<Comment><![CDATA[DOUT14 1.5]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -14318,14 +14319,14 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<MBoxUserCmdData>020005000a00000020000000000000000000000000000000000000000000000003406a0000000000ed0043757272656e74206c6f6f702070726f706f7274696f6e616c206761696e203100</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002b000000000000000000000000000000000000000000000003406b0000000000080043757272656e7420636f6e74726f6c206c6f6f7020696e74656772616c20616374696f6e2074696d65203100</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002900000000000000000000000000000000000000000000000340ff8100000000000056656c6f636974792066696c74657220313a204c6f7720706173732074696d6520636f6e7374616e7400</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000c0000001f000000000000000000000000000000000000000000000003406400000000005000000056656c6f63697479206c6f6f702070726f706f7274696f6e616c206761696e00</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a0000002200000000000000000000000000000000000000000000000340650000000000320056656c6f63697479206c6f6f7020696e74656772616c20616374696f6e2074696d6500</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000c0000001f000000000000000000000000000000000000000000000003406400000000003200000056656c6f63697479206c6f6f702070726f706f7274696f6e616c206761696e00</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000002200000000000000000000000000000000000000000000000340650000000000500056656c6f63697479206c6f6f7020696e74656772616c20616374696f6e2074696d6500</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c000000230000000000000000000000000000000000000000000000034091810000000010001201506f736974696f6e206c696d69742073776974636820636f6e66696775726174696f6e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a00000014000000000000000000000000000000000000000000000003402e81000000000d00446973706c61792076616c7565206c696e65203100</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c00000011000000000000000000000000000000000000000000000003409f00000000007f842e004d6f6e69746f72696e672077696e646f7700</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001e000000000000000000000000000000000000000000000003405c01000000000000416363656c65726174696f6e206665656420666f7277617264206761696e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a00000020000000000000000000000000000000000000000000000003405c0000000000fa004269706f6c617220746f727175652f666f726365206c696d69742076616c756500</MBoxUserCmdData>
-						<MBoxUserCmdData>020005000a00000017000000000000000000000000000000000000000000000003406800000000002003506f736974696f6e206c6f6f70204b762d666163746f7200</MBoxUserCmdData>
+						<MBoxUserCmdData>020005000a0000001700000000000000000000000000000000000000000000000340680000000000f401506f736974696f6e206c6f6f70204b762d666163746f7200</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000c0000002d000000000000000000000000000000000000000000000003400082000000000000000056656c6f636974792066696c74657220313a204761696e20617420696e66696e697465206672657175656e637900</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000001a00000000000000000000000000000000000000000000000340280100000000102756656c6f63697479206665656420666f7277617264206761696e00</MBoxUserCmdData>
 						<MBoxUserCmdData>020005000a0000002e000000000000000000000000000000000000000000000003402d82000000000000416363656c65726174696f6e206665656420666f72776172642066696c7465722074696d6520636f6e7374616e7400</MBoxUserCmdData>
@@ -17019,7 +17020,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_Environment.rawTemperatureDome" VarB="AI Standard Channel 2^Value"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Dome Azimuth (EK1501)^Dome IN (EL1008)">
-				<Link VarA="PlcTask Inputs^GVL_Dome.Azimut_home" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_Dome.Azimuth_home" VarB="Channel 4^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Dome.Clockwise" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Dome.CounterClockwise" VarB="Channel 1^Input"/>
 			</OwnerB>
@@ -17033,7 +17034,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^GVL_Dome.Inverter_Velocity" VarB="AO Outputs Channel 1^Analog output"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Aux OUT (EL2008)">
-				<Link VarA="PlcTask Outputs^GVL_Telescope.focus_lock" VarB="Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_Telescope.focus_unlock" VarB="Channel 1^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_Telescope.horn" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_Telescope.nasmyth_lock" VarB="Channel 2^Output"/>
 			</OwnerB>

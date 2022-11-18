@@ -4,7 +4,7 @@
     <Declaration><![CDATA[PROGRAM DomeControl
 VAR_INPUT
 	// enable the dome azimuth
-	enable:		BOOL;
+	enable:		BOOL := TRUE;
 	// reset the dome axis after an error
 	Reset:		BOOL;
 	// rotate the dome left (ccw)
@@ -117,7 +117,6 @@ The third section handles the communications via ADS with the dome PLC.
 *)
 
 DomeLowLevelControl(enable := GVL_Safety.Run);
-enable := GVL_Safety.Run;
 
 // if we are calibrated or encounter an error while calibrating, deactivate homing
 IF DomeAxis.Calibrated OR Error THEN
@@ -176,7 +175,7 @@ Azimuth_home := (R_Azimuth_home.Q AND GVL_Dome.bDirectionPlus) OR
 // velocity = 2°/s or 180° in 81s, 360° in 120s (was 2.22)
 // TODO: Reset does not propagate to the FB and therefor does not reset the error
 DomeAxis(
-	Enable := 		enable,
+	Enable := 		enable AND GVL_Safety.Run,
 	Reset := 		reset,
 	MoveAxis := 	move_azimuth,
 	HomeAxis :=		HomeAxis,
@@ -356,7 +355,6 @@ CloseDomeEvent(
       <LineId Id="1010" Count="0" />
       <LineId Id="1009" Count="0" />
       <LineId Id="1425" Count="0" />
-      <LineId Id="2356" Count="0" />
       <LineId Id="2354" Count="0" />
       <LineId Id="1216" Count="0" />
       <LineId Id="955" Count="0" />
