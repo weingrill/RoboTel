@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.17">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.35">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-000000000035}" TcBaseType="true" HideType="true">UINTARR2</Name>
@@ -499,7 +499,7 @@ Drive Status 4 (manually linked):
 			</Format>
 		</DataType>
 		<DataType>
-			<Name GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC" TcBaseType="true">PLCTONC_AXIS_REF</Name>
+			<Name GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC" TcBaseType="true">PLCTONC_AXIS_REF_OLD</Name>
 			<BitSize>1024</BitSize>
 			<SubItem>
 				<Name>ControlDWord</Name>
@@ -1929,6 +1929,15 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 		<DataType>
+			<Name GUID="{9B2C29BE-B860-43F7-B5AA-545677355F79}" IecBaseType="true" AutoDeleteType="true">ARRAY [0..30] OF WORD</Name>
+			<BitSize>496</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000004}">WORD</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>31</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
 			<Name GUID="{0D5D3957-2569-4F30-6431-CF7632826B0E}">Status_3AC9AF68</Name>
 			<BitSize>16</BitSize>
 			<SubItem>
@@ -2259,7 +2268,7 @@ External Setpoint Generation:
 			</Format>
 		</DataType>
 		<DataType>
-			<Name GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC" TcBaseType="true">NCTOPLC_AXIS_REF</Name>
+			<Name GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC" TcBaseType="true">NCTOPLC_AXIS_REF</Name>
 			<BitSize>2048</BitSize>
 			<SubItem>
 				<Name>StateDWord</Name>
@@ -2541,6 +2550,12 @@ External Setpoint Generation:
 				<BitSize>32</BitSize>
 				<BitOffs>1920</BitOffs>
 			</SubItem>
+			<SubItem>
+				<Name>UserData</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>1984</BitOffs>
+			</SubItem>
 			<Properties>
 				<Property>
 					<Name>NcStructType</Name>
@@ -2574,6 +2589,9 @@ External Setpoint Generation:
 				</Relation>
 				<Relation Priority="100">
 					<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}"></Type>
 				</Relation>
 			</Relations>
 		</DataType>
@@ -2916,6 +2934,138 @@ External Setpoint Generation:
 			</SubItem>
 		</DataType>
 		<DataType>
+			<Name GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC" TcBaseType="true">PLCTONC_AXIS_REF</Name>
+			<BitSize>1024</BitSize>
+			<SubItem>
+				<Name>ControlDWord</Name>
+				<Type GUID="{875D2B22-B7EB-497E-B933-0C004593CCF3}" Namespace="MC">PLCTONC_AXIS_REF_CTRL</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Override</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisModeRequest</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>64</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisModeDWord</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000008}">UDINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>96</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>AxisModeLReal</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>128</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PositionCorrection</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>192</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetPos</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>256</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetVelo</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>320</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetAcc</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>384</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtSetDirection</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000009}">DINT</Type>
+				<BitSize>32</BitSize>
+				<BitOffs>448</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtControllerOutput</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>512</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GearRatio1</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>576</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GearRatio2</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>640</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GearRatio3</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>704</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>GearRatio4</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>768</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MapState</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>832</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PlcCycleControl</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000001}">BYTE</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>840</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>PlcCycleCount</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000001}">BYTE</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>848</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>ExtTorque</Name>
+				<Type GUID="{18071995-0000-0000-0000-00000000000E}">LREAL</Type>
+				<BitSize>64</BitSize>
+				<BitOffs>896</BitOffs>
+			</SubItem>
+			<Properties>
+				<Property>
+					<Name>NcStructType</Name>
+					<Value>1</Value>
+				</Property>
+			</Properties>
+			<Relations>
+				<Relation Priority="100">
+					<Type GUID="{60392271-8688-4F4C-B404-618DF106325D}"></Type>
+				</Relation>
+				<Relation Priority="100">
+					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}"></Type>
+				</Relation>
+			</Relations>
+		</DataType>
+		<DataType>
 			<Name GUID="{0F1ADE13-A983-1987-9733-CB596A477A42}" AutoDeleteType="true" ForceIecDecl="true">Control_0D2C036C_Plc</Name>
 			<BitSize>16</BitSize>
 			<SubItem>
@@ -3066,6 +3216,102 @@ External Setpoint Generation:
 				<LBound>0</LBound>
 				<Elements>5</Elements>
 			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{2B008623-51EE-EF6A-ACDE-0017707F5BB8}" AutoDeleteType="true">INFODATA_FB_3</Name>
+			<BitSize>24</BitSize>
+			<SubItem>
+				<Name>State</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Diag</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{1ACAF318-15DD-D449-4F62-AF4D623E4A09}" AutoDeleteType="true">INFODATA_248583369</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>State</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Diag</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Input Safe Data InputChannel1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Input Safe Data InputChannel2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>17</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Input Safe Data InputChannel3</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>18</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Input Safe Data InputChannel4</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>19</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{8EA147D6-69F3-6C3B-79EE-020724104888}" AutoDeleteType="true">INFODATA_1525530285</Name>
+			<BitSize>32</BitSize>
+			<SubItem>
+				<Name>State</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Diag</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>8</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Output Safe Data OutputChannel1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>24</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Output Safe Data OutputChannel2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>25</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Output Safe Data OutputChannel3</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>26</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Output Safe Data OutputChannel4</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>27</BitOffs>
+			</SubItem>
 		</DataType>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-002000000010}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..1] OF BYTE</Name>
@@ -3267,7 +3513,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>In</Name>
 								<Type GUID="{901C2423-655B-45CE-B7E3-21F174F0F99F}" Namespace="MC">NCENCODERSTRUCT_IN2B</Type>
-								<BitOffs>1024</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn1</Name>
 								</SubVar>
@@ -3298,7 +3543,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>Out</Name>
 								<Type GUID="{9CC50AB2-5D79-4869-A3C2-1FA7761BAFEA}" Namespace="MC">NCENCODERSTRUCT_OUT2</Type>
-								<BitOffs>2048</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataOut1</Name>
 								</SubVar>
@@ -3330,7 +3574,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>In</Name>
 								<Type GUID="{F95C7C69-0C87-46C4-9559-1285CCA5B23A}" Namespace="MC">NCDRIVESTRUCT_IN2</Type>
-								<BitOffs>1344</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn1</Name>
 								</SubVar>
@@ -3356,7 +3599,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>Out</Name>
 								<Type GUID="{644DC4BD-3D15-4DCB-94C7-24F3A5D579AA}" Namespace="MC">NCDRIVESTRUCT_OUT2</Type>
-								<BitOffs>2368</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataOut1</Name>
 								</SubVar>
@@ -3404,7 +3646,7 @@ External Setpoint Generation:
 						<Name>Eingänge</Name>
 						<Var>
 							<Name>FromPlc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF_OLD</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2" InsertType="1">
@@ -3434,7 +3676,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>In</Name>
 								<Type GUID="{901C2423-655B-45CE-B7E3-21F174F0F99F}" Namespace="MC">NCENCODERSTRUCT_IN2B</Type>
-								<BitOffs>2688</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn1</Name>
 								</SubVar>
@@ -3465,7 +3706,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>Out</Name>
 								<Type GUID="{9CC50AB2-5D79-4869-A3C2-1FA7761BAFEA}" Namespace="MC">NCENCODERSTRUCT_OUT2</Type>
-								<BitOffs>4736</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataOut1</Name>
 								</SubVar>
@@ -3497,7 +3737,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>In</Name>
 								<Type GUID="{F95C7C69-0C87-46C4-9559-1285CCA5B23A}" Namespace="MC">NCDRIVESTRUCT_IN2</Type>
-								<BitOffs>3008</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn1</Name>
 								</SubVar>
@@ -3523,7 +3762,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>Out</Name>
 								<Type GUID="{644DC4BD-3D15-4DCB-94C7-24F3A5D579AA}" Namespace="MC">NCDRIVESTRUCT_OUT2</Type>
-								<BitOffs>5056</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataOut1</Name>
 								</SubVar>
@@ -3555,8 +3793,7 @@ External Setpoint Generation:
 						<Name>Eingänge</Name>
 						<Var>
 							<Name>FromPlc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-							<BitOffs>1664</BitOffs>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF_OLD</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2" InsertType="1">
@@ -3564,7 +3801,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>ToPlc</Name>
 							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF_OLD5</Type>
-							<BitOffs>2688</BitOffs>
 						</Var>
 					</Vars>
 				</Axis>
@@ -3587,7 +3823,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>In</Name>
 								<Type GUID="{901C2423-655B-45CE-B7E3-21F174F0F99F}" Namespace="MC">NCENCODERSTRUCT_IN2B</Type>
-								<BitOffs>4352</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn1</Name>
 								</SubVar>
@@ -3618,7 +3853,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>Out</Name>
 								<Type GUID="{9CC50AB2-5D79-4869-A3C2-1FA7761BAFEA}" Namespace="MC">NCENCODERSTRUCT_OUT2</Type>
-								<BitOffs>7424</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataOut1</Name>
 								</SubVar>
@@ -3650,7 +3884,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>In</Name>
 								<Type GUID="{F95C7C69-0C87-46C4-9559-1285CCA5B23A}" Namespace="MC">NCDRIVESTRUCT_IN2</Type>
-								<BitOffs>4672</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn1</Name>
 								</SubVar>
@@ -3676,7 +3909,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>Out</Name>
 								<Type GUID="{644DC4BD-3D15-4DCB-94C7-24F3A5D579AA}" Namespace="MC">NCDRIVESTRUCT_OUT2</Type>
-								<BitOffs>7744</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataOut1</Name>
 								</SubVar>
@@ -3708,8 +3940,7 @@ External Setpoint Generation:
 						<Name>Eingänge</Name>
 						<Var>
 							<Name>FromPlc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-							<BitOffs>3328</BitOffs>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF_OLD</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2" InsertType="1">
@@ -3717,7 +3948,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>ToPlc</Name>
 							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF_OLD5</Type>
-							<BitOffs>5376</BitOffs>
 						</Var>
 					</Vars>
 				</Axis>
@@ -3740,7 +3970,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>In</Name>
 								<Type GUID="{901C2423-655B-45CE-B7E3-21F174F0F99F}" Namespace="MC">NCENCODERSTRUCT_IN2B</Type>
-								<BitOffs>6016</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn1</Name>
 								</SubVar>
@@ -3771,7 +4000,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>Out</Name>
 								<Type GUID="{9CC50AB2-5D79-4869-A3C2-1FA7761BAFEA}" Namespace="MC">NCENCODERSTRUCT_OUT2</Type>
-								<BitOffs>10112</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataOut1</Name>
 								</SubVar>
@@ -3803,7 +4031,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>In</Name>
 								<Type GUID="{F95C7C69-0C87-46C4-9559-1285CCA5B23A}" Namespace="MC">NCDRIVESTRUCT_IN2</Type>
-								<BitOffs>6336</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn1</Name>
 								</SubVar>
@@ -3829,7 +4056,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>Out</Name>
 								<Type GUID="{644DC4BD-3D15-4DCB-94C7-24F3A5D579AA}" Namespace="MC">NCDRIVESTRUCT_OUT2</Type>
-								<BitOffs>10432</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataOut1</Name>
 								</SubVar>
@@ -3861,8 +4087,7 @@ External Setpoint Generation:
 						<Name>Eingänge</Name>
 						<Var>
 							<Name>FromPlc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-							<BitOffs>4992</BitOffs>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF_OLD</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2" InsertType="1">
@@ -3870,7 +4095,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>ToPlc</Name>
 							<Type GUID="{72F5AAAA-16DF-4ED3-8367-F6C8C3ADAE99}" Namespace="MC">NCTOPLC_AXIS_REF_OLD5</Type>
-							<BitOffs>8064</BitOffs>
 						</Var>
 					</Vars>
 				</Axis>
@@ -3894,7 +4118,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>In</Name>
 								<Type GUID="{901C2423-655B-45CE-B7E3-21F174F0F99F}" Namespace="MC">NCENCODERSTRUCT_IN2B</Type>
-								<BitOffs>7680</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn1</Name>
 								</SubVar>
@@ -3925,7 +4148,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>Out</Name>
 								<Type GUID="{9CC50AB2-5D79-4869-A3C2-1FA7761BAFEA}" Namespace="MC">NCENCODERSTRUCT_OUT2</Type>
-								<BitOffs>12800</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataOut1</Name>
 								</SubVar>
@@ -3957,7 +4179,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>In</Name>
 								<Type GUID="{F95C7C69-0C87-46C4-9559-1285CCA5B23A}" Namespace="MC">NCDRIVESTRUCT_IN2</Type>
-								<BitOffs>8000</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn1</Name>
 								</SubVar>
@@ -3983,7 +4204,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>Out</Name>
 								<Type GUID="{8334E88E-C913-48D1-A19F-392974AB7820}" Namespace="MC">NCDRIVESTRUCT_TWOSPEED</Type>
-								<BitOffs>13120</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataOut1</Name>
 								</SubVar>
@@ -4003,8 +4223,7 @@ External Setpoint Generation:
 						<Name>Eingänge</Name>
 						<Var>
 							<Name>FromPlc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-							<BitOffs>6656</BitOffs>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF_OLD</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2" InsertType="1">
@@ -4012,7 +4231,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>ToPlc</Name>
 							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF_OLD4</Type>
-							<BitOffs>10752</BitOffs>
 							<SubVar>
 								<Name>AxisState</Name>
 								<Comment><![CDATA[Present State Of The Axis Movement (two speed axis):
@@ -4041,7 +4259,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>In</Name>
 								<Type GUID="{901C2423-655B-45CE-B7E3-21F174F0F99F}" Namespace="MC">NCENCODERSTRUCT_IN2B</Type>
-								<BitOffs>9344</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn1</Name>
 								</SubVar>
@@ -4072,7 +4289,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>Out</Name>
 								<Type GUID="{9CC50AB2-5D79-4869-A3C2-1FA7761BAFEA}" Namespace="MC">NCENCODERSTRUCT_OUT2</Type>
-								<BitOffs>15488</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataOut1</Name>
 								</SubVar>
@@ -4104,7 +4320,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>In</Name>
 								<Type GUID="{F95C7C69-0C87-46C4-9559-1285CCA5B23A}" Namespace="MC">NCDRIVESTRUCT_IN2</Type>
-								<BitOffs>9664</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataIn1</Name>
 								</SubVar>
@@ -4130,7 +4345,6 @@ External Setpoint Generation:
 							<Var>
 								<Name>Out</Name>
 								<Type GUID="{644DC4BD-3D15-4DCB-94C7-24F3A5D579AA}" Namespace="MC">NCDRIVESTRUCT_OUT2</Type>
-								<BitOffs>15808</BitOffs>
 								<SubVar TypeFormatIndex="2">
 									<Name>nDataOut1</Name>
 								</SubVar>
@@ -4162,8 +4376,7 @@ External Setpoint Generation:
 						<Name>Eingänge</Name>
 						<Var>
 							<Name>FromPlc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-							<BitOffs>8320</BitOffs>
+							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF_OLD</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="2" InsertType="1">
@@ -4171,7 +4384,6 @@ External Setpoint Generation:
 						<Var>
 							<Name>ToPlc</Name>
 							<Type GUID="{6A65C767-34E5-42BF-AD87-E1A503EAC7BE}" Namespace="MC">NCTOPLC_AXIS_REF_OLD4</Type>
-							<BitOffs>13440</BitOffs>
 						</Var>
 					</Vars>
 				</Axis>
@@ -4179,11 +4391,15 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{082E65A1-C5B7-45DB-A2A1-3703469085B9}" Name="RoboTelRuntime" PrjFilePath="RoboTelRuntime\RoboTelRuntime.plcproj" TmcFilePath="RoboTelRuntime\RoboTelRuntime.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="RoboTelRuntime\RoboTelRuntime.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="RoboTelRuntime\RoboTelRuntime.tmc" TmcHash="{7D76FB39-9209-F594-E932-866CB3613DF0}">
 					<Name>RoboTelRuntime Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>MAIN.arrInputPD</Name>
+							<Type GUID="{9B2C29BE-B860-43F7-B5AA-545677355F79}">ARRAY [0..30] OF WORD</Type>
+						</Var>
 						<Var>
 							<Name>FanControl.Fan_axis.MDP5001_511_733_Input</Name>
 							<Type GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Type>
@@ -4239,6 +4455,13 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Dome.Azimuth_home</Name>
+							<Comment><![CDATA[ EL5151
+ Azimut_raw				AT%I*:	INT;
+ Azimuth home signal]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Environment.rawNoRain</Name>
 							<Comment><![CDATA[ Digital Input 1]]></Comment>
 							<Type>BOOL</Type>
@@ -4249,17 +4472,17 @@ External Setpoint Generation:
 							<Type>INT</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Environment.rawWindDirection</Name>
+							<Comment><![CDATA[ Input 2]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Dome.ActVelo</Name>
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
-							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawWindDirection</Name>
-							<Comment><![CDATA[ Input 2]]></Comment>
-							<Type>INT</Type>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Environment.rawTemperature</Name>
@@ -4330,10 +4553,6 @@ External Setpoint Generation:
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
-							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
 							<Name>GVL_pendant_control.reset_switch</Name>
 							<Comment><![CDATA[DIN21 2.4]]></Comment>
 							<Type>BOOL</Type>
@@ -4342,6 +4561,10 @@ External Setpoint Generation:
 							<Name>GVL_pendant_control.direction_up</Name>
 							<Comment><![CDATA[DIN22 2.5]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.direction_down</Name>
@@ -4536,14 +4759,14 @@ DIN39 4.6]]></Comment>
 							<Type>WORD</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Telescope.Elevation_diagnostic</Name>
-							<Comment><![CDATA[ diagnostic number]]></Comment>
-							<Type>UDINT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Telescope.Elevation_torque</Name>
 							<Comment><![CDATA[ torque feedback]]></Comment>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.Elevation_diagnostic</Name>
+							<Comment><![CDATA[ diagnostic number]]></Comment>
+							<Type>UDINT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.Azimuth_inputs</Name>
@@ -4551,14 +4774,14 @@ DIN39 4.6]]></Comment>
 							<Type>WORD</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Telescope.Azimuth_diagnostic</Name>
-							<Comment><![CDATA[ diagnostic number]]></Comment>
-							<Type>UDINT</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Telescope.Azimuth_torque</Name>
 							<Comment><![CDATA[ torque feedback]]></Comment>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Telescope.Azimuth_diagnostic</Name>
+							<Comment><![CDATA[ diagnostic number]]></Comment>
+							<Type>UDINT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Main.power_available</Name>
@@ -4572,20 +4795,30 @@ DIN3 0.2]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Main.start_switch</Name>
+							<Comment><![CDATA[DIN4 0.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.stop_switch</Name>
+							<Comment><![CDATA[DIN5 0.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Telescope.AzimuthAxisRef.NcToPlc</Name>
-							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.ElevationAxisRef.NcToPlc</Name>
-							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.DerotatorAxisRef.NcToPlc</Name>
-							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.FocusAxisRef.NcToPlc</Name>
-							<Type GUID="{10036166-C9D3-404B-BDD3-323034AAA7F4}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Input</Name>
@@ -4602,16 +4835,6 @@ DIN3 0.2]]></Comment>
 						<Var>
 							<Name>GVL_Telescope.Cover3_axis.MDP5001_511_733_Input</Name>
 							<Type GUID="{2D9F1DEF-D0A1-8CE8-8800-12F336222FE8}">MDP5001_511_733_I_BA4AEFF1</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.start_switch</Name>
-							<Comment><![CDATA[DIN4 0.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.stop_switch</Name>
-							<Comment><![CDATA[DIN5 0.4]]></Comment>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Main.reset_switch</Name>
@@ -4652,21 +4875,9 @@ DIN3 0.2]]></Comment>
 							<Name>GVL_Main.ups_output_current</Name>
 							<Type>UINT</Type>
 						</Var>
-						<Var>
-							<Name>GVL_Dome.Azimuth_home</Name>
-							<Comment><![CDATA[ EL5151
- Azimut_raw				AT%I*:	INT;
- Azimuth home signal]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
 					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
-						<Var>
-							<Name>GVL_Telescope.focus_unlock</Name>
-							<Comment><![CDATA[DOUT14 1.5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
 						<Var>
 							<Name>FanControl.Fan_axis.MDP5001_511_733_Output</Name>
 							<Type GUID="{0D3B3A77-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_O_32199BA1</Type>
@@ -4698,11 +4909,11 @@ DIN3 0.2]]></Comment>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.DomeAxisRef.PlcToNc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_FilterWheel.FilterWheel_AxisRef.PlcToNc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.lamp_up</Name>
@@ -4761,6 +4972,11 @@ DOUT9 1.0]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Telescope.focus_unlock</Name>
+							<Comment><![CDATA[DOUT14 1.5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Telescope.nasmyth_lock</Name>
 							<Comment><![CDATA[DOUT15 4.6]]></Comment>
 							<Type>BOOL</Type>
@@ -4772,19 +4988,19 @@ DOUT9 1.0]]></Comment>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.AzimuthAxisRef.PlcToNc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.ElevationAxisRef.PlcToNc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.DerotatorAxisRef.PlcToNc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.FocusAxisRef.PlcToNc</Name>
-							<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}" Namespace="MC">PLCTONC_AXIS_REF</Type>
+							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Output</Name>
@@ -4976,7 +5192,7 @@ DOUT9 1.0]]></Comment>
 							<SyncMan>001000012600010001000000000100010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000000100010001001122010000</SyncMan>
 							<SyncMan>00120f002400010003000000000000000200001224010000</SyncMan>
-							<SyncMan>001d0f002000010004000000000000000200001d20010000</SyncMan>
+							<SyncMan>001d1a002000010004000000000000000200001d20010000</SyncMan>
 							<SyncMan>002e00002400000003000000000000000000002e24000000</SyncMan>
 							<SyncMan>002f00002000000004000000000000000000002f20000000</SyncMan>
 							<Fmmu>0000000000000000001200020100000001000000060000000200000000000000</Fmmu>
@@ -5024,6 +5240,19 @@ DOUT9 1.0]]></Comment>
 									<Type GUID="{18071995-0000-0000-0000-002000000005}">ARRAY [0..4] OF BIT</Type>
 								</Entry>
 							</Pdo>
+							<Pdo Name="Function Block Info Data" Index="#x1bf8" Flags="#x2011" SyncMan="3">
+								<Entry Name="TwinSafeGroup1.Network1.FBEstop1 Info Data" Index="#x7000" Sub="#x01">
+									<Type GUID="{2B008623-51EE-EF6A-ACDE-0017707F5BB8}">INFODATA_FB_3</Type>
+								</Entry>
+							</Pdo>
+							<Pdo Name="Connection Info Data" Index="#x1bf9" Flags="#x2011" SyncMan="3">
+								<Entry Name="TwinSafeGroup1.Klemme 30 (EL1904) - Module 1 (FSOES)_2 Info Data" Index="#x7000" Sub="#x01">
+									<Type GUID="{1ACAF318-15DD-D449-4F62-AF4D623E4A09}">INFODATA_248583369</Type>
+								</Entry>
+								<Entry Name="TwinSafeGroup1.Klemme 31 (EL2904) - Module 1 (FSOES)_3 Info Data" Index="#x7000" Sub="#x02">
+									<Type GUID="{8EA147D6-69F3-6C3B-79EE-020724104888}">INFODATA_1525530285</Type>
+								</Entry>
+							</Pdo>
 							<Pdo Name="FSLOGIC Inputs" Index="#x1bff" Flags="#x0011" SyncMan="3">
 								<Entry Name="Safe Logic State" Index="#xf100" Sub="#x01">
 									<Type>USINT</Type>
@@ -5059,13 +5288,13 @@ DOUT9 1.0]]></Comment>
 								<Entry Name="FSOE__InputChannel1" Index="#x6001" Sub="#x01" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="FSOE__InputChannel2" Index="#x6001" Sub="#x02">
+								<Entry Name="FSOE__InputChannel2" Index="#x6001" Sub="#x02" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="FSOE__InputChannel3" Index="#x6001" Sub="#x03">
+								<Entry Name="FSOE__InputChannel3" Index="#x6001" Sub="#x03" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="FSOE__InputChannel4" Index="#x6001" Sub="#x04">
+								<Entry Name="FSOE__InputChannel4" Index="#x6001" Sub="#x04" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="FSOE__">
@@ -5140,13 +5369,13 @@ DOUT9 1.0]]></Comment>
 								<Entry Name="FSOE__OutputChannel1" Index="#x7001" Sub="#x01" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="FSOE__OutputChannel2" Index="#x7001" Sub="#x02">
+								<Entry Name="FSOE__OutputChannel2" Index="#x7001" Sub="#x02" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="FSOE__OutputChannel3" Index="#x7001" Sub="#x03">
+								<Entry Name="FSOE__OutputChannel3" Index="#x7001" Sub="#x03" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="FSOE__OutputChannel4" Index="#x7001" Sub="#x04">
+								<Entry Name="FSOE__OutputChannel4" Index="#x7001" Sub="#x04" Flags="#x00008020">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="FSOE__">
@@ -10794,7 +11023,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 									</Pdo>
 									<CoeProfile ProfileNo="39326601"/>
 									<CoeProfile ProfileNo="5001"/>
-									<EL60xxComPort BaudRate="9600" ByteSize="8" EnableRtsCts="true" LocalComPort="true" RxFifoFullThreshold="864"/>
 								</EtherCAT>
 							</Box>
 							<Box Id="80" BoxType="9099">
@@ -12054,6 +12282,8 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 									<MBoxUserCmdData>020003000c0000001f000000000000000000000000000000000000000000000020108015040000006200000056656c6f63697479206c6f6f702070726f706f7274696f6e616c206761696e00</MBoxUserCmdData>
 									<MBoxUserCmdData>020003000c0000001b000000000000000000000000000000000000000000000020108014040000009600000056656c6f63697479206c6f6f7020696e74656772616c2074696d6500</MBoxUserCmdData>
 									<MBoxUserCmdData>020003000c0000001f000000000000000000000000000000000000000000000020108017040000000a000000506f736974696f6e206c6f6f702070726f706f7274696f6e616c206761696e00</MBoxUserCmdData>
+									<MBoxUserCmdData>020003000a0000001100000000000000000000000000000000000000000000002010700b02000000ff7f546f72717565206c696d69746174696f6e00</MBoxUserCmdData>
+									<MBoxUserCmdData>020003000c00000013000000000000000000000000000000000000000000000020108031040000000000040056656c6f63697479206c696d69746174696f6e00</MBoxUserCmdData>
 									<Pdo Name="FB Position" Index="#x1a00" Flags="#x0000" SyncMan="3">
 										<Entry Name="Position" BitLen="32" Index="#x6000" Sub="#x11">
 											<Type>UDINT</Type>
@@ -13614,7 +13844,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 									</Pdo>
 									<CoeProfile ProfileNo="39326601"/>
 									<CoeProfile ProfileNo="5001"/>
-									<EL60xxComPort BaudRate="9600" ByteSize="8" EnableRtsCts="true" LocalComPort="true" RxFifoFullThreshold="864"/>
 								</EtherCAT>
 							</Box>
 							<Box Id="24" BoxType="9099" BoxFlags="#x00000020">
@@ -13839,13 +14068,13 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 						<EtherCAT SlaveType="1" PdiType="#x0100" CycleMBoxPollingTime="0" VendorId="#x00000002" ProductCode="#x04562c52" RevisionNo="#x00110000" PortPhys="19" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EK1110 EtherCAT-Verlängerung" Desc="EK1110" PortABoxInfo="#x02000054"/>
 					</Box>
 				</Box>
-				<Box Id="104" BoxType="9099" BoxFlags="#x00000020">
-					<Name>QUINT4-UPS (Uninterruptible Power Supply)</Name>
+				<Box Id="107" BoxType="9099" BoxFlags="#x00000020">
+					<Name>Box 107 (Uninterruptible Power Supply)</Name>
 					<ImageId>65</ImageId>
-					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="35" FoeType="1" VendorId="#x00000084" ProductCode="#x002c5bc9" InfoDataAddr="true" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="QUINT4-UPS/24DC/24DC/40/EC" Desc="Uninterruptible Power Supply" PortABoxInfo="#x01000016">
+					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="35" FoeType="1" VendorId="#x00000084" ProductCode="#x002c5bc9" RevisionNo="#x00000001" InfoDataAddr="true" PortPhys="17" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="QUINT4-UPS/24DC/24DC/40/EC" Desc="Uninterruptible Power Supply" PortABoxInfo="#x01000016">
 						<SyncMan>0018f60026000100010000002800ce05f600001826010000</SyncMan>
 						<SyncMan>f618f60022000100020000002800ce05f600f61822010000</SyncMan>
-						<SyncMan>00103a006000010004000000000000003a00001060010000</SyncMan>
+						<SyncMan>00103e006000010004000000000000003e00001060010000</SyncMan>
 						<Fmmu>0000000000000000001000010100000002000000000000000000000000000000</Fmmu>
 						<Fmmu>00000000000000000d0800010100000003000000000000000000000000000000</Fmmu>
 						<Pdo Name="TxPDO 1" Index="#x1a00" Flags="#x0010" SyncMan="2">
@@ -13907,6 +14136,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<Type>UDINT</Type>
 							</Entry>
 							<Entry Name="BATTERY 5 ALARMS" Index="#x7006">
+								<Type>UDINT</Type>
+							</Entry>
+							<Entry Name="QUINT CHARGER ALARMS" Index="#x7007">
 								<Type>UDINT</Type>
 							</Entry>
 						</Pdo>
@@ -14130,9 +14362,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<InitCmd DriveNo="0" IDN="32861" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32918" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="1" IDN="33072" MotorDataLevel="0" DisableMode="2"/>
-								<InitCmd DriveNo="0" IDN="33088" MotorDataLevel="0" DisableMode="0">
-									<RetainData>24002400d5000900ca0002002c9d5b002c9d5b000000000000000000000000002260000000000000</RetainData>
-								</InitCmd>
 								<InitCmd DriveNo="0" IDN="33093" MotorDataLevel="0" DisableMode="0">
 									<RetainData>16001a004d61792020332032303231202c2031373a35383a3032</RetainData>
 								</InitCmd>
@@ -14260,7 +14489,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 							</StatusBar>
 						</AX5XXXDriveTool>
 					</Xml>
-					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" DownloadPdoCfg="true" CycleMBoxPollingTime="0" FoeType="1" SoeChannels="2" VendorId="#x00000002" ProductCode="#x14566012" RevisionNo="#x00d50000" InfoDataAddr="true" InfoDataSoeDS401="true" InfoDataDcTimes="true" TimeoutStateChange2="20000" TimeoutStateChange3="10000" TimeoutStateChange4="500" AutoRestoreAfterWcOk="true" CheckRevisionNoType="4" PortPhys="12305" IdentificationAdo="308" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AX5206-0000-0213 EtherCAT Drive (SoE, 2 Ch.)" Desc="AX5206-0000-0213" PortABoxInfo="#x01000068">
+					<EtherCAT SlaveType="2" PdiType="#x0c08" MboxDataLinkLayer="true" StateMBoxPolling="true" CfgModeSafeOp="true" DownloadPdoCfg="true" CycleMBoxPollingTime="0" FoeType="1" SoeChannels="2" VendorId="#x00000002" ProductCode="#x14566012" RevisionNo="#x00d50000" InfoDataAddr="true" InfoDataSoeDS401="true" InfoDataDcTimes="true" TimeoutStateChange2="20000" TimeoutStateChange3="10000" TimeoutStateChange4="500" AutoRestoreAfterWcOk="true" CheckRevisionNoType="4" PortPhys="12305" IdentificationAdo="308" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="AX5206-0000-0213 EtherCAT Drive (SoE, 2 Ch.)" Desc="AX5206-0000-0213" PortABoxInfo="#x0100006b">
 						<SyncMan>001880002600010001000000800080008000001826010000</SyncMan>
 						<SyncMan>001a80002200010002000000800080008000001a22010000</SyncMan>
 						<SyncMan>00100c002400010003000000000000000000001024010000</SyncMan>
@@ -15303,6 +15532,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 								<InitCmd DriveNo="0" IDN="32861" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32918" MotorDataLevel="1" DisableMode="0"/>
 								<InitCmd DriveNo="0" IDN="32922" MotorDataLevel="1" DisableMode="0"/>
+								<InitCmd DriveNo="0" IDN="33088" MotorDataLevel="0" DisableMode="0">
+									<RetainData>24002400d5000600ca0002002c9d5b002c9d5b000000000000000000000000002260000000000000</RetainData>
+								</InitCmd>
 								<InitCmd DriveNo="0" IDN="33093" MotorDataLevel="0" DisableMode="0">
 									<RetainData>16001a004a616e2020332032303230202c2030383a32313a3437</RetainData>
 								</InitCmd>
@@ -16788,10 +17020,10 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^TwinSAFE Logic (EL6910)">
 				<Link VarA="Term 1 (EK1200)^TwinSAFE IN (EL1904)^Module 1 (FSOES)^RxPDO^FSOE" VarB="ConnectionInputs^TwinSafeGroup1.Klemme 30 (EL1904) - Module 1 (FSOES)_2 TxPDO"/>
-				<Link VarA="Term 1 (EK1200)^TwinSAFE OUT (EL2904)^Module 1 (FSOES)^RxPDO^FSOE" VarB="ConnectionInputs^TwinSafeGroup1.Klemme 31 (EL2904) - Module 1 (FSOES)_3 TxPDO"/>
+				<Link VarA="Term 1 (EK1200)^TwinSAFE OUT (EL2904)^Module 1 (FSOES)^TxPDO^FSOE" VarB="ConnectionOutputs^TwinSafeGroup1.Klemme 31 (EL2904) - Module 1 (FSOES)_3 RxPDO"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^TwinSAFE OUT (EL2904)">
-				<Link VarA="Term 1 (EK1200)^TwinSAFE Logic (EL6910)^ConnectionOutputs^TwinSafeGroup1.Klemme 31 (EL2904) - Module 1 (FSOES)_3 RxPDO" VarB="Module 1 (FSOES)^TxPDO^FSOE"/>
+				<Link VarA="Term 1 (EK1200)^TwinSAFE Logic (EL6910)^ConnectionInputs^TwinSafeGroup1.Klemme 31 (EL2904) - Module 1 (FSOES)_3 TxPDO" VarB="Module 1 (FSOES)^RxPDO^FSOE"/>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TINC^NC-Task 1 SAF^Axes^Azimuth">
@@ -16963,6 +17195,29 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Azimuth_inputs" VarB="AT^Digital inputs, state"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Azimuth_torque" VarB="AT^Torque/force feedback value"/>
 			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Box 107 (Uninterruptible Power Supply)">
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^BATTERY 1 ALARMS" Size="32" OffsA="304"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^BATTERY 2 ALARMS" Size="32" OffsA="336"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^BATTERY 3 ALARMS" Size="32" OffsA="368"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^BATTERY 4 ALARMS" Size="32" OffsA="400"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^BATTERY 5 ALARMS" Size="32" OffsA="432"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^QUINT CHARGER ALARMS" Size="32" OffsA="464"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^STATUS ACTUAL INPUT CURRENT" Size="16" OffsA="80"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^STATUS ACTUAL INPUT VOLTAGE" Size="16" OffsA="64"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^STATUS ACTUAL OUTPUT CURRENT 1" Size="16" OffsA="112"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^STATUS ACTUAL OUTPUT VOLTAGE 1" Size="16" OffsA="96"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^STATUS BATTERY ACTUAL VOLTAGE" Size="16" OffsA="128"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^STATUS BATTERY CHARGE CURRENT" Size="16" OffsA="144"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^STATUS BATTERY TEMPERATURE" Size="16" OffsA="160"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^STATUS DEVICE TEMPERATURE" Size="16" OffsA="176"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^STATUS FUNCTIONS"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^STATUS INTERFACE" Size="32" OffsA="32"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^STATUS SOC REMAINING TIME" Size="32" OffsA="192"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^STATUS SOC REMAINING TIME PC SHUTDOWN" Size="16" OffsA="224"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^STATUS SOH REMAINING LIFETIME" Size="16" OffsA="240"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^UPS DIAGNOSIS ALARMS" Size="32" OffsA="272"/>
+				<Link VarA="PlcTask Inputs^MAIN.arrInputPD" VarB="TxPDO 1^UPS PROCESS ALARMS" Size="16" OffsA="256"/>
+			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Derotator (AX5206-0000-0213)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Derotator_inputs" VarB="AT 1^Digital inputs, state"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Derotator_torque" VarB="AT 1^Torque/force feedback value"/>
@@ -16971,14 +17226,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Elevation_diagnostic" VarB="AT^Diagnostic number"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Elevation_inputs" VarB="AT^Digital inputs, state"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.Elevation_torque" VarB="AT^Torque/force feedback value"/>
-			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^QUINT4-UPS (Uninterruptible Power Supply)">
-				<Link VarA="PlcTask Inputs^GVL_Main.ups_battery_temperature" VarB="TxPDO 1^STATUS BATTERY TEMPERATURE"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.ups_input_current" VarB="TxPDO 1^STATUS ACTUAL INPUT CURRENT"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.ups_input_voltage" VarB="TxPDO 1^STATUS ACTUAL INPUT VOLTAGE"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.ups_output_current" VarB="TxPDO 1^STATUS ACTUAL OUTPUT CURRENT 1"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.ups_output_voltage" VarB="TxPDO 1^STATUS ACTUAL OUTPUT VOLTAGE 1"/>
-				<Link VarA="PlcTask Inputs^GVL_Main.ups_temperature" VarB="TxPDO 1^STATUS DEVICE TEMPERATURE"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Aux IN (EL1008)">
 				<Link VarA="PlcTask Inputs^GVL_Main.brake_clearing" VarB="Channel 3^Input"/>

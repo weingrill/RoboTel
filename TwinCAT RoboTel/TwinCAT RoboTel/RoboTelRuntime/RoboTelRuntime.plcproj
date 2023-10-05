@@ -183,6 +183,9 @@
     <Compile Include="POUs\FunctionBlocks\FB_InfluxMessage.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FunctionBlocks\TIMER.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\ATAN2.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -356,6 +359,11 @@
   </ItemGroup>
   <ItemGroup>
     <PinnedGlobalDataType Include="MDP5001_511_733_BA4AEFF1" />
+  </ItemGroup>
+  <ItemGroup>
+    <LibraryReference Include="PS_DcUpsEC,2.0,Phoenix Contact GmbH &amp; Co.KG">
+      <Namespace>PS_DcUpsEC</Namespace>
+    </LibraryReference>
   </ItemGroup>
   <ProjectExtensions>
     <PlcProjectOptions>
