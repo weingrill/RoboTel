@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="AuxiliaryControl" Id="{30a3eb2e-ebab-4f9f-a38d-cee5e71b2e38}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM AuxiliaryControl
 VAR
@@ -26,7 +26,7 @@ END_IF
 DeHumidifierDelay(IN := (Environment.HumidityDome > humidity_low) AND 
 						(Environment.HumidityDome < humidity_high) AND
 						DomeControl.DomeClosed,
-					PT := T#2H);
+					PT := T#6H);
 
 // delay startup of the dehumidifier to prevent power-spike
 DeHumidifierOnDelay(IN := DeHumidifier OR DeHumidifierDelay.Q, PT := T#5S, Q=> GVL_Dome.DeHumidifier);
