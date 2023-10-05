@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="TelescopeControl" Id="{6a4f2e3a-c9ee-4352-b4f6-4f9d94b2c472}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM TelescopeControl
 VAR_INPUT
@@ -284,10 +284,10 @@ END_IF
 	
 IF power THEN
 	poweron();
-ELSE
-	poweroff();
+//ELSE
+	//poweroff();
 END_IF
-
+(*
 IF NOT power AND NOT PendantControl.manual THEN
 	// if the power is deactivatied and we are on automatic, ...
 	IF CoverControl.isclosed THEN
@@ -300,7 +300,7 @@ IF NOT power AND NOT PendantControl.manual THEN
 		CoverControl.close := TRUE; *)
 	END_IF
 END_IF
-		
+*)		
 // set TCS_command according to state variables ordered by precedence
 IF track THEN
 	TCS_command := E_TCSCommand.track;
