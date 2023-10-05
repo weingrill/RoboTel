@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="MAIN" Id="{c39aef1e-7c14-41dc-ad83-03bececdc52a}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
@@ -31,8 +31,7 @@ VAR
 	warn_blink: 		FB_BLINK;
 	// main cabinet temperature in degrees
 	cabinet_temperature:	REAL;
-	// measures time between soft start command and power available
-	ups_input_voltage:		REAL;
+	ups_input_voltage: 		REAL;
 	ups_input_current:		REAL;
 	ups_temperature:		REAL;
 	ups_battery_temperature:	REAL;
@@ -53,6 +52,9 @@ VAR
 	cabinet_temperature_warning:	SR;
 	
 	MQTTClient:		FB_MQTTCommunication;
+	
+	UPS:		PS_Q4_DcUpsEC_Cyclic_2;
+	arrInputPD AT%I*:	ARRAY [0..30] OF WORD;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -142,6 +144,11 @@ GVL_Main.lamp_error := error OR warning;
 GVL_Main.lamp_power := Transformer.power_ok AND phase_available;
 SafetyHandling();
 
+// UPS Handling
+UPS(xActivate := key_switch, 
+	arrInputPD := arrInputPD);
+	
+
 ups_input_voltage 		:= GVL_MAIN.ups_input_voltage / 1000.0;
 ups_input_current 		:= GVL_MAIN.ups_input_current / 1000.0;
 ups_output_voltage 		:= GVL_MAIN.ups_output_voltage / 1000.0;
@@ -192,7 +199,14 @@ TemperatureEvent(
       <LineId Id="1458" Count="8" />
       <LineId Id="1333" Count="30" />
       <LineId Id="1457" Count="0" />
-      <LineId Id="1364" Count="28" />
+      <LineId Id="1364" Count="21" />
+      <LineId Id="1580" Count="0" />
+      <LineId Id="1386" Count="0" />
+      <LineId Id="1582" Count="0" />
+      <LineId Id="1588" Count="0" />
+      <LineId Id="1586" Count="0" />
+      <LineId Id="1584" Count="0" />
+      <LineId Id="1387" Count="5" />
       <LineId Id="1452" Count="0" />
       <LineId Id="1454" Count="0" />
       <LineId Id="1453" Count="0" />
