@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<GlobalVariables Crc="4102938875" Id="14a7511a-cafd-46f9-bec6-d9122e753db2" FileFormatVersion="1.0">
+<GlobalVariables Crc="3441248282" Id="14a7511a-cafd-46f9-bec6-d9122e753db2" FileFormatVersion="1.0">
   <Variable Id="c78fca0f-2e4f-46c1-a3d3-8b866481e03b">
     <Name>EStop1</Name>
     <SourceUsages>
@@ -33,8 +33,8 @@
   <Variable Id="c70840e6-fb07-466d-917f-fc4ec5313294">
     <Name>MotorEnable</Name>
     <SourceUsages>
-      <FbPortUsage Id="f43630c2-e479-4cbc-aa1f-a45f438cfd03">
-        <ModelElementId>36f51d3b-a026-421e-bc33-b75e1304fe27</ModelElementId>
+      <FbPortUsage Id="01458a32-2ea8-4d78-ba27-8a9b77dd12b6">
+        <ModelElementId>fe3834f5-38fa-413e-a4a3-3c47b49fb5fc</ModelElementId>
       </FbPortUsage>
     </SourceUsages>
     <TargetUsages>
@@ -46,7 +46,7 @@
     </TargetUsages>
   </Variable>
   <Variable Id="0ad72546-e326-40cd-89f6-1fb725b5dcd5">
-    <Name>HydraulicsEnable1</Name>
+    <Name>HydraulicsEnable</Name>
     <SourceUsages>
       <FbPortUsage Id="b22a6e34-dbf6-4c70-836a-f8636938c25a">
         <ModelElementId>36f51d3b-a026-421e-bc33-b75e1304fe27</ModelElementId>
@@ -57,21 +57,6 @@
         <SdsId>3</SdsId>
         <ChannelId>2</ChannelId>
         <FunctionId>1879114241</FunctionId>
-      </AliasDeviceIoUsage>
-    </TargetUsages>
-  </Variable>
-  <Variable Id="c3f8a568-7321-4ef6-b6fc-788dd50229c7">
-    <Name>HydraulicsEnable2</Name>
-    <SourceUsages>
-      <FbPortUsage Id="b78bb746-df70-4224-b552-981b4ee186e5">
-        <ModelElementId>36f51d3b-a026-421e-bc33-b75e1304fe27</ModelElementId>
-      </FbPortUsage>
-    </SourceUsages>
-    <TargetUsages>
-      <AliasDeviceIoUsage Id="506c1842-b55f-40b7-95dd-56e3f5f12871">
-        <SdsId>3</SdsId>
-        <ChannelId>3</ChannelId>
-        <FunctionId>1879114497</FunctionId>
       </AliasDeviceIoUsage>
     </TargetUsages>
   </Variable>
@@ -121,7 +106,7 @@
     </TargetUsages>
   </Variable>
   <Variable Id="baf321e3-aba7-4fd7-9262-7f9ffdc4823f">
-    <Name>Feedback1</Name>
+    <Name>MotorFeedback</Name>
     <SourceUsages>
       <AliasDeviceIoUsage Id="17c48fa1-5dca-47af-acab-e98c53511621">
         <SdsId>2</SdsId>
@@ -130,7 +115,22 @@
       </AliasDeviceIoUsage>
     </SourceUsages>
     <TargetUsages>
-      <FbPortUsage Id="4c303286-7ae4-49b4-8452-43328827c3cc">
+      <FbPortUsage Id="248ef1e2-6ffe-4647-86d5-8f09e3139f77">
+        <ModelElementId>e73ac346-e429-4b37-9cd2-dbdc15a574e2</ModelElementId>
+      </FbPortUsage>
+    </TargetUsages>
+  </Variable>
+  <Variable Id="f8123c8d-3b6b-4132-82f3-e869aeeaf2ad">
+    <Name>HydraulicsFeedback</Name>
+    <SourceUsages>
+      <AliasDeviceIoUsage Id="aa8fbc25-46d9-4222-ad54-c5058156bdc4">
+        <SdsId>2</SdsId>
+        <ChannelId>4</ChannelId>
+        <FunctionId>1610679297</FunctionId>
+      </AliasDeviceIoUsage>
+    </SourceUsages>
+    <TargetUsages>
+      <FbPortUsage Id="a2452032-1f5a-4cd4-a6f9-f4181f407b7e">
         <ModelElementId>444fc72d-6844-405e-b0f0-8a011516420b</ModelElementId>
       </FbPortUsage>
     </TargetUsages>
