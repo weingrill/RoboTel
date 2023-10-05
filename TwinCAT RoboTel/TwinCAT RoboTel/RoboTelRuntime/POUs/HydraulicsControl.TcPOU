@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="HydraulicsControl" Id="{6bf4055d-2300-4039-bb16-5b9f94622e06}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM HydraulicsControl
 VAR_INPUT
@@ -78,6 +78,8 @@ VAR
 	
 	// measures the operating cycle of the suction pump
 	suction_timer : FB_Timer;
+	pressure_timer:	TIMER;
+	oil_pan_timer: TIMER;
 	StatusWord, LastStatus:	UDINT;
 END_VAR
 ]]></Declaration>
@@ -174,19 +176,9 @@ hydraulics_watchdog(IN := pump_running AND NOT suction_running,
 						PT := T#140S,
 						Q => hydraulics_failure);
 
-(*
-oil_low := NOT GVL_Hydraulics.oil_low;
-oil_high := NOT GVL_Hydraulics.oil_high;
-oil_warning := GVL_Hydraulics.oil_reserve;
-// Michi Email 22.10.2020 True = OK
-oil_pressure_OK := GVL_Hydraulics.oil_pressure_OK;
-oil_filter_dirty := NOT GVL_Hydraulics.oilfilter_dirty;
-oil_cold := NOT GVL_Hydraulics.oil_undertemperature;
-oil_hot := GVL_Hydraulics.oil_overtemperature;
-pump_running := GVL_Hydraulics.pump_running;
-suction_running := GVL_Hydraulics.suction_running;
-
-*)
+pressure_timer(bStart := GVL_Hydraulics.oil_pump_enable AND NOT oil_pressure_OK);
+oil_pan_timer(bStart := GVL_Hydraulics.oilpan_maximum AND suction_running);
+						
 StatusWord.0 := oil_low;
 StatusWord.1 := oil_high;
 StatusWord.2 := oil_warning;
@@ -198,6 +190,8 @@ StatusWord.7 := brake_open;
 StatusWord.8 := GVL_Main.brake_clearing;
 StatusWord.9 := pump_running;
 StatusWord.10 := suction_running;
+StatusWord.11 := GVL_Hydraulics.oilpan_maximum;
+
 
 IF StatusWord<>LastStatus THEN // publish new payload every second
 	LastStatus := StatusWord;
@@ -212,6 +206,13 @@ IF StatusWord<>LastStatus THEN // publish new payload every second
 	MAIN.MQTTClient.Publish('hydraulics', 'base', 'BrakeClearing',	BOOL_TO_STRING(GVL_Main.brake_clearing));
 	MAIN.MQTTClient.Publish('hydraulics', 'base', 'PumpRunning',	BOOL_TO_STRING(pump_running));
 	MAIN.MQTTClient.Publish('hydraulics', 'base', 'SuctionRunning',	BOOL_TO_STRING(suction_running));
+	MAIN.MQTTClient.Publish('hydraulics', 'base', 'OilPanMaxiumum',	BOOL_TO_STRING(GVL_Hydraulics.oilpan_maximum));
+	IF pressure_timer.valid THEN
+		MAIN.MQTTClient.Publish('hydraulics', 'base', 'OilViscosity1',	INT_TO_STRING(TIME_TO_INT(pressure_timer.tDifference)));
+	END_IF
+	IF oil_pan_timer.valid THEN
+		MAIN.MQTTClient.Publish('hydraulics', 'base', 'OilViscosity2',	INT_TO_STRING(TIME_TO_INT(oil_pan_timer.tDifference)));
+	END_IF
 END_IF
 
 
@@ -323,15 +324,16 @@ BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
       <LineId Id="1212" Count="1" />
       <LineId Id="1215" Count="0" />
       <LineId Id="1045" Count="0" />
-      <LineId Id="1013" Count="0" />
-      <LineId Id="1049" Count="9" />
-      <LineId Id="1048" Count="0" />
+      <LineId Id="1474" Count="0" />
+      <LineId Id="1477" Count="0" />
       <LineId Id="1047" Count="0" />
       <LineId Id="1046" Count="0" />
       <LineId Id="1065" Count="1" />
       <LineId Id="1068" Count="5" />
       <LineId Id="1067" Count="0" />
       <LineId Id="1075" Count="0" />
+      <LineId Id="1479" Count="0" />
+      <LineId Id="1478" Count="0" />
       <LineId Id="1135" Count="0" />
       <LineId Id="1017" Count="0" />
       <LineId Id="1019" Count="1" />
@@ -345,6 +347,11 @@ BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
       <LineId Id="1086" Count="0" />
       <LineId Id="1088" Count="0" />
       <LineId Id="1090" Count="0" />
+      <LineId Id="1480" Count="0" />
+      <LineId Id="1483" Count="1" />
+      <LineId Id="1486" Count="1" />
+      <LineId Id="1482" Count="0" />
+      <LineId Id="1488" Count="0" />
       <LineId Id="1040" Count="0" />
       <LineId Id="1014" Count="1" />
       <LineId Id="366" Count="0" />
