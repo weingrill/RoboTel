@@ -31,17 +31,13 @@ VAR
 	warn_blink: 		FB_BLINK;
 	// main cabinet temperature in degrees
 	cabinet_temperature:	REAL;
-	ups_input_voltage: 		REAL;
-	ups_input_current:		REAL;
-	ups_temperature:		REAL;
-	ups_battery_temperature:	REAL;
 	ups_output_voltage:		REAL;
 	ups_output_current:		REAL;
-	ups_input_power:		REAL;
 	ups_output_power:		REAL;
 	
 	PhaseLog:				FB_EventLog;
 	TemperatureEvent:		FB_EventLog;
+	UPSEvent:				FB_EventLog;
 	
 	MQTTTimer : 		TON := (PT:=T#5S);
 	GetHostName:		FB_GetHostName;
@@ -149,15 +145,9 @@ UPS(xActivate := key_switch,
 	arrInputPD := arrInputPD);
 	
 
-ups_input_voltage 		:= GVL_MAIN.ups_input_voltage / 1000.0;
-ups_input_current 		:= GVL_MAIN.ups_input_current / 1000.0;
-ups_output_voltage 		:= GVL_MAIN.ups_output_voltage / 1000.0;
-ups_output_current 		:= GVL_MAIN.ups_output_current / 1000.0;
-ups_temperature 		:= GVL_MAIN.ups_temperature / 10.0;
-ups_battery_temperature := GVL_MAIN.ups_battery_temperature / 10.0;
-ups_input_power			:= ups_input_voltage * ups_input_current;
+ups_output_voltage 		:= UPS.wOutputVoltage / 1000.0;
+ups_output_current 		:= UPS.wOutputCurrent / 1000.0;
 ups_output_power		:= ups_output_voltage * ups_output_current;
-
 
 LightSwitch(SET := Lightbutton, Q := DomeControl.Light);
 
@@ -169,14 +159,9 @@ IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTClient.Publish('electronics', 'base', 'PhaseOK', BOOL_TO_STRING(phase_available));
 	MQTTClient.Publish('electronics', 'base', 'MainReady', BOOL_TO_STRING(ready));
 	MQTTClient.Publish('electronics', 'base', 'MasterError', BOOL_TO_STRING(error));
-	MQTTClient.Publish('electronics', 'base', 'UPSInputVoltage', LREAL_TO_FMTSTR(ups_input_voltage, 3, TRUE));
-	MQTTClient.Publish('electronics', 'base', 'UPSInputCurrent', LREAL_TO_FMTSTR(ups_input_current, 3, TRUE));
-	MQTTClient.Publish('electronics', 'base', 'UPSInputPower', LREAL_TO_FMTSTR(ups_input_power, 3, TRUE));
 	MQTTClient.Publish('electronics', 'base', 'UPSOutputVoltage', LREAL_TO_FMTSTR(ups_output_voltage, 3, TRUE));
 	MQTTClient.Publish('electronics', 'base', 'UPSOutputCurrent', LREAL_TO_FMTSTR(ups_output_current, 3, TRUE));
 	MQTTClient.Publish('electronics', 'base', 'UPSOutputPower', LREAL_TO_FMTSTR(ups_output_power, 3, TRUE));
-	MQTTClient.Publish('electronics', 'base', 'UPSTemperature', LREAL_TO_FMTSTR(ups_temperature, 1, TRUE));
-	MQTTClient.Publish('electronics', 'base', 'UPSBatteryTemperature', LREAL_TO_FMTSTR(ups_battery_temperature, 1, TRUE));
 END_IF
 
 PhaseLog(	
@@ -191,7 +176,13 @@ TemperatureEvent(
 	Trigger := 		cabinet_temperature_warning.Q1, 
 	Level := 		ADSLOG_MSGTYPE_WARN,
 	FormatString :=	'Main Cabinet Temperature warning:	%s',
-	OnMessage := 	LREAL_TO_FMTSTR( cabinet_temperature, 1, TRUE),);]]></ST>
+	OnMessage := 	LREAL_TO_FMTSTR( cabinet_temperature, 1, TRUE),);
+	
+UPSEvent(	
+	Trigger := 		UPS.xAlarm OR UPS.xError, 
+	Level := 		ADSLOG_MSGTYPE_ERROR,
+	FormatString :=	'%s',
+	OnMessage := 	'UPS Alarm!');]]></ST>
     </Implementation>
     <LineIds Name="MAIN">
       <LineId Id="1303" Count="15" />
@@ -206,23 +197,20 @@ TemperatureEvent(
       <LineId Id="1588" Count="0" />
       <LineId Id="1586" Count="0" />
       <LineId Id="1584" Count="0" />
-      <LineId Id="1387" Count="5" />
-      <LineId Id="1452" Count="0" />
+      <LineId Id="1389" Count="1" />
       <LineId Id="1454" Count="0" />
-      <LineId Id="1453" Count="0" />
       <LineId Id="1393" Count="5" />
       <LineId Id="1524" Count="0" />
       <LineId Id="1401" Count="1" />
       <LineId Id="1467" Count="0" />
       <LineId Id="1469" Count="0" />
-      <LineId Id="1412" Count="0" />
-      <LineId Id="1414" Count="1" />
       <LineId Id="1455" Count="0" />
       <LineId Id="1416" Count="1" />
-      <LineId Id="1456" Count="0" />
-      <LineId Id="1418" Count="0" />
       <LineId Id="1429" Count="13" />
       <LineId Id="610" Count="0" />
+      <LineId Id="1648" Count="0" />
+      <LineId Id="1650" Count="3" />
+      <LineId Id="1649" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
