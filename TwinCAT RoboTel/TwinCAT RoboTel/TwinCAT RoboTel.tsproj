@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.35">
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.50">
 	<DataTypes>
 		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-000000000035}" TcBaseType="true" HideType="true">UINTARR2</Name>
@@ -1938,7 +1938,7 @@ External Setpoint Generation:
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{0D5D3957-2569-4F30-6431-CF7632826B0E}">Status_3AC9AF68</Name>
+			<Name GUID="{D1C393B9-FBD6-AD2A-E375-C6E702CADD73}" AutoDeleteType="true" ForceIecDecl="true">Status_E8F2D78F_Plc</Name>
 			<BitSize>16</BitSize>
 			<SubItem>
 				<Name>Latch_extern_valid</Name>
@@ -2002,7 +2002,7 @@ External Setpoint Generation:
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{114953BF-D65E-EC5D-3305-9ACC3A569601}">Status_3018D6E8</Name>
+			<Name GUID="{CD1AA339-3036-D65B-CE27-64C5A759D847}" AutoDeleteType="true" ForceIecDecl="true">Status_99FDED67_Plc</Name>
 			<BitSize>16</BitSize>
 			<SubItem>
 				<Name>Ready_to_enable</Name>
@@ -2072,11 +2072,11 @@ External Setpoint Generation:
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Name>
+			<Name GUID="{5794271D-C677-DBCD-9F34-B8530AAD1320}" AutoDeleteType="true" ForceIecDecl="true">MDP5001_511_733_I_FFF278FE</Name>
 			<BitSize>64</BitSize>
 			<SubItem>
 				<Name>MDP5001_511_Status</Name>
-				<Type GUID="{0D5D3957-2569-4F30-6431-CF7632826B0E}">Status_3AC9AF68</Type>
+				<Type GUID="{D1C393B9-FBD6-AD2A-E375-C6E702CADD73}">Status_E8F2D78F_Plc</Type>
 				<BitSize>16</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>
@@ -2094,7 +2094,105 @@ External Setpoint Generation:
 			</SubItem>
 			<SubItem>
 				<Name>MDP5001_733_Status_1</Name>
-				<Type GUID="{114953BF-D65E-EC5D-3305-9ACC3A569601}">Status_3018D6E8</Type>
+				<Type GUID="{CD1AA339-3036-D65B-CE27-64C5A759D847}">Status_99FDED67_Plc</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>48</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{CEF3C2CC-D745-453C-AE97-18B455650AD3}" AutoDeleteType="true" ForceIecDecl="true">Status_ECDDE775_Plc</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>Ready_to_enable</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Ready</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Warning</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Moving_positive</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Moving_negative</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Torque_reduced</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>6</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Digital_input_1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>11</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Digital_input_2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>12</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Sync_error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>13</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TxPDO_Toggle</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>15</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{C8C52A4C-74E4-A7D1-6327-209E82ACA87F}" AutoDeleteType="true" ForceIecDecl="true">MDP5001_511_733_I_8E9CD54E</Name>
+			<BitSize>64</BitSize>
+			<SubItem>
+				<Name>MDP5001_511_Status</Name>
+				<Type GUID="{D1C393B9-FBD6-AD2A-E375-C6E702CADD73}">Status_E8F2D78F_Plc</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_511_Counter_value</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_511_Latch_value</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_733_Status_1</Name>
+				<Type GUID="{CEF3C2CC-D745-453C-AE97-18B455650AD3}">Status_ECDDE775_Plc</Type>
 				<BitSize>16</BitSize>
 				<BitOffs>48</BitOffs>
 			</SubItem>
@@ -2596,267 +2694,7 @@ External Setpoint Generation:
 			</Relations>
 		</DataType>
 		<DataType>
-			<Name GUID="{82A298F0-2577-5424-093E-34DBB389355E}" AutoDeleteType="true" ForceIecDecl="true">Status_53870A22_Plc</Name>
-			<BitSize>16</BitSize>
-			<SubItem>
-				<Name>Latch_extern_valid</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>1</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Set_counter_done</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>2</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Counter_underflow</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>3</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Counter_overflow</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>4</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Extrapolation_stall</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>7</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Status_of_input_A</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>8</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Status_of_input_B</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>9</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Status_of_extern_latch</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>12</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Sync_error</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>13</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>TxPDO_Toggle</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>15</BitOffs>
-			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{D4B7E62B-7F67-904F-E102-4099680AD138}" AutoDeleteType="true" ForceIecDecl="true">Status_E56991C4_Plc</Name>
-			<BitSize>16</BitSize>
-			<SubItem>
-				<Name>Ready_to_enable</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Ready</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>1</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Warning</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>2</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Error</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>3</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Moving_positive</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>4</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Moving_negative</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>5</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Torque_reduced</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>6</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Digital_input_1</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>11</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Digital_input_2</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>12</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Sync_error</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>13</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>TxPDO_Toggle</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>15</BitOffs>
-			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{1FBBF2EC-6560-6D84-6D14-31C076F4DD99}" AutoDeleteType="true" ForceIecDecl="true">MDP5001_511_733_I_2BD37790</Name>
-			<BitSize>64</BitSize>
-			<SubItem>
-				<Name>MDP5001_511_Status</Name>
-				<Type GUID="{82A298F0-2577-5424-093E-34DBB389355E}">Status_53870A22_Plc</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>MDP5001_511_Counter_value</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>16</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>MDP5001_511_Latch_value</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>32</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>MDP5001_733_Status_1</Name>
-				<Type GUID="{D4B7E62B-7F67-904F-E102-4099680AD138}">Status_E56991C4_Plc</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>48</BitOffs>
-			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{EF4653CE-C3CB-A462-4623-5070DA40CAE7}" AutoDeleteType="true" ForceIecDecl="true">Status_DCBEF39A_Plc</Name>
-			<BitSize>16</BitSize>
-			<SubItem>
-				<Name>Ready_to_enable</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Ready</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>1</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Warning</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>2</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Error</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>3</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Moving_positive</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>4</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Moving_negative</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>5</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Torque_reduced</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>6</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Digital_input_1</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>11</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Digital_input_2</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>12</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Sync_error</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>13</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>TxPDO_Toggle</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>15</BitOffs>
-			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{2D9F1DEF-D0A1-8CE8-8800-12F336222FE8}" AutoDeleteType="true" ForceIecDecl="true">MDP5001_511_733_I_BA4AEFF1</Name>
-			<BitSize>64</BitSize>
-			<SubItem>
-				<Name>MDP5001_511_Status</Name>
-				<Type GUID="{82A298F0-2577-5424-093E-34DBB389355E}">Status_53870A22_Plc</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>MDP5001_511_Counter_value</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>16</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>MDP5001_511_Latch_value</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>32</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>MDP5001_733_Status_1</Name>
-				<Type GUID="{EF4653CE-C3CB-A462-4623-5070DA40CAE7}">Status_DCBEF39A_Plc</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>48</BitOffs>
-			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{6EA42558-F619-E31D-78F6-9601E46735C3}">Control_4F1A42DD</Name>
+			<Name GUID="{DD1F92CA-55C9-22A9-6EB7-3BB56A3A5941}" AutoDeleteType="true" ForceIecDecl="true">Control_0BD44A04_Plc</Name>
 			<BitSize>16</BitSize>
 			<SubItem>
 				<Name>Enable_latch_extern_on_positive_edge</Name>
@@ -2878,7 +2716,7 @@ External Setpoint Generation:
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{3EA2E42C-938D-954B-8DBE-9C7A71451C3D}">Control_EC698C5D</Name>
+			<Name GUID="{A4456CDF-C704-04F6-C830-F71C5F17EFC0}" AutoDeleteType="true" ForceIecDecl="true">Control_7CAB8C4D_Plc</Name>
 			<BitSize>16</BitSize>
 			<SubItem>
 				<Name>Enable</Name>
@@ -2906,11 +2744,11 @@ External Setpoint Generation:
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{0D3B3A77-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_O_32199BA1</Name>
+			<Name GUID="{5794271E-C677-DBCD-9F34-B8530AAD1320}" AutoDeleteType="true" ForceIecDecl="true">MDP5001_511_733_O_FFF278FE</Name>
 			<BitSize>64</BitSize>
 			<SubItem>
 				<Name>MDP5001_511_Control</Name>
-				<Type GUID="{6EA42558-F619-E31D-78F6-9601E46735C3}">Control_4F1A42DD</Type>
+				<Type GUID="{DD1F92CA-55C9-22A9-6EB7-3BB56A3A5941}">Control_0BD44A04_Plc</Type>
 				<BitSize>16</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>
@@ -2922,7 +2760,35 @@ External Setpoint Generation:
 			</SubItem>
 			<SubItem>
 				<Name>MDP5001_733_Control_1</Name>
-				<Type GUID="{3EA2E42C-938D-954B-8DBE-9C7A71451C3D}">Control_EC698C5D</Type>
+				<Type GUID="{A4456CDF-C704-04F6-C830-F71C5F17EFC0}">Control_7CAB8C4D_Plc</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>32</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_733_Velocity</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000006}">INT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>48</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{C8C52A4D-74E4-A7D1-6327-209E82ACA87F}" AutoDeleteType="true" ForceIecDecl="true">MDP5001_511_733_O_8E9CD54E</Name>
+			<BitSize>64</BitSize>
+			<SubItem>
+				<Name>MDP5001_511_Control</Name>
+				<Type GUID="{DD1F92CA-55C9-22A9-6EB7-3BB56A3A5941}">Control_0BD44A04_Plc</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_511_Set_counter_value</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
+				<BitSize>16</BitSize>
+				<BitOffs>16</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>MDP5001_733_Control_1</Name>
+				<Type GUID="{A4456CDF-C704-04F6-C830-F71C5F17EFC0}">Control_7CAB8C4D_Plc</Type>
 				<BitSize>16</BitSize>
 				<BitOffs>32</BitOffs>
 			</SubItem>
@@ -3064,112 +2930,6 @@ External Setpoint Generation:
 					<Type GUID="{63A84524-72E3-41C8-BEAB-4CCE44690A13}"></Type>
 				</Relation>
 			</Relations>
-		</DataType>
-		<DataType>
-			<Name GUID="{0F1ADE13-A983-1987-9733-CB596A477A42}" AutoDeleteType="true" ForceIecDecl="true">Control_0D2C036C_Plc</Name>
-			<BitSize>16</BitSize>
-			<SubItem>
-				<Name>Enable_latch_extern_on_positive_edge</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>1</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Set_counter</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>2</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Enable_latch_extern_on_negative_edge</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>3</BitOffs>
-			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{8F266338-240C-9AA5-EF5F-11BFB5693D9C}" AutoDeleteType="true" ForceIecDecl="true">Control_36AF7161_Plc</Name>
-			<BitSize>16</BitSize>
-			<SubItem>
-				<Name>Enable</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Reset</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>1</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Reduce_torque</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>2</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Threshold_active</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>3</BitOffs>
-			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{1FBBF2ED-6560-6D84-6D14-31C076F4DD99}" AutoDeleteType="true" ForceIecDecl="true">MDP5001_511_733_O_2BD37790</Name>
-			<BitSize>64</BitSize>
-			<SubItem>
-				<Name>MDP5001_511_Control</Name>
-				<Type GUID="{0F1ADE13-A983-1987-9733-CB596A477A42}">Control_0D2C036C_Plc</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>MDP5001_511_Set_counter_value</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>16</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>MDP5001_733_Control_1</Name>
-				<Type GUID="{8F266338-240C-9AA5-EF5F-11BFB5693D9C}">Control_36AF7161_Plc</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>32</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>MDP5001_733_Velocity</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000006}">INT</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>48</BitOffs>
-			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{2D9F1DF0-D0A1-8CE8-8800-12F336222FE8}" AutoDeleteType="true" ForceIecDecl="true">MDP5001_511_733_O_BA4AEFF1</Name>
-			<BitSize>64</BitSize>
-			<SubItem>
-				<Name>MDP5001_511_Control</Name>
-				<Type GUID="{0F1ADE13-A983-1987-9733-CB596A477A42}">Control_0D2C036C_Plc</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>MDP5001_511_Set_counter_value</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000005}">UINT</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>16</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>MDP5001_733_Control_1</Name>
-				<Type GUID="{8F266338-240C-9AA5-EF5F-11BFB5693D9C}">Control_36AF7161_Plc</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>32</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>MDP5001_733_Velocity</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000006}">INT</Type>
-				<BitSize>16</BitSize>
-				<BitOffs>48</BitOffs>
-			</SubItem>
 		</DataType>
 		<DataType>
 			<Name GUID="{2438F91B-E188-4ED7-8594-54354F9ED6A4}" Namespace="Safety" TcBaseType="true">FSOE_6</Name>
@@ -4391,7 +4151,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{082E65A1-C5B7-45DB-A2A1-3703469085B9}" Name="RoboTelRuntime" PrjFilePath="RoboTelRuntime\RoboTelRuntime.plcproj" TmcFilePath="RoboTelRuntime\RoboTelRuntime.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="RoboTelRuntime\RoboTelRuntime.tmc" TmcHash="{7D76FB39-9209-F594-E932-866CB3613DF0}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="RoboTelRuntime\RoboTelRuntime.tmc" TmcHash="{A7C379EA-F8AD-78D2-5FD6-80026464D100}">
 					<Name>RoboTelRuntime Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">
@@ -4401,8 +4161,24 @@ External Setpoint Generation:
 							<Type GUID="{9B2C29BE-B860-43F7-B5AA-545677355F79}">ARRAY [0..30] OF WORD</Type>
 						</Var>
 						<Var>
+							<Name>CoverControl.Cover1_axis.MDP5001_511_733_Input</Name>
+							<Type GUID="{5794271D-C677-DBCD-9F34-B8530AAD1320}">MDP5001_511_733_I_FFF278FE</Type>
+						</Var>
+						<Var>
+							<Name>CoverControl.Cover2_axis.MDP5001_511_733_Input</Name>
+							<Type GUID="{5794271D-C677-DBCD-9F34-B8530AAD1320}">MDP5001_511_733_I_FFF278FE</Type>
+						</Var>
+						<Var>
+							<Name>CoverControl.Cover3_axis.MDP5001_511_733_Input</Name>
+							<Type GUID="{C8C52A4C-74E4-A7D1-6327-209E82ACA87F}">MDP5001_511_733_I_8E9CD54E</Type>
+						</Var>
+						<Var>
+							<Name>NasmythControl.Nasmyth_axis.MDP5001_511_733_Input</Name>
+							<Type GUID="{5794271D-C677-DBCD-9F34-B8530AAD1320}">MDP5001_511_733_I_FFF278FE</Type>
+						</Var>
+						<Var>
 							<Name>FanControl.Fan_axis.MDP5001_511_733_Input</Name>
-							<Type GUID="{0D3B3A76-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_I_32199BA1</Type>
+							<Type GUID="{C8C52A4C-74E4-A7D1-6327-209E82ACA87F}">MDP5001_511_733_I_8E9CD54E</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Auxiliary.Dewar_temperature_error</Name>
@@ -4477,17 +4253,17 @@ External Setpoint Generation:
 							<Type>INT</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Environment.rawTemperature</Name>
+							<Comment><![CDATA[ Input 3]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Dome.ActVelo</Name>
 							<Type>LREAL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.DomeAxisRef.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Environment.rawTemperature</Name>
-							<Comment><![CDATA[ Input 3]]></Comment>
-							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Environment.rawHumidity</Name>
@@ -4533,6 +4309,10 @@ External Setpoint Generation:
 							<Type>INT</Type>
 						</Var>
 						<Var>
+							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
+							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
+						</Var>
+						<Var>
 							<Name>GVL_pendant_control.BCD1</Name>
 							<Comment><![CDATA[DIN17 2.0]]></Comment>
 							<Type>BOOL</Type>
@@ -4561,10 +4341,6 @@ External Setpoint Generation:
 							<Name>GVL_pendant_control.direction_up</Name>
 							<Comment><![CDATA[DIN22 2.5]]></Comment>
 							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_FilterWheel.FilterWheel_AxisRef.NcToPlc</Name>
-							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
 						<Var>
 							<Name>GVL_pendant_control.direction_down</Name>
@@ -4646,6 +4422,47 @@ DIN39 4.6]]></Comment>
 						<Var>
 							<Name>GVL_Safety.Error</Name>
 							<Comment><![CDATA[ Safety Error Condition]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.phase_available</Name>
+							<Comment><![CDATA[DIN1 0.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.power_available</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.key_switch_remote</Name>
+							<Comment><![CDATA[DIN2 0.1
+key_switch			AT%I*: BOOL;
+DIN3 0.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.start_switch</Name>
+							<Comment><![CDATA[DIN4 0.3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.stop_switch</Name>
+							<Comment><![CDATA[DIN5 0.4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.reset_switch</Name>
+							<Comment><![CDATA[DIN8 0.7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.main_cabinet_temperature</Name>
+							<Comment><![CDATA[BT1]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.brake_clearing</Name>
+							<Comment><![CDATA[DIN15 1.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -4739,11 +4556,6 @@ DIN39 4.6]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.phase_available</Name>
-							<Comment><![CDATA[DIN1 0.0]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Telescope.Derotator_inputs</Name>
 							<Comment><![CDATA[ digitale inputs der Endlagen]]></Comment>
 							<Type>WORD</Type>
@@ -4784,27 +4596,6 @@ DIN39 4.6]]></Comment>
 							<Type>UDINT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_Main.power_available</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.key_switch_remote</Name>
-							<Comment><![CDATA[DIN2 0.1
-key_switch			AT%I*: BOOL;
-DIN3 0.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.start_switch</Name>
-							<Comment><![CDATA[DIN4 0.3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.stop_switch</Name>
-							<Comment><![CDATA[DIN5 0.4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_Telescope.AzimuthAxisRef.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
@@ -4820,67 +4611,28 @@ DIN3 0.2]]></Comment>
 							<Name>GVL_Telescope.FocusAxisRef.NcToPlc</Name>
 							<Type GUID="{25521FAA-EA5F-4C7F-8864-BBCCDACD2E98}" Namespace="MC">NCTOPLC_AXIS_REF</Type>
 						</Var>
-						<Var>
-							<Name>GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Input</Name>
-							<Type GUID="{1FBBF2EC-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_I_2BD37790</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.Cover1_axis.MDP5001_511_733_Input</Name>
-							<Type GUID="{1FBBF2EC-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_I_2BD37790</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.Cover2_axis.MDP5001_511_733_Input</Name>
-							<Type GUID="{1FBBF2EC-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_I_2BD37790</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.Cover3_axis.MDP5001_511_733_Input</Name>
-							<Type GUID="{2D9F1DEF-D0A1-8CE8-8800-12F336222FE8}">MDP5001_511_733_I_BA4AEFF1</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.reset_switch</Name>
-							<Comment><![CDATA[DIN8 0.7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.brake_clearing</Name>
-							<Comment><![CDATA[DIN15 1.6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.main_cabinet_temperature</Name>
-							<Comment><![CDATA[BT1]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.ups_input_voltage</Name>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.ups_input_current</Name>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.ups_temperature</Name>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.ups_battery_temperature</Name>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.ups_output_voltage</Name>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.ups_output_current</Name>
-							<Type>UINT</Type>
-						</Var>
 					</Vars>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
 						<Var>
+							<Name>CoverControl.Cover1_axis.MDP5001_511_733_Output</Name>
+							<Type GUID="{5794271E-C677-DBCD-9F34-B8530AAD1320}">MDP5001_511_733_O_FFF278FE</Type>
+						</Var>
+						<Var>
+							<Name>CoverControl.Cover2_axis.MDP5001_511_733_Output</Name>
+							<Type GUID="{5794271E-C677-DBCD-9F34-B8530AAD1320}">MDP5001_511_733_O_FFF278FE</Type>
+						</Var>
+						<Var>
+							<Name>CoverControl.Cover3_axis.MDP5001_511_733_Output</Name>
+							<Type GUID="{C8C52A4D-74E4-A7D1-6327-209E82ACA87F}">MDP5001_511_733_O_8E9CD54E</Type>
+						</Var>
+						<Var>
+							<Name>NasmythControl.Nasmyth_axis.MDP5001_511_733_Output</Name>
+							<Type GUID="{5794271E-C677-DBCD-9F34-B8530AAD1320}">MDP5001_511_733_O_FFF278FE</Type>
+						</Var>
+						<Var>
 							<Name>FanControl.Fan_axis.MDP5001_511_733_Output</Name>
-							<Type GUID="{0D3B3A77-171A-3B5B-1FC7-7202D1710B06}">MDP5001_511_733_O_32199BA1</Type>
+							<Type GUID="{C8C52A4D-74E4-A7D1-6327-209E82ACA87F}">MDP5001_511_733_O_8E9CD54E</Type>
 						</Var>
 						<Var>
 							<Name>GVL_Dome.Inverter_Enable</Name>
@@ -4967,6 +4719,26 @@ DOUT9 1.0]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_Main.lamp_power</Name>
+							<Comment><![CDATA[DOUT1 0.0]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.lamp_ready</Name>
+							<Comment><![CDATA[DOUT2 0.1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.lamp_error</Name>
+							<Comment><![CDATA[DOUT3 0.2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_Main.softstart_trafo</Name>
+							<Comment><![CDATA[DOUT7 0.6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_Telescope.brake_azimuth_eve</Name>
 							<Comment><![CDATA[DOUT6 0.5]]></Comment>
 							<Type>BOOL</Type>
@@ -5001,42 +4773,6 @@ DOUT9 1.0]]></Comment>
 						<Var>
 							<Name>GVL_Telescope.FocusAxisRef.PlcToNc</Name>
 							<Type GUID="{96B75FEB-2D84-43BE-A3EC-D9A681F27D52}" Namespace="MC">PLCTONC_AXIS_REF</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Output</Name>
-							<Type GUID="{1FBBF2ED-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_O_2BD37790</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.Cover1_axis.MDP5001_511_733_Output</Name>
-							<Type GUID="{1FBBF2ED-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_O_2BD37790</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.Cover2_axis.MDP5001_511_733_Output</Name>
-							<Type GUID="{1FBBF2ED-6560-6D84-6D14-31C076F4DD99}">MDP5001_511_733_O_2BD37790</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Telescope.Cover3_axis.MDP5001_511_733_Output</Name>
-							<Type GUID="{2D9F1DF0-D0A1-8CE8-8800-12F336222FE8}">MDP5001_511_733_O_BA4AEFF1</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.lamp_power</Name>
-							<Comment><![CDATA[DOUT1 0.0]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.lamp_ready</Name>
-							<Comment><![CDATA[DOUT2 0.1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.lamp_error</Name>
-							<Comment><![CDATA[DOUT3 0.2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_Main.softstart_trafo</Name>
-							<Comment><![CDATA[DOUT7 0.6]]></Comment>
-							<Type>BOOL</Type>
 						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2020-11-02T13:21:21">
@@ -5112,9 +4848,59 @@ DOUT9 1.0]]></Comment>
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2023-10-06T18:02:57">
+						<OwnerA Name="InputDst" Prefix="TIPC^RoboTelRuntime^RoboTelRuntime Instance" Type="1">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Motor1 (EL7342)">
+								<Link VarA="GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" TypeA="UINT" InOutA="0" ParentTypeA="MDP5001_511_733_I_2BD37790" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="ENC Status compact Channel 2^Counter value" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" TypeA="UINT" InOutA="0" ParentTypeA="MDP5001_511_733_I_2BD37790" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="ENC Status compact Channel 2^Latch value" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Status" TypeA="Status_53870A22_Plc" InOutA="0" ParentTypeA="MDP5001_511_733_I_2BD37790" GuidA="{82A298F0-2577-5424-093E-34DBB389355E}" VarB="ENC Status compact Channel 2^Status" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" TypeA="Status_E56991C4_Plc" InOutA="0" ParentTypeA="MDP5001_511_733_I_2BD37790" GuidA="{D4B7E62B-7F67-904F-E102-4099680AD138}" VarB="DCM Status Channel 2^Status" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Motor2 (EL7342)">
+								<Link VarA="GVL_Telescope.Cover1_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" TypeA="UINT" InOutA="0" ParentTypeA="MDP5001_511_733_I_2BD37790" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="ENC Status compact Channel 1^Counter value" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover1_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" TypeA="UINT" InOutA="0" ParentTypeA="MDP5001_511_733_I_2BD37790" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="ENC Status compact Channel 1^Latch value" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover1_axis.MDP5001_511_733_Input^MDP5001_511_Status" TypeA="Status_53870A22_Plc" InOutA="0" ParentTypeA="MDP5001_511_733_I_2BD37790" GuidA="{82A298F0-2577-5424-093E-34DBB389355E}" VarB="ENC Status compact Channel 1^Status" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover1_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" TypeA="Status_E56991C4_Plc" InOutA="0" ParentTypeA="MDP5001_511_733_I_2BD37790" GuidA="{D4B7E62B-7F67-904F-E102-4099680AD138}" VarB="DCM Status Channel 1^Status" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" TypeA="UINT" InOutA="0" ParentTypeA="MDP5001_511_733_I_2BD37790" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="ENC Status compact Channel 2^Counter value" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" TypeA="UINT" InOutA="0" ParentTypeA="MDP5001_511_733_I_2BD37790" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="ENC Status compact Channel 2^Latch value" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Status" TypeA="Status_53870A22_Plc" InOutA="0" ParentTypeA="MDP5001_511_733_I_2BD37790" GuidA="{82A298F0-2577-5424-093E-34DBB389355E}" VarB="ENC Status compact Channel 2^Status" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover2_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" TypeA="Status_E56991C4_Plc" InOutA="0" ParentTypeA="MDP5001_511_733_I_2BD37790" GuidA="{D4B7E62B-7F67-904F-E102-4099680AD138}" VarB="DCM Status Channel 2^Status" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Motor3 (EL7342)">
+								<Link VarA="GVL_Telescope.Cover3_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" TypeA="UINT" InOutA="0" ParentTypeA="MDP5001_511_733_I_BA4AEFF1" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="ENC Status compact Channel 1^Counter value" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover3_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" TypeA="UINT" InOutA="0" ParentTypeA="MDP5001_511_733_I_BA4AEFF1" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="ENC Status compact Channel 1^Latch value" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover3_axis.MDP5001_511_733_Input^MDP5001_511_Status" TypeA="Status_53870A22_Plc" InOutA="0" ParentTypeA="MDP5001_511_733_I_BA4AEFF1" GuidA="{82A298F0-2577-5424-093E-34DBB389355E}" VarB="ENC Status compact Channel 1^Status" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover3_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" TypeA="Status_DCBEF39A_Plc" InOutA="0" ParentTypeA="MDP5001_511_733_I_BA4AEFF1" GuidA="{EF4653CE-C3CB-A462-4623-5070DA40CAE7}" VarB="DCM Status Channel 1^Status" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+						<OwnerA Name="OutputSrc" Prefix="TIPC^RoboTelRuntime^RoboTelRuntime Instance" Type="2">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Motor1 (EL7342)">
+								<Link VarA="GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_511_Control" TypeA="Control_0D2C036C_Plc" InOutA="1" ParentTypeA="MDP5001_511_733_O_2BD37790" GuidA="{0F1ADE13-A983-1987-9733-CB596A477A42}" VarB="ENC Control compact Channel 2^Control" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" TypeA="UINT" InOutA="1" ParentTypeA="MDP5001_511_733_O_2BD37790" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="ENC Control compact Channel 2^Set counter value" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" TypeA="Control_36AF7161_Plc" InOutA="1" ParentTypeA="MDP5001_511_733_O_2BD37790" GuidA="{8F266338-240C-9AA5-EF5F-11BFB5693D9C}" VarB="DCM Control Channel 2^Control" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" TypeA="INT" InOutA="1" ParentTypeA="MDP5001_511_733_O_2BD37790" GuidA="{18071995-0000-0000-0000-000000000006}" VarB="DCM Velocity Channel 2^Velocity" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Motor2 (EL7342)">
+								<Link VarA="GVL_Telescope.Cover1_axis.MDP5001_511_733_Output^MDP5001_511_Control" TypeA="Control_0D2C036C_Plc" InOutA="1" ParentTypeA="MDP5001_511_733_O_2BD37790" GuidA="{0F1ADE13-A983-1987-9733-CB596A477A42}" VarB="ENC Control compact Channel 1^Control" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover1_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" TypeA="UINT" InOutA="1" ParentTypeA="MDP5001_511_733_O_2BD37790" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="ENC Control compact Channel 1^Set counter value" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover1_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" TypeA="Control_36AF7161_Plc" InOutA="1" ParentTypeA="MDP5001_511_733_O_2BD37790" GuidA="{8F266338-240C-9AA5-EF5F-11BFB5693D9C}" VarB="DCM Control Channel 1^Control" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover1_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" TypeA="INT" InOutA="1" ParentTypeA="MDP5001_511_733_O_2BD37790" GuidA="{18071995-0000-0000-0000-000000000006}" VarB="DCM Velocity Channel 1^Velocity" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover2_axis.MDP5001_511_733_Output^MDP5001_511_Control" TypeA="Control_0D2C036C_Plc" InOutA="1" ParentTypeA="MDP5001_511_733_O_2BD37790" GuidA="{0F1ADE13-A983-1987-9733-CB596A477A42}" VarB="ENC Control compact Channel 2^Control" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover2_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" TypeA="UINT" InOutA="1" ParentTypeA="MDP5001_511_733_O_2BD37790" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="ENC Control compact Channel 2^Set counter value" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover2_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" TypeA="Control_36AF7161_Plc" InOutA="1" ParentTypeA="MDP5001_511_733_O_2BD37790" GuidA="{8F266338-240C-9AA5-EF5F-11BFB5693D9C}" VarB="DCM Control Channel 2^Control" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover2_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" TypeA="INT" InOutA="1" ParentTypeA="MDP5001_511_733_O_2BD37790" GuidA="{18071995-0000-0000-0000-000000000006}" VarB="DCM Velocity Channel 2^Velocity" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Motor3 (EL7342)">
+								<Link VarA="GVL_Telescope.Cover3_axis.MDP5001_511_733_Output^MDP5001_511_Control" TypeA="Control_0D2C036C_Plc" InOutA="1" ParentTypeA="MDP5001_511_733_O_BA4AEFF1" GuidA="{0F1ADE13-A983-1987-9733-CB596A477A42}" VarB="ENC Control compact Channel 1^Control" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover3_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" TypeA="UINT" InOutA="1" ParentTypeA="MDP5001_511_733_O_BA4AEFF1" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="ENC Control compact Channel 1^Set counter value" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" TypeA="Control_36AF7161_Plc" InOutA="1" ParentTypeA="MDP5001_511_733_O_BA4AEFF1" GuidA="{8F266338-240C-9AA5-EF5F-11BFB5693D9C}" VarB="DCM Control Channel 1^Control" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_Telescope.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" TypeA="INT" InOutA="1" ParentTypeA="MDP5001_511_733_O_BA4AEFF1" GuidA="{18071995-0000-0000-0000-000000000006}" VarB="DCM Velocity Channel 1^Velocity" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
 					<Contexts>
 						<Context>
-							<Id NeedCalleeCall="true">0</Id>
+							<Id>0</Id>
 							<Name>PlcTask</Name>
 							<ManualConfig>
 								<OTCID>#x02010050</OTCID>
@@ -17325,51 +17111,33 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.nasmyth_limit_left" VarB="Channel 3^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_Telescope.nasmyth_limit_right" VarB="Channel 4^Input"/>
 			</OwnerB>
-			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Motor1 (EL7342)">
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 2^Counter value"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 2^Latch value"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 2^Status"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" VarB="DCM Status Channel 2^Status"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_511_Control" VarB="ENC Control compact Channel 2^Control"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" VarB="ENC Control compact Channel 2^Set counter value"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 2^Control"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Nasmyth_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 2^Velocity"/>
-			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Motor2 (EL7342)">
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover1_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 1^Counter value"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover1_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 1^Latch value"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover1_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 1^Status"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover1_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" VarB="DCM Status Channel 1^Status"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 2^Counter value"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 2^Latch value"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 2^Status"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover2_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" VarB="DCM Status Channel 2^Status"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover1_axis.MDP5001_511_733_Output^MDP5001_511_Control" VarB="ENC Control compact Channel 1^Control"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover1_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" VarB="ENC Control compact Channel 1^Set counter value"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover1_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 1^Control"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover1_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 1^Velocity"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover2_axis.MDP5001_511_733_Output^MDP5001_511_Control" VarB="ENC Control compact Channel 2^Control"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover2_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" VarB="ENC Control compact Channel 2^Set counter value"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover2_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 2^Control"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover2_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 2^Velocity"/>
+				<Link VarA="PlcTask Inputs^CoverControl.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 2^Counter value"/>
+				<Link VarA="PlcTask Inputs^CoverControl.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 2^Latch value"/>
+				<Link VarA="PlcTask Inputs^CoverControl.Cover2_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 2^Status"/>
+				<Link VarA="PlcTask Inputs^CoverControl.Cover2_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" VarB="DCM Status Channel 2^Status"/>
+				<Link VarA="PlcTask Outputs^CoverControl.Cover2_axis.MDP5001_511_733_Output^MDP5001_511_Control" VarB="ENC Control compact Channel 2^Control"/>
+				<Link VarA="PlcTask Outputs^CoverControl.Cover2_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" VarB="ENC Control compact Channel 2^Set counter value"/>
+				<Link VarA="PlcTask Outputs^CoverControl.Cover2_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 2^Control"/>
+				<Link VarA="PlcTask Outputs^CoverControl.Cover2_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 2^Velocity"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Motor3 (EL7342)">
+				<Link VarA="PlcTask Inputs^CoverControl.Cover3_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 1^Counter value"/>
+				<Link VarA="PlcTask Inputs^CoverControl.Cover3_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 1^Latch value"/>
+				<Link VarA="PlcTask Inputs^CoverControl.Cover3_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 1^Status"/>
+				<Link VarA="PlcTask Inputs^CoverControl.Cover3_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" VarB="DCM Status Channel 1^Status"/>
 				<Link VarA="PlcTask Inputs^FanControl.Fan_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 2^Counter value"/>
 				<Link VarA="PlcTask Inputs^FanControl.Fan_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 2^Latch value"/>
 				<Link VarA="PlcTask Inputs^FanControl.Fan_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 2^Status"/>
 				<Link VarA="PlcTask Inputs^FanControl.Fan_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" VarB="DCM Status Channel 2^Status"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover3_axis.MDP5001_511_733_Input^MDP5001_511_Counter_value" VarB="ENC Status compact Channel 1^Counter value"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover3_axis.MDP5001_511_733_Input^MDP5001_511_Latch_value" VarB="ENC Status compact Channel 1^Latch value"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover3_axis.MDP5001_511_733_Input^MDP5001_511_Status" VarB="ENC Status compact Channel 1^Status"/>
-				<Link VarA="PlcTask Inputs^GVL_Telescope.Cover3_axis.MDP5001_511_733_Input^MDP5001_733_Status_1" VarB="DCM Status Channel 1^Status"/>
+				<Link VarA="PlcTask Outputs^CoverControl.Cover3_axis.MDP5001_511_733_Output^MDP5001_511_Control" VarB="ENC Control compact Channel 1^Control"/>
+				<Link VarA="PlcTask Outputs^CoverControl.Cover3_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" VarB="ENC Control compact Channel 1^Set counter value"/>
+				<Link VarA="PlcTask Outputs^CoverControl.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 1^Control"/>
+				<Link VarA="PlcTask Outputs^CoverControl.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 1^Velocity"/>
 				<Link VarA="PlcTask Outputs^FanControl.Fan_axis.MDP5001_511_733_Output^MDP5001_511_Control" VarB="ENC Control compact Channel 2^Control"/>
 				<Link VarA="PlcTask Outputs^FanControl.Fan_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" VarB="ENC Control compact Channel 2^Set counter value"/>
 				<Link VarA="PlcTask Outputs^FanControl.Fan_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 2^Control"/>
 				<Link VarA="PlcTask Outputs^FanControl.Fan_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 2^Velocity"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover3_axis.MDP5001_511_733_Output^MDP5001_511_Control" VarB="ENC Control compact Channel 1^Control"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover3_axis.MDP5001_511_733_Output^MDP5001_511_Set_counter_value" VarB="ENC Control compact Channel 1^Set counter value"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Control_1" VarB="DCM Control Channel 1^Control"/>
-				<Link VarA="PlcTask Outputs^GVL_Telescope.Cover3_axis.MDP5001_511_733_Output^MDP5001_733_Velocity" VarB="DCM Velocity Channel 1^Velocity"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1200)^Term 7 (EK1521)^Telescope Cabinet (EK1501)^Temp1 (EL3202-0010)">
 				<Link VarA="PlcTask Inputs^GVL_Telescope.temperature_bearing2" VarB="RTD Inputs Channel 1^Value"/>
