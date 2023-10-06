@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="CoverControl" Id="{c323d474-9f57-40fd-ba67-b4ebd08c9f7c}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM CoverControl
 VAR_INPUT
@@ -78,6 +78,12 @@ VAR
 	Cover_status:		WORD;
 	// last status word to trigger MQTT message if different
 	LastStatus:			WORD;
+// Motor2 Channel 1; MDP5001_511_733_2BD37790
+	Cover1_axis: 		MDP5001_511_733_FFF278FE;
+	// Motor2 Channel 2: MDP5001_511_733_2BD37790
+	Cover2_axis: 		MDP5001_511_733_FFF278FE;
+	// Motor3 Channel 1: MDP5001_511_733_BA4AEFF1
+	Cover3_axis: 		MDP5001_511_733_8E9CD54E;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -155,18 +161,18 @@ END_CASE
 Cover1_control(
 	limit_open := 	NOT Cover1_opened,
 	limit_close :=  NOT Cover1_closed,
-	axis_ref := 	GVL_Telescope.Cover1_axis,
+	axis_ref := 	Cover1_axis,
 	error => 		Cover1_error);
 // Cover 2 can only be moved in manual operation if cover 3 is not closed to protect the lid.
 Cover2_control(
 	limit_open := 	NOT Cover2_opened,
 	limit_close := 	NOT Cover2_closed,
-	axis_ref := 	GVL_Telescope.Cover2_axis,
+	axis_ref := 	Cover2_axis,
 	error => 		Cover2_error);
 Cover3_control(
 	limit_open := 	NOT Cover3_opened,
 	limit_close := 	NOT Cover3_closed,
-	axis_ref := 	GVL_Telescope.Cover3_axis,
+	axis_ref := 	Cover3_axis,
 	error => 		Cover3_error);
 
 // we are open, if all covers are open

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_DCAxis_1" Id="{155c9b23-9342-4c5c-8631-97a7a3de17d7}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_DCAxis_1
 VAR_INPUT
@@ -23,7 +23,7 @@ VAR_OUTPUT
 	Digital_input2:		BOOL;
 END_VAR
 VAR_IN_OUT
-	axis_ref:	MDP5001_511_733_BA4AEFF1;
+	axis_ref:	MDP5001_511_733_8E9CD54E;
 END_VAR
 VAR
 	enable_state: RS;

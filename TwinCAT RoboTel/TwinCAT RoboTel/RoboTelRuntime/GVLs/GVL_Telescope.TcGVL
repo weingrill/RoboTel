@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <GVL Name="GVL_Telescope" Id="{a7572ab9-17bf-4e0d-b71f-e76e531b6203}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
@@ -77,15 +77,7 @@ VAR_GLOBAL
 	DerotatorAxisRef: 	AXIS_REF;
  	// Motor1 Channel 1
 	FocusAxisRef:		AXIS_REF;
-	// Motor1 Channel 2 
-	Nasmyth_axis:		MDP5001_511_733_2BD37790;
-
-	// Motor2 Channel 1; MDP5001_511_733_2BD37790
-	Cover1_axis: 		MDP5001_511_733_2BD37790;
-	// Motor2 Channel 2: MDP5001_511_733_2BD37790
-	Cover2_axis: 		MDP5001_511_733_2BD37790;
-	// Motor3 Channel 1: MDP5001_511_733_BA4AEFF1
-	Cover3_axis: 		MDP5001_511_733_BA4AEFF1;
+	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

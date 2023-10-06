@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FanControl" Id="{aa14e62d-ea4c-4f88-afe0-bf32efd9c378}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM FanControl
 VAR_INPUT
@@ -14,7 +14,7 @@ VAR_OUTPUT
 END_VAR
 VAR
 	// fan axis reference
-	Fan_axis:		MDP5001_511_733_32199BA1;
+	Fan_axis:		MDP5001_511_733_8E9CD54E;
 	// measured temperature
 	temperature:	REAL;
 	// calculated velocity

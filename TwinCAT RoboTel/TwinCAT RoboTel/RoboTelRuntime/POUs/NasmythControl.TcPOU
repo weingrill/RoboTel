@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="NasmythControl" Id="{44cc95a4-2714-4f68-86b9-267e29c12088}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM NasmythControl
 VAR_INPUT
@@ -40,7 +40,8 @@ VAR
 	NasmythLeftEvent:	FB_Eventlog;
 	NasmythRightEvent:	FB_Eventlog;
 	Nasmyth_Timeout:	TON := (PT := T#10S);
-	
+// Motor1 Channel 2 
+	Nasmyth_axis:		MDP5001_511_733_FFF278FE;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -84,7 +85,7 @@ Nasmyth_control(
 	error => error,
 	Ready => ready,
 	velocity := 18000,
-	axis_ref := GVL_Telescope.Nasmyth_axis);
+	axis_ref := Nasmyth_axis);
 
 Nasmyth_Timeout(IN := (left AND NOT Nasmyth_left) OR (right AND NOT Nasmyth_right));
 
