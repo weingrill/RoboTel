@@ -24,10 +24,6 @@ VAR_OUTPUT
 	Error: 	BOOL;
 	// warning state of the DC drives
 	Warning: BOOL;
-	// cover1 is open
-	Cover1_opened, 
-	// cover1 is closed
-	Cover1_closed:	BOOL;
 	// cover2 is open
 	Cover2_opened, 
 	// cover2 is closed
@@ -36,7 +32,6 @@ VAR_OUTPUT
 	Cover3_opened, 
 	// cover3 is closed
 	Cover3_closed:	BOOL;
-	Cover1_error: BOOL;
 	Cover2_error: BOOL;
 	Cover3_error: BOOL;
 	Ready:		BOOL;
@@ -46,24 +41,16 @@ VAR
 	open2_delay: 	TON;
 	// dely timer for closing cover3
 	close3_delay : 	TON;
-	// axis control for cover3
-	Cover3_control:	FB_DCAxis_1;
-	// axis control for cover2
-	Cover2_control:	FB_DCAxis;
-	// axis control for cover1
-	Cover1_control:	FB_DCAxis;
 	
 	//Cover3_state: 	RS;
 	//triggers for timeout event for cover1
-	Cover1_timeout,
 	Cover2_timeout,
 	Cover3_timeout:	TON;
-	//error event for cover1
-	Cover1_Event,
+	error_trigger: SR;
+	//error event for cover
 	Cover2_Event,
 	Cover3_Event:	FB_EventLog;
 	// timeout event for cover1
-	Cover1_Timeout_Event,
 	Cover2_Timeout_Event,
 	Cover3_Timeout_Event:	FB_EventLog;
 	// log if covers are open
@@ -78,12 +65,6 @@ VAR
 	Cover_status:		WORD;
 	// last status word to trigger MQTT message if different
 	LastStatus:			WORD;
-// Motor2 Channel 1; MDP5001_511_733_2BD37790
-	Cover1_axis: 		MDP5001_511_733_FFF278FE;
-	// Motor2 Channel 2: MDP5001_511_733_2BD37790
-	Cover2_axis: 		MDP5001_511_733_FFF278FE;
-	// Motor3 Channel 1: MDP5001_511_733_BA4AEFF1
-	Cover3_axis: 		MDP5001_511_733_8E9CD54E;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -98,103 +79,72 @@ IF close THEN
 	open := FALSE;
 END_IF
 
-Cover1_opened := NOT GVL_Telescope.cover1_open;
+IF Error THEN
+	open := FALSE;
+	close := FALSE;
+END_IF
+
 Cover2_opened := NOT GVL_Telescope.cover2_open;
 Cover3_opened := NOT GVL_Telescope.cover3_open;
-Cover1_closed := NOT GVL_Telescope.cover1_closed;
 Cover2_closed := NOT GVL_Telescope.cover2_closed;
 Cover3_closed := NOT GVL_Telescope.cover3_closed;
 
-// wait for cover2 until cover3 has left the closed state
-open2_delay(IN := open AND NOT cover3_closed,
-			PT := T#300MS);
-// wait for cover3 until cover2 has left the open state
-close3_delay(IN := close AND NOT cover2_opened,
-			PT := T#1500MS);
-
-// fix cover3 errors
-Cover3_control.velocity := 18000;
-
-CASE active_cover OF
-	1:	
-		Cover1_Control.enable := enable;
-		Cover1_Control.reset := reset;
-		Cover1_control.open :=	open;
-		Cover1_control.close := close;
-		Ready := Cover1_control.Ready;
-	2:	
-		Cover2_Control.enable := enable;
-		Cover2_Control.reset := reset;
-		Cover2_control.open :=	open;
-		Cover2_control.close :=	close AND NOT cover3_closed;
-		Ready := Cover2_control.Ready;
-	3:
-		Cover3_Control.enable := enable;
-		Cover3_Control.reset := reset;
-		Cover3_control.open :=	open;
-		Cover3_control.close :=	close;
-		Ready := Cover3_control.Ready;
-ELSE	
-	// enable all drives
-	Cover1_Control.enable := enable;
-	Cover2_Control.enable := enable;
-	Cover3_Control.enable := enable;
-	Cover1_Control.reset := reset;
-	Cover2_Control.reset := reset;
-	Cover3_Control.reset := reset;
-
-	//TODO: verify Cover1 operations
-	Cover1_control.open := open;
-	// open cover 3 first then cover 2 after 3 seconds
-	Cover3_control.open := open;
-	Cover2_control.open := open2_delay.Q;
+IF active_cover = 2 THEN
+	GVL_Telescope.open_cover2 := enable AND open AND NOT Cover2_opened;
+	GVL_Telescope.close_cover2 := enable AND close AND NOT Cover2_closed;
+ELSIF active_cover = 3 THEN
+	GVL_Telescope.open_cover3 := enable AND open AND NOT Cover3_opened;
+	GVL_Telescope.close_cover3 := enable AND close AND NOT Cover3_closed;
+ELSE
+	// we open both covers
+	// wait for cover2 until cover3 has left the closed state
+	open2_delay(IN := enable AND open AND NOT cover3_closed,
+				PT := T#300MS);
+	// wait for cover3 until cover2 has left the open state
+	close3_delay(IN := enable AND close AND NOT cover2_opened,
+				PT := T#1500MS);
+	GVL_Telescope.open_cover2 := enable AND open AND open2_delay.Q AND NOT Cover2_opened;
+	GVL_Telescope.open_cover3 := enable AND open AND NOT Cover3_opened;
 	
-	// close cover 2 first then cover 3 after 3 seconds
-	Cover2_control.close := close;
-	Cover3_control.close := close3_delay.Q;
-	// close cover 1 if cover 3 is closed;
-	Cover1_control.close :=	close AND Cover3_closed AND NOT Cover1_closed;	
-	Ready := Cover1_Control.Ready AND Cover2_Control.Ready AND Cover3_Control.Ready;
-END_CASE
-		
+	GVL_Telescope.close_cover2 := enable AND close AND NOT Cover2_closed;
+	GVL_Telescope.close_cover3 := enable AND close AND close3_delay.Q AND NOT Cover3_closed;
+END_IF
 
-Cover1_control(
-	limit_open := 	NOT Cover1_opened,
-	limit_close :=  NOT Cover1_closed,
-	axis_ref := 	Cover1_axis,
-	error => 		Cover1_error);
-// Cover 2 can only be moved in manual operation if cover 3 is not closed to protect the lid.
-Cover2_control(
-	limit_open := 	NOT Cover2_opened,
-	limit_close := 	NOT Cover2_closed,
-	axis_ref := 	Cover2_axis,
-	error => 		Cover2_error);
-Cover3_control(
-	limit_open := 	NOT Cover3_opened,
-	limit_close := 	NOT Cover3_closed,
-	axis_ref := 	Cover3_axis,
-	error => 		Cover3_error);
-
+Cover2_error := Cover2_opened AND Cover2_closed;
+Cover3_error := Cover3_opened AND Cover3_closed;
 // we are open, if all covers are open
-isopen := cover3_opened AND cover2_opened AND (cover1_opened OR GVL_Main.isRoboTel);
+isopen := cover3_opened AND cover2_opened;
 // we are closed, if all covers are closed
-isclosed := cover2_closed AND cover3_closed AND (cover1_closed OR GVL_Main.isRoboTel);
+isclosed := cover2_closed AND cover3_closed;
 // error indicates an axis error on any axis
-Error := (Cover1_error AND NOT GVL_Main.isRoboTel) OR Cover2_error OR Cover3_error;
-Warning := Cover1_control.Warning OR Cover2_control.Warning OR Cover3_control.Warning;
+Cover2_timeout(IN := (open AND NOT Cover2_opened) OR (close AND NOT Cover2_closed), PT := T#30S);
+Cover3_timeout(IN := (open AND NOT Cover3_opened) OR (close AND NOT Cover3_closed), PT := T#30S);
+
+error_trigger(	SET1 := Cover2_error OR Cover2_timeout.Q OR Cover3_error OR Cover3_timeout.Q,
+				RESET := reset,
+				Q1 => Error);
+
+Ready := NOT Error;
+
+IF isopen THEN
+	open := FALSE;
+END_IF
+IF isclosed THEN
+	close := FALSE;
+END_IF
 
 Cover_status.0 := isopen;
 Cover_status.1 := isclosed;
 Cover_status.2 := Warning;
 Cover_status.3 := Error;
 Cover_status.4 := isopen;
-Cover_status.5 := Cover1_opened;
+Cover_status.5 := FALSE;
 Cover_status.6 := Cover2_opened;
 Cover_status.7 := Cover3_opened;
-Cover_status.8 := Cover1_closed;
+Cover_status.8 := FALSE;
 Cover_status.9 := Cover2_closed;
 Cover_status.10 := Cover3_closed;
-Cover_status.11 := Cover1_error;
+Cover_status.11 := FALSE;
 Cover_status.12 := Cover2_error;
 Cover_status.13 := Cover3_error;
 
@@ -209,8 +159,6 @@ END_IF
 
 // A timeout occurs, when we open the cover, and the opened signal does not activate within n seconds.
 // The same holds for closing the cover. This should not take longer then 10 seconds
-Cover1_timeout(IN := NOT (Cover1_opened XOR Cover1_closed), PT := T#20S);
-
 Cover2_timeout(IN := NOT (Cover2_opened XOR Cover2_closed), PT := T#20S);
 				
 Cover3_timeout(IN := NOT (Cover3_opened XOR Cover3_closed), PT := T#20S);
@@ -223,22 +171,8 @@ IF Error THEN
 	IF Cover2_error THEN 
 		Covers_Error_Event.OnMessage := 'Cover 2 has a drive error.';
 	END_IF
-	IF Cover1_error  AND NOT GVL_Main.isRoboTel THEN 
-		Covers_Error_Event.OnMessage := 'Cover 1 has a drive error.';
-	END_IF
 END_IF
 
-IF Warning THEN
-	IF Cover3_control.Warning THEN 
-		Covers_Warning_event.OnMessage := 'Cover 3 has a drive warning.';
-	END_IF
-	IF Cover2_control.Warning THEN 
-		Covers_Warning_event.OnMessage := 'Cover 2 has a drive warning.';
-	END_IF
-	IF Cover1_control.Warning AND NOT GVL_Main.isRoboTel THEN 
-		Covers_Warning_event.OnMessage := 'Cover 1 has a drive warning.';
-	END_IF
-END_IF
 
 Covers_Error_event(	Trigger := Error, 
 					Level := ADSLOG_MSGTYPE_ERROR);
@@ -248,10 +182,6 @@ Covers_Warning_event(	Trigger := Warning,
 
 // raise an error, if both opened and closed signals are activated
 // handle RoboTel differently
-Cover1_Event(	Trigger := cover1_opened AND cover1_closed AND NOT GVL_Main.isRoboTel,
-				Level := ADSLOG_MSGTYPE_ERROR, 
-				OnMessage := 'Cover1: limit switch error');
-
 Cover2_Event(Trigger := cover2_opened AND cover2_closed,
 				Level := ADSLOG_MSGTYPE_ERROR, 
 				OnMessage := 'Cover2: limit switch error');
@@ -262,10 +192,6 @@ Cover3_Event(Trigger := cover3_opened AND cover3_closed,
 
 //trigger an event, if we encounter a timeout
 // handle RoboTel differently
-
-Cover1_Timeout_Event(Trigger := Cover1_timeout.Q AND NOT GVL_Main.isRoboTel,
-				Level := ADSLOG_MSGTYPE_ERROR, 
-				OnMessage := 'Cover1: Timeout');
 
 Cover2_Timeout_Event(Trigger := Cover2_timeout.Q,
 				Level := ADSLOG_MSGTYPE_ERROR, 
@@ -293,70 +219,38 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="18" Count="0" />
       <LineId Id="5" Count="0" />
       <LineId Id="16" Count="1" />
+      <LineId Id="1236" Count="2" />
+      <LineId Id="1240" Count="0" />
+      <LineId Id="1239" Count="0" />
       <LineId Id="269" Count="0" />
-      <LineId Id="32" Count="0" />
       <LineId Id="271" Count="1" />
-      <LineId Id="270" Count="0" />
-      <LineId Id="274" Count="2" />
-      <LineId Id="273" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="277" Count="0" />
-      <LineId Id="35" Count="1" />
+      <LineId Id="274" Count="1" />
+      <LineId Id="1197" Count="2" />
+      <LineId Id="1205" Count="0" />
+      <LineId Id="1201" Count="0" />
+      <LineId Id="1206" Count="1" />
+      <LineId Id="1203" Count="1" />
+      <LineId Id="1215" Count="7" />
+      <LineId Id="1224" Count="0" />
+      <LineId Id="1223" Count="0" />
+      <LineId Id="1225" Count="0" />
+      <LineId Id="1200" Count="0" />
+      <LineId Id="276" Count="0" />
       <LineId Id="1112" Count="0" />
-      <LineId Id="1111" Count="0" />
-      <LineId Id="931" Count="0" />
-      <LineId Id="832" Count="2" />
-      <LineId Id="842" Count="0" />
-      <LineId Id="892" Count="0" />
-      <LineId Id="881" Count="0" />
-      <LineId Id="840" Count="0" />
-      <LineId Id="928" Count="0" />
-      <LineId Id="836" Count="0" />
-      <LineId Id="843" Count="0" />
-      <LineId Id="882" Count="0" />
-      <LineId Id="893" Count="0" />
-      <LineId Id="841" Count="0" />
-      <LineId Id="929" Count="0" />
-      <LineId Id="837" Count="0" />
-      <LineId Id="845" Count="0" />
-      <LineId Id="883" Count="0" />
-      <LineId Id="894" Count="0" />
-      <LineId Id="844" Count="0" />
-      <LineId Id="930" Count="0" />
-      <LineId Id="846" Count="0" />
-      <LineId Id="848" Count="0" />
-      <LineId Id="886" Count="0" />
-      <LineId Id="884" Count="1" />
-      <LineId Id="911" Count="2" />
-      <LineId Id="847" Count="0" />
-      <LineId Id="849" Count="9" />
-      <LineId Id="839" Count="0" />
-      <LineId Id="927" Count="0" />
-      <LineId Id="835" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="438" Count="0" />
-      <LineId Id="160" Count="0" />
-      <LineId Id="163" Count="0" />
-      <LineId Id="166" Count="1" />
-      <LineId Id="738" Count="0" />
-      <LineId Id="209" Count="0" />
-      <LineId Id="168" Count="0" />
-      <LineId Id="171" Count="0" />
-      <LineId Id="174" Count="1" />
-      <LineId Id="739" Count="0" />
-      <LineId Id="176" Count="0" />
-      <LineId Id="179" Count="0" />
-      <LineId Id="182" Count="1" />
-      <LineId Id="740" Count="0" />
-      <LineId Id="159" Count="0" />
+      <LineId Id="1226" Count="0" />
       <LineId Id="142" Count="0" />
       <LineId Id="139" Count="0" />
       <LineId Id="422" Count="0" />
       <LineId Id="143" Count="0" />
       <LineId Id="423" Count="0" />
+      <LineId Id="1233" Count="0" />
+      <LineId Id="1235" Count="0" />
+      <LineId Id="1234" Count="0" />
+      <LineId Id="1230" Count="2" />
       <LineId Id="256" Count="0" />
-      <LineId Id="628" Count="0" />
+      <LineId Id="1208" Count="0" />
+      <LineId Id="1227" Count="0" />
+      <LineId Id="1209" Count="5" />
       <LineId Id="1017" Count="2" />
       <LineId Id="627" Count="0" />
       <LineId Id="1020" Count="1" />
@@ -369,8 +263,6 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="373" Count="0" />
       <LineId Id="353" Count="0" />
       <LineId Id="374" Count="0" />
-      <LineId Id="354" Count="0" />
-      <LineId Id="351" Count="0" />
       <LineId Id="350" Count="0" />
       <LineId Id="359" Count="0" />
       <LineId Id="357" Count="0" />
@@ -380,11 +272,9 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="632" Count="0" />
       <LineId Id="634" Count="0" />
       <LineId Id="633" Count="0" />
-      <LineId Id="635" Count="5" />
+      <LineId Id="635" Count="2" />
       <LineId Id="630" Count="0" />
       <LineId Id="914" Count="0" />
-      <LineId Id="916" Count="9" />
-      <LineId Id="915" Count="0" />
       <LineId Id="643" Count="0" />
       <LineId Id="449" Count="0" />
       <LineId Id="452" Count="0" />
@@ -393,10 +283,7 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="356" Count="0" />
       <LineId Id="334" Count="0" />
       <LineId Id="535" Count="0" />
-      <LineId Id="335" Count="0" />
-      <LineId Id="377" Count="0" />
-      <LineId Id="381" Count="0" />
-      <LineId Id="340" Count="1" />
+      <LineId Id="341" Count="0" />
       <LineId Id="382" Count="1" />
       <LineId Id="345" Count="1" />
       <LineId Id="384" Count="1" />
@@ -404,9 +291,7 @@ Covers_closed_event(Trigger := isclosed,
       <LineId Id="364" Count="0" />
       <LineId Id="537" Count="0" />
       <LineId Id="536" Count="0" />
-      <LineId Id="365" Count="0" />
-      <LineId Id="386" Count="1" />
-      <LineId Id="367" Count="1" />
+      <LineId Id="368" Count="0" />
       <LineId Id="388" Count="1" />
       <LineId Id="370" Count="1" />
       <LineId Id="390" Count="1" />
