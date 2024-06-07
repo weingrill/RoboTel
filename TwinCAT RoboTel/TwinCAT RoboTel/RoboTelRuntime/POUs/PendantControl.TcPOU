@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="PendantControl" Id="{4c9494b1-b987-44f6-88ae-faae341979f2}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PendantControl
 VAR
@@ -82,16 +82,6 @@ CoverControl.active_cover := 0;
 // enable only the selected item and connect lamps and buttons accordingly
 CASE Selection OF
 	1:	// reserved for Cover1 control
-		lamp_up := GVL_Telescope.cover1_open AND CoverControl.Ready;
-		lamp_down := GVL_Telescope.cover1_closed AND CoverControl.Ready;
-		IF manual THEN
-			CoverEnable(SET := enable, Q := CoverControl.enable);
-			CoverControl.active_cover := 1;
-			CoverControl.reset := reset;
-			CoverControl.open := up AND CoverControl.Ready;
-			CoverControl.close := down AND CoverControl.Ready;
-			lamp_error := CoverControl.Cover1_Error;			
-		END_IF
 
 	2: // Cover2 control
 		lamp_up := GVL_Telescope.cover2_open AND CoverControl.Ready;
@@ -302,7 +292,8 @@ GVL_pendant_control.lamp_error := lamp_error;]]></ST>
     <LineIds Name="PendantControl">
       <LineId Id="2490" Count="20" />
       <LineId Id="2749" Count="0" />
-      <LineId Id="2511" Count="142" />
+      <LineId Id="2511" Count="15" />
+      <LineId Id="2537" Count="116" />
       <LineId Id="2747" Count="1" />
       <LineId Id="2654" Count="24" />
       <LineId Id="2743" Count="2" />
