@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="TelescopeAuxiliary" Id="{974ce34a-6026-4bc5-b92d-99da70a09948}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM TelescopeAuxiliary
 VAR
@@ -12,13 +12,6 @@ VAR_OUTPUT
 	// BT10
 	temperature_mirror1:	REAL;
 	// BT11
-	temperature_mirror3:	REAL;
-	// BT12
-	temperature_tube:		REAL;
-	// BT13
-	temperature_bearing1:	REAL;
-	// BT14
-	temperature_bearing2:	REAL;
 
 	// dewar pressure 0..10V Pfeiffer 
 	pressure_Dewar:	REAL;
@@ -32,28 +25,12 @@ END_VAR
     <Implementation>
       <ST><![CDATA[temperature_mirror2 := GVL_Telescope.temperature_mirror2 / 100.0;
 temperature_mirror1 := GVL_Telescope.temperature_mirror1 / 100.0;
-temperature_mirror3 := GVL_Telescope.temperature_mirror3 / 100.0;
-temperature_tube 	:= GVL_Telescope.temperature_tube / 100.0;
-temperature_bearing1 := GVL_Telescope.temperature_bearing1 / 100.0;
-temperature_bearing2 := GVL_Telescope.temperature_bearing2 / 100.0;
 
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 
 	MAIN.MQTTClient.Publish('telescope', 'dome',  'Mirror2Temperature',	LREAL_TO_FMTSTR(temperature_mirror2, 2, TRUE));
 	MAIN.MQTTClient.Publish('telescope', 'dome', 'Mirror1Temperature',	LREAL_TO_FMTSTR(temperature_mirror1, 2, TRUE));
-	IF GVL_Telescope.temperature_mirror3>0 AND GVL_Telescope.temperature_mirror3<32767 THEN
-		MAIN.MQTTClient.Publish('telescope', 'dome', 'Mirror3Temperature',	LREAL_TO_FMTSTR(temperature_mirror3, 2, TRUE));
-	END_IF
-	IF GVL_Telescope.temperature_tube>0 AND GVL_Telescope.temperature_tube<32767 THEN
-		MAIN.MQTTClient.Publish('telescope', 'dome', 'TubeTemperature', 	LREAL_TO_FMTSTR(temperature_tube, 2, TRUE));
-	END_IF
-	IF GVL_Telescope.temperature_bearing1>0 AND GVL_Telescope.temperature_bearing1<32767 THEN
-		MAIN.MQTTClient.Publish('telescope', 'dome', 'Bearing1Temperature', LREAL_TO_FMTSTR(temperature_bearing1, 2, TRUE));
-	END_IF
-	IF GVL_Telescope.temperature_bearing2>0 AND GVL_Telescope.temperature_bearing2<32767 THEN
-		MAIN.MQTTClient.Publish('telescope', 'dome', 'Bearing2Temperature', LREAL_TO_FMTSTR(temperature_bearing2, 2, TRUE));
-	END_IF
 	
 	MAIN.MQTTClient.Publish('telescope', 'instrument', 'DewarPressureVoltage',	LREAL_TO_FMTSTR(pressure_voltage, 3, TRUE));
 	IF NOT GVL_Auxiliary.Dewar_temperature_error THEN
@@ -70,23 +47,11 @@ END_IF
     </Implementation>
     <LineIds Name="TelescopeAuxiliary">
       <LineId Id="6" Count="0" />
-      <LineId Id="36" Count="1" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="40" Count="0" />
+      <LineId Id="36" Count="0" />
       <LineId Id="82" Count="0" />
       <LineId Id="50" Count="1" />
       <LineId Id="53" Count="1" />
       <LineId Id="56" Count="0" />
-      <LineId Id="87" Count="0" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="89" Count="1" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="91" Count="1" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="94" Count="1" />
-      <LineId Id="81" Count="0" />
-      <LineId Id="96" Count="0" />
       <LineId Id="67" Count="0" />
       <LineId Id="99" Count="1" />
       <LineId Id="179" Count="0" />
