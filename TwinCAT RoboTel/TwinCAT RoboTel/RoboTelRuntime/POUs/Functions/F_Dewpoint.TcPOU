@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="F_Dewpoint" Id="{1075508b-0103-445e-af41-8392a971b7cf}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION F_Dewpoint : REAL
 VAR_INPUT
@@ -35,7 +35,9 @@ IF SDD > 0.0 THEN
 	DD := relhum/100.0 * SDD;
 END_IF
 
-v := LOG(ABS(DD)/6.1078);
+IF DD  > 0.0 THEN
+  v := LOG(ABS(DD)/6.1078);	
+END_IF
 
 IF a <> v THEN
 	F_Dewpoint := b*v/(a-v);	
@@ -58,8 +60,10 @@ END_IF
       <LineId Id="48" Count="0" />
       <LineId Id="13" Count="0" />
       <LineId Id="63" Count="0" />
+      <LineId Id="98" Count="0" />
       <LineId Id="79" Count="0" />
-      <LineId Id="23" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="96" Count="0" />
       <LineId Id="80" Count="0" />
       <LineId Id="39" Count="2" />
       <LineId Id="15" Count="0" />
