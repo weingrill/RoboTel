@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_Axis2" Id="{a3e55664-127b-4a99-a2ba-301ba26f68b3}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_Axis2
 VAR_INPUT
@@ -30,6 +30,7 @@ VAR_INPUT
 	isModuloAxis:		BOOL := FALSE;
 	// enable external setpoint generator
 	Tracking:			BOOL;
+	HomingMode:			MC_HomingMode := MC_HomingMode.MC_DefaultHoming;
 END_VAR
 VAR_OUTPUT
 	// Reset has been executed
@@ -60,14 +61,14 @@ VAR_OUTPUT
 	Homing:		BOOL;
 	// axis is Accelerating or Decelerating
 	InRamp:		BOOL;
+	// axis is tracking on position
+	isTracking:	BOOL;
 	//	error condition
 	Error: 		BOOL;
 	// number of error
 	ErrorID: 	UDINT;
 	// actual position of the axis
 	ActualPosition: LREAL;
-	// absolute position of the axis
-	AbsolutePosition:	LREAL;
 	// axis is calibrated;
 	Calibrated:	BOOL := FALSE;
 	
@@ -77,7 +78,7 @@ VAR
 	Axis_Reset:		MC_Reset;
 	Axis_Move:		MC_MoveAbsolute;
 	Axis_Modulo:	MC_MoveModulo;
-	Axis_Position:	MC_ReadActualPosition;
+	//Axis_Position:	MC_ReadActualPosition;
 	Axis_Stop:		MC_Stop;
 	Axis_Status:	MC_ReadStatus;
 	Axis_Home:		MC_Home;
@@ -85,12 +86,13 @@ VAR
 	Axis_SetpointEnable:	MC_ExtSetPointGenEnable;
 	Axis_SetpointDisable:	MC_ExtSetPointGenDisable;
 	StopAllowed:	BOOL;
-	//wasEnabled:		BOOL;
-	// Direction fot Axis_SetpointFeed
-	Direction:		DINT;
-	Acceleration:	LREAL := 0.0;
-	EndTracking:	F_TRIG;
+	// Direction for Axis_SetpointFeed
+	Direction:			DINT;
+	// difference between set position and measured position
 	PositionDifference:	LREAL;
+	TrackPosition:		LREAL;
+	TrackVelocity:		LREAL;
+	TrackAcceleration:	LREAL;
 END_VAR
 
 VAR_IN_OUT
@@ -116,31 +118,51 @@ Axis_Reset(
 	Execute := 	Reset,
 	Done => 	ResetDone);
 
-Axis_SetpointEnable(Axis := AxisRef,
-	Execute :=		Tracking AND Ready AND Calibrated AND NOT StopAxis,
-	Position :=		Position,	// final destination
-	PositionType := POSITIONTYPE_ABSOLUTE);
+(* Tracking section ********************************************** *)
 
-PositionDifference := Position - AbsolutePosition;
-IF PositionDifference < 0.0 THEN
+IF Tracking THEN
+	PositionDifference := LIMIT(-0.002, Position - ActualPosition, 0.002);
+	TrackPosition := ActualPosition + PositionDifference;
+	TrackVelocity := 0.0; // LIMIT(-1.0, 2.0 * Velocity, 1.0);
+	TrackAcceleration := 0.0;
+ELSE
+	TrackPosition := ActualPosition;
+	TrackVelocity := 0.0;
+	TrackAcceleration := 0.0;
+END_IF
+
+
+IF NOT Tracking OR ABS(PositionDifference) < 1E-5 THEN // TrackVelocity = 0 AND TrackAcceleration = 0 THEN
+	Direction := 0;
+ELSIF PositionDifference < 0.0 THEN
 	Direction := -1;
-	
 ELSE
 	Direction := 1;
 END_IF
+
+isTracking := Tracking AND ABS(Position - ActualPosition) < 5.0E-3;
+IF Tracking AND Ready AND Calibrated AND NOT StopAxis THEN
+	Axis_SetpointEnable.Execute := TRUE;
+ELSIF NOT Axis_SetpointEnable.Busy AND Axis_SetpointEnable.Done THEN
+	Axis_SetpointEnable.Execute := FALSE;
+END_IF
+
+Axis_SetpointEnable(Axis := AxisRef,
+	Position :=		TrackPosition,	// final destination
+	PositionType := POSITIONTYPE_ABSOLUTE);
 	
 MC_ExtSetPointGenFeed(
-	Position :=		AbsolutePosition + LIMIT(-0.5, PositionDifference, 0.5),
-	Velocity :=		0, //ABS(Velocity),
-	Acceleration :=	ABS(Acceleration),
+	Position :=		TrackPosition,
+	Velocity :=		TrackVelocity,
+	Acceleration :=	TrackAcceleration,
 	Direction :=	Direction, 
 	Axis :=			AxisRef);
 
-// stop tracking on falling edge of tracking signal
-EndTracking(CLK := Tracking);
 Axis_SetpointDisable(Axis := AxisRef,
 	Execute := NOT Tracking);
-
+	
+(* end of tracking section  ********************************************** *)
+	
 IF isModuloAxis THEN
 	Axis_Modulo( 
 		Axis := 		AxisRef,
@@ -166,17 +188,18 @@ Axis_Jog(
 	Axis := 		AxisRef);
 
 Axis_Home(
-	Axis := 		AxisRef,
-	Execute := 		HomeAxis AND Ready,
-	Position := 	position, //DEFAULT_HOME_POSITION,
-	bCalibrationCam := bCalibrationCam,
-	Done => 		HomeDone);	
-	
+	Axis := 			AxisRef,
+	Execute := 			HomeAxis AND Ready,
+	Position := 		position, //DEFAULT_HOME_POSITION,
+	HomingMode :=		HomingMode,
+	bCalibrationCam := 	bCalibrationCam,
+	Done => 			HomeDone);	
+(*	
 IF (MoveDone OR HomeDone OR JogDone) AND NOT Axis_Status.StandStill THEN
 	StopAxis := TRUE;
 END_IF
-
-IF Axis_Modulo.Busy OR Axis_Move.Busy OR MoveDone THEN
+*)
+IF MoveDone AND (NOT Axis_Modulo.Busy OR NOT Axis_Move.Busy) THEN
 	MoveAxis := FALSE;
 END_IF
 
@@ -204,16 +227,16 @@ Axis_Stop(
 	Axis := 	AxisRef,
 	Execute := 	StopAxis AND StopAllowed,
 	Done => 	StopDone);
-
+(*
 Axis_Position(
 	Axis := 	AxisRef,
 	Enable := 	Calibrated,
 	Position => AbsolutePosition);
-
+*)
 IF isModuloAxis THEN
 	ActualPosition := AxisRef.NcToPlc.ModuloActPos; // required e.g. for Filterwheel
 ELSE
-	ActualPosition := AbsolutePosition; //AxisRef.NcToPlc.ActPos;
+	ActualPosition := AxisRef.NcToPlc.ActPos;
 END_IF
 
 IF Axis_Power.Error THEN
@@ -248,15 +271,12 @@ IF Axis_Stop.Error THEN
 	ErrorID := Axis_Stop.ErrorID;
 END_IF
 
-Busy := 	// Axis_Power.Busy OR // always true if enabled 
-			Axis_SetpointEnable.Busy OR
+Busy := 	Axis_SetpointEnable.Busy OR
 			Axis_Reset.Busy OR 
 			Axis_Modulo.Busy OR
 			Axis_Move.Busy OR 
 			Axis_Home.Busy OR
-			Axis_Jog.Busy
-			// OR Axis_Position.Busy // always true if enabled
-			;
+			Axis_Jog.Busy;
 
 Error := 	Axis_Power.Error OR 
 			Axis_SetpointEnable.Error OR
@@ -292,127 +312,12 @@ InRamp :=	Axis_Status.Accelerating OR
 			Axis_Status.Decelerating;
 Stopping := Axis_Status.Stopping;
 StandStill := Axis_Status.StandStill;
-Homing :=	Axis_Status.Homing;]]></ST>
+Homing :=	Axis_Status.Homing;
+// InPosition := AxisRef.NcToPlc.TargetPos;]]></ST>
     </Implementation>
     <LineIds Name="FB_Axis2">
-      <LineId Id="292" Count="0" />
-      <LineId Id="200" Count="1" />
-      <LineId Id="1619" Count="0" />
-      <LineId Id="198" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="294" Count="0" />
-      <LineId Id="28" Count="4" />
-      <LineId Id="37" Count="1" />
-      <LineId Id="286" Count="0" />
-      <LineId Id="39" Count="1" />
-      <LineId Id="1620" Count="0" />
-      <LineId Id="1280" Count="0" />
-      <LineId Id="1283" Count="2" />
-      <LineId Id="1812" Count="0" />
-      <LineId Id="1415" Count="0" />
-      <LineId Id="1301" Count="0" />
-      <LineId Id="1417" Count="0" />
-      <LineId Id="1810" Count="0" />
-      <LineId Id="1419" Count="1" />
-      <LineId Id="1418" Count="0" />
-      <LineId Id="1416" Count="0" />
-      <LineId Id="1287" Count="0" />
-      <LineId Id="1297" Count="3" />
-      <LineId Id="1296" Count="0" />
-      <LineId Id="1413" Count="0" />
-      <LineId Id="1411" Count="0" />
-      <LineId Id="1294" Count="0" />
-      <LineId Id="1288" Count="0" />
-      <LineId Id="1291" Count="0" />
-      <LineId Id="1185" Count="0" />
-      <LineId Id="391" Count="0" />
-      <LineId Id="491" Count="3" />
-      <LineId Id="891" Count="0" />
-      <LineId Id="523" Count="0" />
-      <LineId Id="495" Count="0" />
-      <LineId Id="476" Count="0" />
-      <LineId Id="479" Count="3" />
-      <LineId Id="892" Count="0" />
-      <LineId Id="483" Count="0" />
-      <LineId Id="477" Count="0" />
-      <LineId Id="264" Count="0" />
-      <LineId Id="266" Count="3" />
-      <LineId Id="275" Count="0" />
-      <LineId Id="265" Count="0" />
-      <LineId Id="611" Count="0" />
-      <LineId Id="303" Count="2" />
-      <LineId Id="307" Count="0" />
-      <LineId Id="1002" Count="0" />
-      <LineId Id="309" Count="0" />
-      <LineId Id="302" Count="0" />
-      <LineId Id="898" Count="2" />
-      <LineId Id="897" Count="0" />
-      <LineId Id="58" Count="2" />
-      <LineId Id="297" Count="2" />
-      <LineId Id="301" Count="0" />
-      <LineId Id="300" Count="0" />
-      <LineId Id="394" Count="2" />
-      <LineId Id="691" Count="0" />
-      <LineId Id="397" Count="0" />
-      <LineId Id="893" Count="3" />
-      <LineId Id="875" Count="5" />
-      <LineId Id="67" Count="1" />
-      <LineId Id="290" Count="0" />
-      <LineId Id="69" Count="0" />
-      <LineId Id="72" Count="2" />
-      <LineId Id="291" Count="0" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="79" Count="0" />
-      <LineId Id="186" Count="0" />
-      <LineId Id="603" Count="1" />
-      <LineId Id="606" Count="1" />
-      <LineId Id="605" Count="0" />
-      <LineId Id="772" Count="0" />
-      <LineId Id="771" Count="0" />
-      <LineId Id="773" Count="1" />
-      <LineId Id="1513" Count="3" />
-      <LineId Id="776" Count="0" />
-      <LineId Id="775" Count="0" />
-      <LineId Id="777" Count="1" />
-      <LineId Id="881" Count="0" />
-      <LineId Id="794" Count="0" />
-      <LineId Id="882" Count="1" />
-      <LineId Id="788" Count="0" />
-      <LineId Id="787" Count="0" />
-      <LineId Id="789" Count="1" />
-      <LineId Id="917" Count="0" />
-      <LineId Id="913" Count="2" />
-      <LineId Id="783" Count="3" />
-      <LineId Id="779" Count="3" />
-      <LineId Id="903" Count="0" />
-      <LineId Id="905" Count="0" />
-      <LineId Id="1517" Count="0" />
-      <LineId Id="906" Count="2" />
-      <LineId Id="911" Count="0" />
-      <LineId Id="909" Count="1" />
-      <LineId Id="1715" Count="0" />
-      <LineId Id="791" Count="0" />
-      <LineId Id="608" Count="0" />
-      <LineId Id="1518" Count="0" />
-      <LineId Id="884" Count="2" />
-      <LineId Id="912" Count="0" />
-      <LineId Id="887" Count="1" />
-      <LineId Id="1177" Count="0" />
-      <LineId Id="1179" Count="1" />
-      <LineId Id="1182" Count="2" />
-      <LineId Id="1089" Count="0" />
-      <LineId Id="1186" Count="0" />
-      <LineId Id="1189" Count="3" />
-      <LineId Id="1178" Count="0" />
-      <LineId Id="1193" Count="0" />
-      <LineId Id="792" Count="0" />
-      <LineId Id="1091" Count="1" />
-      <LineId Id="1090" Count="0" />
-      <LineId Id="178" Count="0" />
-      <LineId Id="188" Count="2" />
-      <LineId Id="195" Count="1" />
-      <LineId Id="187" Count="0" />
-      <LineId Id="385" Count="1" />
+      <LineId Id="2004" Count="212" />
+      <LineId Id="386" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>
