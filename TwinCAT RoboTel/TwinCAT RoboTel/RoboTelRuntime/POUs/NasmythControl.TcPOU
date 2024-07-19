@@ -23,8 +23,9 @@ VAR_OUTPUT
 	Nasmyth_left:		BOOL;
 END_VAR
 VAR
-	// axis function block
-	Nasmyth_control:	FB_DCAxis;
+	//move to derotator
+	nasmyth_move_left	AT%Q*: BOOL;
+	nasmyth_move_right	AT%Q*: BOOL;
 	// delay for the Nasmyth holding brake
 	Nasmyth_delay:		TON;
 	// status word for MQTT message
@@ -40,8 +41,6 @@ VAR
 	NasmythLeftEvent:	FB_Eventlog;
 	NasmythRightEvent:	FB_Eventlog;
 	Nasmyth_Timeout:	TON := (PT := T#10S);
-// Motor1 Channel 2 
-	Nasmyth_axis:		MDP5001_511_733_FFF278FE;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -74,18 +73,6 @@ Nasmyth_delay(
 
 // set the outputs
 GVL_Telescope.nasmyth_lock := Nasmyth_unlock;
-	
-Nasmyth_control(
-	open := left,
-	close := right,
-	enable := Nasmyth_unlocked,
-	reset := reset,
-	limit_open := NOT Nasmyth_left,
-	limit_close := NOT Nasmyth_right,
-	error => error,
-	Ready => ready,
-	velocity := 18000,
-	axis_ref := Nasmyth_axis);
 
 Nasmyth_Timeout(IN := (left AND NOT Nasmyth_left) OR (right AND NOT Nasmyth_right));
 
@@ -133,12 +120,6 @@ NasmythRightEvent(	Trigger := Nasmyth_right,
       <LineId Id="150" Count="0" />
       <LineId Id="140" Count="0" />
       <LineId Id="142" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="16" Count="5" />
-      <LineId Id="181" Count="0" />
-      <LineId Id="22" Count="1" />
       <LineId Id="43" Count="0" />
       <LineId Id="92" Count="4" />
       <LineId Id="124" Count="0" />
