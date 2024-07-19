@@ -55,3 +55,5 @@ bld/
 *.png
 TwinCAT RoboTel/TwinCAT RoboTel/RoboTel Safety_old_oxdrkjm2/
 TwinCAT RoboTel/TwinCAT Measurement Project1/VSSettings/.vsm
+TwinCAT RoboTel/RoboTelHMI/
+TwinCAT RoboTel/Packages/

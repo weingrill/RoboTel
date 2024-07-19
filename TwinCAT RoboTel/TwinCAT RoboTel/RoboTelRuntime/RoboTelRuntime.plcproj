@@ -126,22 +126,10 @@
     <Compile Include="POUs\FunctionBlocks\FB_CO_NUTATE.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_DCAxis.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_DCAxis_1.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_EQ2HOR.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_EQ2HOR2.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_EventLog.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_HADEC2ALTAZ.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_HOR2EQ.TcPOU">
@@ -153,19 +141,10 @@
     <Compile Include="POUs\FunctionBlocks\FB_MQTTCommunication.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_MQTTPublisher.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_MQTTTelegraf.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_NUTATE.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_PRECESS.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\FunctionBlocks\FB_RFTRIG.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_SUNPOS.TcPOU">
@@ -217,9 +196,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\NCError_TO_STRING.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="POUs\Functions\APPEND.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\TEN.TcPOU">
