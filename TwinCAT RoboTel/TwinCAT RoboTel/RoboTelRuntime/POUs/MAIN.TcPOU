@@ -69,7 +69,7 @@ GVL_Main.isRoboTel := HostName = 'CX-4E6032';
 start := GVL_Main.start_switch OR remote_start;
 stop := GVL_Main.stop_switch OR remote_stop;
 
-phase_available := GVL_Main.phase_available;
+phase_available := GVL_Main.L1_L2_Voltage > 380.0 AND  GVL_Main.L2_L3_Voltage > 380.0 AND  GVL_Main.L3_L1_Voltage > 380.0;
 reset := GVL_Main.reset_switch OR GVL_pendant_control.reset_switch OR remote_reset;		
 key_switch := GVL_Main.key_switch_remote;
 brake_clearing := GVL_Main.brake_clearing;
@@ -179,7 +179,7 @@ TemperatureEvent(
 	OnMessage := 	LREAL_TO_FMTSTR( cabinet_temperature, 1, TRUE),);
 	
 UPSEvent(	
-	Trigger := 		UPS.xAlarm OR UPS.xError, 
+	Trigger := 		UPS.xAlarm, 
 	Level := 		ADSLOG_MSGTYPE_ERROR,
 	FormatString :=	'%s',
 	OnMessage := 	'UPS Alarm!');]]></ST>
@@ -199,7 +199,8 @@ UPSEvent(
       <LineId Id="1584" Count="0" />
       <LineId Id="1389" Count="1" />
       <LineId Id="1454" Count="0" />
-      <LineId Id="1393" Count="5" />
+      <LineId Id="1656" Count="0" />
+      <LineId Id="1394" Count="4" />
       <LineId Id="1524" Count="0" />
       <LineId Id="1401" Count="1" />
       <LineId Id="1467" Count="0" />
