@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FB_SUNPOS" Id="{0dff82b7-3e2e-4cb4-82b3-58dc17eb6623}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK FB_SUNPOS
 VAR_INPUT
@@ -93,20 +93,22 @@ oblt := 23.452294 - 0.0130125*t + (9.2*COS(omega*dtor))/3600.0;
 
 // Form Right Ascension AND Declination
 l := l/3600.0;
-ra := ATAN2( COS(l*dtor), SIN(l*dtor) * COS(oblt*dtor));
-ra := MODABS(ra, 360.0);
+//ra := ATAN2( COS(l*dtor), SIN(l*dtor) * COS(oblt*dtor));
+ra := ATAN2( SIN(l*dtor) * COS(oblt*dtor), COS(l*dtor));
 dec := ASIN(SIN(l*dtor) * SIN(oblt*dtor));
  
 IF RADIAN THEN
 	oblt := oblt*dtor; 
 	longmed := longmed*dtor;
-ELSE
-	ra := ra/dtor;
+ELSE // result in degrees
+	ra := MODABS(ra/dtor, 360.0);
     dec := dec/dtor;
 END_IF]]></ST>
     </Implementation>
     <LineIds Name="FB_SUNPOS">
-      <LineId Id="3" Count="68" />
+      <LineId Id="3" Count="58" />
+      <LineId Id="108" Count="1" />
+      <LineId Id="64" Count="7" />
       <LineId Id="2" Count="0" />
     </LineIds>
   </POU>
