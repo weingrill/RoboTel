@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="DomeControl" Id="{0e02434d-920e-4c0f-81fc-5ff7d5573875}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM DomeControl
 VAR_INPUT
@@ -146,7 +146,7 @@ IF HomeDelay.Q THEN
 	move_azimuth := TRUE;
 END_IF
 *)
-SyncDome := DomeAxis.Calibrated AND TelescopeControl.power AND AzimuthElevationControl.calibrated;
+SyncDome := DomeAxis.Calibrated AND TelescopeControl.ready AND TelescopeControl.telescope_mode = E_TelescopeMode.automatic;
 // if we are on automatic, tie the dome to the telescope
 
 IF SyncDome THEN
@@ -160,7 +160,20 @@ IF SyncDome THEN
 	
 END_IF
 
+IF DomeClosed AND Calibrated AND TelescopeControl.telescope_mode = E_TelescopeMode.automatic THEN
+	IF Environment.WindSpeed > 10.0 THEN
+		position := Environment.WindDirection;
+		move_azimuth := TRUE;
+	ELSE
+		move_azimuth := FALSE;
+	END_IF
+END_IF
+
 Calibrated := DomeAxis.Calibrated;
+// automaticallz calibrate dome
+IF TelescopeControl.telescope_mode = E_TelescopeMode.automatic THEN
+	HomeAxis := NOT Calibrated;
+END_IF
 // when homing, ensure that the position is the calibration position
 IF HomeAxis THEN
 	position := calibration_position;	
@@ -390,8 +403,16 @@ CloseDomeEvent(
       <LineId Id="2577" Count="0" />
       <LineId Id="1408" Count="0" />
       <LineId Id="1403" Count="0" />
+      <LineId Id="2905" Count="2" />
+      <LineId Id="2909" Count="0" />
+      <LineId Id="2911" Count="2" />
+      <LineId Id="2910" Count="0" />
+      <LineId Id="2908" Count="0" />
       <LineId Id="1452" Count="0" />
       <LineId Id="1428" Count="0" />
+      <LineId Id="2902" Count="0" />
+      <LineId Id="2901" Count="0" />
+      <LineId Id="2903" Count="1" />
       <LineId Id="1414" Count="1" />
       <LineId Id="1418" Count="0" />
       <LineId Id="2796" Count="0" />
