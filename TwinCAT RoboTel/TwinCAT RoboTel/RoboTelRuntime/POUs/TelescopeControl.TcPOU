@@ -73,7 +73,10 @@ VAR
 	
 	eq2hor2:	FB_EQ2HOR2;
 	hor2eq:		FB_HOR2EQ;
-	
+	sunpos:		FB_SUNPOS;
+	sunhor2:	FB_EQ2HOR2;
+	// zenith distance of the sun
+	solz: 		LREAL;
 	// triggers power-failure event
 	powerfailure: 	BOOL;
 	powerontrigger:		R_TRIG;
@@ -237,6 +240,14 @@ hor2eq(alt := elevation_current,
 		ra => rightascension_calc,
 		dec => declination_calc);		
 
+sunpos(JD := jd);
+sunhor2(alpha := sunpos.ra,
+		delta := sunpos.Dec,
+		lon := longitude,
+		lat := latitude,
+		JD := jd + time_offset);
+solz := 90.0 - sunhor2.alt;
+		
 // TODO check sign; offset is applied later
 derotation_calc := F_DerotatorPosition2(azimuth_calc, elevation_calc, declination_calc, latitude);
 IF Tracking THEN
@@ -819,7 +830,14 @@ END_IF
       <LineId Id="2011" Count="0" />
       <LineId Id="3521" Count="4" />
       <LineId Id="3528" Count="1" />
+      <LineId Id="7931" Count="0" />
       <LineId Id="6202" Count="0" />
+      <LineId Id="7932" Count="0" />
+      <LineId Id="7934" Count="0" />
+      <LineId Id="7936" Count="1" />
+      <LineId Id="7935" Count="0" />
+      <LineId Id="7943" Count="0" />
+      <LineId Id="7941" Count="0" />
       <LineId Id="6200" Count="0" />
       <LineId Id="4243" Count="0" />
       <LineId Id="6570" Count="4" />
