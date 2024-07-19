@@ -161,8 +161,18 @@ suction_timer(	bStart := suction_running AND NOT suction_pump_timer.Q,
 
 suction_pump_timer(IN := MAIN.phase_available AND 
 						GVL_Hydraulics.oilpan_maximum,
-					PT := T#28S,
+					PT := T#48S,
 					Q => GVL_Hydraulics.oil_suction_enable);
+					
+(*					
+IF MAIN.phase_available AND GVL_Hydraulics.oilpan_maximum THEN 
+  GVL_Hydraulics.oil_suction_enable := TRUE;
+END_IF
+					
+IF MAIN.phase_available AND NOT suction_min_duration AND oil_warning THEN
+  GVL_Hydraulics.oil_suction_enable := FALSE;
+END_IF
+*)	
 					
 suction_watchdog(IN := GVL_Hydraulics.oil_suction_enable AND NOT suction_running,
 					PT := T#10S,
@@ -318,6 +328,13 @@ BreakHydraulicsWarning(Trigger := NOT start AND open_brake,
       <LineId Id="350" Count="1" />
       <LineId Id="494" Count="0" />
       <LineId Id="352" Count="4" />
+      <LineId Id="1591" Count="0" />
+      <LineId Id="1685" Count="0" />
+      <LineId Id="1582" Count="0" />
+      <LineId Id="1594" Count="1" />
+      <LineId Id="1570" Count="1" />
+      <LineId Id="1596" Count="1" />
+      <LineId Id="1572" Count="0" />
       <LineId Id="936" Count="0" />
       <LineId Id="357" Count="3" />
       <LineId Id="362" Count="3" />
