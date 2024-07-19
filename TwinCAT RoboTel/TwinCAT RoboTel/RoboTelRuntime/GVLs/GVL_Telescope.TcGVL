@@ -33,8 +33,6 @@ VAR_GLOBAL
 	// DIN38 4.5
 	cover3_closed	AT%I*: BOOL;
 
-	open_cover1		AT%Q*: BOOL;
-	close_cover1	AT%Q*: BOOL;
 	open_cover2		AT%Q*: BOOL;
 	close_cover2	AT%Q*: BOOL;
 	open_cover3		AT%Q*: BOOL;
