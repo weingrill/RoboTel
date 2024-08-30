@@ -87,6 +87,7 @@ VAR
 	
 	fbReadReq: ADSREAD := ( NETID := '5.73.45.158.1.1', PORT := 851, TMOUT := DEFAULT_ADS_TIMEOUT );
 	DomeCalibration:	MC_SetPosition;
+	HomingMode:			MC_HomingMode := MC_DefaultHoming;
 	SyncDome:			BOOL;
 	DomeCommEvent:		FB_Eventlog;
 	DomeAxisEvent:		FB_Eventlog;
@@ -171,19 +172,40 @@ END_IF
 
 Calibrated := DomeAxis.Calibrated;
 // automaticallz calibrate dome
-IF TelescopeControl.telescope_mode = E_TelescopeMode.automatic THEN
+IF TelescopeControl.telescope_mode = E_TelescopeMode.automatic AND enable THEN
 	HomeAxis := NOT Calibrated;
 END_IF
-// when homing, ensure that the position is the calibration position
-IF HomeAxis THEN
-	position := calibration_position;	
-	velocity := 15.0;
-END_IF
+
 F_Azimuth_home(CLK := GVL_Dome.Azimuth_home);
 R_Azimuth_home(CLK := GVL_Dome.Azimuth_home);
 
 Azimuth_home := (R_Azimuth_home.Q AND GVL_Dome.bDirectionPlus) OR 
-				(F_Azimuth_home.Q AND GVL_Dome.bDirectionMinus);
+				(F_Azimuth_home.Q AND GVL_Dome.bDirectionMinus) OR
+				(GVL_Dome.Azimuth_home AND DomeAxis.StandStill);
+
+				// when homing, ensure that the position is the calibration position
+IF HomeAxis THEN
+	IF last_position > 0.0 THEN // direct calibration
+		HomingMode := MC_ForceCalibration; // MC_Direct
+		DomeCalibration.Position := last_position;
+		DomeCalibration.Execute := TRUE;
+	ELSE // classic calibration
+		HomingMode := MC_DefaultHoming;
+		position := calibration_position;
+		// set to slow velocity for homing
+		velocity := 15.0;
+		DomeCalibration.Execute := FALSE;
+	END_IF
+ELSE // we are not homing
+	velocity := 100.0;
+	DomeCalibration.Execute := FALSE;	
+END_IF
+
+
+IF Calibrated AND Azimuth_home THEN
+	DomeCalibration.Position := calibration_position;
+	DomeCalibration.Execute := TRUE;
+END_IF
 
 // velocity = 2°/s or 180° in 81s, 360° in 120s (was 2.22)
 // TODO: Reset does not propagate to the FB and therefor does not reset the error
@@ -192,6 +214,7 @@ DomeAxis(
 	Reset := 		reset,
 	MoveAxis := 	move_azimuth,
 	HomeAxis :=		HomeAxis,
+	HomingMode :=	HomingMode,
 	Position := 	position,
 	Velocity := 	velocity,
 	Jog_Forward :=	right OR GVL_Dome.Clockwise,
@@ -204,13 +227,7 @@ DomeAxis(
 	ActualPosition => Azimuth_current,
 	AxisRef	:= 		GVL_Dome.DomeAxisRef);
 
-IF getlastposition AND last_position>=0.0 AND NOT Calibrated THEN
-	DomeCalibration.Execute := getlastposition AND DomeAxis.Ready;
-	DomeCalibration.Position := last_position;
-ELSE
-	DomeCalibration.Execute := Azimuth_home AND HomeDelay.Q AND DomeAxis.Ready;
-	DomeCalibration.Position := calibration_position;
-END_IF
+
 
 // re-calibrate the dome, if we pass the reference switch. execute only if enough time has passed since homing.
 DomeCalibration(Axis := GVL_Dome.DomeAxisRef);
@@ -253,8 +270,7 @@ IF ReadCycle.Q THEN
 	// read if the ADS command is busy
 	fbReadReq(	READ := FALSE,
 				BUSY => bBusy,
-				ERR =>	bError,
-				ERRID => nErrID);
+				ERR =>	bError);
 	IF bBusy THEN
 		// reset the read command
 		fbReadReq(READ := FALSE);
@@ -266,8 +282,7 @@ IF ReadCycle.Q THEN
 					DESTADDR := ADR(DomeStatusWord),
 					READ := TRUE,
 					BUSY => bBusy,
-					ERR =>	bError,
-					ERRID => nErrID);
+					ERR =>	bError);
 		// restart the read cycle
 		ReadCycle(IN := FALSE);		
 	END_IF
@@ -282,6 +297,7 @@ IF ReadCycle.Q THEN
 		SlitClosed := DomeStatusWord.6;
 	ELSE
 		// reset the status word
+		nErrID := fbReadReq.ERRID;
 		DomeStatusWord := 0;
 	END_IF
 END_IF
@@ -294,7 +310,7 @@ ELSE
 			DomeCommEvent.OnMessage := UDINT_TO_STRING(nErrID);
 END_CASE
 
-PermanentError(IN := bError);
+PermanentError(IN := NOT DomeValid);
 		
 DomeError := PermanentError.Q OR Error;
 
@@ -413,14 +429,17 @@ CloseDomeEvent(
       <LineId Id="2902" Count="0" />
       <LineId Id="2901" Count="0" />
       <LineId Id="2903" Count="1" />
-      <LineId Id="1414" Count="1" />
-      <LineId Id="1418" Count="0" />
-      <LineId Id="2796" Count="0" />
-      <LineId Id="1417" Count="0" />
+      <LineId Id="3036" Count="0" />
       <LineId Id="1443" Count="0" />
       <LineId Id="1445" Count="1" />
       <LineId Id="1001" Count="0" />
       <LineId Id="1447" Count="0" />
+      <LineId Id="3174" Count="0" />
+      <LineId Id="3037" Count="14" />
+      <LineId Id="3067" Count="0" />
+      <LineId Id="3060" Count="0" />
+      <LineId Id="3053" Count="1" />
+      <LineId Id="3062" Count="4" />
       <LineId Id="1444" Count="0" />
       <LineId Id="1000" Count="0" />
       <LineId Id="871" Count="0" />
@@ -428,6 +447,7 @@ CloseDomeEvent(
       <LineId Id="925" Count="0" />
       <LineId Id="914" Count="1" />
       <LineId Id="1413" Count="0" />
+      <LineId Id="3035" Count="0" />
       <LineId Id="916" Count="0" />
       <LineId Id="1434" Count="0" />
       <LineId Id="919" Count="1" />
@@ -439,10 +459,6 @@ CloseDomeEvent(
       <LineId Id="307" Count="0" />
       <LineId Id="305" Count="0" />
       <LineId Id="2324" Count="0" />
-      <LineId Id="941" Count="0" />
-      <LineId Id="2327" Count="0" />
-      <LineId Id="2340" Count="0" />
-      <LineId Id="2342" Count="2" />
       <LineId Id="2326" Count="0" />
       <LineId Id="2333" Count="0" />
       <LineId Id="778" Count="0" />
@@ -474,18 +490,19 @@ CloseDomeEvent(
       <LineId Id="2001" Count="0" />
       <LineId Id="2067" Count="0" />
       <LineId Id="2049" Count="2" />
-      <LineId Id="2004" Count="0" />
       <LineId Id="2013" Count="0" />
       <LineId Id="2467" Count="2" />
       <LineId Id="2068" Count="0" />
-      <LineId Id="2041" Count="7" />
+      <LineId Id="2041" Count="6" />
       <LineId Id="2069" Count="0" />
       <LineId Id="2014" Count="0" />
       <LineId Id="2021" Count="0" />
       <LineId Id="2470" Count="0" />
       <LineId Id="2052" Count="7" />
       <LineId Id="2063" Count="0" />
-      <LineId Id="2065" Count="1" />
+      <LineId Id="2065" Count="0" />
+      <LineId Id="3068" Count="0" />
+      <LineId Id="2066" Count="0" />
       <LineId Id="2062" Count="0" />
       <LineId Id="2022" Count="1" />
       <LineId Id="2035" Count="5" />
