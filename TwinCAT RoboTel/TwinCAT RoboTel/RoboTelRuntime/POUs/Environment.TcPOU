@@ -29,19 +29,25 @@ VAR_OUTPUT
 	Rain:			BOOL;
 	// boolean weather bad condition
 	WeatherBad:		BOOL;
+	// boolean weather good condition for observation
+	WeatherGood:	BOOL;
 END_VAR
 VAR
 	WindEvent,
 	HumidityEvent,
 	HumidityDomeEvent,
 	PrecipitationEvent,
-	DewpointEvent: FB_Eventlog;
+	DewpointEvent,
+	WeatherGoodEvent: FB_Eventlog;
 	WindAverage,
 	Wind5sAverage,
 	WindDirectionAverage,
 	HumidityDomeAverage,
-	PressureAverage: FB_TimeAverage;
+	PressureAverage,
+	PrecipitationAverage,
+	BrightnessAverage: FB_TimeAverage;
 	RainDelay:	TON;
+	RainSustain: TOF;
 	sunpos:		FB_SUNPOS;
 	eq2hor2:	FB_EQ2HOR2;
 	avg_wind, max_wind: REAL;
@@ -49,7 +55,7 @@ VAR
 	HumidityDomeThreshold:	SR;
 	WindThreshold:		SR;
 	WeatherBadDelay: 	TOF;
-	MQTTTimer : TON := (PT:=T#5S);
+	MQTTTimer : TON := (PT:=T#10S);
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -62,42 +68,46 @@ Humidity :=			F_YREAL(GVL_Environment.rawHumidity, 		0, 32767,   0.0, 100.0); //
 Pressure := 		F_YREAL(GVL_Environment.rawPressure,		0, 32767, 800.0, 1060.0); // mBar 
 Brightness := 		F_YREAL(GVL_Environment.rawBrightness,		0, 32767,   0.0, 120000.0); // Lux 
 LightDirection :=	F_YREAL(GVL_Environment.rawLightDirection, 	0, 32767,   0.0, 360.0); // °
-Precipitation := 	F_YREAL(GVL_Environment.rawPrecipitation,	0, 32767,   0.0, 100.0); // mm/h 
-
+Precipitation := 	F_YREAL(GVL_Environment.rawPrecipitation - 28,	0, 32767,   0.0, 100.0); // mm/h 
 HumidityDome :=		F_YREAL(GVL_Environment.rawHumidityDome, 		0, 32767,   0.0, 100.0); // %
 TemperatureDome :=  F_YREAL(GVL_Environment.rawTemperatureDome, 	0, 32767, -30.0, 70.0); // °C
 
 DewpointDome := 	F_Dewpoint(HumidityDome, TemperatureDome);
 
-RainDelay(IN := GVL_Environment.rawRain OR NOT GVL_Environment.rawNoRain, PT := T#10S, Q => Rain);
-
+RainDelay(IN := GVL_Environment.rawRain OR NOT GVL_Environment.rawNoRain, PT := T#60S);
+RainSustain( IN := RainDelay.Q, PT := T#120S, Q => Rain);
 WindAverage(IN := WindSpeed, PT := T#3M, AVG => avg_wind, MAXAVG => max_wind);
-Wind5sAverage(IN := WindSpeed, PT := T#5S);
+Wind5sAverage(IN := WindSpeed, PT := T#10S);
 WindDirectionAverage(IN := WindDirection, PT := T#5S);
 PressureAverage(IN := Pressure, PT := T#5S);
+PrecipitationAverage(IN := Precipitation, PT := T#60S);
+BrightnessAverage(IN := Brightness, PT := T#10S);
 
-//HumidityDomeAverage(IN := HumidityDome, PT := T#2M);
-
+// addition rules for low values
+IF Brightness < 250.0 THEN
+	Brightness := BrightnessAverage.AVG;
+END_IF
+// Thresholds
 HumidityThreshold(	SET1 := Humidity >= 80.0,
 					RESET := Humidity < 65.0);
 
 HumidityDomeThreshold(	SET1 := HumidityDome >= 80.0,
 					RESET := HumidityDome <= 65.0);
 
-
 WindThreshold(	SET1 := WindAverage.AVG > 10.0 OR max_wind > 15.0, 
 				RESET := WindAverage.AVG < 5.0);
 
 WeatherBadDelay(IN := Rain OR
-				Precipitation >= 0.1 OR
+				PrecipitationAverage.AVG >= 0.1 OR
 				HumidityThreshold.Q1 OR
 				HumidityDomeThreshold.Q1 OR
 				WindThreshold.Q1, PT := T#4M, Q => WeatherBad);
-				
+// close dome on bad weather				
 IF WeatherBad AND DomeControl.DomeOpened THEN
 	DomeControl.CloseDome := TRUE;
 END_IF
 
+// calculate solar position
 sunpos(JD := TelescopeControl.jd);
 eq2hor2(alpha := sunpos.RA,
 	delta := sunpos.Dec,
@@ -105,6 +115,8 @@ eq2hor2(alpha := sunpos.RA,
 	lat := TelescopeControl.latitude,
 	JD := TelescopeControl.jd);
 
+WeatherGood := NOT WeatherBad AND eq2hor2.alt<0.0;
+	
 MQTTTimer(IN:=TRUE);
 IF MQTTTimer.Q THEN // publish new payload every second
 	MQTTTimer(IN:=FALSE);
@@ -117,12 +129,14 @@ IF MQTTTimer.Q THEN // publish new payload every second
 	MAIN.MQTTClient.Publish('environment', 'roof', 'Brightness', LREAL_TO_FMTSTR(Brightness, 2, TRUE));
 	MAIN.MQTTClient.Publish('environment', 'roof', 'LightDirection', LREAL_TO_FMTSTR(LightDirection, 1, TRUE));
 	MAIN.MQTTClient.Publish('environment', 'roof', 'Rain', BOOL_TO_STRING(Rain));
-	MAIN.MQTTClient.Publish('environment', 'roof', 'RainAnalog', LREAL_TO_FMTSTR(Precipitation, 3, TRUE));
-	
+	MAIN.MQTTClient.Publish('environment', 'roof', 'RainAnalog', LREAL_TO_FMTSTR(PrecipitationAverage.AVG, 3, TRUE));
+	MAIN.MQTTClient.Publish('environment', 'roof', 'solz', LREAL_TO_FMTSTR(90.0 - eq2hor2.alt, 3, TRUE));
+	MAIN.MQTTClient.Publish('environment', 'roof', 'solaz', LREAL_TO_FMTSTR(eq2hor2.az, 3, TRUE));
 					
 	MAIN.MQTTClient.Publish('dome', 'dome', 'DomeTemperature', LREAL_TO_FMTSTR(TemperatureDome, 2, TRUE));
 	MAIN.MQTTClient.Publish('dome', 'dome', 'DomeHumidity', LREAL_TO_FMTSTR(HumidityDome, 1, TRUE));
 	MAIN.MQTTClient.Publish('dome', 'dome', 'WeatherBad', BOOL_TO_STRING(WeatherBad));
+	MAIN.MQTTClient.Publish('dome', 'dome', 'WeatherGood', BOOL_TO_STRING(WeatherGood));
 END_IF
 
 WindEvent(	Trigger := avg_wind > 10.0, 
@@ -132,7 +146,7 @@ WindEvent(	Trigger := avg_wind > 10.0,
 			OffMessage := 'OK',
 			OffLevel := ADSLOG_MSGTYPE_HINT);
 
-HumidityEvent(	Trigger :=  HumidityThreshold.Q1, 
+HumidityEvent(	Trigger :=  HumidityThreshold.Q1 AND DomeControl.DomeOpened, 
 				Level := ADSLOG_MSGTYPE_WARN,
 				FormatString := 'Humidity: %s',
 				OnMessage := LREAL_TO_FMTSTR( Humidity, 1, TRUE),
@@ -148,11 +162,19 @@ HumidityDomeEvent(	Trigger :=  HumidityDomeAverage.AVG>= 65.0,
 				OffLevel := ADSLOG_MSGTYPE_HINT);
 
 				
-PrecipitationEvent(	Trigger := WeatherBad, 
+PrecipitationEvent(	Trigger := WeatherBad AND DomeControl.DomeOpened, 
 					Level := ADSLOG_MSGTYPE_WARN,
 					FormatString := 'The weather is %s',
 					OnMessage := 'BAD.',
 					OffMessage := 'OK.');
+
+WeatherGoodEvent(	Trigger := WeatherGood, 
+					Level := ADSLOG_MSGTYPE_HINT,
+					FormatString := 'The weather is %s',
+					OnMessage := 'good: virtual dome is open.',
+					OffMessage := 'bad: virtual dome is closed.',
+					OffLevel := ADSLOG_MSGTYPE_HINT);
+
 
 DewPointEvent( Trigger := TemperatureDome < DewpointDome,
 				Level := ADSLOG_MSGTYPE_WARN,
@@ -171,7 +193,7 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="950" Count="1" />
       <LineId Id="953" Count="0" />
       <LineId Id="952" Count="0" />
-      <LineId Id="507" Count="2" />
+      <LineId Id="508" Count="1" />
       <LineId Id="567" Count="0" />
       <LineId Id="506" Count="0" />
       <LineId Id="99" Count="0" />
@@ -181,32 +203,42 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="795" Count="0" />
       <LineId Id="792" Count="0" />
       <LineId Id="511" Count="1" />
+      <LineId Id="1207" Count="0" />
+      <LineId Id="1147" Count="0" />
+      <LineId Id="1142" Count="1" />
       <LineId Id="995" Count="0" />
+      <LineId Id="1148" Count="0" />
       <LineId Id="800" Count="0" />
       <LineId Id="996" Count="0" />
       <LineId Id="1061" Count="2" />
-      <LineId Id="1060" Count="0" />
       <LineId Id="999" Count="2" />
       <LineId Id="576" Count="0" />
       <LineId Id="1006" Count="3" />
       <LineId Id="1004" Count="0" />
       <LineId Id="581" Count="3" />
+      <LineId Id="1149" Count="0" />
       <LineId Id="906" Count="5" />
-      <LineId Id="622" Count="3" />
+      <LineId Id="622" Count="0" />
+      <LineId Id="1118" Count="0" />
+      <LineId Id="623" Count="0" />
+      <LineId Id="1119" Count="0" />
+      <LineId Id="624" Count="1" />
       <LineId Id="665" Count="0" />
       <LineId Id="727" Count="0" />
       <LineId Id="731" Count="0" />
       <LineId Id="733" Count="0" />
       <LineId Id="835" Count="1" />
       <LineId Id="737" Count="0" />
-      <LineId Id="956" Count="1" />
+      <LineId Id="1132" Count="0" />
+      <LineId Id="1134" Count="0" />
       <LineId Id="730" Count="0" />
       <LineId Id="870" Count="0" />
-      <LineId Id="718" Count="0" />
+      <LineId Id="1129" Count="1" />
       <LineId Id="759" Count="0" />
       <LineId Id="740" Count="0" />
       <LineId Id="743" Count="0" />
       <LineId Id="750" Count="0" />
+      <LineId Id="1120" Count="0" />
       <LineId Id="628" Count="0" />
       <LineId Id="612" Count="0" />
       <LineId Id="144" Count="12" />
@@ -216,6 +248,9 @@ DewPointEvent( Trigger := TemperatureDome < DewpointDome,
       <LineId Id="462" Count="0" />
       <LineId Id="515" Count="0" />
       <LineId Id="158" Count="4" />
+      <LineId Id="1121" Count="0" />
+      <LineId Id="1123" Count="5" />
+      <LineId Id="1122" Count="0" />
       <LineId Id="569" Count="0" />
       <LineId Id="571" Count="0" />
       <LineId Id="575" Count="0" />
