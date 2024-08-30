@@ -3750,7 +3750,7 @@ External Setpoint Generation:
 						<Dynamic AccelerationMaximum="1" DecelerationMaximum="1"/>
 						<Velo RefSearch="15" RefSync="15" SlowManual="25" FastManual="75" Fast="100" Maximum="100"/>
 						<PositionAreaControl Enable="false"/>
-						<TargetPosControl Enable="false"/>
+						<TargetPosControl Range="10"/>
 						<OtherSettings AllowMotionCmdToSlave="true"/>
 						<Discrete CreepDistancePos="10" CreepDistanceNeg="10" BreakDistancePos="2.5" BreakDistanceNeg="2.5" BreakDelayPos="0.1" BreakDelayNeg="0.1" CreepDistanceStop="5"/>
 					</AxisPara>
@@ -4036,7 +4036,7 @@ External Setpoint Generation:
 		</Motion>
 		<Plc>
 			<Project GUID="{082E65A1-C5B7-45DB-A2A1-3703469085B9}" Name="RoboTelRuntime" PrjFilePath="RoboTelRuntime\RoboTelRuntime.plcproj" TmcFilePath="RoboTelRuntime\RoboTelRuntime.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="RoboTelRuntime\RoboTelRuntime.tmc" TmcHash="{F32FFDAF-5903-DCC5-0131-EFCB899ED84D}">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="RoboTelRuntime\RoboTelRuntime.tmc" TmcHash="{1F68D45D-0363-69A0-1CA2-648638181BE4}">
 					<Name>RoboTelRuntime Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="1">

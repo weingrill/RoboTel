@@ -138,6 +138,9 @@
     <Compile Include="POUs\FunctionBlocks\FB_LightTimer.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\FunctionBlocks\FB_MOONPOS.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\FunctionBlocks\FB_MQTTCommunication.TcPOU">
       <SubType>Code</SubType>
     </Compile>
