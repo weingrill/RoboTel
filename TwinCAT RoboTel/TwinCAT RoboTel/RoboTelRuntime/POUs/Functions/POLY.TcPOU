@@ -1,17 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4018.5">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="POLY" Id="{289288d7-34a1-48c9-a091-6574769f9ed1}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION POLY : LREAL
 VAR_INPUT
+	// independent variable
 	X:	LREAL;
-	COEFFS: ARRAY [0..3] OF LREAL;
+END_VAR
+VAR_IN_OUT
+	// array of coefficients
+	COEFFS: ARRAY [*] OF LREAL;
 END_VAR
 VAR
+	i: DINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[POLY := COEFFS[0]*EXPT(X, 0) + COEFFS[1]*EXPT(X, 1) + COEFFS[2]*EXPT(X, 2) + COEFFS[3]*EXPT(X, 3);
+      <ST><![CDATA[POLY := 0.0;
+FOR i := LOWER_BOUND(COEFFS,1) TO UPPER_BOUND(COEFFS,1) DO
+	POLY := POLY + COEFFS[i]*EXPT(X, i);
+END_FOR
 ]]></ST>
     </Implementation>
+    <LineIds Name="POLY">
+      <LineId Id="13" Count="3" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
   </POU>
 </TcPlcObject>
